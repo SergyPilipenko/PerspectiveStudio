@@ -7,6 +7,7 @@
                     <div class="box-body">
                         <parser
                                 :routes="'{{ $routes }}'"
+                                :columns="'{{ $columns }}'"
                         ></parser>
                     </div>
                 </div>

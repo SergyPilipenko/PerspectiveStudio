@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Admin\Import;
 
-use App\Article;
+//use App\Article;
 use App\Helpers\Routes;
 use App\Imports\PriceFilter;
 use App\Models\Admin\Import\ImportByUrl;
+use App\Models\Admin\Import\ImportColumn;
 use App\Models\Admin\Import\ImportSetting;
+use App\Models\Admin\Import\SuppliersMapping;
+use App\Models\Prices\Price;
 use App\Models\Tecdoc\ArticleNumber;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\DB;
 
 
 class ImportController extends Controller
@@ -47,8 +51,11 @@ class ImportController extends Controller
 
     public function create(Routes $routes)
     {
+        $columns = ImportColumn::all();
+
         return view('admin.import.create', [
-            'routes' => json_encode($routes->getRoutesByName('admin.import'))
+            'routes' => json_encode($routes->getRoutesByName('admin.import')),
+            'columns' => $columns
         ]);
     }
 
@@ -78,10 +85,6 @@ class ImportController extends Controller
 
         $rows = $request->type::import($request);
         $articles = [];
-
-//        foreach ($rows as $row) {
-//            $articles[] = $row[0];
-//        }
 
         $filtered = $filterSubset->getPreview($rows, 10);
 
@@ -126,16 +129,84 @@ class ImportController extends Controller
     {
         $rows = $request->type::import($request);
 
-        $import_setting = ImportSetting::find($import_price_id);
+        $import_setting = json_decode(ImportSetting::find($import_price_id)->scheme);
+
+        $info = [];
+
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            foreach ($rows as $row) {
+                $mapping = SuppliersMapping::where('title', $row[$this->getColumn($import_setting,3)])->first();
+                $supplier = $mapping ? $mapping->supplier_id : null;
+                dd($supplier);
+
+//                dd($mapping);
+
+                $query = ArticleNumber::where('datasupplierarticlenumber', $row[$this->getColumn($import_setting,1)])
+
+                    ->whereHas('supplier', function ($query) use ($row,$import_setting, $mapping) {
+
+                        $query->where('description', $row[$this->getColumn($import_setting,3)])
+
+                            ->orWhere('id', $mapping);
+
+                })->first();
 
 
-        $prices = [];
-        $articles = [];
-        foreach ($rows as $row) {
-            $articles[] = array_shift($row);
+                if($query) {
+                    $info['saved'][] = Price::create([
+                        'title' => $row[$this->getColumn($import_setting,2)],
+                        'article_id' => $query->id,
+                        'price' => $row[$this->getColumn($import_setting,5)],
+                        'import_setting_id' => $import_price_id
+                    ]);
+
+                } else {
+//                    $mapping = SuppliersMapping::where('title', $row[$this->getColumn($import_setting,3)])->first();
+
+//                    if($mapping) {
+////                        Price::create([]);
+//                    } else {
+//
+//
+//
+//                    }
+
+                    $info['not_found'] = $row;
+                    dd($row);
+                }
+            }
+            DB::connection()->getPdo()->commit();
+        } catch (\PDOException $e) {
+
+            dd($e);
+            DB::connection()->getPdo()->rollBack();
         }
 
-//        dd($article = ArticleNumber::whereIn('datasupplierarticlenumber', $articles)->get());
+        dd($info);
+
+
+//        $query = ArticleNumber::whereIn('datasupplierarticlenumber', $articles)
+//            ->whereHas('supplier', function($query) use ($brands) {
+//                $query->whereIn('description', ['MAHLE ORIGINAL']);
+//            })->get();
+//        if($query->count() > 0) {
+//            $prices[] = $query;
+//        } else {
+//            $notFount[] = $row;
+//        }
+//
+//        dump($query);
+//        dd($notFount);
+
+//        ArticleNumber::whereIn('datasupplierarticlenumber', $articles)->whereHas('supplier', function($query) use ($brands) {
+//            $query->whereIn('description', $brands);
+//        })->get();
+//
+//        dd($notFount);
+
+        return redirect()->back();
+//        dd();
 
 //        dd($rows);
 //        dd($rows);
@@ -150,5 +221,12 @@ class ImportController extends Controller
         Session::flash('flash', 'Схема загрузки была удалена');
 
         return back();
+    }
+
+    public function getColumn($scheme, $needle)
+    {
+        foreach ($scheme as $item) {
+            if($item->value == $needle) return $item->column;
+        }
     }
 }

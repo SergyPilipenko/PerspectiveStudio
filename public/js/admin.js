@@ -2080,16 +2080,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['previewData', 'routes', 'type', 'link'],
+  props: ['previewData', 'routes', 'type', 'link', 'columns'],
   data: function data() {
     return {
       key: "",
@@ -2113,10 +2105,11 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
     selects: function selects() {
       var selects = [];
+      var alphabet = ' abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
 
       for (var i = 1; i <= this.maxRowLength; i++) {
         selects.push({
-          id: i,
+          column: alphabet[i],
           value: ''
         });
       }
@@ -2168,6 +2161,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var unique = _toConsumableArray(new Set(selected.map(function (selected) {
         return selected.value;
       })));
+
+      console.log(selected.length);
+      console.log(unique.length);
 
       if (selected.length != unique.length) {
         flash('Поля не должны совпадать', 'error');
@@ -2323,11 +2319,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['routes'],
+  props: ['routes', 'columns'],
   components: {
     UploadForm: _UploadForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     PreviewTable: _PreviewTable_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -2349,6 +2347,11 @@ __webpack_require__.r(__webpack_exports__);
         name: 'Загрузка с компьютера'
       }]
     };
+  },
+  computed: {
+    tableColumns: function tableColumns() {
+      return JSON.parse(this.columns);
+    }
   },
   methods: {
     renderPreview: function renderPreview(data) {
@@ -38872,42 +38875,16 @@ var render = function() {
                           _vm._v(" - выбрать поле - ")
                         ]),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "name" } }, [
-                          _vm._v("Название")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "brand" } }, [
-                          _vm._v("Производитель")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "article" } }, [
-                          _vm._v("Код")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "description" } }, [
-                          _vm._v("Описание")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "used" } }, [
-                          _vm._v("Б/У")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "price" } }, [
-                          _vm._v("Цена")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "quantity" } }, [
-                          _vm._v("Кол-во")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "original" } }, [
-                          _vm._v("Ориг. производители")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "picture" } }, [
-                          _vm._v("Фото")
-                        ])
-                      ]
+                        _vm._l(_vm.columns, function(column) {
+                          return _c("option", {
+                            domProps: {
+                              value: column.id,
+                              textContent: _vm._s(column.title)
+                            }
+                          })
+                        })
+                      ],
+                      2
                     )
                   ]
                 )
@@ -39128,8 +39105,10 @@ var render = function() {
         attrs: {
           previewData: _vm.previewData,
           routes: _vm.routes,
+          tester: _vm.routes,
           type: _vm.selected,
-          link: _vm.link
+          link: _vm.link,
+          columns: _vm.tableColumns
         }
       })
     ],

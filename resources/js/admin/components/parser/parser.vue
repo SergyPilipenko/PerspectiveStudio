@@ -33,8 +33,10 @@
         <preview-table v-show="preview"
                        :previewData="previewData"
                        :routes="routes"
+                       :tester="routes"
                        :type="selected"
                        :link="link"
+                       :columns="tableColumns"
         ></preview-table>
     </div>
 </template>
@@ -45,7 +47,7 @@
     import ImportUrl from './ImportUrl.vue';
 
     export default {
-        props: ['routes'],
+        props: ['routes','columns'],
 
         components: { UploadForm, PreviewTable, ImportUrl },
 
@@ -68,6 +70,14 @@
                     }
                 ],
             }
+        },
+
+        computed: {
+
+            tableColumns() {
+                return JSON.parse(this.columns)
+            }
+
         },
 
         methods: {
