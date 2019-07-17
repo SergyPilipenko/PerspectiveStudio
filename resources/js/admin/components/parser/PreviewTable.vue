@@ -26,15 +26,7 @@
                         <th scope="col" v-for="(item, index) in selects" :key="index" v-model="key">
                             <select class="form-control" name="columnType[]" @change="onChange($event,index)" v-model="selects[index].value">
                                 <option value="" > - выбрать поле - </option>
-                                <option value="name">Название</option>
-                                <option value="brand">Производитель</option>
-                                <option value="article">Код</option>
-                                <option value="description">Описание</option>
-                                <option value="used">Б/У</option>
-                                <option value="price">Цена</option>
-                                <option value="quantity">Кол-во</option>
-                                <option value="original">Ориг. производители</option>
-                                <option value="picture">Фото</option>
+                                <option :value="column.id" v-for="column in columns" v-text="column.title"></option>
                             </select>
                         </th>
                 </tr>
@@ -54,7 +46,7 @@
 
 <script>
     export default {
-        props: ['previewData', 'routes', 'type','link'],
+        props: ['previewData', 'routes', 'type','link','columns'],
 
         data() {
            return {
@@ -77,11 +69,13 @@
             routeList() {
                 return JSON.parse(this.routes);
             },
+
             selects() {
                 let selects = [];
+                let alphabet = ' abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
                 for(let i = 1; i <= this.maxRowLength; i++) {
                     selects.push({
-                        id: i,
+                        column: alphabet[i],
                         value: ''
                     })
                 }
@@ -124,9 +118,12 @@
                     return;
                 }
 
+
                 const selects = this.selects;
                 var selected = selects.filter(header => header.value !== "");
                 var unique = [...new Set(selected.map(selected => selected.value))];
+                console.log(selected.length);
+                console.log(unique.length);
 
 
                 if(selected.length != unique.length) {
