@@ -1,0 +1,31 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);.control-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.control-container:first-child {
+  margin-right: 10px;
+}
+
+button {
+  background: none;
+  border: none;
+  color: #007bff;
+  transition: 0.3s;
+}
+
+button:hover {
+  color: #0056b3;
+  transition: 0.3s;
+}
+
+a {
+  transition: 0.3s;
+}
+
+a:hover {
+  text-decoration: none;
+  transition: 0.3s;
+}
+

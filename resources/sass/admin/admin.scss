@@ -1,0 +1,26 @@
+.control-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &:first-child {
+    margin-right: 10px;
+  }
+}
+button {
+  background: none;
+  border: none;
+  color: #007bff;
+  transition: .3s;
+  &:hover {
+    color: #0056b3;
+    transition: .3s;
+  }
+}
+
+a {
+  transition: .3s;
+  &:hover {
+    text-decoration: none;
+    transition: .3s;
+  }
+}
