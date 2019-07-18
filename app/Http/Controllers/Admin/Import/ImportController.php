@@ -20,6 +20,11 @@ use Illuminate\Support\Facades\DB;
 
 class ImportController extends Controller
 {
+    protected $mapping = [];
+    protected $articles;
+    protected $errors;
+    protected $upload;
+    protected $save_data;
 
     protected $options = [
         'name' => 'Название',
@@ -135,47 +140,77 @@ class ImportController extends Controller
 
         try {
             DB::connection()->getPdo()->beginTransaction();
-            foreach ($rows as $row) {
-                $mapping = SuppliersMapping::where('title', $row[$this->getColumn($import_setting,3)])->first();
-                $supplier = $mapping ? $mapping->supplier_id : null;
-                dd($supplier);
+            $x = 0;
+//            dd($rows);
+            foreach ($rows as $key => $row) {
+                DB::enableQueryLog();
 
-//                dd($mapping);
+                $this->articles = [];
+                $brand = $row[$this->getColumn($import_setting,3)];
 
-                $query = ArticleNumber::where('datasupplierarticlenumber', $row[$this->getColumn($import_setting,1)])
+                $article = $row[$this->getColumn($import_setting,1)];
+                $articles = ArticleNumber::getArticles($article)->get();
 
-                    ->whereHas('supplier', function ($query) use ($row,$import_setting, $mapping) {
+                if(!$articles->count()) {
+                    $this->errors['article'][] = $article;
+                    $this->upload['invalid'][] = $row;
+                    continue;
+                }
 
-                        $query->where('description', $row[$this->getColumn($import_setting,3)])
+                if($articles->count() > 1) {
 
-                            ->orWhere('id', $mapping);
+                    $filtered = $articles->filter(function($art) use ($row, $brand){
+                        if($art->supplier->description == $brand || in_array($art->supplier->description, $this->mapping)) {
+                            return $art;
+                        };
+                    });
 
-                })->first();
+                    if($filtered->count() < 1) {
+
+                        $mapping =  SuppliersMapping::where('title', $brand)->first();
+
+                        if(!$mapping) {
+                            $this->errors['supplier'][] = $brand;
+                            $this->upload['invalid'][] = $row;
+
+                            continue;
+                        } else {
+
+                            if(!in_array($mapping->title, $this->mapping)) {
+                                $this->mapping[] = $mapping->supplier->description;
+                            }
+
+                            $filtered = $articles->filter(function($art) use ($row, $brand, $x){
+
+                                if($art->supplier->description == $brand || in_array($art->supplier->description, $this->mapping) ) {
+                                    return $art;
+                                }
+                            });
+                        }
+                    }
 
 
-                if($query) {
-                    $info['saved'][] = Price::create([
-                        'title' => $row[$this->getColumn($import_setting,2)],
-                        'article_id' => $query->id,
-                        'price' => $row[$this->getColumn($import_setting,5)],
-                        'import_setting_id' => $import_price_id
-                    ]);
+                    if($filtered->count())
+                    {
+                        $this->upload['valid'][] = $filtered->first();
+                        $this->save_data[$key]['title'] = $row[$this->getColumn($import_setting,2)];
+                        $this->save_data[$key]['price'] = $row[$this->getColumn($import_setting,5)];
+                        $this->save_data[$key]['article_id'] = $filtered->first()->id;
+                        $this->save_data[$key]['import_setting_id'] = $import_price_id;
+                    } else {
+
+                        dd($filtered->count());
+                    }
 
                 } else {
-//                    $mapping = SuppliersMapping::where('title', $row[$this->getColumn($import_setting,3)])->first();
-
-//                    if($mapping) {
-////                        Price::create([]);
-//                    } else {
-//
-//
-//
-//                    }
-
-                    $info['not_found'] = $row;
-                    dd($row);
+//                    dd(34);
                 }
+                $x++;
             }
+//            dd(DB::getQueryLog());
+            dd($this);
+            Price::insert($this->save_data);
+
             DB::connection()->getPdo()->commit();
         } catch (\PDOException $e) {
 
@@ -183,35 +218,7 @@ class ImportController extends Controller
             DB::connection()->getPdo()->rollBack();
         }
 
-        dd($info);
-
-
-//        $query = ArticleNumber::whereIn('datasupplierarticlenumber', $articles)
-//            ->whereHas('supplier', function($query) use ($brands) {
-//                $query->whereIn('description', ['MAHLE ORIGINAL']);
-//            })->get();
-//        if($query->count() > 0) {
-//            $prices[] = $query;
-//        } else {
-//            $notFount[] = $row;
-//        }
-//
-//        dump($query);
-//        dd($notFount);
-
-//        ArticleNumber::whereIn('datasupplierarticlenumber', $articles)->whereHas('supplier', function($query) use ($brands) {
-//            $query->whereIn('description', $brands);
-//        })->get();
-//
-//        dd($notFount);
-
         return redirect()->back();
-//        dd();
-
-//        dd($rows);
-//        dd($rows);
-//        dd($request->file('file'));
-//        dd($this->parse($request, (new PriceFilter)));
     }
 
     public function destroy($id)

@@ -2,14 +2,15 @@
 
 namespace App\Models\Tecdoc;
 
+use function foo\func;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ArticleNumber extends Model
 {
+
     protected $with = ['supplier'];
-
-
 
     public function supplier()
     {
@@ -26,11 +27,21 @@ class ArticleNumber extends Model
     {
         $explodeBrand = explode(' ', $brand);
 
-        return $query->where('datasupplierarticlenumber', $article)->whereHas('supplier', function($query) use ($brand) {
+        return $query->where('datasupplierarticlenumber', $article)->when($query->count() > 1, function($query) use ($brand){
 
-            $query->where('description', "{$brand}");
+            $query->whereHas('supplier', function($query) use ($brand) {
+
+                $query->where('description', $brand);
+
+            });
 
         });
+
+//        return $query->where('datasupplierarticlenumber', $article)->whereHas('supplier', function($query) use ($brand) {
+//
+//            $query->where('description', "{$brand}");
+//
+//        });
 
 //            ->when($query->count() > 1, function ($query) use ($brand) {
 //
@@ -61,4 +72,25 @@ class ArticleNumber extends Model
 //                });
 //        });
     }
+
+    public function scopeGetAticles($query,$article)
+    {
+        return $query->where(DB::raw("TRIM(datasupplierarticlenumber)"), $article);
+    }
+
+    public function scopeGetArticles($query, $article)
+    {
+        return $query->where("datasupplierarticlenumber", $article);
+    }
+
+//    public function ()
+//    {
+//
+//    }
+
+    public function scopeGetArticlesWithSupplier($query, $article, $brand)
+    {
+        $query->where('datasupplierarticlenumber', $article)->get();
+    }
+
 }
