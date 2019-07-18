@@ -15,7 +15,6 @@ class Price extends Model
         $price->article_id = $fields['article_id'];
         $price->price = $fields['price'];
         $price->import_setting_id = $fields['import_setting_id'];
-
         if($price->save()) return $price;
     }
 }
