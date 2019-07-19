@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePricesTable extends Migration
+class CreateInvalidPricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreatePricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('invalid_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('article_id')->nullable();
+            $table->string('article');
+            $table->string('supplier');
             $table->float('price');
+            $table->bigInteger('available');
             $table->unsignedBigInteger('import_setting_id');
             $table->foreign('import_setting_id')
                 ->references('id')->on('import_settings')->onDelete('restrict');
-            $table->unsignedBigInteger('available');
-            $table->boolean('status');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreatePricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('invalid_prices');
     }
 }

@@ -36,41 +36,6 @@ class ArticleNumber extends Model
             });
 
         });
-
-//        return $query->where('datasupplierarticlenumber', $article)->whereHas('supplier', function($query) use ($brand) {
-//
-//            $query->where('description', "{$brand}");
-//
-//        });
-
-//            ->when($query->count() > 1, function ($query) use ($brand) {
-//
-//                $query->whereHas('supplier', function($query) use ($brand) {
-//
-//                    $query->where('description', 'like', "{$brand}%");
-//
-//                });
-
-
-
-//                $query->whereHas('supplier', function($query) use ($brand) {
-//
-//                    $query->where('description', 'like', "%{$brand}%")
-//
-//                        ->when($query->count() == 0, function ($query) use ($brand){
-//
-//                            $query->whereHas('supplier', function($query) use ($brand) {
-//
-//                                $explodeBrand = explode($brand);
-//
-//                                $query->where('description', 'like', "%{$brand[0]}%");
-//
-//                            });
-//
-//                    });
-//
-//                });
-//        });
     }
 
     public function scopeGetAticles($query,$article)
@@ -82,12 +47,6 @@ class ArticleNumber extends Model
     {
         return $query->where("datasupplierarticlenumber", $article);
     }
-
-//    public function ()
-//    {
-//
-//    }
-
     public function scopeGetArticlesWithSupplier($query, $article, $brand)
     {
         $query->where('datasupplierarticlenumber', $article)->get();

@@ -30,8 +30,6 @@
                             </thead>
                             <tbody>
                             @foreach($import_settings as $import_setting)
-{{--                                {{ dd($import_setting) }}--}}
-
                                 <tr role="row" class="odd">
                                     <td tabindex="0">
                                         <span>

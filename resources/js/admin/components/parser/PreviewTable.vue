@@ -1,46 +1,48 @@
 <template>
     <div>
-        <form action="/admin/parser/store" method="POST" id="previewForm">
-            <div class="row m-t-20">
-                <div class="col-md-4">
-                    <label for="importFileTitle" >
-                        <span class="required">Название</span>
-                        <input
-                                :class="'form-control '+errorClass"
-                                @keyup="afterError"
-                                type="text" class="form-control" id="importFileTitle" v-model="title">
-                        <div v-if="errors.title" class="error">
-                            <p
-                                    :class="errorClass"
-                                    v-for="error in errors.title"
-                                    v-text="error">
+        <div class="preview-form-container">
+            <form action="/admin/parser/store" method="POST" id="previewForm">
+                <div class="row m-t-20">
+                    <div class="col-md-4">
+                        <label for="importFileTitle" >
+                            <span class="required">Название</span>
+                            <input
+                                    :class="'form-control '+errorClass"
+                                    @keyup="afterError"
+                                    type="text" class="form-control" id="importFileTitle" v-model="title">
+                            <div v-if="errors.title" class="error">
+                                <p
+                                        :class="errorClass"
+                                        v-for="error in errors.title"
+                                        v-text="error">
 
-                            </p>
-                        </div>
-                    </label>
+                                </p>
+                            </div>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <table class="table m-t-20 importFileTable">
-                <thead>
-                <tr>
+                <table class="table m-t-20 importFileTable">
+                    <thead>
+                    <tr>
                         <th scope="col" v-for="(item, index) in selects" :key="index" v-model="key">
                             <select class="form-control" name="columnType[]" @change="onChange($event,index)" v-model="selects[index].value">
                                 <option value="" > - выбрать поле - </option>
                                 <option :value="column.id" v-for="column in columns" v-text="column.title"></option>
                             </select>
                         </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="row in rows">
-                    <td v-for="cell in row" v-text="cell">
-                        <input type="text">
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <input type="submit" class="btn btn-success" value="Сохранить" @click.prevent="upload">
-        </form>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="row in rows">
+                        <td v-for="cell in row" v-text="cell">
+                            <input type="text">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <input type="submit" class="btn btn-success" value="Сохранить" @click.prevent="upload">
     </div>
 </template>
 

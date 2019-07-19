@@ -8,9 +8,13 @@ use App\Imports\PriceFilter;
 use App\Models\Admin\Import\ImportByUrl;
 use App\Models\Admin\Import\ImportColumn;
 use App\Models\Admin\Import\ImportSetting;
+use App\Models\Admin\Import\InvalidPrice;
 use App\Models\Admin\Import\SuppliersMapping;
 use App\Models\Prices\Price;
+use App\Models\Prices\UploadHistory;
 use App\Models\Tecdoc\ArticleNumber;
+use App\Models\Tecdoc\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -25,18 +29,8 @@ class ImportController extends Controller
     protected $errors;
     protected $upload;
     protected $save_data;
+    protected $supplier;
 
-    protected $options = [
-        'name' => 'Название',
-        'brand' => 'Производитель',
-        'article' => 'Код',
-        'description' => 'Описание',
-        'used' => 'Б/У',
-        'price' => 'Цена',
-        'quantity' => 'Кол-во',
-        'original' => 'Ориг. производители',
-        'picture' => 'Фото'
-    ];
     /**
      * ImportController constructor.
      */
@@ -68,7 +62,6 @@ class ImportController extends Controller
 
     {
         $import_setting = ImportSetting::findOrFail($id);
-//        dd(json_decode($import_setting->scheme));
 
         return view('admin.import.edit', [
             'import_setting' => $import_setting,
@@ -130,30 +123,34 @@ class ImportController extends Controller
 
     }
 
-    public function import_price(Request $request, $import_price_id)
+    public function import_price(Request $request, $import_setting_id)
     {
         $rows = $request->type::import($request);
 
-        $import_setting = json_decode(ImportSetting::find($import_price_id)->scheme);
-
-        $info = [];
-
+        $import_setting = ImportSetting::parse($import_setting_id);
+//        dd($rows);
         try {
             DB::connection()->getPdo()->beginTransaction();
             $x = 0;
-//            dd($rows);
             foreach ($rows as $key => $row) {
                 DB::enableQueryLog();
 
                 $this->articles = [];
-                $brand = $row[$this->getColumn($import_setting,3)];
-
-                $article = $row[$this->getColumn($import_setting,1)];
+                $brand = $row[$import_setting->columns['supplier']];
+                $article = $row[$import_setting->columns['article']];
                 $articles = ArticleNumber::getArticles($article)->get();
 
                 if(!$articles->count()) {
-                    $this->errors['article'][] = $article;
-                    $this->upload['invalid'][] = $row;
+                    $this->errors['article_not_found'][] = $article;
+                    $this->upload['invalid'][$key]['row'] = $row;
+                    $this->upload['invalid'][$key]['errors'][] = 'article_not_found';
+                    $supplier = Supplier::where('description', $brand)->first();
+                    if(!$supplier) {
+                        $this->upload['invalid'][$key]['errors'][] = 'supplier_not_found';
+                    }
+
+//                    dd(Supplier::where('description', $brand)->first());
+
                     continue;
                 }
 
@@ -170,9 +167,10 @@ class ImportController extends Controller
                         $mapping =  SuppliersMapping::where('title', $brand)->first();
 
                         if(!$mapping) {
-                            $this->errors['supplier'][] = $brand;
-                            $this->upload['invalid'][] = $row;
-
+                            $this->errors['supplier_not_found'][] = $brand;
+//                            $this->upload['invalid'][] = $row;
+                            $this->upload['invalid'][$key]['row'] = $row;
+                            $this->upload['invalid'][$key]['errors'][] = 'supplier_not_found';
                             continue;
                         } else {
 
@@ -181,7 +179,6 @@ class ImportController extends Controller
                             }
 
                             $filtered = $articles->filter(function($art) use ($row, $brand, $x){
-
                                 if($art->supplier->description == $brand || in_array($art->supplier->description, $this->mapping) ) {
                                     return $art;
                                 }
@@ -193,10 +190,14 @@ class ImportController extends Controller
                     if($filtered->count())
                     {
                         $this->upload['valid'][] = $filtered->first();
-                        $this->save_data[$key]['title'] = $row[$this->getColumn($import_setting,2)];
-                        $this->save_data[$key]['price'] = $row[$this->getColumn($import_setting,5)];
+                        $this->save_data[$key]['price'] = $row[$import_setting->columns['price']];
                         $this->save_data[$key]['article_id'] = $filtered->first()->id;
-                        $this->save_data[$key]['import_setting_id'] = $import_price_id;
+                        $this->save_data[$key]['import_setting_id'] = $import_setting_id;
+                        $this->save_data[$key]['available'] = (int) $row[$import_setting->columns['available']];
+                        $created_at = Carbon::now();
+                        $this->save_data[$key]['created_at'] = $created_at;
+                        $this->save_data[$key]['updated_at'] = $created_at;
+                        $this->save_data[$key]['status'] = true;
                     } else {
 
                         dd($filtered->count());
@@ -207,10 +208,21 @@ class ImportController extends Controller
                 }
                 $x++;
             }
-//            dd(DB::getQueryLog());
-            dd($this);
-            Price::insert($this->save_data);
 
+            if(isset($this->upload['invalid'])) {
+                InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
+            }
+            if(isset($this->save_data)) {
+                Price::createOrUpdatePrice($this->save_data);
+            }
+
+
+//            $history = new UploadHistory();
+//            $history->price_upload_success_count = count($this->upload['valid']);
+//            $history->price_upload_fails_count = count($this->upload['invalid']);
+//            $history->import_setting_id = $import_price_id;
+//            $history->save();
+//            dd($this);
             DB::connection()->getPdo()->commit();
         } catch (\PDOException $e) {
 
@@ -228,12 +240,5 @@ class ImportController extends Controller
         Session::flash('flash', 'Схема загрузки была удалена');
 
         return back();
-    }
-
-    public function getColumn($scheme, $needle)
-    {
-        foreach ($scheme as $item) {
-            if($item->value == $needle) return $item->column;
-        }
     }
 }
