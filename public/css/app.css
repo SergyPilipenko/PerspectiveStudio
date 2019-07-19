@@ -29,3 +29,7 @@ a:hover {
   transition: 0.3s;
 }
 
+.preview-form-container {
+  overflow-x: scroll;
+}
+
