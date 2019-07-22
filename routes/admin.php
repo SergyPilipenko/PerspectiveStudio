@@ -12,10 +12,18 @@ Route::prefix('admin')->group(function() {
     Route::delete('import/{id}/destroy', 'Admin\Import\ImportController@destroy')->name('admin.import.destroy');
     Route::get('import/{id}/edit', 'Admin\Import\ImportController@edit')->name('admin.import.edit');
 
-    Route::prefix('upload-history')->group(function (){
+    Route::prefix('upload-history')->group(function() {
 
         Route::get('/', 'Admin\Import\UploadHistory@index')->name('admin.upload-history.index');
 
+    });
+
+    Route::prefix('catalog')->group(function() {
+        Route::get('/', 'Admin\Catalog\CatalogController@index')->name('admin.catalog.index');
+        Route::get('/{import_setting}/show', 'Admin\Catalog\CatalogController@show')->name('admin.catalog.show');
+        Route::post('/{import_setting}/errors/add-mapping', 'Admin\Catalog\CatalogController@addMapping')->name('admin.catalog.errors.add-mapping');
+
+        Route::get('/{import_setting}/errors', 'Admin\Catalog\CatalogController@catalogErrors')->name('admin.catalog.errors');
     });
 
 });

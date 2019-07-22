@@ -2406,7 +2406,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['message'],
   data: function data() {
@@ -2507,7 +2506,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.allert-flash {\n    position: fixed;\n    right: 25px;\n    top: 95px;\n    z-index: 1000;\n}\n.flash-message-body {\n    padding-right: 15px;\n}\n.allert-flash span {\n    position: absolute;\n    top: 2px;\n    right: 0px;\n    color: #fff;\n    padding-right: 7px;\n    padding-left: 7px;\n    cursor: pointer;\n}\n.fade-enter-active, .fade-leave-active {\n    transition: opacity .5s;\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {\n    opacity: 0;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.alert-flash {\n    position: fixed;\n    right: 25px;\n    top: 95px;\n    z-index: 1000;\n    background-color: #569211;\n    color: #fff;\n    font-family: inherit;\n    font-size: 0.875rem;\n    line-height: 1;\n    font-weight: 400;\n}\n.flash-message-body {\n    padding-right: 15px;\n}\n.alert.alert-flash.alert-error {\n    background-color: #ff1414;\n}\n.alert-flash span {\n    position: absolute;\n    top: 2px;\n    right: 0px;\n    color: #fff;\n    padding-right: 7px;\n    padding-left: 7px;\n    cursor: pointer;\n}\n.fade-enter-active, .fade-leave-active {\n    transition: opacity .5s;\n}\n.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {\n    opacity: 0;\n}\n\n\n", ""]);
 
 // exports
 
@@ -24100,7 +24099,7 @@ var render = function() {
             expression: "show"
           }
         ],
-        class: "alert allert-flash alert-" + _vm.level,
+        class: "alert alert-flash alert-" + _vm.level,
         attrs: { role: "alert" }
       },
       [

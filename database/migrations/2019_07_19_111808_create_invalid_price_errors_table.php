@@ -15,7 +15,9 @@ class CreateInvalidPriceErrorsTable extends Migration
     {
         Schema::create('invalid_price_errors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('invalid_price_id');
+            $table->unsignedBigInteger('invalid_price_id');
+            $table->foreign('invalid_price_id')
+                ->references('id')->on('invalid_prices')->onDelete('cascade');
             $table->string('error');
             $table->timestamps();
         });

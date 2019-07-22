@@ -17,6 +17,7 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div id="app">
+                    <flash message="{{ session('flash') }}"></flash>
                     @yield('content')
                 </div>
             </div>

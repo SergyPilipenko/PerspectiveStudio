@@ -2,17 +2,41 @@
 
 namespace App\Models\Admin\Import;
 
+use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 
 class ImportSetting extends Model
 {
     public $with = ['importable'];
+
+//    protected $appends = ['pricesCount'];
+
     public $timestamps = true;
     public $columns;
 
     public function importable()
     {
         return $this->morphTo();
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(Price::class);
+    }
+
+    public function getPricesCountAttribute()
+    {
+        return $this->prices->count();
+    }
+
+    public function importErrors()
+    {
+        return $this->hasMany(InvalidPrice::class);
+    }
+
+    public function getImportErrorsCountAttribute()
+    {
+        return $this->importErrors->count();
     }
 
     public function scopeParse($query, $id) : ImportSetting

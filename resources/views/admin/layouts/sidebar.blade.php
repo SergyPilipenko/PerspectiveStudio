@@ -21,8 +21,10 @@
             </a>
             <div class="collapse" id="auth" style="">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html">Каталог</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html">Каталог</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">index</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html">Товары</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html">Диагностика</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html">Настройки</a></li>
                 </ul>
             </div>
         </li>
