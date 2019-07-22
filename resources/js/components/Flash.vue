@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div
-                :class="'alert allert-flash alert-'+level"
+                :class="'alert alert-flash alert-'+level"
                 role="alert"
                 v-show="show"
         >
@@ -21,7 +21,6 @@
             <span @click="show = false"><i class="fa fa-times" aria-hidden="true"></i></span>
         </div>
     </transition>
-
 </template>
 
 <script>
@@ -73,16 +72,26 @@
 </script>
 
 <style>
-    .allert-flash {
+    .alert-flash {
         position: fixed;
         right: 25px;
         top: 95px;
         z-index: 1000;
+        background-color: #569211;
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.875rem;
+        line-height: 1;
+        font-weight: 400;
     }
     .flash-message-body {
         padding-right: 15px;
     }
-    .allert-flash span {
+    .alert.alert-flash.alert-error {
+        background-color: #ff1414;
+    }
+
+    .alert-flash span {
         position: absolute;
         top: 2px;
         right: 0px;

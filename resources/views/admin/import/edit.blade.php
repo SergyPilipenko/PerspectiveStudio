@@ -10,7 +10,6 @@
         </div>
     </div>
     <div class="row m-t-20"><div class="col-md-4">
-{{--            {{ dd($import_setting) }}--}}
             <label for="importFileTitle">
                 <span class="required" >Название</span>
                 <input type="text" id="importFileTitle" class="form-control form-control" value="{{ $import_setting->title }}">
@@ -24,8 +23,6 @@
                     <thead>
                     <tr>
                         @foreach(json_decode($import_setting->scheme) as $item)
-{{--                            {{dd($item)}}--}}
-
                             <th scope="col">
                                     <select name="columnType[]" class="form-control">
                                         <option value=""> - выбрать поле - </option>

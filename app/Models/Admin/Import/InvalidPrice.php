@@ -8,7 +8,7 @@ class InvalidPrice extends Model
 {
     public function errors()
     {
-        $this->hasMany(InvalidPrice::class);
+        return $this->hasMany(InvalidPriceError::class);
     }
 
     public static function saveInvalidPrices(array $invalidPrices, ImportSetting $importSetting) : bool
@@ -19,10 +19,10 @@ class InvalidPrice extends Model
             $errors = $invalidPrice['errors'];
             $invalidPrice = $invalidPrice['row'];
             $new_invalid_price = new self();
-            $new_invalid_price->article = $invalidPrice[$importSetting->columns['article']];
-            $new_invalid_price->supplier = $invalidPrice[$importSetting->columns['supplier']];
-            $new_invalid_price->price = (float) $invalidPrice[$importSetting->columns['price']];
-            $new_invalid_price->available = (int) $invalidPrice[$importSetting->columns['available']];
+            $new_invalid_price->article = $invalidPrice['article'];
+            $new_invalid_price->supplier = $invalidPrice['supplier'];
+            $new_invalid_price->price = (float) $invalidPrice['price'];
+            $new_invalid_price->available = (int) $invalidPrice['available'];
             $new_invalid_price->import_setting_id = $importSetting->id;
             $new_invalid_price->save();
             $new_invalid_price->saveInvalidPriceErrors($errors);

@@ -24,12 +24,7 @@ use Illuminate\Support\Facades\DB;
 
 class ImportController extends Controller
 {
-    protected $mapping = [];
-    protected $articles;
-    protected $errors;
-    protected $upload;
-    protected $save_data;
-    protected $supplier;
+
 
     /**
      * ImportController constructor.
@@ -111,125 +106,26 @@ class ImportController extends Controller
         Session::flash('flash', 'Новая схема была сохранена успешно');
         return json_encode($importSettings->save());
 
-//        $file = Session::get('file_path');
-//
-//        $reader = IOFactory::load($file);
-//
-//        $rows = $reader->getActiveSheet()->toArray();
-//
-//        $articles = implode($rows);
-//
-//        return $filterSubset->getPreview($rows, 10)->toJson();
-
     }
 
     public function import_price(Request $request, $import_setting_id)
     {
+        //Грузим строки из файла
         $rows = $request->type::import($request);
-
+        //Парсим схему и колонки
         $import_setting = ImportSetting::parse($import_setting_id);
-//        dd($rows);
+
+        $prepare = Price::prepareRowsToSave($rows, $import_setting);
+
         try {
             DB::connection()->getPdo()->beginTransaction();
-            $x = 0;
-            foreach ($rows as $key => $row) {
-                DB::enableQueryLog();
-
-                $this->articles = [];
-                $brand = $row[$import_setting->columns['supplier']];
-                $article = $row[$import_setting->columns['article']];
-                $articles = ArticleNumber::getArticles($article)->get();
-
-                if(!$articles->count()) {
-                    $this->errors['article_not_found'][] = $article;
-                    $this->upload['invalid'][$key]['row'] = $row;
-                    $this->upload['invalid'][$key]['errors'][] = 'article_not_found';
-                    $supplier = Supplier::where('description', $brand)->first();
-                    if(!$supplier) {
-                        $this->upload['invalid'][$key]['errors'][] = 'supplier_not_found';
-                    }
-
-//                    dd(Supplier::where('description', $brand)->first());
-
-                    continue;
-                }
-
-                if($articles->count() > 1) {
-
-                    $filtered = $articles->filter(function($art) use ($row, $brand){
-                        if($art->supplier->description == $brand || in_array($art->supplier->description, $this->mapping)) {
-                            return $art;
-                        };
-                    });
-
-                    if($filtered->count() < 1) {
-
-                        $mapping =  SuppliersMapping::where('title', $brand)->first();
-
-                        if(!$mapping) {
-                            $this->errors['supplier_not_found'][] = $brand;
-//                            $this->upload['invalid'][] = $row;
-                            $this->upload['invalid'][$key]['row'] = $row;
-                            $this->upload['invalid'][$key]['errors'][] = 'supplier_not_found';
-                            continue;
-                        } else {
-
-                            if(!in_array($mapping->title, $this->mapping)) {
-                                $this->mapping[] = $mapping->supplier->description;
-                            }
-
-                            $filtered = $articles->filter(function($art) use ($row, $brand, $x){
-                                if($art->supplier->description == $brand || in_array($art->supplier->description, $this->mapping) ) {
-                                    return $art;
-                                }
-                            });
-                        }
-                    }
-
-
-                    if($filtered->count())
-                    {
-                        $this->upload['valid'][] = $filtered->first();
-                        $this->save_data[$key]['price'] = $row[$import_setting->columns['price']];
-                        $this->save_data[$key]['article_id'] = $filtered->first()->id;
-                        $this->save_data[$key]['import_setting_id'] = $import_setting_id;
-                        $this->save_data[$key]['available'] = (int) $row[$import_setting->columns['available']];
-                        $created_at = Carbon::now();
-                        $this->save_data[$key]['created_at'] = $created_at;
-                        $this->save_data[$key]['updated_at'] = $created_at;
-                        $this->save_data[$key]['status'] = true;
-                    } else {
-
-                        dd($filtered->count());
-                    }
-
-                } else {
-//                    dd(34);
-                }
-                $x++;
-            }
-
-            if(isset($this->upload['invalid'])) {
-                InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
-            }
-            if(isset($this->save_data)) {
-                Price::createOrUpdatePrice($this->save_data);
-            }
-
-
-//            $history = new UploadHistory();
-//            $history->price_upload_success_count = count($this->upload['valid']);
-//            $history->price_upload_fails_count = count($this->upload['invalid']);
-//            $history->import_setting_id = $import_price_id;
-//            $history->save();
-//            dd($this);
+            Price::savePrices($prepare, $import_setting);
             DB::connection()->getPdo()->commit();
         } catch (\PDOException $e) {
 
             dd($e);
             DB::connection()->getPdo()->rollBack();
         }
-
         return redirect()->back();
     }
 
