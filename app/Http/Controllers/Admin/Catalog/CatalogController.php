@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Catalog;
 
+use App\Classes\PartfixTecDoc as Tecdoc;
 use App\Models\Admin\Import\ImportColumn;
 use App\Models\Admin\Import\ImportSetting;
 use App\Models\Admin\Import\InvalidPrice;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\Routes;
+use Session;
 
 class CatalogController extends Controller
 {
@@ -55,11 +57,33 @@ class CatalogController extends Controller
         return view('admin.catalog.errors.index', compact(['setting', 'columns','suppliers']));
     }
 
+    /**
+     * @param ImportSetting $import_setting
+     * @param Routes $routes
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function settings(ImportSetting $import_setting, Routes $routes)
     {
         $routes = json_encode($routes->getRoutesByName('admin.import'));
 
         return view('admin.catalog.settings', compact('import_setting', 'routes'));
+    }
+
+    /**
+     * @param Request $request
+     * @param ImportSetting $importSetting
+     * @return bool
+     */
+    public function update(Request $request, ImportSetting $importSetting)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'type' => 'required'
+        ]);
+        $importSetting->title = $request->title;
+        $importSetting->update();
+        $importSetting->importable->updateImportByUrl($request);
+        return $importSetting;
     }
 
     public function addMapping(Request $request, $setting_id, SuppliersMapping $suppliersMapping)
@@ -90,9 +114,9 @@ class CatalogController extends Controller
 
                 InvalidPrice::destroy($invalid_prices->pluck('id'));
 
-                $save = Price::savePrices($invalid_prices->toArray(), $import_setting);
+                Price::savePrices($invalid_prices->toArray(), $import_setting);
 
-
+//                dd(1);
                 DB::connection()->getPdo()->commit();
             } catch (\PDOException $e) {
 
@@ -107,5 +131,14 @@ class CatalogController extends Controller
         }
 
         $setting = ImportSetting::find($setting_id);
+    }
+
+    public function destroy($id)
+    {
+        ImportSetting::findOrFail($id)->delete();
+
+        Session::flash('flash', 'Схема загрузки была удалена');
+
+        return redirect()->route('admin.catalog.index');
     }
 }

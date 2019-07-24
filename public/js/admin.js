@@ -1893,8 +1893,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['import_setting', 'file_import_price_action'],
+  props: ['import_setting', 'file_import_price_action', 'update_action', 'destroy_action'],
   data: function data() {
     return {
       importSettingName: this.import_setting.title,
@@ -1919,8 +1930,37 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    impSetting: function impSetting() {
-      console.log(this.import_setting.importable.link);
+    appendUrlData: function appendUrlData(formData) {
+      formData.append('url', this.url);
+      formData.append('updatePeriod', this.selected);
+    },
+    saveImportSetting: function saveImportSetting() {
+      var self = this;
+      var formData = new FormData();
+      formData.append('type', self.type);
+      formData.append('title', this.importSettingName);
+
+      if (this.type == "App\\Models\\Admin\\Import\\ImportByUrl") {
+        this.appendUrlData(formData);
+      }
+
+      axios.post(this.update_action, formData)["catch"](function (error) {
+        var message = "";
+
+        if (error.response.data.message) {
+          message = error.response.data.message;
+        } else if (error.response.data.exception) {
+          message = error.response.data.exception;
+        } else {
+          message = "Не удалось сохранить схему загрузки";
+        }
+
+        flash(message, 'error', error.response.data.errors);
+      }).then(function (data) {
+        if (data.data) {
+          flash("Новые данные сохранены успешно");
+        }
+      });
     }
   }
 });
@@ -2504,6 +2544,51 @@ __webpack_require__.r(__webpack_exports__);
       this.preview = false;
       this.selected = type;
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      crosses: ['456-67-908', 'A3568', '89-878778.654', '8dfg556', 'A3568', '89-878778.654', '8dfg556', 'A3568', '89-878778.654', '8dfg556', 'A3568', '89-878778.654', '8dfg556']
+    };
   }
 });
 
@@ -29684,6 +29769,25 @@ exports.push([module.i, "\n#importFileUpload {\n    margin-right: 0;\n}\n", ""])
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.crosses-container span {\n    margin-right: 10px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Flash.vue?vue&type=style&index=0&lang=css&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Flash.vue?vue&type=style&index=0&lang=css& ***!
@@ -50657,6 +50761,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArtCross.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Flash.vue?vue&type=style&index=0&lang=css&":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Flash.vue?vue&type=style&index=0&lang=css& ***!
@@ -51341,145 +51475,195 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("button", { on: { click: _vm.impSetting } }, [_vm._v("clickMe")]),
-        _vm._v(" "),
         _c(
           "div",
+          { staticClass: "grid-margin" },
           [
             _c(
               "b-tabs",
               { attrs: { "content-class": "mt-3" } },
               [
-                _c("b-tab", { attrs: { title: "Файл", active: "" } }, [
-                  _c(
-                    "form",
-                    {
-                      attrs: {
-                        action: _vm.filePriceImportAction,
-                        method: "POST",
-                        enctype: "multipart/form-data"
-                      }
-                    },
-                    [
-                      _c("input", {
-                        attrs: { type: "hidden", name: "_token" },
-                        domProps: { value: _vm.token }
-                      }),
-                      _vm._v(" "),
-                      _c("input", {
-                        attrs: { type: "hidden", name: "type" },
-                        domProps: { value: _vm.type }
-                      }),
-                      _vm._v(" "),
-                      _c("label", { attrs: { for: "price_file_upload" } }, [
-                        _vm._v("Выберите файл")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        attrs: { type: "file", id: "price_file_upload" }
-                      }),
-                      _vm._v(" "),
-                      _c("input", {
-                        staticClass: "btn btn-success",
-                        attrs: { type: "submit" }
-                      })
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("b-tab", { attrs: { title: "Ссылка на файл" } }, [
-                  _c("div", [
-                    _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-md-4" }, [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("label", { attrs: { for: "timeUpdateSelect" } }, [
-                            _vm._v("Обновлять каждые")
+                _vm.type == "App\\Models\\Admin\\Import\\ImportByFile"
+                  ? _c("b-tab", { attrs: { title: "Файл", active: "" } }, [
+                      _c(
+                        "form",
+                        {
+                          attrs: {
+                            action: _vm.filePriceImportAction,
+                            method: "POST",
+                            enctype: "multipart/form-data"
+                          }
+                        },
+                        [
+                          _c("input", {
+                            attrs: { type: "hidden", name: "_token" },
+                            domProps: { value: _vm.token }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: { type: "hidden", name: "type" },
+                            domProps: { value: _vm.type }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: "price_file_upload" } }, [
+                            _vm._v("Выберите файл")
                           ]),
                           _vm._v(" "),
-                          _c(
-                            "select",
-                            {
-                              directives: [
+                          _c("input", {
+                            attrs: {
+                              type: "file",
+                              id: "price_file_upload",
+                              name: "file"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            staticClass: "btn btn-success",
+                            attrs: { type: "submit" }
+                          })
+                        ]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "App\\Models\\Admin\\Import\\ImportByUrl"
+                  ? _c("b-tab", { attrs: { title: "Ссылка на файл" } }, [
+                      _c("div", [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-md-4" }, [
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "timeUpdateSelect" } },
+                                [_vm._v("Обновлять каждые")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "select",
                                 {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.selected,
-                                  expression: "selected"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: { id: "timeUpdateSelect" },
-                              on: {
-                                change: function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.selected = $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                }
-                              }
-                            },
-                            _vm._l(_vm.timeUpdateOptions, function(option) {
-                              return _c("option", {
-                                domProps: {
-                                  value: option.hours,
-                                  textContent: _vm._s(option.label)
-                                }
-                              })
-                            }),
-                            0
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-12" }, [
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "import_url_container" }, [
-                              _c("label", { attrs: { for: "url" } }, [
-                                _vm._v(
-                                  "URL:\n                                                    "
-                                ),
-                                _c("input", {
                                   directives: [
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: _vm.url,
-                                      expression: "url"
+                                      value: _vm.selected,
+                                      expression: "selected"
                                     }
                                   ],
                                   staticClass: "form-control",
-                                  attrs: { type: "text", id: "url" },
-                                  domProps: { value: _vm.url },
+                                  attrs: { id: "timeUpdateSelect" },
                                   on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.url = $event.target.value
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.selected = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
                                     }
                                   }
-                                })
+                                },
+                                _vm._l(_vm.timeUpdateOptions, function(option) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: option.hours,
+                                      textContent: _vm._s(option.label)
+                                    }
+                                  })
+                                }),
+                                0
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-12" }, [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "import_url_container" },
+                                  [
+                                    _c("label", { attrs: { for: "url" } }, [
+                                      _vm._v(
+                                        "URL:\n                                                    "
+                                      ),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.url,
+                                            expression: "url"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: { type: "text", id: "url" },
+                                        domProps: { value: _vm.url },
+                                        on: {
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.url = $event.target.value
+                                          }
+                                        }
+                                      })
+                                    ])
+                                  ]
+                                )
                               ])
                             ])
                           ])
                         ])
                       ])
                     ])
-                  ])
-                ])
+                  : _vm._e()
               ],
               1
             )
           ],
           1
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-2" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: { click: _vm.saveImportSetting }
+              },
+              [_vm._v("Сохранить")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "offset-md-8 col-md-2" }, [
+            _c(
+              "form",
+              { attrs: { action: _vm.destroy_action, method: "POST" } },
+              [
+                _c("input", {
+                  attrs: { type: "hidden", name: "_token" },
+                  domProps: { value: _vm.token }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  attrs: { type: "hidden", name: "_method", value: "delete" }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "btn btn-danger",
+                  attrs: { type: "submit", value: "Удалить" }
+                })
+              ]
+            )
+          ])
+        ])
       ])
     ])
   ])
@@ -52166,6 +52350,98 @@ var render = function() {
     ],
     1
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      [
+        _c(
+          "a",
+          {
+            directives: [
+              {
+                name: "b-modal",
+                rawName: "v-b-modal.modal-center",
+                modifiers: { "modal-center": true }
+              }
+            ],
+            attrs: { href: "#" }
+          },
+          [_vm._v("Кросс номера")]
+        ),
+        _vm._v(" "),
+        _c(
+          "b-modal",
+          {
+            attrs: { id: "modal-center", centered: "", title: "BootstrapVue" }
+          },
+          [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-8" }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: { type: "text" }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c("input", {
+                    staticClass: "btn btn-block btn-primary",
+                    attrs: { type: "submit", value: "Добавить" }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "col-md-12 d-flex flex-row flex-wrap crosses-container"
+                },
+                _vm._l(_vm.crosses, function(cross) {
+                  return _c(
+                    "span",
+                    {
+                      staticClass: "badge badge-secondary ",
+                      domProps: { textContent: _vm._s(cross) }
+                    },
+                    [_vm._v("Secondary")]
+                  )
+                }),
+                0
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -64425,6 +64701,7 @@ window.flash = function (message) {
 
 Vue.component('flash', __webpack_require__(/*! ../components/Flash.vue */ "./resources/js/components/Flash.vue")["default"]);
 Vue.component('parser', __webpack_require__(/*! ./components/parser/parser.vue */ "./resources/js/admin/components/parser/parser.vue")["default"]);
+Vue.component('art-cross', __webpack_require__(/*! ./components/products/ArtCross.vue */ "./resources/js/admin/components/products/ArtCross.vue")["default"]);
 Vue.component('catalog-settings', __webpack_require__(/*! ./components/catalog/settings.vue */ "./resources/js/admin/components/catalog/settings.vue")["default"]);
 Vue.component('import-edit', __webpack_require__(/*! ./components/parser/Edit.vue */ "./resources/js/admin/components/parser/Edit.vue")["default"]);
 Vue.component('import-price', __webpack_require__(/*! ./components/parser/ImportPrice.vue */ "./resources/js/admin/components/parser/ImportPrice.vue")["default"]);
@@ -64969,6 +65246,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_parser_vue_vue_type_template_id_68a8ce94___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_parser_vue_vue_type_template_id_68a8ce94___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/products/ArtCross.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/admin/components/products/ArtCross.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArtCross.vue?vue&type=template&id=201d58e6& */ "./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6&");
+/* harmony import */ var _ArtCross_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ArtCross.vue?vue&type=script&lang=js& */ "./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ArtCross.vue?vue&type=style&index=0&lang=css& */ "./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ArtCross_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/components/products/ArtCross.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArtCross.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArtCross.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ArtCross.vue?vue&type=template&id=201d58e6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/products/ArtCross.vue?vue&type=template&id=201d58e6&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ArtCross_vue_vue_type_template_id_201d58e6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

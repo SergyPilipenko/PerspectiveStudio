@@ -1,6 +1,7 @@
 @extends('admin')
 @section('content')
-    <div class="row"><div class="col-lg-6 grid-margin">
+    <div class="row">
+        <div class="col-lg-6 grid-margin">
             <div class="hidden-print with-border">
                 <a href="{{ route('admin.import.create') }}" data-style="zoom-in" class="btn btn-primary ladda-button">
                     <span class="ladda-label"><i class="fa fa-plus"></i> Добавить схему импорта</span>
@@ -8,6 +9,7 @@
             </div>
         </div>
     </div>
+    @if($settings->count())
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -67,5 +69,5 @@
             </div>
         </div>
     </div>
-
+    @endif
 @endsection

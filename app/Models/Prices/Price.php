@@ -41,23 +41,6 @@ class Price extends Model
 
     public function scopeCreateOrUpdatePrice(Builder $query, array $prices)
     {
-        $existing_price = [
-            'article_id' => 7070470,
-            'import_setting_id' => 14,
-
-        ];
-
-        $new_row = [
-            'price' => 432423.06,
-            'available' => 9,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'status' => true
-        ];
-
-
-        $this->updateOrcreate($existing_price, $new_row);
-
         foreach ($prices as $price) {
             $this->updateOrCreate(
                 [
@@ -174,14 +157,14 @@ class Price extends Model
                 $x++;
 
             }
-            if(isset($this->upload['invalid'])) {
-                InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
-            }
-            if(isset($this->save_data)) {
-                $query->createOrUpdatePrice($this->save_data);
-            }
-//            dd($this->upload['invalid']);
 
+        if(isset($this->upload['invalid'])) {
+                InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
+        }
+        if(isset($this->save_data)) {
+            $query->createOrUpdatePrice($this->save_data);
+        }
+        return;
     }
 
     public static function tryToSavePriceWithNewMapping(InvalidPrice $invalidPrices)
