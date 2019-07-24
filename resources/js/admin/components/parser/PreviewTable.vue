@@ -2,25 +2,6 @@
     <div>
         <div class="preview-form-container">
             <form action="/admin/parser/store" method="POST" id="previewForm">
-                <div class="row m-t-20">
-                    <div class="col-md-4">
-                        <label for="importFileTitle" >
-                            <span class="required">Название</span>
-                            <input
-                                    :class="'form-control '+errorClass"
-                                    @keyup="afterError"
-                                    type="text" class="form-control" id="importFileTitle" v-model="title">
-                            <div v-if="errors.title" class="error">
-                                <p
-                                        :class="errorClass"
-                                        v-for="error in errors.title"
-                                        v-text="error">
-
-                                </p>
-                            </div>
-                        </label>
-                    </div>
-                </div>
                 <table class="table m-t-20 importFileTable">
                     <thead>
                     <tr>
@@ -48,7 +29,7 @@
 
 <script>
     export default {
-        props: ['previewData', 'routes', 'type','link','columns'],
+        props: ['previewData', 'routes', 'type', 'link','columns', 'title', 'periodUpdate'],
 
         data() {
            return {
@@ -56,7 +37,7 @@
                selected: [],
                selectAll: false,
                headers: [],
-               title: '',
+               // title: '',
                errors: [],
                errorClass: '',
            }
@@ -95,28 +76,28 @@
             },
             checkTitle() {
                 if(this.title && this.title.length >= 3) {
-                    this.errorClass = '';
-                    this.errors.title = [];
+                    // this.errorClass = '';
+                    // this.errors.title = [];
                     return true
-                }
-                this.errors = {
-                    title: []
-                };
-                if(!this.title) {
-                    this.errors.title.push("Это поле обязательно для заполнения");
-                    this.errorClass = 'error'
-                }
-                if(this.title.length < 3) {
-                    this.errors.title.push("Это поле должно содержать минимум 3 символа");
-                    this.errorClass = 'error'
-                }
+                } else return false;
+                // this.errors = {
+                //     title: []
+                // };
+                // if(!this.title) {
+                //     this.errors.title.push("Это поле обязательно для заполнения");
+                //     this.errorClass = 'error'
+                // }
+                // if(this.title.length < 3) {
+                //     this.errors.title.push("Это поле должно содержать минимум 3 символа");
+                //     this.errorClass = 'error'
+                // }
             },
 
 
             upload() {
 
                 if(!this.checkTitle()) {
-                    flash('Не удалось сохранить схему загрузки', 'error');
+                    flash('Введите название конфигурации', 'error');
                     return;
                 }
 
@@ -137,13 +118,14 @@
                 formData.append('title', this.title);
                 formData.append('type', this.type);
                 formData.append('link', this.link);
+                formData.append('updatePeriod', this.periodUpdate);
                 formData.append('columns', JSON.stringify(selects));
 
                 axios.post("/"+this.routeList['admin.import.store'], formData)
 
                     .then(data => {
                         if(data.data) {
-                            window.location.href = "/"+this.routeList['admin.import.index'];
+                            window.location.href = "/admin/catalog";
                         }
                     })
                     .catch(error => {

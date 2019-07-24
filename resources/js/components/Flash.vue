@@ -74,7 +74,7 @@
 <style>
     .alert-flash {
         position: fixed;
-        right: 25px;
+        right: 40px;
         top: 95px;
         z-index: 1000;
         background-color: #569211;

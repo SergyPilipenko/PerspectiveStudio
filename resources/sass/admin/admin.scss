@@ -1,3 +1,5 @@
+@import '~bootstrap-vue/dist/bootstrap-vue.css';
+
 .control-container {
   display: flex;
   flex-direction: row;
@@ -26,4 +28,10 @@ a {
 }
 .preview-form-container{
   overflow-x: scroll;
+}
+//.btn {
+//  color: #fff !important;
+//}
+.tabs .btn {
+  color: inherit;
 }

@@ -6,15 +6,20 @@ use function foo\func;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
 class ArticleNumber extends Model
 {
+    use \Awobaz\Compoships\Compoships;
 
     protected $with = ['supplier'];
 
     public function supplier()
     {
         return $this->hasOne(Supplier::class, 'id', 'supplierid');
+    }
+
+    public function article()
+    {
+        return $this->hasOne(Article::class, ['supplierId','DataSupplierArticleNumber'], ['supplierid', 'datasupplierarticlenumber']);
     }
 
     /**

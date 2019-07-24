@@ -30,20 +30,26 @@
                                             @if($error->errors->contains('error', 'supplier_not_found'))
                                                 <div class="col-md-12">
                                                     <div class="row">
-                                                        <div class="text-danger">
+                                                        <div class="text-danger col-md-6">
                                                             Производитель не найден
                                                         </div>
-                                                        <div>
+                                                        <div class="col-md-6">
                                                             <form action="{{ route('admin.catalog.errors.add-mapping', $setting->id) }}" method="post">
                                                                 @csrf
                                                                 <input type="hidden" value="{{ $error->supplier }}" name="supplier">
-                                                                <select class="form-control" name="mapping">
-                                                                    <option value="">Не выбрано</option>
-                                                                    @foreach($suppliers as $supplier)
-                                                                        <option value="{{ $supplier->id }}">{{ $supplier->description }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <input type="submit" value="Применить" class="btn btn-success">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <select class="form-control" name="mapping">
+                                                                            <option value="">Не выбрано</option>
+                                                                            @foreach($suppliers as $supplier)
+                                                                                <option value="{{ $supplier->id }}">{{ $supplier->description }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="submit" value="Применить" class="btn btn-success">
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -56,6 +62,7 @@
                                         <td>
                                             {{ $error->available }}
                                         </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

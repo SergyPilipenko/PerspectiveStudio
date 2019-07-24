@@ -11,6 +11,7 @@ use App\Models\Tecdoc\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\Routes;
 
 class CatalogController extends Controller
 {
@@ -25,9 +26,20 @@ class CatalogController extends Controller
      * @param ImportSetting $import_setting
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(ImportSetting $import_setting)
+    public function diagnostics(ImportSetting $import_setting)
     {
-        return view('admin.catalog.show', compact('import_setting'));
+        $errors = $import_setting->importErrors()->orderBy('created_at', 'desc')->paginate(5);
+        $suppliers = Supplier::all();
+        $prices_count = $import_setting->prices()->count();
+
+        return view('admin.catalog.diagnostics', compact('import_setting', 'errors', 'suppliers', 'prices_count'));
+    }
+
+    public function prices(ImportSetting $import_setting)
+    {
+        $prices = $import_setting->prices()->with('articleNumber.article')->get();
+
+        return view('admin.catalog.prices', compact('import_setting', 'prices'));
     }
 
     /**
@@ -41,6 +53,13 @@ class CatalogController extends Controller
         $suppliers = Supplier::orderBy('description', 'asc')->get();
 
         return view('admin.catalog.errors.index', compact(['setting', 'columns','suppliers']));
+    }
+
+    public function settings(ImportSetting $import_setting, Routes $routes)
+    {
+        $routes = json_encode($routes->getRoutesByName('admin.import'));
+
+        return view('admin.catalog.settings', compact('import_setting', 'routes'));
     }
 
     public function addMapping(Request $request, $setting_id, SuppliersMapping $suppliersMapping)
@@ -60,10 +79,19 @@ class CatalogController extends Controller
                     'import_setting_id' => $setting_id
                 ]);
 
-                $invalid_prices = InvalidPrice::where('supplier', $request->supplier)->where('import_setting_id', $setting_id)->get();
+                $invalid_prices = InvalidPrice::where('supplier', $request->supplier)
+                    ->where('import_setting_id', $setting_id)
+                    ->with('errors')
+                    ->whereHas('errors', function($query) {
+                    $query->error = 'supplier_not_found';
+                })->get();
+
                 $import_setting = ImportSetting::parse($setting_id);
+
                 InvalidPrice::destroy($invalid_prices->pluck('id'));
+
                 $save = Price::savePrices($invalid_prices->toArray(), $import_setting);
+
 
                 DB::connection()->getPdo()->commit();
             } catch (\PDOException $e) {
