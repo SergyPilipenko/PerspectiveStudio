@@ -17,7 +17,13 @@
                             :import_setting="{{ $import_setting }}"
                             :routes="{{ $routes }}"
                             :file_import_price_action="'{{ route('admin.import.price', $import_setting) }}'"
+                            :update_action="'{{ route('admin.catalog.update', $import_setting) }}'"
+                            :destroy_action="'{{ route('admin.catalog.destroy', $import_setting) }}'"
                     ></catalog-settings>
+                    <form action="">
+                        @csrf
+                        @method('delete')
+                    </form>
                 </div>
             </div>
         </div>

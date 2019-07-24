@@ -129,12 +129,5 @@ class ImportController extends Controller
         return redirect()->back();
     }
 
-    public function destroy($id)
-    {
-        ImportSetting::findOrFail($id)->delete();
 
-        Session::flash('flash', 'Схема загрузки была удалена');
-
-        return back();
-    }
 }

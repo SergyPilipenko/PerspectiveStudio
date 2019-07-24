@@ -10,20 +10,19 @@
                         </div>
                     </div>
                 </div>
-                <button @click="impSetting">clickMe</button>
-                <div>
+                <div class="grid-margin">
                     <b-tabs content-class="mt-3">
-                        <b-tab title="Файл" active>
+                        <b-tab title="Файл" active v-if="type == 'App\\Models\\Admin\\Import\\ImportByFile'">
                             <form :action="filePriceImportAction"  method="POST" enctype='multipart/form-data'>
                                 <input type="hidden" name="_token" :value="token">
                                 <input type="hidden" name="type" :value="type">
 
                                 <label for="price_file_upload">Выберите файл</label>
-                                <input type="file" id="price_file_upload">
+                                <input type="file" id="price_file_upload" name="file">
                                 <input type="submit" class="btn btn-success">
                             </form>
                         </b-tab>
-                        <b-tab title="Ссылка на файл">
+                        <b-tab title="Ссылка на файл" v-if="type == 'App\\Models\\Admin\\Import\\ImportByUrl'">
                             <div>
                                 <div class="row">
                                     <div class="col-md-4">
@@ -48,6 +47,18 @@
                         </b-tab>
                     </b-tabs>
                 </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" @click="saveImportSetting">Сохранить</button>
+                    </div>
+                    <div class="offset-md-8 col-md-2">
+                        <form :action="destroy_action" method="POST">
+                            <input type="hidden" name="_token" :value="token">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="submit" class="btn btn-danger" value="Удалить">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +66,7 @@
 
 <script>
     export default {
-        props: ['import_setting', 'file_import_price_action'],
+        props: ['import_setting', 'file_import_price_action', 'update_action', 'destroy_action'],
         data() {
             return {
                 importSettingName : this.import_setting.title,
@@ -85,8 +96,38 @@
             }
         },
         methods: {
-            impSetting() {
-                console.log(this.import_setting.importable.link)
+            appendUrlData(formData) {
+                formData.append('url', this.url);
+                formData.append('updatePeriod', this.selected);
+            },
+            saveImportSetting() {
+
+                let self = this;
+                let formData = new FormData();
+                formData.append('type', self.type);
+                formData.append('title', this.importSettingName);
+
+                if(this.type == "App\\Models\\Admin\\Import\\ImportByUrl") {
+                    this.appendUrlData(formData);
+                }
+
+                axios.post(this.update_action, formData)
+                    .catch(error => {
+                        var message = "";
+                        if(error.response.data.message) {
+                            message = error.response.data.message
+                        } else if(error.response.data.exception) {
+                            message = error.response.data.exception
+                        } else {
+                            message = "Не удалось сохранить схему загрузки";
+                        }
+                        flash(message, 'error', error.response.data.errors)
+                    })
+                    .then(function (data) {
+                        if(data.data) {
+                            flash("Новые данные сохранены успешно")
+                        }
+                });
             }
         }
     }

@@ -8,13 +8,17 @@ Route::prefix('admin')->group(function() {
     Route::get('import', 'Admin\Import\ImportController@index')->name('admin.import.index');
     Route::post('import/parse', 'Admin\Import\ImportController@parse')->name('admin.import.parse');
     Route::post('import/store', 'Admin\Import\ImportController@store')->name('admin.import.store');
-    Route::delete('import/{id}/destroy', 'Admin\Import\ImportController@destroy')->name('admin.import.destroy');
     Route::get('import/{id}/edit', 'Admin\Import\ImportController@edit')->name('admin.import.edit');
 
     Route::prefix('upload-history')->group(function() {
 
         Route::get('/', 'Admin\Import\UploadHistory@index')->name('admin.upload-history.index');
 
+    });
+
+    Route::prefix('products')->group(function () {
+        Route::get('/', 'Admin\Products\ProductsController@index')->name('admin.products.index');
+        Route::get('{id}/edit', 'Admin\Products\ProductsController@edit')->name('admin.products.edit');
     });
 
     Route::prefix('catalog')->group(function() {
@@ -26,6 +30,9 @@ Route::prefix('admin')->group(function() {
         Route::post('/{import_setting}/errors/add-mapping', 'Admin\Catalog\CatalogController@addMapping')->name('admin.catalog.errors.add-mapping');
         Route::get('/{import_setting}/errors', 'Admin\Catalog\CatalogController@catalogErrors')->name('admin.catalog.errors');
         Route::get('/{import_setting}/settings', 'Admin\Catalog\CatalogController@settings')->name('admin.catalog.settings');
+        Route::post('/{import_setting}/update', 'Admin\Catalog\CatalogController@update')->name('admin.catalog.update');
+        Route::delete('/{import_setting}/destroy', 'Admin\Catalog\CatalogController@destroy')->name('admin.catalog.destroy');
+
     });
 
 });

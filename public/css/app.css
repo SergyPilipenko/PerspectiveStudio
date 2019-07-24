@@ -1591,6 +1591,10 @@ a:hover {
   overflow-x: scroll;
 }
 
+a.btn {
+  color: #fff;
+}
+
 .tabs .btn {
   color: inherit;
 }

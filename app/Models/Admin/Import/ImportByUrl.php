@@ -4,6 +4,7 @@ namespace App\Models\Admin\Import;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ImportByUrl extends Model
@@ -37,6 +38,25 @@ class ImportByUrl extends Model
         $ImportByUrl->link = $request->link;
         $ImportByUrl->update_periods = $request->updatePeriod;
         if ($ImportByUrl->save()) return $ImportByUrl;
+
+    }
+
+    public function updateImportByUrl(Request $request)
+    {
+        Validator::validate($request->toArray(), [
+            'url' => 'required|min:3',
+            'updatePeriod' => 'required|numeric'
+        ]);
+        $this->link = $request->url;
+        $this->update_periods = $request->updatePeriod;
+        $this->update();
+        return;
+    }
+
+    public static function updateImportSetting($request)
+    {
+
+
 
     }
 }

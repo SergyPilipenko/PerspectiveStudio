@@ -49,8 +49,7 @@
                                                 <i class="ti-pencil-alt"></i>
                                                 Редактировать
                                             </a>
-{{--                                            <a  class="btn btn-xs btn-default"><i class="fa fa-edit"></i> Редактировать</a>--}}
-                                            <form action="{{ route('admin.import.destroy', $import_setting) }}" method="POST">
+                                            <form action="{{ route('admin.catalog.destroy', $import_setting) }}" method="POST">
                                                 {{ method_field('delete') }}
                                                 @csrf
                                                 <button><i class="ti-trash"></i> Удалить</button>
