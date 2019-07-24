@@ -16,6 +16,7 @@ class CreateImportByUrlsTable extends Migration
         Schema::create('import_by_urls', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('link');
+            $table->unsignedInteger('update_periods');
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="col-md-2">
-            <input type="submit" class="btn btn-success" id="importUploadSubmit" @click="submitForm" value="Загрузить">
+            <input type="submit" class="btn btn-success" id="importUploadSubmit" @click="submitForm(type)" value="Загрузить">
         </div>
     </div>
 </template>
@@ -53,8 +53,5 @@
 <style>
     #importFileUpload {
         margin-right: 0;
-    }
-    #importUploadSubmit {
-        margin-top: 17px;
     }
 </style>

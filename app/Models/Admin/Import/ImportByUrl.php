@@ -35,6 +35,7 @@ class ImportByUrl extends Model
 
         $ImportByUrl = new self();
         $ImportByUrl->link = $request->link;
+        $ImportByUrl->update_periods = $request->updatePeriod;
         if ($ImportByUrl->save()) return $ImportByUrl;
 
     }

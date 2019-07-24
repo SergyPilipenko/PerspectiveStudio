@@ -24,6 +24,11 @@ class Price extends Model
     protected $save_data;
     protected $supplier;
 
+    public function articleNumber()
+    {
+        return $this->hasOne(ArticleNumber::class, 'id', 'article_id');
+    }
+
     public static function create($fields)
     {
         $price = new self();
@@ -94,16 +99,13 @@ class Price extends Model
                 $brand = $price['supplier'];
                 $article = $price['article'];
                 $articles = ArticleNumber::getArticles($article)->get();
-
                 if(!$articles->count()) {
-
                     $this->errors['article_not_found'][] = $article;
                     $this->upload['invalid'][$key]['row'] = $price;
                     $this->upload['invalid'][$key]['errors'][] = 'article_not_found';
                     $supplier = Supplier::where('description', $brand)->first();
                     $mapping = SuppliersMapping::where('title', $brand)->first();
-                    dd($mapping);
-                    if(!$supplier && $mapping) {
+                    if(!$supplier && !$mapping) {
                         $this->upload['invalid'][$key]['errors'][] = 'supplier_not_found';
                     }
 
@@ -138,9 +140,14 @@ class Price extends Model
                                     return $art;
                                 }
                             });
+                            if(!$filtered->count()) {
+                                $this->errors['article_not_found'][] = $article;
+                                $this->upload['invalid'][$key]['row'] = $price;
+                                $this->upload['invalid'][$key]['errors'][] = 'article_not_found';
+                                continue;
+                            }
                         }
                     }
-
 
                     if($filtered->count())
                     {
@@ -165,6 +172,7 @@ class Price extends Model
                     continue;
                 }
                 $x++;
+
             }
             if(isset($this->upload['invalid'])) {
                 InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
@@ -172,7 +180,7 @@ class Price extends Model
             if(isset($this->save_data)) {
                 $query->createOrUpdatePrice($this->save_data);
             }
-//            dd($this);
+//            dd($this->upload['invalid']);
 
     }
 
