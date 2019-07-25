@@ -14,6 +14,39 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <div class="search">
+                            <form action="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Оригинальный номер</label>
+                                            <input type="text" class="form-control" name="article" value="{{ request()->article  }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Производитель</label>
+                                            <input type="text" class="form-control" name="supplier">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Модель авто</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="" class="empty-label"> </label>
+                                            </div>
+                                            <input type="submit" class="btn btn-primary" value="Поиск">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -45,10 +78,14 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <td>{{ $price->articleNumber->datasupplierarticlenumber }}</td>
-                                        <td>{{ $price->articleNumber->article->NormalizedDescription }}</td>
-                                        <td>{{ $price->articleNumber->supplier->description }}</td>
-                                        <td>{{ $price->price }}</td>
+                                        <td>{{ $price->datasupplierarticlenumber }}</td>
+                                        <td>{{ $price->article->NormalizedDescription }}</td>
+                                        <td>{{ $price->supplier->description }}</td>
+                                        <td>
+                                            @if($price->prices->count())
+                                                {{ $price->prices->first()->price }}
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('admin.products.edit', $price) }}"><i class="ti-pencil-alt"></i>
                                                 Редактировать
@@ -58,6 +95,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $prices->links() }}
                     </div>
                 </div>
             </div>

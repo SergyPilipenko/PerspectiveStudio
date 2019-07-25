@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Products;
 
+use App\Filters\ProductsFilter;
 use App\Models\Prices\Price;
+use App\Models\Tecdoc\Article;
+use App\Models\Tecdoc\ArticleNumber;
+use App\Models\Tecdoc\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Classes\PartfixTecDoc;
+use DB;
 
 class ProductsController extends Controller
 {
@@ -18,17 +23,27 @@ class ProductsController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function index()
+    public function index(ProductsFilter $filter)
     {
-        $prices = Price::with('articleNumber.article')->paginate(10);
+        $prices = ArticleNumber::with('supplier', 'article', 'prices')->filter($filter)->paginate(10);
+
 
         return view('admin.products.index', compact('prices'));
     }
 
-    public function edit($price, PartfixTecDoc $tec_doc)
+    public function edit($article, PartfixTecDoc $tec_doc)
     {
-        $price = Price::whereId($price)->with('articleNumber.article')->first();
-//        dd($tec_doc->getArtCross('190130', '1'));
-        return view('admin.products.edit', compact('price'));
+        $article = ArticleNumber::whereId($article)->with('supplier', 'article', 'prices.importSetting')->first();
+
+        $article->crosses = $tec_doc->getArtCross($article->datasupplierarticlenumber, $article->supplierid);
+
+        $brands = $tec_doc->getBrands();
+        dump($tec_doc->getArtVehicles($article->datasupplierarticlenumber, $article->supplierid));
+
+        $suppliers = Supplier::all();
+
+        $article->attributes = $tec_doc->getArtAttributes($article->datasupplierarticlenumber, $article->supplierid);
+
+        return view('admin.products.edit', compact('article', 'crosses', 'suppliers', 'brands'));
     }
 }

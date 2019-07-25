@@ -16,3 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('tecdoc')->group(function () {
+    Route::post('get-models', 'Api\TecdocController@getModels')->name('api.tecdoc.get-models');
+    Route::post('get-modifications', 'Api\TecdocController@getModifications')->name('api.tecdoc.get-modifications');
+});
