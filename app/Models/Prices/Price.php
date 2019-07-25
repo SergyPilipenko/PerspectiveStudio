@@ -29,6 +29,11 @@ class Price extends Model
         return $this->hasOne(ArticleNumber::class, 'id', 'article_id');
     }
 
+    public function importSetting()
+    {
+        return $this->belongsTo(ImportSetting::class);
+    }
+
     public static function create($fields)
     {
         $price = new self();

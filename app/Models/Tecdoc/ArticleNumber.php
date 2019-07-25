@@ -2,6 +2,8 @@
 
 namespace App\Models\Tecdoc;
 
+use App\Classes\PartfixTecDoc;
+use App\Models\Prices\Price;
 use function foo\func;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,16 @@ class ArticleNumber extends Model
     public function article()
     {
         return $this->hasOne(Article::class, ['supplierId','DataSupplierArticleNumber'], ['supplierid', 'datasupplierarticlenumber']);
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(Price::class, 'article_id', 'id');
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
     }
 
     /**
