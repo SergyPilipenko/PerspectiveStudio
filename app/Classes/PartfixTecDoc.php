@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class PartfixTecDoc extends Tecdoc
 {
+    public $linkageTypeId = [];
     /**
      * PartfixTecDoc constructor.
      */
@@ -110,15 +111,19 @@ class PartfixTecDoc extends Tecdoc
         $rows = json_decode(json_encode($rows), true);
 
         foreach ($rows as $key => &$row) {
-//            dd($row);
+//            dd(in_array($row['linkageTypeId'], $this->linkageTypeId));
+            if(in_array($row['linkageTypeId'], $this->linkageTypeId)) continue;
             switch ($row['linkageTypeId']) {
                 case 'PassengerCar':
+                    $this->linkageTypeId[] = $row['linkageTypeId'];
+
                     $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM passanger_cars p 
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'CommercialVehicle':
+                    $this->linkageTypeId[] = $row['linkageTypeId'];
                     $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM commercial_vehicles p 
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
@@ -146,6 +151,9 @@ class PartfixTecDoc extends Tecdoc
                 break;
             }
         }
+//        dd($this);
+//        dd($result);
+
         return $result;
     }
 

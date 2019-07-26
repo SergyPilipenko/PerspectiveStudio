@@ -7,10 +7,10 @@
                         <input type="checkbox" class="form-check-input">
                         {{ brand.name }}
                         <i class="input-helper"></i></label>
-                    <button @click="loadMoreItems(brand.id)"><i class="ti-plus"></i></button>
+                    <button @click="loadMoreItems(brand)"><i class="ti-plus"></i></button>
                 </div>
-                {{ brand.id }}
-                <div v-if="brand.models">
+<!--                {{ brand.id }}-->
+                <div v-if="brand.modelsShow">
                     <models-tree
                             :models="brand.models"
                             :get_modifications="get_modifications"
@@ -28,10 +28,23 @@
         data() {
             return {
                 models: [],
+                // modelsShow: false,
                 autoBrands: this.brands
             }
         },
+        mounted() {
+            this.brands.map((brand) => {
+                brand.modelsShow = false;
+                return brand;
+            });
+        },
         methods: {
+            show(brand) {
+                brand.modelsShow = true;
+            },
+            hide(brand) {
+                brand.modelsShow = false;
+            },
             addModels(data, brand_id) {
                 const brandWithModels = this.autoBrands;
                 for(let el in brandWithModels) {
@@ -42,7 +55,20 @@
                     }
                 }
             },
-            loadMoreItems(brand_id) {
+            loadMoreItems(brand) {
+                console.log(brand.modelsShow);
+                if(brand.modelsShow) {
+                    this.hide(brand);
+                    return;
+                } else if(brand.models != undefined) {
+                    this.show(brand);
+                    return;
+                }
+                var brand_id = brand.id;
+                if(this.modelsShow) {
+                    this.hide();
+                    return;
+                }
                 let self = this;
                 let formData = new FormData();
                 formData.append('brand_id', brand_id);
@@ -60,6 +86,7 @@
                         flash(message, 'error', error.response.data.errors)
                     })
                     .then(function (data) {
+                        self.show(brand);
                         self.addModels(data, brand_id);
                     });
             }

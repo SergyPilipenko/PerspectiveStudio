@@ -2628,10 +2628,23 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       models: [],
+      // modelsShow: false,
       autoBrands: this.brands
     };
   },
+  mounted: function mounted() {
+    this.brands.map(function (brand) {
+      brand.modelsShow = false;
+      return brand;
+    });
+  },
   methods: {
+    show: function show(brand) {
+      brand.modelsShow = true;
+    },
+    hide: function hide(brand) {
+      brand.modelsShow = false;
+    },
     addModels: function addModels(data, brand_id) {
       var brandWithModels = this.autoBrands;
 
@@ -2643,7 +2656,24 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    loadMoreItems: function loadMoreItems(brand_id) {
+    loadMoreItems: function loadMoreItems(brand) {
+      console.log(brand.modelsShow);
+
+      if (brand.modelsShow) {
+        this.hide(brand);
+        return;
+      } else if (brand.models != undefined) {
+        this.show(brand);
+        return;
+      }
+
+      var brand_id = brand.id;
+
+      if (this.modelsShow) {
+        this.hide();
+        return;
+      }
+
       var self = this;
       var formData = new FormData();
       formData.append('brand_id', brand_id);
@@ -2660,6 +2690,7 @@ __webpack_require__.r(__webpack_exports__);
 
         flash(message, 'error', error.response.data.errors);
       }).then(function (data) {
+        self.show(brand);
         self.addModels(data, brand_id);
       });
     }
@@ -52770,9 +52801,9 @@ var render = function() {
                   attrs: { type: "checkbox" }
                 }),
                 _vm._v(
-                  "\n                    " +
+                  "\n                        " +
                     _vm._s(brand.name) +
-                    "\n                    "
+                    "\n                        "
                 ),
                 _c("i", { staticClass: "input-helper" })
               ]),
@@ -52782,15 +52813,15 @@ var render = function() {
                 {
                   on: {
                     click: function($event) {
-                      return _vm.loadMoreItems(brand.id)
+                      return _vm.loadMoreItems(brand)
                     }
                   }
                 },
                 [_c("i", { staticClass: "ti-plus" })]
               )
             ]),
-            _vm._v("\n            " + _vm._s(brand.id) + "\n            "),
-            brand.models
+            _vm._v(" "),
+            brand.modelsShow
               ? _c(
                   "div",
                   [
