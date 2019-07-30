@@ -40,5 +40,18 @@
                 </ul>
             </div>
         </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                <i class="ti-package menu-icon"></i>
+                <span class="menu-title">Пользователи</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div>
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">Администраторы</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html">Клиенты</a></li>
+                </ul>
+            </div>
+        </li>
     </ul>
 </nav>

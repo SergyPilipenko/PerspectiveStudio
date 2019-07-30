@@ -17,6 +17,80 @@ class PartfixTecDoc extends Tecdoc
     }
 
     /**
+     * (1.3) Модификации авто
+     *
+     * @param $model_id
+     * @return mixed
+     */
+    public function getModifications($model_id)
+    {
+        switch ($this->type) {
+            case 'passenger':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
+					FROM passanger_cars pc 
+					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True'");
+                break;
+            case 'commercial':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM commercial_vehicles cv 
+					LEFT JOIN commercial_vehicle_attributes a on cv.id = a.commercialvehicleid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND iscommercialvehicle = 'True'");
+                break;
+            case 'motorbike':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM motorbikes m 
+					LEFT JOIN motorbike_attributes a on m.id = a.motorbikeid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND ismotorbike = 'True'");
+                break;
+            case 'engine':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, salesDescription, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM engines e 
+					LEFT JOIN engine_attributes a on e.id= a.engineid
+					WHERE canbedisplayed = 'True'
+					AND manufacturerId = " . (int)$model_id . " AND isengine = 'True'");
+                break;
+            case 'axle':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM axles ax 
+					LEFT JOIN axle_attributes a on ax.id= a.axleid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND isaxle = 'True'");
+                break;
+        }
+    }
+
+    /**
+     * (2.4) Выборка вложенного дерева категрий
+     *
+     * @param $modification_id
+     * @param $section_id
+     * @return mixed
+     */
+
+    public function getNestedSections($modification_id, $section_id = null)
+    {
+        $sections = $this->getSections($modification_id, $section_id);
+
+        foreach ($sections as $section) {
+
+            $section->parts = $this->getSectionParts($modification_id, $section->id);
+            $section->children = $this->getNestedSections($modification_id, $section->id);
+
+        }
+
+        return $sections;
+    }
+
+    /**
      * (2.3) Поиск запчастей раздела
      *
      * @param $modification_id
@@ -184,7 +258,7 @@ class PartfixTecDoc extends Tecdoc
     public function getArtAttributes($number, $brand_id)
     {
         return DB::connection($this->connection)->select("
-            SELECT displaytitle, displayvalue FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
+            SELECT displaytitle, displayvalue, description FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
         ");
     }
 }

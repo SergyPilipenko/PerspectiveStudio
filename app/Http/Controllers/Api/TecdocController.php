@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 
 class TecdocController extends Controller
 {
+    public function getBrands(PartfixTecDoc $tecDoc)
+    {
+        return $tecDoc->getBrands();
+    }
+
     /**
      * @param Request $request
      * @param PartfixTecDoc $tecDoc

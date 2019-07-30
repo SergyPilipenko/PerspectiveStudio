@@ -28,14 +28,12 @@
         data() {
             return {
                 models: [],
-                // modelsShow: false,
                 autoBrands: this.brands
             }
         },
         mounted() {
             this.brands.map((brand) => {
-                brand.modelsShow = false;
-                return brand;
+                this.$set(brand, 'modelsShow', false);
             });
         },
         methods: {
@@ -46,17 +44,14 @@
                 brand.modelsShow = false;
             },
             addModels(data, brand_id) {
-                const brandWithModels = this.autoBrands;
-                for(let el in brandWithModels) {
-                    if(brandWithModels[el].id == brand_id) {
-                        brandWithModels[el].models = data.data;
-                        this.autoBrands = Object.assign({}, this.autoBrands, brandWithModels);
+                for(let el in this.autoBrands) {
+                    if(this.autoBrands[el].id == brand_id) {
+                        this.$set(this.autoBrands[el], 'models', data.data);
                         break;
                     }
                 }
             },
             loadMoreItems(brand) {
-                console.log(brand.modelsShow);
                 if(brand.modelsShow) {
                     this.hide(brand);
                     return;

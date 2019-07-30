@@ -54,10 +54,10 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $error->price }}
+                                        {{ $error->available }}
                                     </td>
                                     <td>
-                                        {{ $error->available }}
+                                        {{ $error->price }}
                                     </td>
                             @endforeach
                             </tbody>

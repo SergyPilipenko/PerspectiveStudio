@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('tecdoc')->group(function () {
+    Route::post('get-brands', 'Api\TecdocController@getBrands')->name('api.tecdoc.get-brands');
     Route::post('get-models', 'Api\TecdocController@getModels')->name('api.tecdoc.get-models');
     Route::post('get-modifications', 'Api\TecdocController@getModifications')->name('api.tecdoc.get-modifications');
 });
