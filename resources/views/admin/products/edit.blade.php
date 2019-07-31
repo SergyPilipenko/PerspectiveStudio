@@ -75,7 +75,12 @@
                                     </div>
                                 </div>
                             </b-tab>
-                            <b-tab title="Фото/видео/файлы"><p>I'm the second tab</p></b-tab>
+                            <b-tab active title="Фото/видео/файлы">
+                                <div class="d-flex flex-row">
+                                    <product-edit-photos>
+                                    </product-edit-photos>
+                                </div>
+                            </b-tab>
                             @if($article->prices->count())
                                 <b-tab title="Цены">
                                     <table class="table table-striped">
@@ -104,7 +109,7 @@
                                     </table>
                                 </b-tab>
                             @endif
-                            <b-tab active title="Каталог">
+                            <b-tab  title="Каталог">
                                 <brands-tree
                                         :brands="{{ json_encode($brands) }}"
                                         :get_models="'{{ route('api.tecdoc.get-models') }}'"
@@ -140,7 +145,7 @@
                                                 <tbody>
                                                     @foreach($article->attributes as $attribute)
                                                         <tr>
-                                                            <td>{{ $attribute->displaytitle }}</td>
+                                                            <td>{{ $attribute->description }}</td>
                                                             <td>{{ $attribute->displayvalue }}</td>
                                                         </tr>
                                                     @endforeach

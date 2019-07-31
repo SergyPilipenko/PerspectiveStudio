@@ -7,10 +7,10 @@
                         <input type="checkbox" class="form-check-input">
                         {{ model.name }}
                         <i class="input-helper"></i></label>
-                    <button @click="getModifications(model.id)"><i class="ti-plus"></i></button>
+                    <button @click="getModifications(model)"><i class="ti-plus"></i></button>
                 </div>
                 {{ model.id }}
-                <div v-if="model.modifications">
+                <div v-if="model.modificationsShow">
                     <modifications-tree :modifications="model.modifications"></modifications-tree>
                 </div>
             </div>
@@ -26,18 +26,37 @@
                 autoModels: this.models
             }
         },
+        mounted() {
+            this.models.map((model) => {
+                this.$set(model, 'modificationsShow', false);
+            });
+        },
         methods: {
+            show(model) {
+                model.modificationsShow = true;
+            },
+            hide(model) {
+                model.modificationsShow = false;
+            },
             addModels(data, brand_id) {
-                const modelWithModifications = this.autoModels;
-                for(let el in modelWithModifications) {
-                    if(modelWithModifications[el].id == brand_id) {
-                        modelWithModifications[el].modifications = data.data;
-                        this.autoModels = Object.assign({}, this.autoModels, modelWithModifications);
+
+                for(let el in this.autoModels) {
+                    if(this.autoModels[el].id == brand_id) {
+                        this.$set(this.autoModels[el], 'modifications', data.data);
                         break;
                     }
                 }
             },
-            getModifications(model_id) {
+            getModifications(model) {
+                if(model.modificationsShow) {
+                    this.hide(model);
+                    return;
+                } else if(model.modifications != undefined) {
+                    this.show(model);
+                    return;
+                }
+                var model_id = model.id;
+
                 let self = this;
                 let formData = new FormData();
                 formData.append('model_id', model_id);
@@ -55,7 +74,7 @@
                         flash(message, 'error', error.response.data.errors)
                     })
                     .then(function (data) {
-                        console.log(data);
+                        self.show(model);
                         self.addModels(data, model_id);
                     });
             }

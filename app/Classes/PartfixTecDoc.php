@@ -7,12 +7,87 @@ use Illuminate\Support\Facades\DB;
 
 class PartfixTecDoc extends Tecdoc
 {
+    public $linkageTypeId = [];
     /**
      * PartfixTecDoc constructor.
      */
     public function __construct($type = 'passenger')
     {
         $this->setType($type);
+    }
+
+    /**
+     * (1.3) Модификации авто
+     *
+     * @param $model_id
+     * @return mixed
+     */
+    public function getModifications($model_id)
+    {
+        switch ($this->type) {
+            case 'passenger':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
+					FROM passanger_cars pc 
+					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True'");
+                break;
+            case 'commercial':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM commercial_vehicles cv 
+					LEFT JOIN commercial_vehicle_attributes a on cv.id = a.commercialvehicleid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND iscommercialvehicle = 'True'");
+                break;
+            case 'motorbike':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM motorbikes m 
+					LEFT JOIN motorbike_attributes a on m.id = a.motorbikeid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND ismotorbike = 'True'");
+                break;
+            case 'engine':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, salesDescription, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM engines e 
+					LEFT JOIN engine_attributes a on e.id= a.engineid
+					WHERE canbedisplayed = 'True'
+					AND manufacturerId = " . (int)$model_id . " AND isengine = 'True'");
+                break;
+            case 'axle':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
+					FROM axles ax 
+					LEFT JOIN axle_attributes a on ax.id= a.axleid
+					WHERE canbedisplayed = 'True'
+					AND modelid = " . (int)$model_id . " AND isaxle = 'True'");
+                break;
+        }
+    }
+
+    /**
+     * (2.4) Выборка вложенного дерева категрий
+     *
+     * @param $modification_id
+     * @param $section_id
+     * @return mixed
+     */
+
+    public function getNestedSections($modification_id, $section_id = null)
+    {
+        $sections = $this->getSections($modification_id, $section_id);
+
+        foreach ($sections as $section) {
+
+            $section->parts = $this->getSectionParts($modification_id, $section->id);
+            $section->children = $this->getNestedSections($modification_id, $section->id);
+
+        }
+
+        return $sections;
     }
 
     /**
@@ -110,15 +185,19 @@ class PartfixTecDoc extends Tecdoc
         $rows = json_decode(json_encode($rows), true);
 
         foreach ($rows as $key => &$row) {
-//            dd($row);
+//            dd(in_array($row['linkageTypeId'], $this->linkageTypeId));
+            if(in_array($row['linkageTypeId'], $this->linkageTypeId)) continue;
             switch ($row['linkageTypeId']) {
                 case 'PassengerCar':
+                    $this->linkageTypeId[] = $row['linkageTypeId'];
+
                     $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM passanger_cars p 
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'CommercialVehicle':
+                    $this->linkageTypeId[] = $row['linkageTypeId'];
                     $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM commercial_vehicles p 
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
@@ -146,6 +225,9 @@ class PartfixTecDoc extends Tecdoc
                 break;
             }
         }
+//        dd($this);
+//        dd($result);
+
         return $result;
     }
 
@@ -176,7 +258,7 @@ class PartfixTecDoc extends Tecdoc
     public function getArtAttributes($number, $brand_id)
     {
         return DB::connection($this->connection)->select("
-            SELECT displaytitle, displayvalue FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
+            SELECT displaytitle, displayvalue, description FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
         ");
     }
 }

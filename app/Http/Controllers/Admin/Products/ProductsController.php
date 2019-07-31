@@ -38,7 +38,6 @@ class ProductsController extends Controller
         $article->crosses = $tec_doc->getArtCross($article->datasupplierarticlenumber, $article->supplierid);
 
         $brands = $tec_doc->getBrands();
-        dump($tec_doc->getArtVehicles($article->datasupplierarticlenumber, $article->supplierid));
 
         $suppliers = Supplier::all();
 
