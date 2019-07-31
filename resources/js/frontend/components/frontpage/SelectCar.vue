@@ -1,6 +1,6 @@
 <template>
     <div>
-        <select name="" id="" v-model="selectedYear">
+        <select name="" id="" v-model="selectedYear" @change="filterModificationsBySelectedYear">
             <option value="">Не выбрано</option>
             <option
                 :value="year"
@@ -25,11 +25,11 @@
 
             ></option>
         </select>
-        <p>{{modifications}}</p>
+        <p>{{filteredModifications}}</p>
 <!--        <select name="" v-model="modificationSelected" @change="choseModification">-->
         <select name="" v-model="modificationSelected">
             <option value="">Не выбрано</option>
-            <option :value="modification.id" v-for="modification in modifications" v-text="modification.name"></option>
+            <option :value="modification.id" v-for="modification in filteredModifications" v-text="modification.name"></option>
         </select>
     </div>
 </template>
@@ -55,7 +55,8 @@
                 years: 'selectCar/getYears',
                 brands: 'selectCar/getBrands',
                 models: 'selectCar/getModels',
-                modifications: 'selectCar/getModifications'
+                modifications: 'selectCar/getModifications',
+                filteredModifications: 'selectCar/getFilteredModifications',
             })
         },
         methods: {
@@ -63,23 +64,35 @@
                 addBrands: 'selectCar/addBrands',
                 addModels: 'selectCar/addModels',
                 addModifications: 'selectCar/addModifications',
-                clearModifications: 'selectCar/clearModifications'
+                clearModifications: 'selectCar/clearModifications',
+                addFilteredModifications: 'selectCar/addFilteredModifications'
             }),
 
-            filterModificationsBySelectedYear(modifications) {
+            filterModificationsBySelectedYear() {
+                const modifications = this.modifications;
+                if(!modifications) return;
                 const regExp = new RegExp('[0-9]{4}');
-                // const pattern = /${this.selectedYear}/;
                 const validModifications = modifications.filter(modification => {
+
                     const years = modification.constructioninterval.split(' - ');
-                    // console.log(years);
-                    const createdAt = years[0].match(regExp)[0];
-                    console.log(years);
-                    // console.log(createdAt);
-                    if(this.selectedYear >= 9) return modification;
-                    // console.log();
-                    // if(regExp.test(modification.constructioninterval))
+                    const createdAt = years[0].match(regExp);
+                    const stopped = years[1].match(regExp);
+
+                    if(createdAt && stopped) {
+                        if(this.selectedYear >= createdAt[0] && this.selectedYear <= stopped[0]) {
+                            return modification
+                        }
+                    } else if(createdAt && !stopped) {
+                        if(this.selectedYear >= createdAt[0]) {
+                            return modification;
+                        }
+                    } else {
+                        console.log(this.selectedYear);
+                        console.log(createdAt);
+                        console.log(stopped);
+                    }
                 });
-                this.addModifications(validModifications);
+                this.addFilteredModifications(validModifications);
             },
 
             resetModelsSelect() {
@@ -111,7 +124,8 @@
                 form.append('model_id', self.modelSelected);
                 axios.post('/api/tecdoc/get-modifications', form)
                     .then(data => {
-                        self.filterModificationsBySelectedYear(data.data);
+                        self.addModifications(data.data);
+                        self.filterModificationsBySelectedYear();
                     })
             },
             // choseModification() {

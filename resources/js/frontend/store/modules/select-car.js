@@ -1,10 +1,11 @@
 export default {
     namespaced: true,
     state: {
-        years: [1990,1991,1992,1993,1994,1995,2016],
+        years: [1990,1991,1992,1993,1994,1995,2010,2011,2012,2013,2014,2015,2016],
         brands: [],
         models: [],
-        modifications: []
+        modifications: [],
+        filteredModifications: []
     },
     getters: {
         getYears: function (state) {
@@ -18,6 +19,9 @@ export default {
         },
         getModifications: function (state) {
             return state.modifications
+        },
+        getFilteredModifications: function (state) {
+            return state.filteredModifications
         }
     },
     mutations: {
@@ -30,12 +34,17 @@ export default {
         addModifications: function (state, newValue) {
             state.modifications = newValue;
         },
+        addFilteredModifications: function (state, newValue) {
+            state.filteredModifications = newValue;
+        },
         clearModifications: function (state) {
             state.modifications = [];
-        }
+            state.filteredModifications = [];
+
+        },
     },
     actions: {
-        // changeAmount: function(context, payload){
+        // resetModifications: function(context, payload){
         //     context.commit('changeAmount', payload)
         // },
     }

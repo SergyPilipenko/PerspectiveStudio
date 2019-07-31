@@ -1898,29 +1898,42 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     years: 'selectCar/getYears',
     brands: 'selectCar/getBrands',
     models: 'selectCar/getModels',
-    modifications: 'selectCar/getModifications'
+    modifications: 'selectCar/getModifications',
+    filteredModifications: 'selectCar/getFilteredModifications'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])({
     addBrands: 'selectCar/addBrands',
     addModels: 'selectCar/addModels',
     addModifications: 'selectCar/addModifications',
-    clearModifications: 'selectCar/clearModifications'
+    clearModifications: 'selectCar/clearModifications',
+    addFilteredModifications: 'selectCar/addFilteredModifications'
   }), {
-    filterModificationsBySelectedYear: function filterModificationsBySelectedYear(modifications) {
+    filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
       var _this = this;
 
-      var regExp = new RegExp('[0-9]{4}'); // const pattern = /${this.selectedYear}/;
-
+      var modifications = this.modifications;
+      if (!modifications) return;
+      var regExp = new RegExp('[0-9]{4}');
       var validModifications = modifications.filter(function (modification) {
-        var years = modification.constructioninterval.split(' - '); // console.log(years);
+        var years = modification.constructioninterval.split(' - ');
+        var createdAt = years[0].match(regExp);
+        var stopped = years[1].match(regExp);
 
-        var createdAt = years[0].match(regExp)[0];
-        console.log(years); // console.log(createdAt);
-
-        if (_this.selectedYear >= 9) return modification; // console.log();
-        // if(regExp.test(modification.constructioninterval))
+        if (createdAt && stopped) {
+          if (_this.selectedYear >= createdAt[0] && _this.selectedYear <= stopped[0]) {
+            return modification;
+          }
+        } else if (createdAt && !stopped) {
+          if (_this.selectedYear >= createdAt[0]) {
+            return modification;
+          }
+        } else {
+          console.log(_this.selectedYear);
+          console.log(createdAt);
+          console.log(stopped);
+        }
       });
-      this.addModifications(validModifications);
+      this.addFilteredModifications(validModifications);
     },
     resetModelsSelect: function resetModelsSelect() {
       this.modelSelected = "";
@@ -1945,7 +1958,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var form = new FormData();
       form.append('model_id', self.modelSelected);
       axios.post('/api/tecdoc/get-modifications', form).then(function (data) {
-        self.filterModificationsBySelectedYear(data.data);
+        self.addModifications(data.data);
+        self.filterModificationsBySelectedYear();
       });
     }
   })
@@ -22206,19 +22220,22 @@ var render = function() {
         ],
         attrs: { name: "", id: "" },
         on: {
-          change: function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.selectedYear = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          }
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.selectedYear = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.filterModificationsBySelectedYear
+          ]
         }
       },
       [
@@ -22321,7 +22338,7 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("p", [_vm._v(_vm._s(_vm.modifications))]),
+    _c("p", [_vm._v(_vm._s(_vm.filteredModifications))]),
     _vm._v(" "),
     _c(
       "select",
@@ -22354,7 +22371,7 @@ var render = function() {
       [
         _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
         _vm._v(" "),
-        _vm._l(_vm.modifications, function(modification) {
+        _vm._l(_vm.filteredModifications, function(modification) {
           return _c("option", {
             domProps: {
               value: modification.id,
@@ -35726,10 +35743,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    years: [1990, 1991, 1992, 1993, 1994, 1995, 2016],
+    years: [1990, 1991, 1992, 1993, 1994, 1995, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
     brands: [],
     models: [],
-    modifications: []
+    modifications: [],
+    filteredModifications: []
   },
   getters: {
     getYears: function getYears(state) {
@@ -35743,6 +35761,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     getModifications: function getModifications(state) {
       return state.modifications;
+    },
+    getFilteredModifications: function getFilteredModifications(state) {
+      return state.filteredModifications;
     }
   },
   mutations: {
@@ -35755,11 +35776,15 @@ __webpack_require__.r(__webpack_exports__);
     addModifications: function addModifications(state, newValue) {
       state.modifications = newValue;
     },
+    addFilteredModifications: function addFilteredModifications(state, newValue) {
+      state.filteredModifications = newValue;
+    },
     clearModifications: function clearModifications(state) {
       state.modifications = [];
+      state.filteredModifications = [];
     }
   },
-  actions: {// changeAmount: function(context, payload){
+  actions: {// resetModifications: function(context, payload){
     //     context.commit('changeAmount', payload)
     // },
   }
