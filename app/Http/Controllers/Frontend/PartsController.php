@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Classes\PartfixTecDoc;
+use App\Models\Tecdoc\DistinctPassangerCarTree;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

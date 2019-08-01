@@ -2,11 +2,14 @@
 
 namespace App\Models\Tecdoc;
 
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class PassangerCarTree extends Model
 {
-    protected $table = 'suppliers';
+    use Compoships;
+
+    protected $table = 'passanger_car_trees';
 
     public function __construct()
     {
