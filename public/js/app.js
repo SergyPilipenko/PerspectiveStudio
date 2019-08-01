@@ -1961,6 +1961,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         self.addModifications(data.data);
         self.filterModificationsBySelectedYear();
       });
+    },
+    choseModification: function choseModification() {
+      window.location.href = "/parts/" + this.modificationSelected;
     }
   })
 });
@@ -22353,19 +22356,22 @@ var render = function() {
         ],
         attrs: { name: "" },
         on: {
-          change: function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.modificationSelected = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          }
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.modificationSelected = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.choseModification
+          ]
         }
       },
       [

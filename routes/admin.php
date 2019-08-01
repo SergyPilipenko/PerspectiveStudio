@@ -16,11 +16,21 @@ Route::prefix('admin')->group(function() {
 
     });
 
+    Route::prefix('categories')->group(function () {
+        Route::get('/', 'Admin\Catalog\CategoriesController@index')->name('admin.categories.index');
+        Route::get('create', 'Admin\Catalog\CategoriesController@create')->name('admin.categories.create');
+        Route::post('store', 'Admin\Catalog\CategoriesController@store')->name('admin.categories.store');
+        Route::delete('{category}/destroy', 'Admin\Catalog\CategoriesController@destroy')->name('admin.categories.destroy');
+        Route::get('{category}/create', 'Admin\Catalog\CategoriesController@create')->name('admin.categories.create-subcategory');
+        Route::post('{category}/store', 'Admin\Catalog\CategoriesController@store')->name('admin.categories.store-subcategory');
+        Route::get('{category}/edit', 'Admin\Catalog\CategoriesController@edit')->name('admin.categories.edit');
+        Route::put('{category}/update', 'Admin\Catalog\CategoriesController@update')->name('admin.categories.update');
+    });
+
     Route::prefix('products')->group(function () {
         Route::get('/', 'Admin\Products\ProductsController@index')->name('admin.products.index');
         Route::get('{id}/edit', 'Admin\Products\ProductsController@edit')->name('admin.products.edit');
     });
-
     Route::prefix('catalog')->group(function() {
         Route::get('/', 'Admin\Catalog\CatalogController@index')->name('admin.catalog.index');
         Route::get('/create', 'Admin\Import\ImportController@create')->name('admin.import.create');
@@ -32,7 +42,6 @@ Route::prefix('admin')->group(function() {
         Route::get('/{import_setting}/settings', 'Admin\Catalog\CatalogController@settings')->name('admin.catalog.settings');
         Route::post('/{import_setting}/update', 'Admin\Catalog\CatalogController@update')->name('admin.catalog.update');
         Route::delete('/{import_setting}/destroy', 'Admin\Catalog\CatalogController@destroy')->name('admin.catalog.destroy');
-
     });
 
 });

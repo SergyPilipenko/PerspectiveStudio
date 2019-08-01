@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\DB;
 class PartfixTecDoc extends Tecdoc
 {
     public $linkageTypeId = [];
+
+    private $section_parts = [];
+
     /**
      * PartfixTecDoc constructor.
      */
     public function __construct($type = 'passenger')
     {
+        parent::__construct($connection = 'mysql_tecdoc');
         $this->setType($type);
     }
 
@@ -69,6 +73,23 @@ class PartfixTecDoc extends Tecdoc
     }
 
     /**
+     * (2.4) Выборка всех уникальных категорий
+     *
+     * @return mixed
+     */
+
+    public function getDistinctSections()
+    {
+        switch ($this->type) {
+            case 'passenger':
+                return DB::connection($this->connection)->select("
+                SELECT DISTINCT searchtreeid, id, parentid, description FROM `passanger_car_trees`
+                ");
+                break;
+        }
+    }
+
+    /**
      * (2.4) Выборка вложенного дерева категрий
      *
      * @param $modification_id
@@ -81,14 +102,25 @@ class PartfixTecDoc extends Tecdoc
         $sections = $this->getSections($modification_id, $section_id);
 
         foreach ($sections as $section) {
-
-            $section->parts = $this->getSectionParts($modification_id, $section->id);
+//            $section_parts = $this->getSectionParts($modification_id, $section->id);
+//            if(count($section_parts)) $this->section_parts = array_merge($this->section_parts, $section_parts);
             $section->children = $this->getNestedSections($modification_id, $section->id);
-
         }
 
         return $sections;
     }
+
+    public function getNestedSectionsParts(array $sections, $modification_id)
+    {
+        foreach ($sections as $section) {
+            $section_parts = $this->getSectionParts($modification_id, $section->id);
+            if(count($section_parts)) $this->section_parts = array_merge($this->section_parts, $section_parts);
+            if(count($section->children)) $this->getNestedSectionsParts($section->children, $modification_id);
+        }
+        return $this->section_parts;
+    }
+
+
 
     /**
      * (2.3) Поиск запчастей раздела
@@ -165,7 +197,6 @@ class PartfixTecDoc extends Tecdoc
                     AND al.linkagetypeid = 19
                     ORDER BY s.description, al.datasupplierarticlenumber");
                 break;
-
         }
     }
 

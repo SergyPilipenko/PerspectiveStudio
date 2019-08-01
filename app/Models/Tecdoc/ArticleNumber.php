@@ -12,6 +12,13 @@ class ArticleNumber extends Model
 {
     use \Awobaz\Compoships\Compoships;
 
+    protected $table = 'article_numbers';
+
+    public function __construct()
+    {
+        $this->table = env('DB_TECDOC_DATABASE').".{$this->table}";
+    }
+
     protected $with = ['supplier'];
 
     public function supplier()

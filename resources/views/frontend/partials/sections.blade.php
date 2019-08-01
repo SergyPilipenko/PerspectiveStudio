@@ -1,5 +1,5 @@
 <li>
-    {{ $section->description }} ({{ count($section->parts) }})
+    {{ $section->description }}
 </li>
 @if(count($section->children))
    <ul>

@@ -48,7 +48,6 @@
         },
         methods: {
             flash(data){
-                console.log(data);
                 if(this.hideTimer) return;
                 this.body = data.message;
                 this.level = data.level;

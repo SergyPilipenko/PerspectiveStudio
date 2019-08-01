@@ -26,8 +26,8 @@
             ></option>
         </select>
         <p>{{filteredModifications}}</p>
-<!--        <select name="" v-model="modificationSelected" @change="choseModification">-->
-        <select name="" v-model="modificationSelected">
+        <select name="" v-model="modificationSelected" @change="choseModification">
+<!--        <select name="" v-model="modificationSelected">-->
             <option value="">Не выбрано</option>
             <option :value="modification.id" v-for="modification in filteredModifications" v-text="modification.name"></option>
         </select>
@@ -128,9 +128,9 @@
                         self.filterModificationsBySelectedYear();
                     })
             },
-            // choseModification() {
-            //     window.location.href = "/parts/"+this.modificationSelected;
-            // }
+            choseModification() {
+                window.location.href = "/parts/"+this.modificationSelected;
+            }
         }
     }
 </script>
