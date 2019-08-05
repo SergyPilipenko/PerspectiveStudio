@@ -7,9 +7,9 @@
                         <input type="checkbox"
                                class="form-check-input"
                                name="node[]"
-                               :value="node.id"
+                               :value="(!node.children.length ? node.id : '')"
                                v-model="checked"
-                               @change="checkOrUncheckParentCheckbox">
+                        >
                             {{ node.description }}
                         <i class="input-helper"></i>
                     </label>
@@ -28,38 +28,38 @@
                 :node="category"
                 v-for="category in node.children"
                 :key="category.id"
-                :checked="checked"
+                :checked.sync="checked"
             ></tecdoc-categories-node-tree>
         </ul>
     </div>
 </template>
 
 <script>
-    import { EventBus } from "./event-bus";
-    EventBus.$on('handleFunction', () => {
-        console.log(`Oh, that's nice. It's gotten `)
-    });
+    import {mapState, mapGetters, mapMutations} from 'vuex';
+
     export default {
         name: "tecdoc-categories-node-tree",
         props: {
             node: Object,
-            checked: Boolean
+            checked: Boolean,
+            category_distinct_tecdoc_categories: Array
         },
         data() {
             return {
                 visibility: false,
+                localChecked: this.checked
             }
         },
+        computed: {
+            ...mapGetters({
+                selected: 'CategoriesCheckboxes/getSelectedCheckboxes',
+            })
+        },
+
         methods: {
             show() {
                 this.visibility = !this.visibility
             },
-            test() {
-                console.log(1);
-            },
-            checkOrUncheckParentCheckbox() {
-                EventBus.$emit('handleFunction');
-            }
         }
     }
 </script>

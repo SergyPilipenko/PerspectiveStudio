@@ -16,8 +16,5 @@ Route::get('/', 'Frontend\PagesController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('parts/{modificationId}', 'Frontend\PartsController@index');
-
 require_once ('admin.php');
-
-
+require_once ('frontend.php');
