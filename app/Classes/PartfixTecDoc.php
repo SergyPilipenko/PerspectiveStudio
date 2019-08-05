@@ -9,7 +9,7 @@ class PartfixTecDoc extends Tecdoc
 {
     public $linkageTypeId = [];
 
-    private $section_parts = [];
+    public $section_parts = [];
 
     /**
      * PartfixTecDoc constructor.
@@ -100,24 +100,23 @@ class PartfixTecDoc extends Tecdoc
     public function getNestedSections($modification_id, $section_id = null)
     {
         $sections = $this->getSections($modification_id, $section_id);
+        if(count($sections)) {
+            foreach ($sections as $section) {
 
-        foreach ($sections as $section) {
-//            $section_parts = $this->getSectionParts($modification_id, $section->id);
-//            if(count($section_parts)) $this->section_parts = array_merge($this->section_parts, $section_parts);
-            $section->children = $this->getNestedSections($modification_id, $section->id);
+                $section->children = $this->getNestedSections($modification_id, $section->id);
+            }
+        } else {
+            $section_parts = $this->getSectionParts($modification_id, $section_id);
+            if(count($section_parts)) $this->section_parts = array_merge($this->section_parts, $section_parts);
         }
+
 
         return $sections;
     }
 
-    public function getNestedSectionsParts(array $sections, $modification_id)
+    public function getAllSectionParts()
     {
-        foreach ($sections as $section) {
-            $section_parts = $this->getSectionParts($modification_id, $section->id);
-            if(count($section_parts)) $this->section_parts = array_merge($this->section_parts, $section_parts);
-            if(count($section->children)) $this->getNestedSectionsParts($section->children, $modification_id);
-        }
-        return $this->section_parts;
+        $sections = $this->getNestedSections();
     }
 
 

@@ -6,7 +6,7 @@
             <div class="col-md-12 grid-margin">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h4 class="font-weight-bold mb-0">Новая категория</h4>
+                        <h4 class="font-weight-bold mb-0">{{ $category->title }}</h4>
                     </div>
                 </div>
             </div>
@@ -33,11 +33,22 @@
                                 <div class="col-md-10">
                                     <div class="category-active">
                                         <div class="form-check">
+{{--                                            {{ dd($category->activity) }}--}}
                                             <label class="form-check-label">
                                                 Включить категорию
-                                                <input type="checkbox" checked="checked" class="form-check-input" name="category_activity">
+                                                <input type="checkbox" {{ $category->activity != 0 ? 'checked' : '' }} class="form-check-input" name="category_activity">
                                                 <i class="input-helper"></i>
                                             </label>
+                                        </div>
+                                    </div>
+                                    <div class="sort">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="sort">Сортировка:</label>
+                                                    <input type="number"  class="form-control" value="{{ $category->position ?: 1 }}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="category-title">
@@ -50,9 +61,44 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <tecdoc-categories-tree :categories="{{ $tec_doc_categories }}"></tecdoc-categories-tree>
+                                            <tecdoc-categories-tree
+                                                :categories="{{ $tec_doc_categories }}"
+                                                :category_distinct_tecdoc_categories="{{ $category_distinct_tecdoc_categories }}"
+                                                :disabled_distinct_tecdoc_categories="{{ $disabled_distinct_tecdoc_categories }}"
+                                            ></tecdoc-categories-tree>
+                                        </div>
+                                    </div>
+                                    <div class="slug">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="url">URL:</label>
+                                                    <input type="text"  class="form-control" name="url" value="{{ $category->slug ?: '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="meta_title">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="meta_title">Meta title:</label>
+                                                    <input type="text"  class="form-control" name="meta_title" value="{{ $category->meta_title ?: '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="meta_description">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="meta_description">Meta description:</label>
+                                                    <input type="text"  class="form-control" name="meta_description" value="{{ $category->description ?: '' }}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

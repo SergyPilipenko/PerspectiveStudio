@@ -1963,7 +1963,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     choseModification: function choseModification() {
-      window.location.href = "/parts/" + this.modificationSelected;
+      window.location.href = this.modificationSelected + "/categories/";
     }
   })
 });

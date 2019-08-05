@@ -12,8 +12,6 @@ class PagesController extends Controller
     {
         $brands = $tecdoc->getBrands();
 
-        dd($brands);
-
         return view('frontend.index', compact('brands'));
     }
 }

@@ -129,7 +129,7 @@
                     })
             },
             choseModification() {
-                window.location.href = "/parts/"+this.modificationSelected;
+                window.location.href = this.modificationSelected+"/categories/";
             }
         }
     }

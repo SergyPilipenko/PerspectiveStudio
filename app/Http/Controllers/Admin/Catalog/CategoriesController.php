@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin\Catalog;
 
 use App\Models\Categories\Category;
+use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Models\Tecdoc\DistinctPassangerCarTree;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -49,23 +51,61 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
+
         $category = Category::findOrFail($id);
         $categories = Category::get()->toTree();
-        $tec_doc_categories = DistinctPassangerCarTree::get()->toTree();
+        $tec_doc_categories = DistinctPassangerCarTree::get();
 
-        return view('admin.catalog.categories.edit', compact('category', 'categories', 'tec_doc_categories'));
+//        $category_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::getCategorySelects();
+
+        $category_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', $id)->pluck('distinct_pct_id');
+        $disabled_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', '!=', $id)->pluck('distinct_pct_id');
+
+        foreach ($tec_doc_categories as &$tec_doc_category) {
+            if(in_array($tec_doc_category->id, $category_distinct_tecdoc_categories->toArray())) {
+                $tec_doc_category->checked = true;
+            }
+        }
+
+        $tec_doc_categories = $this->prepareNodes($tec_doc_categories, $disabled_distinct_tecdoc_categories)->toTree();
+
+        $category_distinct_tecdoc_categories = $category_distinct_tecdoc_categories->toJson();
+
+        return view('admin.catalog.categories.edit', compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $category)
     {
-        dd($request);
         $this->validate($request, [
             'category_title' => 'required|min:3',
         ]);
+        $category = Category::find($category);
 
-        $category->title = $request->category_title;
-        $category->activity = $request->category_activity ? true : false;
-        $category->update();
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+
+            $category->title = $request->category_title;
+            $category->activity = $request->category_activity ? true : false;
+            $category->update();
+
+            $tree = null;
+
+            if($request->tree234) {
+                $tree = explode(',', $request->tree234);
+                foreach ($tree as &$item) {
+                    $item = (int) $item;
+                }
+            }
+
+            $category->tecdoc_categories()->sync($tree);
+
+            DB::connection()->getPdo()->commit();
+        } catch (\PDOException $e) {
+
+            DB::connection()->getPdo()->rollBack();
+            return $e->getMessage();
+
+        }
 
         Session::flash('flash', 'Новые данные сохранены успешно');
 
@@ -75,8 +115,27 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         Category::whereId($id)->delete();
+
         Session::flash('flash', 'Категория была удалена успешно');
 
         return redirect()->route('admin.categories.create');
+    }
+
+    private function prepareNodes($nodes, $disabled_distinct_tecdoc_categories)
+    {
+        if($nodes) {
+            foreach ($nodes as $key => &$node) {
+                if(!$node) {
+                    unset($nodes[$key]);
+                } else {
+                    $node->label = $node->description;
+                    if(in_array($node->id, $disabled_distinct_tecdoc_categories->toArray())) {
+                        $node->isDisabled = "true";
+                    };
+                    unset($node->description);
+                };
+            }
+        }
+        return $nodes;
     }
 }

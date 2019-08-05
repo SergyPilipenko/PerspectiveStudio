@@ -1,3 +1,5 @@
+import Vuex from "vuex";
+
 require('../bootstrap');
 
 window.Vue = require('vue');
@@ -24,9 +26,19 @@ Vue.component('catalog-settings', require('./components/catalog/settings.vue').d
 Vue.component('import-edit', require('./components/parser/Edit.vue').default);
 Vue.component('import-price', require('./components/parser/ImportPrice.vue').default);
 
+import CategoriesCheckboxes from './components/vuex/categories-checkboxes';
+
+const store = new Vuex.Store({
+    modules: {
+        CategoriesCheckboxes,
+    }
+});
+
 window.onload = function () {
     const app = new Vue({
-        el: '#app'
+        el: '#app',
+        store
+
     });
 };
 
