@@ -16,7 +16,8 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div id="app">
-                    <flash message="{{ session('flash') }}" :errors_list="{{ json_encode($errors->messages()) }}"
+{{--                    {{ dd($errors) }}--}}
+                    <flash message="{{ session('flash') }}" :errors_list="{{  json_encode($errors->messages()) }}"
                     ></flash>
                     @yield('content')
                 </div>

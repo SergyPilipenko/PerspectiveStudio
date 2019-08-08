@@ -9,12 +9,12 @@
             </div>
         </div>
     </div>
-    @if($errors->count())
+    @if($protuct_errors->count())
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="card-title text-danger">Ошибок: {{ $errors->total() }}</h1>
+                        <h1 class="card-title text-danger">Ошибок: {{ $protuct_errors->total() }}</h1>
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -31,7 +31,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($errors as $error)
+                            @foreach($protuct_errors as $error)
                                 <tr>
                                     <td>
                                         {{ $error->article }}
