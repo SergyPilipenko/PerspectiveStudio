@@ -1,5 +1,8 @@
+
 @extends('admin')
 @section('content')
+    {{ var_dump($errors->all()) }}
+
     <div class="category-control">
         <div class="row">
             <div class="col-md-12 grid-margin">
@@ -10,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <form action="{{ !$category ? route('admin.categories.store') : route('admin.categories.store-subcategory', $category) }}" method="POST">
+        <form action="{{ !$category ? route('admin.categories.store') : route('admin.categories.store-subcategory', $category->id) }}" method="POST">
             @csrf
             <div class="row">
             <div class="col-md-12 grid-margin">
@@ -39,6 +42,16 @@
                                             <div class="form-group">
                                                 <label for="category_title">Название</label>
                                                 <input type="text" class="form-control" name="category_title">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="category-slug">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="category_title">URL</label>
+                                                <input type="text" class="form-control" name="slug" value="{{ old('slug') }}">
                                             </div>
                                         </div>
                                     </div>

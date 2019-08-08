@@ -3,7 +3,7 @@
     <ul>
         @foreach($categories as $category)
             <li>
-                <a href="{{ route('frontend.categories.show', [$modification, $category]) }}">{{ $category->title }}</a>
+                <a href="{{ route('frontend.categories.show', [$modification, $category->slug]) }}">{{ $category->title }}</a>
             </li>
         @endforeach
     </ul>

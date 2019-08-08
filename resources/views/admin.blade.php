@@ -9,6 +9,8 @@
     <script type="application/javascript" src="{{ mix('js/admin.js') }}"></script>
 </head>
 <body>
+{{ dd($errors->messagess) }}
+
 <div class="container-scroller">
     @include('admin.layouts.navbar')
     <div class="container-fluid page-body-wrapper">
@@ -16,7 +18,7 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div id="app">
-                    <flash message="{{ session('flash') }}"
+                    <flash message="{{ session('flash') }}" :errors_list="{{ json_encode($errors->all()) }}"
                     ></flash>
                     @yield('content')
                 </div>

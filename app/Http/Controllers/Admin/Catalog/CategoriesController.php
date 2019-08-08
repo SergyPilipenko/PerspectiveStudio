@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Catalog;
 
 use App\Models\Categories\Category;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
+use App\Models\Seo;
 use App\Models\Tecdoc\DistinctPassangerCarTree;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -35,24 +36,26 @@ class CategoriesController extends Controller
     public function store(Request $request, $parent_category = null)
     {
         $this->validate($request, [
-            'category_title' => 'required|min:3',
+            'category_title' => 'url|required',
+            'slug' => 'required|string'
         ]);
 
         $category = new Category;
         $category->title = $request->category_title;
+        $category->slug = $request->slug;
         $category->activity = $request->category_activity ? true : false;
 
         $parent_category ? $category->appendToNode(Category::findOrFail($parent_category))->save() : $category->save();
 
         Session::flash('flash', 'Новая категория добавлена успешно');
 
-        return redirect()->route('admin.categories.edit', $category);
+        return redirect()->route('admin.categories.edit', $category->id);
     }
 
     public function edit($id)
     {
 
-        $category = Category::findOrFail($id);
+        $category = Category::with('seo')->findOrFail($id);
         $categories = Category::get()->toTree();
         $tec_doc_categories = DistinctPassangerCarTree::get();
 
@@ -76,17 +79,38 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $category)
     {
+
         $this->validate($request, [
             'category_title' => 'required|min:3',
+            'slug' => 'required',
         ]);
-        $category = Category::find($category);
+
+        $category = Category::with('seo')->find($category);
 
         try {
             DB::connection()->getPdo()->beginTransaction();
 
             $category->title = $request->category_title;
             $category->activity = $request->category_activity ? true : false;
+            $category->slug = $request->slug;
+
+            $file = $request->file('category_image');
+            if($file) {
+                $file_name = time() . $file->getClientOriginalName();
+                $file_path = 'upload/img/categories/';
+                $file->move($file_path, $file_name);
+                $category->image = $file_path.$file_name;
+            }
+
             $category->update();
+
+            $seo = [
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords,
+            ];
+
+            $category->seo()->getModel()->updateOrCreate($category, $seo);
 
             $tree = null;
 
@@ -109,12 +133,12 @@ class CategoriesController extends Controller
 
         Session::flash('flash', 'Новые данные сохранены успешно');
 
-        return redirect()->route('admin.categories.edit', $category);
+        return redirect()->route('admin.categories.edit', $category->id);
     }
 
     public function destroy($id)
     {
-        Category::whereId($id)->delete();
+        $category = Category::findOrFail($id)->delete();
 
         Session::flash('flash', 'Категория была удалена успешно');
 

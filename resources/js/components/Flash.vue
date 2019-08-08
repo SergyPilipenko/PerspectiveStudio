@@ -5,7 +5,7 @@
                 role="alert"
                 v-show="show"
         >
-            <div  class="flash-message-body">
+            <div  class="flash-message-body" >
                 <div v-text="body"></div>
                 <div v-if="errors">
                     <ul v-for="(error, errorName) in errors">
@@ -25,13 +25,14 @@
 
 <script>
     export default {
-        props: ['message'],
+        props: ['message', 'errors_list'],
         data() {
             return {
                 body: this.message,
                 level: 'success',
                 show: false,
                 hideTimer: false,
+                mouseIn: false,
                 errors: []
             }
         },
@@ -40,6 +41,13 @@
                 this.flash({
                     message: this.message
                 });
+            }
+            if(this.errors_list.length) {
+                this.flash({
+                    message: 'Error:',
+                    errors: this.errors_list,
+                    level: 'error'
+                })
             }
 
             window.events.$on(
@@ -55,15 +63,25 @@
                 this.show = true;
                 this.hide();
             },
+            flashErrors(errors) {
+                if(this.hideTimer) return;
+                this.body = data.message;
+                this.level = data.level;
+                this.errors = data.errors;
+                this.show = true;
+                this.hide();
+            },
+            mouseOver: function(){
+                this.mouseIn = !this.mouseIn;
+            },
             hide() {
-                if(!this.hideTimer) {
+                if(!this.hideTimer && !this.mouseIn) {
                     this.hideTimer = true;
                     setTimeout(() => {
                         this.show = false;
                         this.hideTimer = false;
                     }, 5000);
                 }
-
             },
 
         }
