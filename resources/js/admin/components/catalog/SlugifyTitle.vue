@@ -1,0 +1,67 @@
+<template>
+    <div>
+        <div class="category-title">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="category_title">Название</label>
+                        <input type="text" class="form-control" name="category_title" v-model="title">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="category-slug">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="category_title">URL</label>
+                        <input type="text" class="form-control" name="slug" :value="slug">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+
+    export default {
+        props: ['old'],
+
+        data() {
+            return {
+                title: '',
+                spt: ''
+            }
+        },
+        methods: {
+            find(str) {
+                var arrru = new Array ('Я','я','Ю','ю','Ч','ч','Ш','ш','Щ','щ','Ж','ж','А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','З','з','И','и','Й','й','К','к','Л','л','М','м','Н','н', 'О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ы','ы','Ь','ь','Ъ','ъ','Э','э','-');
+                var arren = new Array ('Ya','ya','Yu','yu','Ch','ch','Sh','sh','Sh','sh','Zh','zh','A','a','B','b','V','v','G','g','D','d','E','e','E','e','Z','z','I','i','J','j','K','k','L','l','M','m','N','n', 'O','o','P','p','R','r','S','s','T','t','U','u','F','f','H','h','C','c','Y','y','`','`','\'','\'','E', 'e','-');
+
+                var ru = arrru.indexOf(str);
+                var en = arrru.indexOf(str);
+                var needle = '';
+                if(ru != -1) {
+                    needle = arren[ru];
+                } else if(en != -1) {
+                    needle = arren[en];
+                }
+                return needle;
+            }
+        },
+        computed: {
+            slug() {
+                var splitTitle = this.title;
+                splitTitle = splitTitle.toLowerCase();
+                splitTitle = splitTitle.replace(/\s+/g, '-');
+                this.spt = splitTitle;
+                splitTitle = splitTitle.split("");
+                for(let i in splitTitle) {
+                    splitTitle[i] = this.find(splitTitle[i]);
+                }
+                splitTitle = splitTitle.join("");
+                return splitTitle;
+            }
+        }
+    }
+</script>

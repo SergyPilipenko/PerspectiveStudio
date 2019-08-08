@@ -36,7 +36,7 @@ class CategoriesController extends Controller
     public function store(Request $request, $parent_category = null)
     {
         $this->validate($request, [
-            'category_title' => 'url|required',
+            'category_title' => 'required',
             'slug' => 'required|string'
         ]);
 
@@ -83,6 +83,7 @@ class CategoriesController extends Controller
         $this->validate($request, [
             'category_title' => 'required|min:3',
             'slug' => 'required',
+            'category_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $category = Category::with('seo')->find($category);

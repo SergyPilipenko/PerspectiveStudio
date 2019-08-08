@@ -17,6 +17,7 @@ Vue.component('flash', require('../components/Flash.vue').default);
 Vue.component('confirm', require('../components/Confirm.vue').default);
 Vue.component('accordion-list', require('../components/Accordion.vue').default);
 Vue.component('category-image', require('./components/catalog/CategoryImageUpload.vue').default);
+Vue.component('slugify-title', require('./components/catalog/SlugifyTitle.vue').default);
 Vue.component('parser', require('./components/parser/parser.vue').default);
 Vue.component('art-cross', require('./components/products/ArtCross.vue').default);
 Vue.component('product-edit-photos', require('./components/products/ProductEditPhotos.vue').default);

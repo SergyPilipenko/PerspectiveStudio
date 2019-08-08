@@ -42,7 +42,7 @@
                     message: this.message
                 });
             }
-            if(this.errors_list.length) {
+            if(Object.keys(this.errors_list).length) {
                 this.flash({
                     message: 'Error:',
                     errors: this.errors_list,
