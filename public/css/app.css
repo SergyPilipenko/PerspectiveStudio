@@ -1607,3 +1607,15 @@ a.btn {
   width: 70%;
 }
 
+.accordion-container a.btn-info {
+  background-color: unset;
+  border: none;
+  color: #000;
+  text-align: left;
+}
+
+.accordion-container a.btn-info:before {
+  position: absolute;
+  right: 27px;
+}
+

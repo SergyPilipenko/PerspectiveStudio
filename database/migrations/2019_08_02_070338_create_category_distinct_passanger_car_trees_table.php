@@ -16,7 +16,6 @@ class CreateCategoryDistinctPassangerCarTreesTable extends Migration
         Schema::create('category_distinct_passanger_car_trees', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('category_id');
-//            $table->string('slug');
             $table->foreign('category_id')
                 ->references('id')
                 ->on('categories')
