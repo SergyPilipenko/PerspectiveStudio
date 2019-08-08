@@ -30,11 +30,11 @@ class CatalogController extends Controller
      */
     public function diagnostics(ImportSetting $import_setting)
     {
-        $errors = $import_setting->importErrors()->orderBy('created_at', 'desc')->paginate(5);
+        $protuct_errors = $import_setting->importErrors()->orderBy('created_at', 'desc')->paginate(5);
         $suppliers = Supplier::all();
         $prices_count = $import_setting->prices()->count();
 
-        return view('admin.catalog.diagnostics', compact('import_setting', 'errors', 'suppliers', 'prices_count'));
+        return view('admin.catalog.diagnostics', compact('import_setting', 'protuct_errors', 'suppliers', 'prices_count'));
     }
 
     public function prices(ImportSetting $import_setting)
