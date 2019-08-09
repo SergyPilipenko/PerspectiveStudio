@@ -75,7 +75,11 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <category-image :current_image="'{{ $category->image }}'"></category-image>
+                                                    <category-image
+                                                        :current_image="'{{ $category->image }}'"
+                                                        :category_id="'{{ $category->id }}'"
+                                                        :action="'{{ route('admin.categories.image', $category->id) }}'"
+                                                    ></category-image>
                                                 </div>
                                             </div>
                                         </div>

@@ -36,6 +36,7 @@
             submitForm() {
                 let self = this;
                 let formData = new FormData();
+
                 formData.append('type', this.type);
                 formData.append('file', this.file);
 

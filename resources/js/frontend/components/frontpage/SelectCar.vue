@@ -1,6 +1,6 @@
 <template>
     <div>
-        <select name="" id="" v-model="selectedYear" @change="filterModificationsBySelectedYear">
+        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">
             <option value="">Не выбрано</option>
             <option
                 :value="year"
@@ -8,7 +8,8 @@
                 v-text="year"
             ></option>
         </select>
-        <select name="" @change="loadModels(brandSelected)" v-model="brandSelected">
+
+        <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">
             <option value="">Не выбрано</option>
             <option
                 :value="brand.id"
@@ -16,7 +17,8 @@
                 v-text="brand.name"
             ></option>
         </select>
-        <select name="" v-model="modelSelected" @change="loadModifications">
+        {{ models }}
+        <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">
             <option value="">Не выбрано</option>
             <option
                 :value="model.id"
@@ -26,7 +28,7 @@
             ></option>
         </select>
         <p>{{filteredModifications}}</p>
-        <select name="" v-model="modificationSelected" @change="choseModification">
+        <select v-if="step >=4" name="" v-model="modificationSelected" class="form-control" @change="choseModification">
 <!--        <select name="" v-model="modificationSelected">-->
             <option value="">Не выбрано</option>
             <option :value="modification.id" v-for="modification in filteredModifications" v-text="modification.name"></option>
@@ -40,11 +42,11 @@
         props: ['auto_brands'],
         data() {
             return {
-                selectedYear: 1990,
+                selectedYear: "",
                 brandSelected: "",
                 modelSelected: "",
                 modificationSelected: "",
-
+                step: 1,
             }
         },
         mounted() {
@@ -68,7 +70,33 @@
                 addFilteredModifications: 'selectCar/addFilteredModifications'
             }),
 
+            filterModelsBySelectedYear(models) {
+                const regExp = new RegExp('[0-9]{4}');
+                const validModels = models.filter(model => {
+                    const years = model.constructioninterval.split(' - ');
+                    const createdAt = years[0].match(regExp);
+                    const stopped = years[1].match(regExp);
+
+                    if(createdAt && stopped) {
+                        if(this.selectedYear >= createdAt[0] && this.selectedYear <= stopped[0]) {
+                            return model
+                        }
+                    } else if(createdAt && !stopped) {
+                        if(this.selectedYear >= createdAt[0]) {
+                            return model;
+                        }
+                    } else {
+                        console.log(this.selectedYear);
+                        console.log(createdAt);
+                        console.log(stopped);
+                    }
+                });
+                return validModels;
+            },
+
             filterModificationsBySelectedYear() {
+                if(this.selectedYear) this.step++;
+
                 const modifications = this.modifications;
                 if(!modifications) return;
                 const regExp = new RegExp('[0-9]{4}');
@@ -101,6 +129,8 @@
 
             loadModels(brand) {
 
+                if(this.brandSelected) this.step++;
+
                 if(!brand) return;
 
                 var self = this;
@@ -109,12 +139,13 @@
 
                 axios.post('/api/tecdoc/get-models', form)
                     .then(data => {
-                    self.addModels(data.data);
+                    self.addModels(self.filterModelsBySelectedYear(data.data));
                     self.resetModelsSelect();
                     self.clearModifications();
                 });
             },
             loadModifications() {
+                if(this.modelSelected) this.step++;
                 if(!this.modelSelected)  {
                     return this.modificationSelected = "";
                 }

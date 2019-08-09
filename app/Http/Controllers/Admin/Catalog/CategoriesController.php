@@ -6,7 +6,9 @@ use App\Models\Categories\Category;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Models\Seo;
 use App\Models\Tecdoc\DistinctPassangerCarTree;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
+use Exception;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -162,5 +164,32 @@ class CategoriesController extends Controller
             }
         }
         return $nodes;
+    }
+
+    public function addOrChangeImage(Request $request, Filesystem $filesystem)
+    {
+        $this->validate($request, [
+            'category_id' => 'required|exists:categories,id',
+            'category_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $category = Category::findOrFail($request->category_id);
+
+        $file = $request->file('category_image');
+
+        if($file) {
+            $file_name = time() . $file->getClientOriginalName();
+            $file_path = 'upload/img/categories/';
+            if($category->image) {
+                $filesystem->delete($category->image);
+            }
+            $file->move($file_path, $file_name);
+            $category->image = $file_path.$file_name;
+        }
+
+        $category->update();
+
+        return ['status' => 'success', 'file_path' => $category->image];
+
     }
 }

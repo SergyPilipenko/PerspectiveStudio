@@ -1880,15 +1880,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auto_brands'],
   data: function data() {
     return {
-      selectedYear: 1990,
+      selectedYear: "",
       brandSelected: "",
       modelSelected: "",
-      modificationSelected: ""
+      modificationSelected: "",
+      step: 1
     };
   },
   mounted: function mounted() {
@@ -1908,9 +1911,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     clearModifications: 'selectCar/clearModifications',
     addFilteredModifications: 'selectCar/addFilteredModifications'
   }), {
-    filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
+    filterModelsBySelectedYear: function filterModelsBySelectedYear(models) {
       var _this = this;
 
+      var regExp = new RegExp('[0-9]{4}');
+      var validModels = models.filter(function (model) {
+        var years = model.constructioninterval.split(' - ');
+        var createdAt = years[0].match(regExp);
+        var stopped = years[1].match(regExp);
+
+        if (createdAt && stopped) {
+          if (_this.selectedYear >= createdAt[0] && _this.selectedYear <= stopped[0]) {
+            return model;
+          }
+        } else if (createdAt && !stopped) {
+          if (_this.selectedYear >= createdAt[0]) {
+            return model;
+          }
+        } else {
+          console.log(_this.selectedYear);
+          console.log(createdAt);
+          console.log(stopped);
+        }
+      });
+      return validModels;
+    },
+    filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
+      var _this2 = this;
+
+      if (this.selectedYear) this.step++;
       var modifications = this.modifications;
       if (!modifications) return;
       var regExp = new RegExp('[0-9]{4}');
@@ -1920,15 +1949,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var stopped = years[1].match(regExp);
 
         if (createdAt && stopped) {
-          if (_this.selectedYear >= createdAt[0] && _this.selectedYear <= stopped[0]) {
+          if (_this2.selectedYear >= createdAt[0] && _this2.selectedYear <= stopped[0]) {
             return modification;
           }
         } else if (createdAt && !stopped) {
-          if (_this.selectedYear >= createdAt[0]) {
+          if (_this2.selectedYear >= createdAt[0]) {
             return modification;
           }
         } else {
-          console.log(_this.selectedYear);
+          console.log(_this2.selectedYear);
           console.log(createdAt);
           console.log(stopped);
         }
@@ -1939,17 +1968,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.modelSelected = "";
     },
     loadModels: function loadModels(brand) {
+      if (this.brandSelected) this.step++;
       if (!brand) return;
       var self = this;
       var form = new FormData();
       form.append('brand_id', brand);
       axios.post('/api/tecdoc/get-models', form).then(function (data) {
-        self.addModels(data.data);
+        self.addModels(self.filterModelsBySelectedYear(data.data));
         self.resetModelsSelect();
         self.clearModifications();
       });
     },
     loadModifications: function loadModifications() {
+      if (this.modelSelected) this.step++;
+
       if (!this.modelSelected) {
         return this.modificationSelected = "";
       }
@@ -22221,6 +22253,7 @@ var render = function() {
             expression: "selectedYear"
           }
         ],
+        staticClass: "form-control",
         attrs: { name: "", id: "" },
         on: {
           change: [
@@ -22253,141 +22286,150 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
+    _vm.step >= 2
+      ? _c(
+          "select",
           {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.brandSelected,
-            expression: "brandSelected"
-          }
-        ],
-        attrs: { name: "" },
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.brandSelected = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            function($event) {
-              return _vm.loadModels(_vm.brandSelected)
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.brandSelected,
+                expression: "brandSelected"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { name: "" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.brandSelected = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                function($event) {
+                  return _vm.loadModels(_vm.brandSelected)
+                }
+              ]
             }
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
-        _vm._v(" "),
-        _vm._l(_vm.brands, function(brand) {
-          return _c("option", {
-            domProps: { value: brand.id, textContent: _vm._s(brand.name) }
-          })
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
+          },
+          [
+            _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
+            _vm._v(" "),
+            _vm._l(_vm.brands, function(brand) {
+              return _c("option", {
+                domProps: { value: brand.id, textContent: _vm._s(brand.name) }
+              })
+            })
+          ],
+          2
+        )
+      : _vm._e(),
+    _vm._v("\n        " + _vm._s(_vm.models) + "\n        "),
+    _vm.step >= 3
+      ? _c(
+          "select",
           {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.modelSelected,
-            expression: "modelSelected"
-          }
-        ],
-        attrs: { name: "" },
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.modelSelected = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            _vm.loadModifications
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
-        _vm._v(" "),
-        _vm._l(_vm.models, function(model) {
-          return _c("option", {
-            domProps: { value: model.id, textContent: _vm._s(model.name) }
-          })
-        })
-      ],
-      2
-    ),
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.modelSelected,
+                expression: "modelSelected"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { name: "" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.modelSelected = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.loadModifications
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
+            _vm._v(" "),
+            _vm._l(_vm.models, function(model) {
+              return _c("option", {
+                domProps: { value: model.id, textContent: _vm._s(model.name) }
+              })
+            })
+          ],
+          2
+        )
+      : _vm._e(),
     _vm._v(" "),
     _c("p", [_vm._v(_vm._s(_vm.filteredModifications))]),
     _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
+    _vm.step >= 4
+      ? _c(
+          "select",
           {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.modificationSelected,
-            expression: "modificationSelected"
-          }
-        ],
-        attrs: { name: "" },
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.modificationSelected = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            _vm.choseModification
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
-        _vm._v(" "),
-        _vm._l(_vm.filteredModifications, function(modification) {
-          return _c("option", {
-            domProps: {
-              value: modification.id,
-              textContent: _vm._s(modification.name)
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.modificationSelected,
+                expression: "modificationSelected"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { name: "" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.modificationSelected = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                _vm.choseModification
+              ]
             }
-          })
-        })
-      ],
-      2
-    )
+          },
+          [
+            _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
+            _vm._v(" "),
+            _vm._l(_vm.filteredModifications, function(modification) {
+              return _c("option", {
+                domProps: {
+                  value: modification.id,
+                  textContent: _vm._s(modification.name)
+                }
+              })
+            })
+          ],
+          2
+        )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -35749,7 +35791,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    years: [1990, 1991, 1992, 1993, 1994, 1995, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
+    years: [1990, 1991, 1992, 1993, 1994, 1995, 2006, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
     brands: [],
     models: [],
     modifications: [],
