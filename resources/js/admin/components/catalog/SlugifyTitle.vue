@@ -15,7 +15,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="category_title">URL</label>
-                        <input type="text" class="form-control" name="slug" :value="slug">
+                        <input type="text" class="form-control" name="slug" :value="slugify">
                     </div>
                 </div>
             </div>
@@ -25,18 +25,22 @@
 <script>
 
     export default {
-        props: ['old'],
+        props: ['old', 'current_title', 'current_slug'],
 
         data() {
             return {
                 title: '',
+                slug: this.current_slug,
                 spt: ''
             }
         },
+        created() {
+            this.current_title ? this.title = this.current_title : this.title = '';
+        },
         methods: {
             find(str) {
-                var arrru = new Array ('Я','я','Ю','ю','Ч','ч','Ш','ш','Щ','щ','Ж','ж','А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','З','з','И','и','Й','й','К','к','Л','л','М','м','Н','н', 'О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ы','ы','Ь','ь','Ъ','ъ','Э','э','-');
-                var arren = new Array ('Ya','ya','Yu','yu','Ch','ch','Sh','sh','Sh','sh','Zh','zh','A','a','B','b','V','v','G','g','D','d','E','e','E','e','Z','z','I','i','J','j','K','k','L','l','M','m','N','n', 'O','o','P','p','R','r','S','s','T','t','U','u','F','f','H','h','C','c','Y','y','`','`','\'','\'','E', 'e','-');
+                var arrru = new Array ('Я','я','Ю','ю','Ч','ч','Ш','ш','Щ','щ','Ж','ж','А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','З','з','И','и','Й','й','К','к','Л','л','М','м','Н','н', 'О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ы','ы','Ь','ь','Ъ','ъ','Э','э','-','/','.');
+                var arren = new Array ('Ya','ya','Yu','yu','Ch','ch','Sh','sh','Sh','sh','Zh','zh','A','a','B','b','V','v','G','g','D','d','E','e','E','e','Z','z','I','i','J','j','K','k','L','l','M','m','N','n', 'O','o','P','p','R','r','S','s','T','t','U','u','F','f','H','h','C','c','Y','y','','','\'','\'','E', 'e','-','-','-');
 
                 var ru = arrru.indexOf(str);
                 var en = arrru.indexOf(str);
@@ -50,14 +54,27 @@
             }
         },
         computed: {
-            slug() {
-                var splitTitle = this.title;
+            slugify() {
+                var splitTitle =  this.title;
+                // if(this.slug) {
+                //     splitTitle = this.slug;
+                //     this.slug = '';
+                // } else {
+                //     splitTitle =  this.title;
+                // }
+
                 splitTitle = splitTitle.toLowerCase();
                 splitTitle = splitTitle.replace(/\s+/g, '-');
                 this.spt = splitTitle;
                 splitTitle = splitTitle.split("");
                 for(let i in splitTitle) {
-                    splitTitle[i] = this.find(splitTitle[i]);
+                    var reg = new RegExp('[a-zA-Z0-9]');
+                    if(reg.test(splitTitle[i])) {
+                        splitTitle[i] = splitTitle[i];
+                        continue;
+                    } else {
+                        splitTitle[i] = this.find(splitTitle[i]);
+                    }
                 }
                 splitTitle = splitTitle.join("");
                 return splitTitle;

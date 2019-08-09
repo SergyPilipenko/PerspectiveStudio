@@ -24,6 +24,7 @@ Route::prefix('admin')->group(function() {
         Route::get('{category}/create', 'Admin\Catalog\CategoriesController@create')->name('admin.categories.create-subcategory');
         Route::post('{category}/store', 'Admin\Catalog\CategoriesController@store')->name('admin.categories.store-subcategory');
         Route::get('{category}/edit', 'Admin\Catalog\CategoriesController@edit')->name('admin.categories.edit');
+        Route::post('{category}/add-or-change-image', 'Admin\Catalog\CategoriesController@addOrChangeImage')->name('admin.categories.image');
         Route::put('{category}/update', 'Admin\Catalog\CategoriesController@update')->name('admin.categories.update');
     });
 
