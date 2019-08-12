@@ -27,6 +27,7 @@ class TecdocController extends Controller
         return $tecDoc->getModels($request->brand_id);
     }
 
+
     /**
      * @param Request $request
      * @param PartfixTecDoc $tecDoc
@@ -40,5 +41,37 @@ class TecdocController extends Controller
         ]);
 
         return $tecDoc->getModifications($request->model_id);
+    }
+
+    /**
+     * @param Request $request
+     * @param PartfixTecDoc $tecDoc
+     * @return mixed
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function getModelsBodyTypes(Request $request, PartfixTecDoc $tecDoc)
+    {
+        $this->validate($request, [
+            'model_Ids' => 'required'
+        ]);
+
+        return $tecDoc->getModelsBodyTypes($request->model_Ids);
+
+    }
+
+    /**
+     * @param Request $request
+     * @param PartfixTecDoc $tecDoc
+     * @return mixed
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function getModelsEngines(Request $request, PartfixTecDoc $tecDoc)
+    {
+        $this->validate($request, [
+            'model_Ids' => 'required',
+            'body_type' => 'required',
+        ]);
+
+        return $tecDoc->getModelsEngines($request->model_Ids, $request->body_type);
     }
 }
