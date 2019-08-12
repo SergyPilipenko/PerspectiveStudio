@@ -233,7 +233,7 @@ class Tecdoc
     public function getModificationById($id)
     {
         switch ($this->type) {
-            case 'passenger':
+            case 'passtartsenger':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.modelid
 					FROM passanger_cars pc 

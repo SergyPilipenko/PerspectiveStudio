@@ -1882,8 +1882,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  //удачи! ^_^
   props: ['auto_brands'],
   data: function data() {
     return {
@@ -1891,8 +1910,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       brandSelected: "",
       modelSelected: "",
       modificationSelected: "",
-      step: 1
+      step: 0,
+      rangeYears: [],
+      bodyTypeSelected: "",
+      engines: []
     };
+  },
+  created: function created() {
+    var first = this.years[0];
+
+    while (first <= this.years[1]) {
+      this.rangeYears.push(first);
+      first++;
+    }
   },
   mounted: function mounted() {
     this.addBrands(this.auto_brands);
@@ -1902,15 +1932,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     brands: 'selectCar/getBrands',
     models: 'selectCar/getModels',
     modifications: 'selectCar/getModifications',
-    filteredModifications: 'selectCar/getFilteredModifications'
+    filteredModifications: 'selectCar/getFilteredModifications',
+    getModelsDistinct: 'selectCar/getDistinctModels',
+    getBodyTypes: 'selectCar/getBodyTypes'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])({
     addBrands: 'selectCar/addBrands',
     addModels: 'selectCar/addModels',
     addModifications: 'selectCar/addModifications',
     clearModifications: 'selectCar/clearModifications',
-    addFilteredModifications: 'selectCar/addFilteredModifications'
+    addFilteredModifications: 'selectCar/addFilteredModifications',
+    addDistinctModels: 'selectCar/addDistinctModels',
+    addBodyTypes: 'selectCar/addBodyTypes'
   }), {
+    distinctModels: function distinctModels(models) {
+      var dm = [];
+      var distModels = models.filter(function (model) {
+        if (!dm.includes(model.name.substr(0, model.name.indexOf(' ')))) {
+          dm.push(model.name.substr(0, model.name.indexOf(' ')));
+          return model;
+        }
+      });
+      return distModels;
+    },
     filterModelsBySelectedYear: function filterModelsBySelectedYear(models) {
       var _this = this;
 
@@ -1934,12 +1978,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           console.log(stopped);
         }
       });
+      this.addDistinctModels(this.distinctModels(validModels));
       return validModels;
     },
     filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
       var _this2 = this;
 
-      if (this.selectedYear) this.step++;
+      !this.step ? this.step += 2 : this.step = this.step;
       var modifications = this.modifications;
       if (!modifications) return;
       var regExp = new RegExp('[0-9]{4}');
@@ -1964,11 +2009,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       this.addFilteredModifications(validModifications);
     },
+    getModelById: function getModelById(id) {
+      for (var i = 0; i <= this.models.length; i++) {
+        if (this.models[i].id == id) return this.models[i];
+      }
+    },
     resetModelsSelect: function resetModelsSelect() {
       this.modelSelected = "";
     },
     loadModels: function loadModels(brand) {
-      if (this.brandSelected) this.step++;
+      this.step = 3;
       if (!brand) return;
       var self = this;
       var form = new FormData();
@@ -1979,19 +2029,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         self.clearModifications();
       });
     },
+    getSameModelIds: function getSameModelIds(modelName) {
+      var modelsIds = [];
+
+      for (var i in this.models) {
+        var reg = new RegExp(modelName);
+
+        if (reg.test(this.models[i].name)) {
+          modelsIds.push(this.models[i].id);
+        }
+      }
+
+      return modelsIds;
+    },
+    getModelSelectedIds: function getModelSelectedIds() {
+      var modelSelected = this.getModelById(this.modelSelected);
+      var modelName = modelSelected.name.substr(0, modelSelected.name.indexOf(' '));
+      var sameModelIds = this.getSameModelIds(modelName);
+      return sameModelIds;
+    },
+    loadEngines: function loadEngines() {
+      var modelSelectedIds = this.getModelSelectedIds();
+      var self = this;
+      var form = new FormData();
+      form.append('model_Ids', modelSelectedIds);
+      form.append('body_type', this.bodyTypeSelected.displayvalue);
+      axios.post('/api/tecdoc/get-models-engines', form).then(function (data) {
+        self.engines = data.data;
+      });
+    },
     loadModifications: function loadModifications() {
-      if (this.modelSelected) this.step++;
+      this.step = 3;
 
       if (!this.modelSelected) {
         return this.modificationSelected = "";
       }
 
+      var modelSelectedIds = this.getModelSelectedIds();
       var self = this;
       var form = new FormData();
-      form.append('model_id', self.modelSelected);
-      axios.post('/api/tecdoc/get-modifications', form).then(function (data) {
-        self.addModifications(data.data);
-        self.filterModificationsBySelectedYear();
+      form.append('model_Ids', modelSelectedIds);
+      axios.post('/api/tecdoc/get-models-body-types', form).then(function (data) {
+        self.addBodyTypes(data.data);
       });
     },
     choseModification: function choseModification() {
@@ -22277,7 +22356,7 @@ var render = function() {
       [
         _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
         _vm._v(" "),
-        _vm._l(_vm.years, function(year) {
+        _vm._l(_vm.rangeYears, function(year) {
           return _c("option", {
             domProps: { value: year, textContent: _vm._s(year) }
           })
@@ -22333,7 +22412,7 @@ var render = function() {
           2
         )
       : _vm._e(),
-    _vm._v("\n        " + _vm._s(_vm.models) + "\n        "),
+    _vm._v(" "),
     _vm.step >= 3
       ? _c(
           "select",
@@ -22370,7 +22449,7 @@ var render = function() {
           [
             _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
             _vm._v(" "),
-            _vm._l(_vm.models, function(model) {
+            _vm._l(_vm.getModelsDistinct, function(model) {
               return _c("option", {
                 domProps: { value: model.id, textContent: _vm._s(model.name) }
               })
@@ -22380,8 +22459,6 @@ var render = function() {
         )
       : _vm._e(),
     _vm._v(" "),
-    _c("p", [_vm._v(_vm._s(_vm.filteredModifications))]),
-    _vm._v(" "),
     _vm.step >= 4
       ? _c(
           "select",
@@ -22390,8 +22467,8 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.modificationSelected,
-                expression: "modificationSelected"
+                value: _vm.bodyTypeSelected,
+                expression: "bodyTypeSelected"
               }
             ],
             staticClass: "form-control",
@@ -22407,29 +22484,30 @@ var render = function() {
                       var val = "_value" in o ? o._value : o.value
                       return val
                     })
-                  _vm.modificationSelected = $event.target.multiple
+                  _vm.bodyTypeSelected = $event.target.multiple
                     ? $$selectedVal
                     : $$selectedVal[0]
                 },
-                _vm.choseModification
+                _vm.loadEngines
               ]
             }
           },
           [
             _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
             _vm._v(" "),
-            _vm._l(_vm.filteredModifications, function(modification) {
+            _vm._l(_vm.getBodyTypes, function(body) {
               return _c("option", {
                 domProps: {
-                  value: modification.id,
-                  textContent: _vm._s(modification.name)
+                  value: body,
+                  textContent: _vm._s(body.displayvalue)
                 }
               })
             })
           ],
           2
         )
-      : _vm._e()
+      : _vm._e(),
+    _vm._v("\n        " + _vm._s(_vm.engines) + "\n\n")
   ])
 }
 var staticRenderFns = []
@@ -35791,11 +35869,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    years: [1990, 1991, 1992, 1993, 1994, 1995, 2006, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
+    years: [1990, 2019],
     brands: [],
     models: [],
     modifications: [],
-    filteredModifications: []
+    filteredModifications: [],
+    distinctModels: [],
+    bodyTypes: []
   },
   getters: {
     getYears: function getYears(state) {
@@ -35809,6 +35889,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     getModifications: function getModifications(state) {
       return state.modifications;
+    },
+    getBodyTypes: function getBodyTypes(state) {
+      return state.bodyTypes;
+    },
+    getDistinctModels: function getDistinctModels(state) {
+      return state.distinctModels;
     },
     getFilteredModifications: function getFilteredModifications(state) {
       return state.filteredModifications;
@@ -35827,14 +35913,20 @@ __webpack_require__.r(__webpack_exports__);
     addFilteredModifications: function addFilteredModifications(state, newValue) {
       state.filteredModifications = newValue;
     },
+    addDistinctModels: function addDistinctModels(state, newValue) {
+      state.distinctModels = newValue;
+    },
+    addBodyTypes: function addBodyTypes(state, newValue) {
+      state.bodyTypes = newValue;
+    },
     clearModifications: function clearModifications(state) {
       state.modifications = [];
-      state.filteredModifications = [];
     }
   },
-  actions: {// resetModifications: function(context, payload){
-    //     context.commit('changeAmount', payload)
-    // },
+  actions: {
+    resetModifications: function resetModifications(context) {
+      context.commit('resetModifications');
+    }
   }
 });
 

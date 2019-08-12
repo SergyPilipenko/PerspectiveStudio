@@ -21,6 +21,50 @@ class PartfixTecDoc extends Tecdoc
     }
 
     /**
+     * (1.4) Типы кузова
+     *
+     * @param $models_ids
+     * @return mixed
+     */
+
+    public function getModelsBodyTypes($models_ids)
+    {
+        return DB::connection($this->connection)->select("
+            SELECT DISTINCT a.displayvalue FROM `models` m
+                LEFT JOIN passanger_cars p ON m.id = p.modelid
+                LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
+                WHERE m.id in ($models_ids) AND a.attributetype = 'BodyType'
+        ");
+    }
+
+    public function getModelsEngines($models_ids, $body_type)
+    {
+        $engineType = [];
+        $attributes =  DB::connection($this->connection)->select("
+            SELECT w.id, w.model_id, w.passanger_car_id, pca.displayvalue as EngineType, cp.displayvalue as capacity, w.displayvalue as BodyType, pca.displayvalue, w.description from (SELECT a.id, a.attributetype, p.description, a.displayvalue,  p.id as passanger_car_id, m.id as model_id
+                FROM models m
+                LEFT JOIN passanger_cars p on m.id = p.modelid
+                LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
+                WHERE m.id IN ($models_ids) AND a.attributetype = 'BodyType' AND a.displayvalue = '".$body_type."') w
+                LEFT JOIN passanger_car_attributes pca ON pca.passangercarid = w.passanger_car_id
+                LEFT JOIN passanger_car_attributes cp ON cp.passangercarid = w.passanger_car_id
+                WHERE pca.attributetype = 'EngineType' and cp.attributetype = 'Capacity'
+        ");
+
+        foreach ($attributes as $attribute) {
+            if(preg_match('/[0-9].[0-9]/', $attribute->capacity, $matches)) {
+                $engineType[$attribute->EngineType][] = $matches[0];
+            }
+        }
+
+        foreach ($engineType as &$type) {
+            $type = array_unique($type);
+        }
+
+        return $engineType;
+    }
+
+    /**
      * (1.3) Модификации авто
      *
      * @param $model_id
@@ -88,6 +132,7 @@ class PartfixTecDoc extends Tecdoc
                 break;
         }
     }
+
 
     /**
      * (2.4) Выборка вложенного дерева категрий

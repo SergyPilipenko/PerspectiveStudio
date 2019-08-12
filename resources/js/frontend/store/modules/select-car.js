@@ -1,11 +1,13 @@
 export default {
     namespaced: true,
     state: {
-        years: [1990,1991,1992,1993,1994,1995,2006,2010,2011,2012,2013,2014,2015,2016],
+        years: [1990,2019],
         brands: [],
         models: [],
         modifications: [],
-        filteredModifications: []
+        filteredModifications: [],
+        distinctModels: [],
+        bodyTypes: [],
     },
     getters: {
         getYears: function (state) {
@@ -19,6 +21,12 @@ export default {
         },
         getModifications: function (state) {
             return state.modifications
+        },
+        getBodyTypes: function (state) {
+            return state.bodyTypes
+        },
+        getDistinctModels: function (state) {
+            return state.distinctModels
         },
         getFilteredModifications: function (state) {
             return state.filteredModifications
@@ -37,15 +45,19 @@ export default {
         addFilteredModifications: function (state, newValue) {
             state.filteredModifications = newValue;
         },
+        addDistinctModels: function (state, newValue) {
+            state.distinctModels = newValue;
+        },
+        addBodyTypes: function (state, newValue) {
+            state.bodyTypes = newValue;
+        },
         clearModifications: function (state) {
             state.modifications = [];
-            state.filteredModifications = [];
-
         },
     },
     actions: {
-        // resetModifications: function(context, payload){
-        //     context.commit('changeAmount', payload)
-        // },
+        resetModifications: function(context){
+            context.commit('resetModifications')
+        },
     }
 }
