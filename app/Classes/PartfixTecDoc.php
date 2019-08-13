@@ -37,6 +37,36 @@ class PartfixTecDoc extends Tecdoc
         ");
     }
 
+//    public function getModelsAttributes($models_ids)
+//    {
+//
+//        $models = [];
+//
+//        $attributes =  DB::connection($this->connection)->select("
+//           SELECT * FROM models m
+//            LEFT JOIN passanger_cars p ON m.id = p.modelid
+//            LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
+//            WHERE m.id IN ({$models_ids})
+//        ");
+//
+//        foreach ($attributes as $attribute) {
+//            if(!array_key_exists($attribute->modelid)) {
+//                $models[$attribute->modelid]
+//            }
+//        }
+//
+//        dd($models);
+//
+//
+//    }
+
+    /**
+     * (1.4) Объемы двигателей для моделей
+     *
+     * @param $models_ids
+     * @return mixed
+     */
+
     public function getModelsEngines($models_ids, $body_type)
     {
         $engineType = [];

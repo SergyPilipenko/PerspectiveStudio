@@ -1900,6 +1900,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   //удачи! ^_^
@@ -1913,7 +1922,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       step: 0,
       rangeYears: [],
       bodyTypeSelected: "",
-      engines: []
+      selectedEngine: ""
     };
   },
   created: function created() {
@@ -1934,7 +1943,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     modifications: 'selectCar/getModifications',
     filteredModifications: 'selectCar/getFilteredModifications',
     getModelsDistinct: 'selectCar/getDistinctModels',
-    getBodyTypes: 'selectCar/getBodyTypes'
+    getBodyTypes: 'selectCar/getBodyTypes',
+    getEngines: 'selectCar/getEngines'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])({
     addBrands: 'selectCar/addBrands',
@@ -1943,7 +1953,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     clearModifications: 'selectCar/clearModifications',
     addFilteredModifications: 'selectCar/addFilteredModifications',
     addDistinctModels: 'selectCar/addDistinctModels',
-    addBodyTypes: 'selectCar/addBodyTypes'
+    addBodyTypes: 'selectCar/addBodyTypes',
+    addEngines: 'selectCar/addEngines'
   }), {
     distinctModels: function distinctModels(models) {
       var dm = [];
@@ -2009,6 +2020,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       this.addFilteredModifications(validModifications);
     },
+    getBrandById: function getBrandById(id) {
+      for (var i = 0; i <= this.brands.length; i++) {
+        if (this.brands[i].id == id) return this.brands[i];
+      }
+    },
     getModelById: function getModelById(id) {
       for (var i = 0; i <= this.models.length; i++) {
         if (this.models[i].id == id) return this.models[i];
@@ -2055,24 +2071,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       form.append('model_Ids', modelSelectedIds);
       form.append('body_type', this.bodyTypeSelected.displayvalue);
       axios.post('/api/tecdoc/get-models-engines', form).then(function (data) {
-        self.engines = data.data;
+        self.$set(self, 'step', 5);
+        self.addEngines(data.data);
       });
     },
+    getSelectedModelURI: function getSelectedModelURI() {
+      var brandSelected = this.getBrandById(this.brandSelected);
+      var modelSelected = this.getModelById(this.modelSelected);
+      var brandName = brandSelected.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
+      var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
+      modelName = modelName.toLowerCase();
+      return brandName + "-" + modelName;
+    },
     loadModifications: function loadModifications() {
-      this.step = 3;
+      this.step = 4;
 
       if (!this.modelSelected) {
         return this.modificationSelected = "";
       }
 
       var modelSelectedIds = this.getModelSelectedIds();
-      var self = this;
-      var form = new FormData();
-      form.append('model_Ids', modelSelectedIds);
-      axios.post('/api/tecdoc/get-models-body-types', form).then(function (data) {
-        self.addBodyTypes(data.data);
-      });
+      window.location.href = this.getSelectedModelURI(); // var self = this;
+      // let form = new FormData();
+      // form.append('model_Ids', modelSelectedIds);
+      // axios.post('/api/tecdoc/get-models-body-types', form)
+      //     .then(data => {
+      //         self.addBodyTypes(data.data);
+      //     })
     },
+    choseEngine: function choseEngine() {},
     choseModification: function choseModification() {
       window.location.href = this.modificationSelected + "/categories/";
     }
@@ -22507,7 +22534,40 @@ var render = function() {
           2
         )
       : _vm._e(),
-    _vm._v("\n        " + _vm._s(_vm.engines) + "\n\n")
+    _vm._v(" "),
+    _c("div", [
+      _c(
+        "ul",
+        _vm._l(_vm.getEngines, function(engine, index) {
+          return _c("li", [
+            _vm._v(
+              "\n                    " +
+                _vm._s(index) +
+                "\n                    "
+            ),
+            _c(
+              "ul",
+              _vm._l(engine, function(capacity) {
+                return _c("li", [
+                  _c("a", {
+                    attrs: { href: "#" },
+                    domProps: { textContent: _vm._s(capacity) },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.test(capacity)
+                      }
+                    }
+                  })
+                ])
+              }),
+              0
+            )
+          ])
+        }),
+        0
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -35875,7 +35935,8 @@ __webpack_require__.r(__webpack_exports__);
     modifications: [],
     filteredModifications: [],
     distinctModels: [],
-    bodyTypes: []
+    bodyTypes: [],
+    engines: []
   },
   getters: {
     getYears: function getYears(state) {
@@ -35898,6 +35959,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     getFilteredModifications: function getFilteredModifications(state) {
       return state.filteredModifications;
+    },
+    getEngines: function getEngines(state) {
+      return state.engines;
     }
   },
   mutations: {
@@ -35918,6 +35982,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     addBodyTypes: function addBodyTypes(state, newValue) {
       state.bodyTypes = newValue;
+    },
+    addEngines: function addEngines(state, newValue) {
+      state.engines = newValue;
     },
     clearModifications: function clearModifications(state) {
       state.modifications = [];
