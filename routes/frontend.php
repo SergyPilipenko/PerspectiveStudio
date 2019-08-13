@@ -13,7 +13,7 @@
 
 
 //Route::get('parts/{modificationId}', 'Frontend\PartsController@index');
-
+//
 Route::prefix('{modificationId}/categories')->group(function (){
     Route::get('/', 'Frontend\CategoriesController@index')->name('frontend.categories.index');
 //    Route::get('{category}/{children}', 'Frontend\CategoriesController@show')->name('frontend.categories.show');
@@ -21,4 +21,13 @@ Route::prefix('{modificationId}/categories')->group(function (){
         ->where('categories','^[a-zA-Z0-9-_\/]+$')->name('frontend.categories.show');
 });
 
-//Route::get('{modificationId}/categories/', 'Frontend\CategoriesController@index')->name('frontend.categories.index');
+
+$brand = '{brand}';
+$model = '{model}';
+$categories = '{categories}';
+
+Route::get(implode('-', [$brand, $model, $categories]), 'Frontend\CategoriesController@show')
+    ->where('categories','^[a-zA-Z0-9-_\/]+$')->name('frontend.categories.show');
+Route::get(implode('-', [$brand, $model]), 'Frontend\CategoriesController@index');
+Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model');
+Route::get($brand, 'Frontend\PagesController@brand');

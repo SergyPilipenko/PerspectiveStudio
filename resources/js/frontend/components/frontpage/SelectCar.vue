@@ -8,7 +8,6 @@
                 v-text="year"
             ></option>
         </select>
-
         <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">
             <option value="">Не выбрано</option>
             <option
@@ -35,8 +34,18 @@
 
             ></option>
         </select>
-        {{ engines }}
-
+        <div>
+            <ul>
+                <li v-for="(engine, index) in getEngines">
+                    {{index}}
+                    <ul>
+                        <li v-for="capacity in engine">
+                            <a href="#" v-text="capacity" @click.prevent="test(capacity)"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
 <!--        <select v-if="step >=4" name="" v-model="bodyTypeSelected" class="form-control" @change="loadEngines">-->
 <!--            <option value="">Не выбрано</option>-->
 <!--            <option-->
@@ -68,7 +77,7 @@
                 step: 0,
                 rangeYears: [],
                 bodyTypeSelected: "",
-                engines: [],
+                selectedEngine: ""
             }
         },
         created() {
@@ -93,6 +102,7 @@
                 filteredModifications: 'selectCar/getFilteredModifications',
                 getModelsDistinct: 'selectCar/getDistinctModels',
                 getBodyTypes: 'selectCar/getBodyTypes',
+                getEngines: 'selectCar/getEngines',
             }),
 
         },
@@ -106,7 +116,8 @@
                 clearModifications: 'selectCar/clearModifications',
                 addFilteredModifications: 'selectCar/addFilteredModifications',
                 addDistinctModels: 'selectCar/addDistinctModels',
-                addBodyTypes: 'selectCar/addBodyTypes'
+                addBodyTypes: 'selectCar/addBodyTypes',
+                addEngines: 'selectCar/addEngines',
             }),
 
             distinctModels(models) {
@@ -180,6 +191,12 @@
                 this.addFilteredModifications(validModifications);
             },
 
+            getBrandById(id) {
+                for(let i = 0; i <= this.brands.length; i++) {
+                    if(this.brands[i].id == id) return this.brands[i];
+                }
+            },
+
             getModelById(id) {
                 for(let i = 0; i <= this.models.length; i++) {
                     if(this.models[i].id == id) return this.models[i];
@@ -229,6 +246,8 @@
                 return sameModelIds;
             },
 
+
+
             loadEngines() {
                 var modelSelectedIds = this.getModelSelectedIds();
 
@@ -240,12 +259,24 @@
 
                 axios.post('/api/tecdoc/get-models-engines', form)
                     .then(data => {
-                        self.engines = data.data;
+                        self.$set(self, 'step', 5);
+                        self.addEngines(data.data);
                     })
             },
 
+            getSelectedModelURI() {
+                var brandSelected = this.getBrandById(this.brandSelected);
+                var modelSelected = this.getModelById(this.modelSelected);
+
+                var brandName = brandSelected.name.toLowerCase().replace(/[^a-zA-Z0-9]/g,'-');
+                var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
+                modelName = modelName.toLowerCase();
+
+                return brandName + "-" + modelName;
+            },
+
             loadModifications() {
-                this.step = 3;
+                this.step = 4;
 
                 if(!this.modelSelected)  {
                     return this.modificationSelected = "";
@@ -253,13 +284,18 @@
 
                 var modelSelectedIds = this.getModelSelectedIds();
 
-                var self = this;
-                let form = new FormData();
-                form.append('model_Ids', modelSelectedIds);
-                axios.post('/api/tecdoc/get-models-body-types', form)
-                    .then(data => {
-                        self.addBodyTypes(data.data);
-                    })
+                window.location.href = this.getSelectedModelURI();
+
+                // var self = this;
+                // let form = new FormData();
+                // form.append('model_Ids', modelSelectedIds);
+                // axios.post('/api/tecdoc/get-models-body-types', form)
+                //     .then(data => {
+                //         self.addBodyTypes(data.data);
+                //     })
+            },
+            choseEngine() {
+
             },
             choseModification() {
                 window.location.href = this.modificationSelected+"/categories/";

@@ -8,6 +8,7 @@ export default {
         filteredModifications: [],
         distinctModels: [],
         bodyTypes: [],
+        engines: [],
     },
     getters: {
         getYears: function (state) {
@@ -30,7 +31,10 @@ export default {
         },
         getFilteredModifications: function (state) {
             return state.filteredModifications
-        }
+        },
+        getEngines: function (state) {
+            return state.engines
+        },
     },
     mutations: {
         addBrands: function(state, newValue){
@@ -50,6 +54,9 @@ export default {
         },
         addBodyTypes: function (state, newValue) {
             state.bodyTypes = newValue;
+        },
+        addEngines: function (state, newValue) {
+            state.engines = newValue;
         },
         clearModifications: function (state) {
             state.modifications = [];
