@@ -63,7 +63,7 @@
     </div>
 </template>
 <script>
-    import {mapState, mapGetters, mapMutations} from 'vuex'
+    import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
     export default {
         //удачи! ^_^
@@ -118,6 +118,10 @@
                 addDistinctModels: 'selectCar/addDistinctModels',
                 addBodyTypes: 'selectCar/addBodyTypes',
                 addEngines: 'selectCar/addEngines',
+            }),
+
+            ...mapActions({
+                setCarYear: 'selectCar/setCarYear'
             }),
 
             distinctModels(models) {
@@ -189,6 +193,17 @@
                     }
                 });
                 this.addFilteredModifications(validModifications);
+
+                this.setCarYear({action: '/set-car-year', yearSelected: this.selectedYear});
+
+                // let form = new FormData();
+                // form.append('selected_year', this.selectedYear);
+                // axios.post('/set-car-year', form)
+                //     .then(data => {
+                //         self.addModels(self.filterModelsBySelectedYear(data.data));
+                //         self.resetModelsSelect();
+                //         self.clearModifications();
+                //     });
             },
 
             getBrandById(id) {
@@ -239,7 +254,6 @@
 
             getModelSelectedIds() {
                 var modelSelected = this.getModelById(this.modelSelected);
-
                 var modelName = modelSelected.name.substr(0, modelSelected.name.indexOf(' '));
                 var sameModelIds = this.getSameModelIds(modelName);
 
@@ -286,13 +300,13 @@
 
                 window.location.href = this.getSelectedModelURI();
 
-                // var self = this;
-                // let form = new FormData();
-                // form.append('model_Ids', modelSelectedIds);
-                // axios.post('/api/tecdoc/get-models-body-types', form)
-                //     .then(data => {
-                //         self.addBodyTypes(data.data);
-                //     })
+                var self = this;
+                let form = new FormData();
+                form.append('model_Ids', modelSelectedIds);
+                axios.post('/api/tecdoc/get-models-body-types', form)
+                    .then(data => {
+                        self.addBodyTypes(data.data);
+                    })
             },
             choseEngine() {
 
