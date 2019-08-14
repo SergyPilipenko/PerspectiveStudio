@@ -66,5 +66,10 @@ export default {
         resetModifications: function(context){
             context.commit('resetModifications')
         },
+        setCarYear(context, payload) {
+            let form = new FormData();
+            form.append('selected_year', payload.yearSelected);
+            axios.post(payload.action, form);
+        },
     }
 }

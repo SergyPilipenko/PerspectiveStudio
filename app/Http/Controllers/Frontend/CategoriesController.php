@@ -25,8 +25,6 @@ class CategoriesController extends Controller
             abort(404);
         }
 
-
-
         $children = $categories->first()->children()->get();
 
 //        dd($children);

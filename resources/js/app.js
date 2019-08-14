@@ -17,6 +17,7 @@ Vue.use(Vuex);
  */
 import selectCar from './frontend/store/modules/select-car';
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
+Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
 
 const store = new Vuex.Store({
     modules: {
