@@ -26,13 +26,15 @@ $brand = '{brand}';
 $model = '{model}';
 $categories = '{categories}';
 $part = '{part}';
+$modification = '{modification}';
 
 
 
-Route::get(implode('-', [$brand, $model, $categories]), 'Frontend\CategoriesController@show')
+Route::get(implode('-', [$brand, $model]).'-c-'.$categories, 'Frontend\CategoriesController@show')
     ->where('categories','^[a-zA-Z0-9-_\/]+$')->name('frontend.categories.show');
+Route::get(implode('-', [$brand, $model, $modification]), 'Frontend\PagesController@modification')->name('auto.model.modification');
 Route::get(implode('-', [$brand, $model]), 'Frontend\CategoriesController@index');
-Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model');
+Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model')->name('auto.model');
 Route::get($brand, 'Frontend\PagesController@brand');
 
 Route::post('set-car-year', function (Illuminate\Http\Request $request) {

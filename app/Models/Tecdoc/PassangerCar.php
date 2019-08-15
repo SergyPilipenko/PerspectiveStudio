@@ -19,4 +19,17 @@ class PassangerCar extends Model
     {
         return $this->hasMany(PassangerCarAttribute::class, 'passangercarid', 'id');
     }
+
+    public function scopeFilter($query, $attributes)
+    {
+
+        foreach ($attributes as $key => $attribute) {
+                $query->whereHas('attributes', function ($query) use ($key, $attribute) {
+                    foreach ($attribute as $key => $rule) {
+                        $query->where($key, $rule);
+                    }
+                });
+        }
+        return $query;
+    }
 }

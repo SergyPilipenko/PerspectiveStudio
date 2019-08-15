@@ -1864,30 +1864,134 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['year', 'actions'],
+  props: ['year', 'actions', 'models'],
   data: function data() {
     return {
       yearSelected: this.year,
-      rangeYears: [],
-      route: JSON.parse(this.actions)
+      route: JSON.parse(this.actions),
+      filteredModels: this.getFilteredModelsByYear,
+      bodyTypes: this.getBodyTypes,
+      selectedBodyType: ""
     };
   },
   created: function created() {
-    var first = this.years[0];
-
-    while (first <= this.years[1]) {
-      this.rangeYears.push(first);
-      first++;
-    }
+    this.setYearsList(this.years);
+    this.setModels(this.convertModelsBackendData());
+    this.filterModelsByYear({
+      models: this.getModels,
+      selectedYear: this.yearSelected
+    });
+    this.pluck({
+      value: 'id',
+      items: this.getFilteredModelsByYear
+    });
+    this.setBodyTypes({
+      action: this.route['get-models-body-types'],
+      model_Ids: this.getPluckedData
+    });
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
-    years: 'selectCar/getYears'
-  })),
+    years: 'selectCar/getYears',
+    getYearsList: 'selectCar/getYearsList',
+    getBodyTypes: 'selectCar/getBodyTypes',
+    getModels: 'selectCar/getModels',
+    getFilteredModelsByYear: 'selectCar/getFilteredModelsByYear',
+    getPluckedData: 'selectCar/getPluckedData',
+    getEngines: 'selectCar/getEngines',
+    getModifications: 'selectCar/getModifications'
+  }), {
+    modificationRoute: function modificationRoute(modificationId) {
+      return this.route['auto.model'] + '-' + modificationId;
+    }
+  }),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
-    setCarYear: 'selectCar/setCarYear'
-  }))
+    setCarYear: 'selectCar/setCarYear',
+    setYearsList: 'selectCar/setYearsList',
+    setModels: 'selectCar/setModels',
+    filterModelsByYear: 'selectCar/filterModelsByYear',
+    setBodyTypes: 'selectCar/setBodyTypes',
+    pluck: 'selectCar/pluck',
+    setEngines: 'selectCar/setEngines',
+    setModifications: 'selectCar/setModifications'
+  }), {
+    setCarBodyType: function setCarBodyType() {
+      this.pluck({
+        value: 'id',
+        items: this.getFilteredModelsByYear
+      });
+      this.setEngines({
+        modelIds: this.getPluckedData,
+        selectedBodyType: this.selectedBodyType,
+        action: this.route['get-models-engines']
+      });
+    },
+    setCarCapacity: function setCarCapacity(capacity, engineType) {
+      this.pluck({
+        value: 'id',
+        items: this.getFilteredModelsByYear
+      });
+      this.setModifications({
+        action: this.route['get-filtered-modifications'],
+        model_Ids: this.getPluckedData,
+        EngineType: engineType,
+        BodyType: this.selectedBodyType,
+        Capacity: capacity
+      });
+    },
+    setYear: function setYear() {
+      this.selectedBodyType = "";
+      this.setCarYear({
+        action: this.route['set-car-year'],
+        yearSelected: this.yearSelected
+      });
+      this.filterModelsByYear({
+        models: this.getModels,
+        selectedYear: this.yearSelected
+      });
+      this.pluck({
+        value: 'id',
+        items: this.getFilteredModelsByYear
+      });
+      this.setBodyTypes({
+        action: this.route['get-models-body-types'],
+        model_Ids: this.getPluckedData
+      });
+    },
+    convertModelsBackendData: function convertModelsBackendData() {
+      var models = JSON.parse(this.models);
+      var data = [];
+
+      if (models.length) {
+        for (var el in models) {
+          data.push(models[el].model);
+        }
+      }
+
+      return data;
+    }
+  })
 });
 
 /***/ }),
@@ -22455,19 +22559,14 @@ var render = function() {
                   ? $$selectedVal
                   : $$selectedVal[0]
               },
-              function($event) {
-                return _vm.setCarYear({
-                  action: _vm.route["set-car-year"],
-                  yearSelected: _vm.yearSelected
-                })
-              }
+              _vm.setYear
             ]
           }
         },
         [
           _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
           _vm._v(" "),
-          _vm._l(_vm.rangeYears, function(year) {
+          _vm._l(_vm.getYearsList, function(year) {
             return _c("option", {
               domProps: { value: year, textContent: _vm._s(year) }
             })
@@ -22477,29 +22576,115 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _vm._m(0),
+    _c(
+      "select",
+      {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.selectedBodyType,
+            expression: "selectedBodyType"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { name: "" },
+        on: {
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.selectedBodyType = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.setCarBodyType
+          ]
+        }
+      },
+      [
+        _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
+        _vm._v(" "),
+        _vm._l(_vm.getBodyTypes, function(bodyType) {
+          return _c("option", {
+            domProps: {
+              value: bodyType.displayvalue,
+              textContent: _vm._s(bodyType.displayvalue)
+            }
+          })
+        })
+      ],
+      2
+    ),
     _vm._v(" "),
-    _vm._m(1)
+    _c("div", [
+      _c(
+        "ul",
+        _vm._l(_vm.getEngines, function(engine, engineType) {
+          return _c("li", [
+            _vm._v(
+              "\n                " + _vm._s(engineType) + "\n                "
+            ),
+            _c(
+              "ul",
+              _vm._l(engine, function(capacity) {
+                return _c("li", [
+                  _c("a", {
+                    attrs: { href: "#" },
+                    domProps: { textContent: _vm._s(capacity) },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.setCarCapacity(capacity, engineType)
+                      }
+                    }
+                  })
+                ])
+              }),
+              0
+            )
+          ])
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _vm.getModifications
+      ? _c(
+          "div",
+          _vm._l(_vm.getModifications, function(modification) {
+            return _c("div", [
+              _c(
+                "a",
+                {
+                  attrs: {
+                    href: _vm.route["auto.model"] + "-" + modification.id
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(modification.fulldescription) +
+                      " (" +
+                      _vm._s(modification.enginePower) +
+                      ")\n            "
+                  )
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      : _vm._e()
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("select", { staticClass: "form-control", attrs: { name: "" } }, [
-      _c("option", { attrs: { value: "" } }, [_vm._v("test")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("select", { staticClass: "form-control", attrs: { name: "" } }, [
-      _c("option", { attrs: { value: "" } }, [_vm._v("test")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -36174,13 +36359,16 @@ __webpack_require__.r(__webpack_exports__);
   namespaced: true,
   state: {
     years: [1990, 2019],
+    yearsList: [],
     brands: [],
     models: [],
     modifications: [],
     filteredModifications: [],
     distinctModels: [],
     bodyTypes: [],
-    engines: []
+    engines: [],
+    filteredModelsByYear: [],
+    pluck: []
   },
   getters: {
     getYears: function getYears(state) {
@@ -36198,14 +36386,23 @@ __webpack_require__.r(__webpack_exports__);
     getBodyTypes: function getBodyTypes(state) {
       return state.bodyTypes;
     },
+    getYearsList: function getYearsList(state) {
+      return state.yearsList;
+    },
     getDistinctModels: function getDistinctModels(state) {
       return state.distinctModels;
+    },
+    getFilteredModelsByYear: function getFilteredModelsByYear(state) {
+      return state.filteredModelsByYear;
     },
     getFilteredModifications: function getFilteredModifications(state) {
       return state.filteredModifications;
     },
     getEngines: function getEngines(state) {
       return state.engines;
+    },
+    getPluckedData: function getPluckedData(state) {
+      return state.pluck;
     }
   },
   mutations: {
@@ -36230,7 +36427,25 @@ __webpack_require__.r(__webpack_exports__);
     addEngines: function addEngines(state, newValue) {
       state.engines = newValue;
     },
+    addFilteredModelsByYear: function addFilteredModelsByYear(state, newValue) {
+      state.filteredModelsByYear = newValue;
+    },
     clearModifications: function clearModifications(state) {
+      state.modifications = [];
+    },
+    addYearsList: function addYearsList(state, newValue) {
+      state.yearsList = newValue;
+    },
+    addPluckData: function addPluckData(state, newValue) {
+      state.pluck = newValue;
+    },
+    unsetBodyTypes: function unsetBodyTypes(state) {
+      state.bodyTypes = [];
+    },
+    unsetEngines: function unsetEngines(state) {
+      state.engines = [];
+    },
+    unsetModifications: function unsetModifications(state) {
       state.modifications = [];
     }
   },
@@ -36242,6 +36457,91 @@ __webpack_require__.r(__webpack_exports__);
       var form = new FormData();
       form.append('selected_year', payload.yearSelected);
       axios.post(payload.action, form);
+    },
+    setYearsList: function setYearsList(context, payload) {
+      var list = [];
+      var first = payload[0];
+
+      while (first <= payload[1]) {
+        list.push(first);
+        first++;
+      }
+
+      context.commit('addYearsList', list);
+    },
+    setModels: function setModels(context, payload) {
+      context.commit('addModels', payload);
+    },
+    setModifications: function setModifications(context, payload) {
+      var form = new FormData();
+      form.append('model_Ids', payload.model_Ids);
+      form.append('EngineType', payload.EngineType);
+      form.append('BodyType', payload.BodyType);
+      form.append('Capacity', payload.Capacity);
+      axios.post(payload.action, form).then(function (data) {
+        console.log(data.data);
+        context.commit('addModifications', data.data);
+      });
+    },
+    filterModelsByYear: function filterModelsByYear(context, payload) {
+      var regExp = new RegExp('[0-9]{4}');
+      var validModels = payload.models.filter(function (model) {
+        var years = model.constructioninterval.split(' - ');
+        var createdAt = years[0].match(regExp);
+        var stopped = years[1].match(regExp);
+
+        if (createdAt && stopped) {
+          if (payload.selectedYear >= createdAt[0] && payload.selectedYear <= stopped[0]) {
+            return model;
+          }
+        } else if (createdAt && !stopped) {
+          if (payload.selectedYear >= createdAt[0]) {
+            return model;
+          }
+        } else {
+          console.log(payload.selectedYear);
+          console.log(createdAt);
+          console.log(stopped);
+        }
+      });
+      context.commit('addFilteredModelsByYear', validModels);
+    },
+    setBodyTypes: function setBodyTypes(context, payload) {
+      var form = new FormData();
+
+      if (!payload.model_Ids.length) {
+        context.commit('unsetBodyTypes');
+        context.commit('unsetEngines');
+        context.commit('unsetModifications');
+        return;
+      }
+
+      form.append('model_Ids', payload.model_Ids);
+      axios.post(payload.action, form).then(function (data) {
+        context.commit('addBodyTypes', data.data);
+      });
+    },
+    setEngines: function setEngines(context, payload) {
+      var form = new FormData();
+      form.append('model_Ids', payload.modelIds);
+      form.append('body_type', payload.selectedBodyType);
+      axios.post(payload.action, form).then(function (data) {
+        context.commit('addEngines', data.data);
+      });
+    },
+    pluck: function pluck(context, payload) {
+      var plucked = [];
+
+      for (var el in payload.items) {
+        if (payload.items[el][payload.value]) {
+          plucked.push(payload.items[el][payload.value]);
+          continue;
+        }
+
+        continue;
+      }
+
+      context.commit('addPluckData', plucked);
     }
   }
 });
