@@ -82,9 +82,7 @@ class PartfixTecDoc extends Tecdoc
         ");
 
         foreach ($attributes as $attribute) {
-            if(preg_match('/[0-9].[0-9]/', $attribute->capacity, $matches)) {
-                $engineType[$attribute->EngineType][] = $matches[0];
-            }
+            $engineType[$attribute->EngineType][] = $attribute->capacity;
         }
 
         foreach ($engineType as &$type) {
@@ -142,6 +140,20 @@ class PartfixTecDoc extends Tecdoc
 					LEFT JOIN axle_attributes a on ax.id= a.axleid
 					WHERE canbedisplayed = 'True'
 					AND modelid = " . (int)$model_id . " AND isaxle = 'True'");
+                break;
+        }
+    }
+
+    public function getModelsModifications($models_ids)
+    {
+        switch ($this->type) {
+            case 'passenger':
+                return DB::connection($this->connection)->select("
+					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
+					FROM passanger_cars pc 
+					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
+					WHERE canbedisplayed = 'True'
+					AND modelid IN " . $models_ids . " AND ispassengercar = 'True'");
                 break;
         }
     }

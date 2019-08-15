@@ -2,9 +2,9 @@
 @section('content')
     <div class="container">
         <select-car-body
-            :models="'{{ $models }}'"
+            :models="'{{ json_encode($models) }}'"
             :year="'{{ Session::get('car-year') }}'"
-            :actions="'{{ json_encode(['set-car-year' => route('set-car-year')]) }}'"
+            :actions="'{{ json_encode($routes) }}'"
         ></select-car-body>
         <ul>
             @foreach($categories as $category)

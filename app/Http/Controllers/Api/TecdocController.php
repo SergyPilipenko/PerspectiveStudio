@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Classes\PartfixTecDoc;
+use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -73,5 +74,51 @@ class TecdocController extends Controller
         ]);
 
         return $tecDoc->getModelsEngines($request->model_Ids, $request->body_type);
+    }
+
+    public function getFilteredModifications(Request $request)
+    {
+        $this->validate($request, [
+            'model_Ids' => 'required',
+            'EngineType' => 'required',
+            'BodyType' => 'required',
+            'Capacity' => 'required',
+        ]);
+
+        $models = PassangerCar::whereIn('modelid', explode(',',$request->model_Ids))->with('attributes')
+            ->filter([
+            [
+                'attributetype' => 'BodyType',
+                'displayvalue' => $request->BodyType
+            ],
+            [
+                'attributetype' => 'EngineType',
+                'displayvalue' => $request->EngineType,
+            ],
+            [
+                'attributetype' => 'Capacity',
+                'displayvalue' => $request->Capacity,
+            ],
+
+        ])->get();
+
+        if($models->count()) {
+            foreach ($models as $model) {
+                foreach ($model->attributes as $attribute) {
+                    if($attribute->attributetype != "Power") {
+                        continue;
+                    } else {
+                        if(preg_match (  '/PS/' , $attribute->displayvalue)) {
+                            $power = preg_replace('/\D/', '',  $attribute->displayvalue);
+                            $model->enginePower = $power.' л.с';
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $models;
     }
 }

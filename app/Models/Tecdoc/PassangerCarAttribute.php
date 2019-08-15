@@ -12,4 +12,5 @@ class PassangerCarAttribute extends Model
     {
         $this->table = env('DB_TECDOC_DATABASE').".{$this->table}";
     }
+
 }

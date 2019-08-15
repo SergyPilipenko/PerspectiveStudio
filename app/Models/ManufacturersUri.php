@@ -29,4 +29,5 @@ class ManufacturersUri extends Model
     {
         return $this->manufacturers()->where('ispassengercar', 'true');
     }
+
 }

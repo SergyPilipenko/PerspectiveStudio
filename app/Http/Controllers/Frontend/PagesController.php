@@ -8,6 +8,7 @@ use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\CarModel;
 use App\Models\Tecdoc\Manufacturer;
+use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Transliterate;
@@ -35,11 +36,42 @@ class PagesController extends Controller
 
         $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->first();
 
+        $models = PassangerCar::whereIn('modelid', [19,36,59])->with('attributes')->filter([
+            [
+                'attributetype' => 'BodyType',
+                'displayvalue' => 'Седан'
+            ],
+            [
+                'attributetype' => 'EngineType',
+                'displayvalue' => 'Бензиновый двигатель',
+            ],
+            [
+                'attributetype' => 'Capacity',
+                'displayvalue' => '2 l',
+            ],
+        ])->get();
+
+//        print_r(count($models));
+
+
         $models = ModelsUri::where([
             'slug' => $model,
             'manufacturer_id' => $manufacturer->manufacturer_id
         ])->with('model')->get();
 
-        return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models'));
+        $routes = [
+            'set-car-year' => route('set-car-year'),
+            'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
+            'get-models-engines' => route('api.tecdoc.get-models-engines'),
+            'get-filtered-modifications' => route('api.tecdoc.get-filtered-modifications'),
+            'auto.model' => route('auto.model', [$brand, $model]),
+        ];
+
+        return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
+    }
+
+    public function modification($brand, $model, $modification)
+    {
+        dd($modification);
     }
 }
