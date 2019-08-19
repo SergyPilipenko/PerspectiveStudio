@@ -17,11 +17,12 @@ class PagesController extends Controller
 {
     public function index(PartfixTecDoc $tecdoc)
     {
-        $brands = $tecdoc->filterBrandsByModelsYear();
-        dd($brands);
+        $brands = $tecdoc->getBrands();
+
         $models = CarModel::whereIn('id', explode(',', '253,4731,3485'))
             ->with('modifications.attributes')
             ->get();
+
         $garage = \Session::get('garage')
             ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
@@ -98,6 +99,7 @@ class PagesController extends Controller
 
     public function removeCar($id)
     {
+//        dd(\Session::forget('garage'));
         $garage = collect(\Session::get('garage'));
         $current_auto = \Session::get('current-auto');
 
