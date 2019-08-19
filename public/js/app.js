@@ -1944,6 +1944,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.setEngines({
         modelIds: this.getPluckedData,
         selectedBodyType: this.selectedBodyType,
+        selectedYear: this.yearSelected,
         action: this.route['get-models-engines']
       });
     },
@@ -36479,7 +36480,6 @@ __webpack_require__.r(__webpack_exports__);
       form.append('BodyType', payload.BodyType);
       form.append('Capacity', payload.Capacity);
       axios.post(payload.action, form).then(function (data) {
-        console.log(data.data);
         context.commit('addModifications', data.data);
       });
     },
@@ -36525,6 +36525,7 @@ __webpack_require__.r(__webpack_exports__);
       var form = new FormData();
       form.append('model_Ids', payload.modelIds);
       form.append('body_type', payload.selectedBodyType);
+      form.append('selected_year', payload.selectedYear);
       axios.post(payload.action, form).then(function (data) {
         context.commit('addEngines', data.data);
       });

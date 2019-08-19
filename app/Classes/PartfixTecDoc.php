@@ -92,6 +92,31 @@ class PartfixTecDoc extends Tecdoc
         return $engineType;
     }
 
+    public function getModificationsEngines($modifications, $body_type)
+    {
+        $engineType = [];
+
+        $attributes = DB::connection($this->connection)->select("
+            SELECT w.passanger_car_id, pca.displayvalue as EngineType, cp.displayvalue as capacity, w.displayvalue as BodyType, pca.displayvalue, w.description from (SELECT a.id, a.attributetype, p.description, a.displayvalue,  p.id as passanger_car_id
+                FROM passanger_cars p
+                LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
+                WHERE p.id IN ($modifications) AND a.attributetype = 'BodyType' AND a.displayvalue = '".$body_type."') w
+                LEFT JOIN passanger_car_attributes pca ON pca.passangercarid = w.passanger_car_id
+                LEFT JOIN passanger_car_attributes cp ON cp.passangercarid = w.passanger_car_id
+                WHERE pca.attributetype = 'EngineType' and cp.attributetype = 'Capacity'
+        ");
+
+        foreach ($attributes as $attribute) {
+            $engineType[$attribute->EngineType][] = $attribute->capacity;
+        }
+
+        foreach ($engineType as &$type) {
+            $type = array_unique($type);
+        }
+
+        return $engineType;
+    }
+
     /**
      * (1.3) Модификации авто
      *
