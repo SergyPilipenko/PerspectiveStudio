@@ -100,6 +100,7 @@
                 this.setEngines({
                     modelIds: this.getPluckedData,
                     selectedBodyType: this.selectedBodyType,
+                    selectedYear: this.yearSelected,
                     action: this.route['get-models-engines'],
                 });
             },

@@ -121,7 +121,6 @@ export default {
             form.append('Capacity', payload.Capacity);
             axios.post(payload.action, form)
                 .then(data => {
-                    console.log(data.data);
                     context.commit('addModifications', data.data);
                 })
         },
@@ -168,11 +167,12 @@ export default {
             let form = new FormData();
             form.append('model_Ids', payload.modelIds);
             form.append('body_type', payload.selectedBodyType);
+            form.append('selected_year', payload.selectedYear);
 
             axios.post(payload.action, form)
                 .then(data => {
                     context.commit('addEngines', data.data)
-                })
+                });
         },
         pluck: function (context, payload) {
             let plucked = [];
