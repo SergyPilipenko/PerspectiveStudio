@@ -17,12 +17,17 @@ class PagesController extends Controller
 {
     public function index(PartfixTecDoc $tecdoc)
     {
-        $brands = $tecdoc->getBrands();
+        $brands = $tecdoc->filterBrandsByModelsYear();
+        dd($brands);
         $models = CarModel::whereIn('id', explode(',', '253,4731,3485'))
             ->with('modifications.attributes')
             ->get();
-        \Session::put('selected-year', 1323);
-        return view('frontend.index', compact('brands'));
+        $garage = \Session::get('garage')
+            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
+            : null;
+        $current_auto = \Session::get('current-auto') ? : null;
+
+        return view('frontend.index', compact('brands', 'garage', 'current_auto'));
     }
 
     public function brand($brand)
@@ -51,9 +56,6 @@ class PagesController extends Controller
             ],
         ])->get();
 
-//        print_r(count($models));
-
-
         $models = ModelsUri::where([
             'slug' => $model,
             'manufacturer_id' => $manufacturer->manufacturer_id
@@ -72,6 +74,48 @@ class PagesController extends Controller
 
     public function modification($brand, $model, $modification)
     {
-        dd($modification);
+        \Session::put('current-auto', [
+            'modification_id' => $modification,
+            'modification_year' => \Session::get('car-year')
+        ]);
+        \Session::push('garage', [
+            'modification_id' => $modification,
+            'modification_year' => \Session::get('car-year')
+        ]);
+        return redirect('/');
+    }
+
+    public function changeCurrentCar($id)
+    {
+        $garage = collect(\Session::get('garage'));
+        $current_modification = $garage->where('modification_id', $id)->first();
+        \Session::put('current-auto', [
+            'modification_id' => $current_modification['modification_id'],
+            'modification_year' => $current_modification['modification_year']
+        ]);
+        return back();
+    }
+
+    public function removeCar($id)
+    {
+        $garage = collect(\Session::get('garage'));
+        $current_auto = \Session::get('current-auto');
+
+        foreach ($garage as $key => $item) {
+            if($item['modification_id'] == $id) {
+                \Session::forget('garage.'.$key);
+
+                if($current_auto['modification_id'] == $id) {
+                    $new_current_auto = collect(\Session::get('garage'))->first();
+                    \Session::put('current-auto', [
+                        'modification_id' => $new_current_auto['modification_id'],
+                        'modification_year' => $new_current_auto['modification_year']
+                    ]);
+                }
+
+                return back();
+            } continue;
+        }
+        return back();
     }
 }

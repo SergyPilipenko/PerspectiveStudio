@@ -25,3 +25,4 @@ Route::prefix('tecdoc')->group(function () {
     Route::post('get-models-engines', 'Api\TecdocController@getModelsEngines')->name('api.tecdoc.get-models-engines');
     Route::post('get-filtered-modifications', 'Api\TecdocController@getFilteredModifications')->name('api.tecdoc.get-filtered-modifications');
 });
+

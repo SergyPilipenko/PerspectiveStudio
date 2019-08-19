@@ -82,17 +82,7 @@ class TecdocController extends Controller
             ]
         ])->get();
 
-        $filtered_models = [];
-
-        foreach ($models as $model) {
-            $years = explode('-', $model->constructioninterval);
-
-            $first = $this->getYear($years[0]);
-            if(isset($years[1])) {
-                $last = $this->getYear($years[1]);
-            }
-            if($this->validYear($request->selected_year, $first, $last)) $filtered_models[] = $model;
-        }
+        $filtered_models = PassangerCar::filterByYear($request->selected_year, $models);
 
         return $tecDoc->getModificationsEngines(
             implode(collect($filtered_models)->pluck('id')->toArray(), ','),
@@ -100,26 +90,10 @@ class TecdocController extends Controller
         );
     }
 
-    public function getYear($str)
-    {
-        $value = str_replace(' ', '', $str);
-        $year = preg_replace('/[0-9]+\./', '', $value);
 
-        return $year;
-    }
 
-    public function validYear($year, $from, $to = null)
-    {
 
-        if($to) {
-            if($year >= $from && $year <= $to) {
 
-                return true;
-            } return false;
-        } else {
-            if($year >= $from) return true;
-        } return false;
-    }
 
     public function getFilteredModifications(Request $request)
     {
