@@ -32,4 +32,40 @@ class PassangerCar extends Model
         }
         return $query;
     }
+
+    public static function filterByYear($year, $models = null)
+    {
+        if(!$models) $models = PassangerCar::where('canbedisplayed', 'true')->get();
+        foreach ($models as $model) {
+            $years = explode('-', $model->constructioninterval);
+
+            $first = self::getYear($years[0]);
+            if(isset($years[1])) {
+                $last = self::getYear($years[1]);
+            }
+            if(self::validYear($year, $first, $last)) $filtered_models[] = $model;
+        }
+        return $filtered_models;
+    }
+
+    public static function getYear($str)
+    {
+        $value = str_replace(' ', '', $str);
+        $year = preg_replace('/[0-9]+\./', '', $value);
+
+        return $year;
+    }
+
+    public static function validYear($year, $from, $to = null)
+    {
+
+        if($to) {
+            if($year >= $from && $year <= $to) {
+
+                return true;
+            } return false;
+        } else {
+            if($year >= $from) return true;
+        } return false;
+    }
 }

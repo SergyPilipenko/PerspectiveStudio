@@ -16,12 +16,16 @@ Vue.use(Vuex);
  * Vuex
  */
 import selectCar from './frontend/store/modules/select-car';
+import garage from './frontend/store/modules/garage';
+
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
+Vue.component('garage', require('./frontend/components/Garage').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
 
 const store = new Vuex.Store({
     modules: {
         selectCar,
+        garage,
     }
 });
 

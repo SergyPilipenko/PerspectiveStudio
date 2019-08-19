@@ -20,6 +20,16 @@ class PartfixTecDoc extends Tecdoc
         $this->setType($type);
     }
 
+    public function filterBrandsByModelsYear($year = 2010)
+    {
+        $models = DB::connection($this->connection)->select("
+            SELECT m.id, m.manufacturerid, m.constructioninterval  FROM `manufacturers` mf
+                LEFT JOIN models m on mf.id = m.manufacturerid
+                WHERE mf.ispassengercar = 'true' AND mf.canbedisplayed = 'True'
+        ");
+        dd($models);
+    }
+
     /**
      * (1.4) Типы кузова
      *
@@ -168,6 +178,20 @@ class PartfixTecDoc extends Tecdoc
                 break;
         }
     }
+
+//    public function getGarageModificications()
+//    {
+//        switch ($this->type) {
+//            case 'passenger':
+//                return DB::connection($this->connection)->select("
+//					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
+//					FROM passanger_cars pc
+//					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
+//					WHERE canbedisplayed = 'True'
+//					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True'");
+//                break;
+//        }
+//    }
 
     public function getModelsModifications($models_ids)
     {

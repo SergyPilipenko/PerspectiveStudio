@@ -36,7 +36,10 @@ Route::get(implode('-', [$brand, $model, $modification]), 'Frontend\PagesControl
 Route::get(implode('-', [$brand, $model]), 'Frontend\CategoriesController@index');
 Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model')->name('auto.model');
 Route::get($brand, 'Frontend\PagesController@brand');
+Route::get('change-current-car/{id}', 'Frontend\PagesController@changeCurrentCar')->name('garage-change-current-car');
+Route::get('garage-remove-car/{id}', 'Frontend\PagesController@removeCar')->name('garage-change-current-car');
 
 Route::post('set-car-year', function (Illuminate\Http\Request $request) {
     \Session::put('car-year', $request->selected_year);
 })->name('set-car-year');
+
