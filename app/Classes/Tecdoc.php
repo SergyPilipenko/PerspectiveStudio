@@ -108,6 +108,29 @@ class Tecdoc
     }
 
     /**
+     * Бренды у которых есть модели в $year году
+     *
+     * (требуется заполненная таблица models_counstruction_interval с помощью seeder-a AddModelsConstructionIntervalTable)
+     * @param $year
+     * @return array
+     */
+    public function getBrandsByModelsCreatedYear($year) : array
+    {
+        return DB::connection('mysql')->select("
+            SELECT DISTINCT mf.id, mf.description 
+            FROM 
+                (SELECT id, model_id, manufacturer_id, created, 
+                    (CASE WHEN models_counstruction_interval.stopped = '' THEN YEAR(CURRENT_DATE) ELSE models_counstruction_interval.stopped END) stopped
+                FROM models_counstruction_interval) w 
+            JOIN tecdoc.manufacturers mf on w.manufacturer_id = mf.id
+            WHERE w.stopped >= '".$year."' 
+                AND w.created <= '".$year."' 
+                AND w.created != '' 
+                AND mf.ispassengercar = 'true' 
+            ORDER BY mf.description");
+    }
+
+    /**
      * (1.3) Модификации авто
      *
      * @param $model_id

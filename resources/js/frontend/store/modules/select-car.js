@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        years: [1990,2019],
+        years: [1960, new Date().getFullYear()],
         yearsList: [],
         brands: [],
         models: [],
@@ -93,6 +93,14 @@ export default {
         },
     },
     actions: {
+        setBrands: function(context, payload) {
+            let form = new FormData();
+            form.append('year', payload.selected_year);
+            axios.post(payload.action, form)
+                .then(data => {
+                context.commit('addBrands', data.data)
+            });
+        },
         resetModifications: function(context){
             context.commit('resetModifications')
         },
