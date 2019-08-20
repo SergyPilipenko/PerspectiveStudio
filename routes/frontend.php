@@ -29,7 +29,6 @@ $part = '{part}';
 $modification = '{modification}';
 
 
-
 Route::get(implode('-', [$brand, $model]).'-c-'.$categories, 'Frontend\CategoriesController@show')
     ->where('categories','^[a-zA-Z0-9-_\/]+$')->name('frontend.categories.show');
 Route::get(implode('-', [$brand, $model, $modification]), 'Frontend\PagesController@modification')->name('auto.model.modification');
@@ -39,7 +38,7 @@ Route::get($brand, 'Frontend\PagesController@brand');
 Route::get('change-current-car/{id}', 'Frontend\PagesController@changeCurrentCar')->name('garage-change-current-car');
 Route::get('garage-remove-car/{id}', 'Frontend\PagesController@removeCar')->name('garage-change-current-car');
 
-Route::post('set-car-year', function (Illuminate\Http\Request $request) {
-    \Session::put('car-year', $request->selected_year);
+Route::post('set-car-year', function (Illuminate\Http\Request $request, \App\Classes\Garage $garage) {
+    $garage->setCurrentYear($request->selected_year);
 })->name('set-car-year');
 

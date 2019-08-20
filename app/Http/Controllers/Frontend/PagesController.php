@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
@@ -16,8 +17,9 @@ use Transliterate;
 
 class PagesController extends Controller
 {
-    public function index(PartfixTecDoc $tecdoc)
+    public function index(PartfixTecDoc $tecdoc, Garage $garage)
     {
+//        $garage->clear();
         $brands = $tecdoc->getBrands();
 
 //        $bm = ModelConstrucitonInterval::whereRaw('REPLACE(`stopped`, ``, CURRENT_DATE)', 2019)->get();
@@ -78,16 +80,11 @@ class PagesController extends Controller
         return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
     }
 
-    public function modification($brand, $model, $modification)
+    public function modification($brand, $model, $modification, Garage $garage)
     {
-        \Session::put('current-auto', [
-            'modification_id' => $modification,
-            'modification_year' => \Session::get('car-year')
-        ]);
-        \Session::push('garage', [
-            'modification_id' => $modification,
-            'modification_year' => \Session::get('car-year')
-        ]);
+//        dd(1);
+        $garage->setActiveCar($modification);
+
         return redirect('/');
     }
 
@@ -102,27 +99,16 @@ class PagesController extends Controller
         return back();
     }
 
-    public function removeCar($id)
+    public function removeCar($id, Garage $garage)
     {
 //        dd(\Session::forget('garage'));
-        $garage = collect(\Session::get('garage'));
-        $current_auto = \Session::get('current-auto');
-
-        foreach ($garage as $key => $item) {
-            if($item['modification_id'] == $id) {
-                \Session::forget('garage.'.$key);
-
-                if($current_auto['modification_id'] == $id) {
-                    $new_current_auto = collect(\Session::get('garage'))->first();
-                    \Session::put('current-auto', [
-                        'modification_id' => $new_current_auto['modification_id'],
-                        'modification_year' => $new_current_auto['modification_year']
-                    ]);
-                }
-
-                return back();
-            } continue;
+        try {
+            $garage->removeCar($id);
+        } catch (\Exception $exception) {
+            dd($exception);
+            exit();
         }
+
         return back();
     }
 }
