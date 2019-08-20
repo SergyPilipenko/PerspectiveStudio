@@ -8,7 +8,9 @@
             ></garage>
         </div>
         <div class="row">
-            <select-car :auto_brands="{{ json_encode($brands) }}"></select-car>
+            <select-car :auto_brands="{{ json_encode($brands) }}"
+                        :routes="'{{ json_encode($routes) }}'"
+            ></select-car>
         </div>
     </div>
 @endsection

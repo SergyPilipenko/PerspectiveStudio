@@ -8,6 +8,7 @@ use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\CarModel;
 use App\Models\Tecdoc\Manufacturer;
+use App\Models\Tecdoc\ModelConstrucitonInterval;
 use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,16 +20,20 @@ class PagesController extends Controller
     {
         $brands = $tecdoc->getBrands();
 
-        $models = CarModel::whereIn('id', explode(',', '253,4731,3485'))
-            ->with('modifications.attributes')
-            ->get();
+//        $bm = ModelConstrucitonInterval::whereRaw('REPLACE(`stopped`, ``, CURRENT_DATE)', 2019)->get();
+//        dd($tecdoc->getBrandsByModelsCreatedYear(1960));
 
         $garage = \Session::get('garage')
             ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
+
         $current_auto = \Session::get('current-auto') ? : null;
 
-        return view('frontend.index', compact('brands', 'garage', 'current_auto'));
+        $routes = [
+            'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
+        ];
+
+        return view('frontend.index', compact('brands', 'garage', 'current_auto', 'routes'));
     }
 
     public function brand($brand)

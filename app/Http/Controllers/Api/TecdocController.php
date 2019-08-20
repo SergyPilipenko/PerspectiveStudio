@@ -15,6 +15,11 @@ class TecdocController extends Controller
         return $tecDoc->getBrands();
     }
 
+    public function getBrandsByModelsCreatedYear(Request $request, PartfixTecDoc $tecDoc)
+    {
+        return $tecDoc->getBrandsByModelsCreatedYear($request->year);
+    }
+
     /**
      * @param Request $request
      * @param PartfixTecDoc $tecDoc

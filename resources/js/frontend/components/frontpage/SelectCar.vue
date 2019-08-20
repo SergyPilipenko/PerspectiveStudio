@@ -13,7 +13,7 @@
             <option
                 :value="brand.id"
                 v-for="brand in brands"
-                v-text="brand.name"
+                v-text="brand.description"
             ></option>
         </select>
         <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">
@@ -67,7 +67,7 @@
 
     export default {
         //удачи! ^_^
-        props: ['auto_brands'],
+        props: ['auto_brands', 'routes'],
         data() {
             return {
                 selectedYear: "",
@@ -77,7 +77,7 @@
                 step: 0,
                 rangeYears: [],
                 bodyTypeSelected: "",
-                selectedEngine: ""
+                selectedEngine: "",
             }
         },
         created() {
@@ -88,11 +88,14 @@
             }
         },
 
-        mounted() {
-            this.addBrands(this.auto_brands);
-        },
+        // mounted() {
+        //     this.addBrands(this.auto_brands);
+        // },
 
         computed: {
+            route() {
+                return JSON.parse(this.routes);
+            },
 
             ...mapGetters({
                 years: 'selectCar/getYears',
@@ -104,6 +107,8 @@
                 getBodyTypes: 'selectCar/getBodyTypes',
                 getEngines: 'selectCar/getEngines',
             }),
+
+
 
         },
 
@@ -121,7 +126,8 @@
             }),
 
             ...mapActions({
-                setCarYear: 'selectCar/setCarYear'
+                setCarYear: 'selectCar/setCarYear',
+                setBrands: 'selectCar/setBrands'
             }),
 
             distinctModels(models) {
@@ -164,7 +170,10 @@
             },
 
             filterModificationsBySelectedYear() {
-
+                this.setBrands({
+                    action: this.route['get-brands-by-models-created-year'],
+                    selected_year: this.selectedYear
+                });
                 !this.step ? this.step+=2 : this.step = this.step;
 
                 const modifications = this.modifications;
@@ -282,7 +291,7 @@
                 var brandSelected = this.getBrandById(this.brandSelected);
                 var modelSelected = this.getModelById(this.modelSelected);
 
-                var brandName = brandSelected.name.toLowerCase().replace(/[^a-zA-Z0-9]/g,'-');
+                var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g,'-');
                 var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
                 modelName = modelName.toLowerCase();
 

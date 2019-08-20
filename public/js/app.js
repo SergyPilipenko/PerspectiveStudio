@@ -2199,7 +2199,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   //удачи! ^_^
-  props: ['auto_brands'],
+  props: ['auto_brands', 'routes'],
   data: function data() {
     return {
       selectedYear: "",
@@ -2220,10 +2220,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       first++;
     }
   },
-  mounted: function mounted() {
-    this.addBrands(this.auto_brands);
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+  // mounted() {
+  //     this.addBrands(this.auto_brands);
+  // },
+  computed: _objectSpread({
+    route: function route() {
+      return JSON.parse(this.routes);
+    }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     years: 'selectCar/getYears',
     brands: 'selectCar/getBrands',
     models: 'selectCar/getModels',
@@ -2243,7 +2247,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     addBodyTypes: 'selectCar/addBodyTypes',
     addEngines: 'selectCar/addEngines'
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
-    setCarYear: 'selectCar/setCarYear'
+    setCarYear: 'selectCar/setCarYear',
+    setBrands: 'selectCar/setBrands'
   }), {
     distinctModels: function distinctModels(models) {
       var dm = [];
@@ -2284,6 +2289,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
       var _this2 = this;
 
+      this.setBrands({
+        action: this.route['get-brands-by-models-created-year'],
+        selected_year: this.selectedYear
+      });
       !this.step ? this.step += 2 : this.step = this.step;
       var modifications = this.modifications;
       if (!modifications) return;
@@ -2378,7 +2387,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getSelectedModelURI: function getSelectedModelURI() {
       var brandSelected = this.getBrandById(this.brandSelected);
       var modelSelected = this.getModelById(this.modelSelected);
-      var brandName = brandSelected.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
+      var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
       var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
       modelName = modelName.toLowerCase();
       return brandName + "-" + modelName;
@@ -23041,7 +23050,10 @@ var render = function() {
             _vm._v(" "),
             _vm._l(_vm.brands, function(brand) {
               return _c("option", {
-                domProps: { value: brand.id, textContent: _vm._s(brand.name) }
+                domProps: {
+                  value: brand.id,
+                  textContent: _vm._s(brand.description)
+                }
               })
             })
           ],
@@ -36724,7 +36736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    years: [1990, 2019],
+    years: [1960, new Date().getFullYear()],
     yearsList: [],
     brands: [],
     models: [],
@@ -36816,6 +36828,13 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   actions: {
+    setBrands: function setBrands(context, payload) {
+      var form = new FormData();
+      form.append('year', payload.selected_year);
+      axios.post(payload.action, form).then(function (data) {
+        context.commit('addBrands', data.data);
+      });
+    },
     resetModifications: function resetModifications(context) {
       context.commit('resetModifications');
     },
