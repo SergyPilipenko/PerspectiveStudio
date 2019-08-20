@@ -44,8 +44,10 @@
             }
         },
         created() {
-            this.setCars(this.garage);
-            this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+            if(this.garage) {
+                this.setCars(this.garage);
+                this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+            }
         },
         computed: {
             ...mapGetters({

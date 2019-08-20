@@ -15,6 +15,7 @@ class AddModelsConstructionIntervalTable extends Seeder
     {
         try {
             DB::connection()->getPdo()->beginTransaction();
+            if(ModelConstrucitonInterval::first()) return;
 
             $models = \App\Models\Tecdoc\CarModel::where('canbedisplayed', 'true')->get();
 
