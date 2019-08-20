@@ -1888,8 +1888,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   created: function created() {
-    this.setCars(this.garage);
-    this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+    if (this.garage) {
+      this.setCars(this.garage);
+      this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+    }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     'getCars': 'garage/getCars',
