@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
+use App\Classes\RoutesParser\CarRoutesParser;
+use App\Classes\RoutesParser\RoutesParserInterface;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
@@ -13,6 +15,7 @@ use App\Models\Tecdoc\ModelConstrucitonInterval;
 use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
 use Transliterate;
 
 class PagesController extends Controller
@@ -38,13 +41,19 @@ class PagesController extends Controller
         return view('frontend.index', compact('brands', 'garage', 'current_auto', 'routes'));
     }
 
-    public function brand($brand)
+    public function brand(Request $request)
     {
-        dd($brand);
+
+        dd(Route::getCurrentRoute()->uri);
+//        dd($brand);
     }
 
-    public function model($brand, $model)
+    public function model($model = null, RoutesParserInterface $rotesParser)
     {
+        $brand = $rotesParser->getBrand();
+
+        $model ?? $model = $rotesParser->getModel();
+
         $categories = Category::where('parent_id', null)->get();
 
         $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->first();
@@ -74,15 +83,24 @@ class PagesController extends Controller
             'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
             'get-models-engines' => route('api.tecdoc.get-models-engines'),
             'get-filtered-modifications' => route('api.tecdoc.get-filtered-modifications'),
-            'auto.model' => route('auto.model', [$brand, $model]),
+            'auto.model' => route('auto.' . $brand . '.model', [$model]),
         ];
 
         return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
     }
 
-    public function modification($brand, $model, $modification, Garage $garage)
+    /**
+     * В СЛУЧАЕ СРАБАТЫВАНИЯ РОУТА
+     * Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
+     * $modification это $model ¯\_(ツ)_/¯
+     */
+    public function modification($model, $modification = null, Garage $garage, RoutesParserInterface $rotesParser)
     {
-//        dd(1);
+
+
+        if(!$modification) $modification = $model;
+
+
         $garage->setActiveCar($modification);
 
         return redirect('/');
@@ -110,5 +128,10 @@ class PagesController extends Controller
         }
 
         return back();
+    }
+
+    public function setCarYear(Request $request, Garage $garage)
+    {
+        $garage->setCurrentYear($request->selected_year);
     }
 }

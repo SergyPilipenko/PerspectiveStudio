@@ -35,16 +35,20 @@ class PassangerCar extends Model
 
     public static function filterByYear($year, $models = null)
     {
+        $filtered_models = [];
+
         if(!$models) $models = PassangerCar::where('canbedisplayed', 'true')->get();
         foreach ($models as $model) {
             $years = explode('-', $model->constructioninterval);
 
             $first = self::getYear($years[0]);
+
             if(isset($years[1])) {
                 $last = self::getYear($years[1]);
             }
             if(self::validYear($year, $first, $last)) $filtered_models[] = $model;
         }
+
         return $filtered_models;
     }
 

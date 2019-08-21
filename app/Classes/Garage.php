@@ -74,8 +74,6 @@ class Garage
             }
         }
         if($current_auto[self::MODIFICATION_ID] == $id && $this->getGarageList()->count()) {
-//            dd($this->getGarageList()->first());
-
             $new_current_auto = $this->getGarageList()->first();
             $this->setActiveCar($new_current_auto[self::MODIFICATION_ID], $new_current_auto[self::MODIFICATION_YEAR]);
         }

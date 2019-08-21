@@ -21,6 +21,11 @@ class ManufacturersUri extends Model
         return $this->hasMany(Manufacturer::class, 'id', 'manufacturer_id');
     }
 
+    public function models_uri() : HasMany
+    {
+        return  $this->hasMany(ModelsUri::class, 'manufacturer_id', 'manufacturer_id');
+    }
+
     /**
      * Производители пассажирских авто
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

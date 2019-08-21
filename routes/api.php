@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middlewas
 
 Route::prefix('tecdoc')->group(function () {
     Route::post('get-brands', 'Api\TecdocController@getBrands')->name('api.tecdoc.get-brands');

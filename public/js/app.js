@@ -2215,12 +2215,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   created: function created() {
+    var years = [];
     var first = this.years[0];
 
     while (first <= this.years[1]) {
-      this.rangeYears.push(first);
+      years.push(first);
       first++;
     }
+
+    this.rangeYears = years.reverse();
   },
   // mounted() {
   //     this.addBrands(this.auto_brands);
@@ -36738,7 +36741,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    years: [1960, new Date().getFullYear()],
+    years: [1980, new Date().getFullYear()],
     yearsList: [],
     brands: [],
     models: [],
@@ -36854,7 +36857,7 @@ __webpack_require__.r(__webpack_exports__);
         first++;
       }
 
-      context.commit('addYearsList', list);
+      context.commit('addYearsList', list.reverse());
     },
     setModels: function setModels(context, payload) {
       context.commit('addModels', payload);

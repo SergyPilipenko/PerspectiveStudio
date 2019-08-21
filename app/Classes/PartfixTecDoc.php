@@ -56,7 +56,7 @@ class PartfixTecDoc extends Tecdoc
             SELECT DISTINCT a.displayvalue FROM `models` m
                 LEFT JOIN passanger_cars p ON m.id = p.modelid
                 LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
-                WHERE m.id in ($models_ids) AND a.attributetype = 'BodyType'
+                WHERE m.id IN ($models_ids) AND a.attributetype = 'BodyType' AND m.canbedisplayed = 'true'
         ");
     }
 

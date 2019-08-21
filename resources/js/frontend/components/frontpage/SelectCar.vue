@@ -81,11 +81,13 @@
             }
         },
         created() {
+            let years = [];
             let first = this.years[0];
             while (first <= this.years[1]) {
-                this.rangeYears.push(first);
+                years.push(first);
                 first++;
             }
+            this.rangeYears = years.reverse()
         },
 
         // mounted() {
