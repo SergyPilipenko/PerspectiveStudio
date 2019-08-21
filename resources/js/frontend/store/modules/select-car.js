@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        years: [1960, new Date().getFullYear()],
+        years: [1980, new Date().getFullYear()],
         yearsList: [],
         brands: [],
         models: [],
@@ -116,7 +116,7 @@ export default {
                 list.push(first);
                 first++;
             }
-            context.commit('addYearsList', list)
+            context.commit('addYearsList', list.reverse())
         },
         setModels: function (context, payload) {
             context.commit('addModels', payload)

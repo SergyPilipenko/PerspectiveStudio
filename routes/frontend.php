@@ -28,17 +28,42 @@ $categories = '{categories}';
 $part = '{part}';
 $modification = '{modification}';
 
+if(!Cache::get('brands')) {
+    Cache::rememberForever('brands', function () {
+        return \App\Models\ManufacturersUri::get()->pluck('slug')->toArray();
+    });
+}
+
+foreach (Cache::get('brands') as $key => $brand) {
+
+
+    if(!Cache::get('brands.' . $brand . 'models_uri')) {
+        $models_uri = \App\Models\ManufacturersUri::where('slug', $brand)->first()->models_uri()->get()->pluck('slug')->toArray();
+        Cache::forever('brands.' . $brand . 'models_uri', $models_uri);
+    };
+
+
+    foreach (Cache::get('brands.' . $brand . 'models_uri') as $item) {
+        if(preg_match('/-/', $item)) {
+            Route::get($brand . "-$item", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
+            Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
+        };
+    }
+
+    Route::get($brand . "-{model}-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
+
+    Route::get($brand . "-{model}", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
+    Route::get($brand, 'Frontend\PagesController@brand');
+}
+
 
 Route::get(implode('-', [$brand, $model]).'-c-'.$categories, 'Frontend\CategoriesController@show')
     ->where('categories','^[a-zA-Z0-9-_\/]+$')->name('frontend.categories.show');
 Route::get(implode('-', [$brand, $model, $modification]), 'Frontend\PagesController@modification')->name('auto.model.modification');
 Route::get(implode('-', [$brand, $model]), 'Frontend\CategoriesController@index');
 Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model')->name('auto.model');
-Route::get($brand, 'Frontend\PagesController@brand');
+
 Route::get('change-current-car/{id}', 'Frontend\PagesController@changeCurrentCar')->name('garage-change-current-car');
 Route::get('garage-remove-car/{id}', 'Frontend\PagesController@removeCar')->name('garage-change-current-car');
 
-Route::post('set-car-year', function (Illuminate\Http\Request $request, \App\Classes\Garage $garage) {
-    $garage->setCurrentYear($request->selected_year);
-})->name('set-car-year');
-
+Route::post('set-car-year', 'Frontend\PagesController@setCarYear')->name('set-car-year');
