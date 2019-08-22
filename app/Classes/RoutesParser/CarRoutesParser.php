@@ -41,11 +41,18 @@ class CarRoutesParser implements RoutesParserInterface
     public function getModel(string $uri = null)
     {
         if(!$uri) $uri = $this->router->getCurrentRoute()->uri;
+        if($this->routeParameterExists(self::MODEL)) return $this->parameters[self::MODEL];
+
         foreach (Cache::get('brands') as $item) {
             if(preg_match("/$item/", $uri, $matches)) {
-                return preg_replace("/$item-/", '', $uri);
+                return preg_replace("/($item-)|(-{[a-zA-Z]+})/", '', $uri);
             }
         }
+    }
+
+    public function getParameter($parameter)
+    {
+        return array_key_exists($parameter, $this->parameters) ? $this->parameters[$parameter] : null;
     }
 
     /**
@@ -58,4 +65,5 @@ class CarRoutesParser implements RoutesParserInterface
     {
         return array_key_exists($parameter, $this->parameters);
     }
+
 }

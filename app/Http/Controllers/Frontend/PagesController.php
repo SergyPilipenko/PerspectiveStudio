@@ -50,7 +50,6 @@ class PagesController extends Controller
 
     public function model($model = null, RoutesParserInterface $rotesParser)
     {
-//        dd(request()->route()->parameters());
         $brand = $rotesParser->getBrand();
 
         $model ?? $model = $rotesParser->getModel();
@@ -98,24 +97,79 @@ class PagesController extends Controller
      */
     public function modification($model, $modification = null, Garage $garage, RoutesParserInterface $rotesParser)
     {
-
-
         if(!$modification) $modification = $model;
 
+        $brand = $rotesParser->getBrand();
+
+        $model = $rotesParser->getModel();
+//        dd($brand);
 
         $garage->setActiveCar($modification);
 
-        return redirect('/');
+        $garage = \Session::get('garage')
+            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
+            : null;
+
+        $current_auto = \Session::get('current-auto');
+
+
+
+
+        $categories = Category::where('parent_id', null)->get();
+
+        try {
+            $route_name = route($brand.'.'.$model.'.'.'frontend.categories.show', [$modification, $categories->first()->slug]);
+            $route_name = $brand.'.'.$model.'.'.'frontend.categories.show';
+            $route_parameters = [$modification];
+        } catch (\InvalidArgumentException $exception) {
+            $route_name = $brand.'.'.'frontend.categories.show';
+            $route_parameters = [$model, $modification];
+        }
+
+        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model', 'route_name', 'route_parameters'));
+    }
+
+    public function category(Garage $garageInstance, RoutesParserInterface $routesParser)
+    {
+        $brand = $routesParser->getBrand();
+        $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
+        $modification = $routesParser->getParameter('modification');
+        $category = $routesParser->getParameter('category');
+
+        $garage_list = $garageInstance->getGarageList();
+        $garage = $garage_list->count()
+            ? PassangerCar::whereIn('id', $garage_list->pluck('modification_id'))->with('attributes')->get()
+            : null;
+
+        $category = Category::whereSlug($category)->with('children')->firstOrFail();
+
+        $current_auto = $garageInstance->getActiveCar();
+
+        $categories = $category->children;
+
+        if($categories->count()) {
+            try {
+                $route_name = route($brand.'.'.$model.'.'.'frontend.categories.show', [$modification, $categories->first()->slug]);
+                $route_name = $brand.'.'.$model.'.'.'frontend.categories.show';
+                $route_parameters = [$modification];
+            } catch (\InvalidArgumentException $exception) {
+                $route_name = $brand.'.'.'frontend.categories.show';
+                $route_parameters = [$model, $modification];
+            }
+        }
+        return view('frontend.car.index', compact('category', 'garage', 'current_auto', 'categories', 'brand', 'model', 'modification', 'route_name', 'route_parameters'));
     }
 
     public function changeCurrentCar($id)
     {
         $garage = collect(\Session::get('garage'));
+
         $current_modification = $garage->where('modification_id', $id)->first();
         \Session::put('current-auto', [
             'modification_id' => $current_modification['modification_id'],
             'modification_year' => $current_modification['modification_year']
         ]);
+
         return back();
     }
 
