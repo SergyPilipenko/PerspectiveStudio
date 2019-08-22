@@ -14,13 +14,12 @@
         data() {
             return {
                 file: '',
-                image: this.current_image ? this.current_image : 'upload/img/empty.png'
+                image: this.current_image ? this.current_image : 'img/admin/empty.png'
             }
         },
         methods: {
             changeImage() {
                 $("#importFileUpload").trigger('click');
-
             },
             handleFileUpload() {
                 this.file = this.$refs.file.files[0];

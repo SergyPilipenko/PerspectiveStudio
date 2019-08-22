@@ -28,13 +28,13 @@
         <li class="nav-item">
             <a class="nav-link collapsed" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                 <i class="ti-package menu-icon"></i>
-                <span class="menu-title">Каталог</span>
+                <span class="menu-title">Tecdoc</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="auth" style="">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">index</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.categories.index') }}">Категории</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.categories.create') }}">Категории</a></li>
                 </ul>
             </div>
         </li>
