@@ -36,10 +36,13 @@ class PartfixTecDoc extends Tecdoc
                     (CASE WHEN models_counstruction_interval.stopped = '' THEN YEAR(CURRENT_DATE) ELSE models_counstruction_interval.stopped END) stopped
                 FROM models_counstruction_interval) w 
             JOIN ".env('DB_TECDOC_DATABASE').".manufacturers mf on w.manufacturer_id = mf.id
+            LEFT JOIN ".env('DB_TECDOC_DATABASE').".models m ON mf.id = m.manufacturerid
             WHERE w.stopped >= '".$year."' 
                 AND w.created <= '".$year."' 
                 AND w.created != '' 
-                AND mf.ispassengercar = 'true' 
+                AND mf.ispassengercar = 'true'
+                AND m.canbedisplayed = 'true'
+                AND m.ispassengercar = 'true'
             ORDER BY mf.description");
     }
 

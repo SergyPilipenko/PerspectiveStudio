@@ -50,6 +50,7 @@ class PagesController extends Controller
 
     public function model($model = null, RoutesParserInterface $rotesParser)
     {
+//        dd(request()->route()->parameters());
         $brand = $rotesParser->getBrand();
 
         $model ?? $model = $rotesParser->getModel();
@@ -90,6 +91,7 @@ class PagesController extends Controller
     }
 
     /**
+     * Требуется рефактор...
      * В СЛУЧАЕ СРАБАТЫВАНИЯ РОУТА
      * Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
      * $modification это $model ¯\_(ツ)_/¯
