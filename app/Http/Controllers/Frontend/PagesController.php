@@ -43,6 +43,7 @@ class PagesController extends Controller
 
     public function brand(Request $request)
     {
+//        dd(1);
 
         dd(Route::getCurrentRoute()->uri);
 //        dd($brand);
@@ -50,6 +51,7 @@ class PagesController extends Controller
 
     public function model($model = null, RoutesParserInterface $rotesParser)
     {
+//        dd(1);
         $brand = $rotesParser->getBrand();
 
         $model ?? $model = $rotesParser->getModel();
@@ -131,6 +133,7 @@ class PagesController extends Controller
 
     public function category(Garage $garageInstance, RoutesParserInterface $routesParser)
     {
+
         $brand = $routesParser->getBrand();
         $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
         $modification = $routesParser->getParameter('modification');
