@@ -28,6 +28,11 @@ Route::prefix('admin')->group(function() {
         Route::put('{category}/update', 'Admin\Catalog\CategoriesController@update')->name('admin.categories.update');
     });
 
+    Route::prefix('auto')->group(function() {
+        Route::get('/', 'Admin\Auto\AutoController@index')->name('admin.auto.index');
+        Route::post('/store', 'Admin\Auto\AutoController@store')->name('admin.auto.store');
+    });
+
     Route::prefix('products')->group(function () {
         Route::get('/', 'Admin\Products\ProductsController@index')->name('admin.products.index');
         Route::get('{id}/edit', 'Admin\Products\ProductsController@edit')->name('admin.products.edit');

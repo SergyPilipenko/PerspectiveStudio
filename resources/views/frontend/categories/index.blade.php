@@ -6,12 +6,12 @@
             :year="'{{ Session::get('car-year') }}'"
             :actions="'{{ json_encode($routes) }}'"
         ></select-car-body>
-        <ul>
-            @foreach($categories as $category)
-                <li>
-                    <a href="{{ route($brand.'.'.'frontend.categories.show', [$brand, $model, $category->slug]) }}">{{ $category->title }}</a>
-                </li>
-            @endforeach
-        </ul>
+{{--        <ul>--}}
+{{--            @foreach($categories as $category)--}}
+{{--                <li>--}}
+{{--                    <a href="{{ route('frontend.category', [$brand, $model]) }}">{{ $category->title }}</a>--}}
+{{--                </li>--}}
+{{--            @endforeach--}}
+{{--        </ul>--}}
     </div>
 @endsection

@@ -45,6 +45,7 @@ class Garage
      */
     public function setActiveCar(int $modification, $year = null)
     {
+
         if($this->carInGarage($modification) == false) {
             $this->addCarToGarage($modification, $year);
         }
@@ -68,16 +69,19 @@ class Garage
         $garage = Session::get(self::GARAGE);
         $current_auto = $this->getActiveCar();
 
+
         foreach ($garage as $key => $car) {
             if($car[self::MODIFICATION_ID] == $id) {
                 Session::forget(self::GARAGE.'.'."$key");
+                if(!$this->getGarageList()->count()) return;
             }
         }
+
         if($current_auto[self::MODIFICATION_ID] == $id && $this->getGarageList()->count()) {
             $new_current_auto = $this->getGarageList()->first();
+
             $this->setActiveCar($new_current_auto[self::MODIFICATION_ID], $new_current_auto[self::MODIFICATION_YEAR]);
         }
-//        throw new Exception("Car id '".$id."' does not exist in garage");
     }
 
     /**
