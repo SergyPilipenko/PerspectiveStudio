@@ -49,16 +49,16 @@ class PagesController extends Controller
 //        dd($brand);
     }
 
-    public function model($model = null, RoutesParserInterface $rotesParser)
+    public function model($brand, $model, RoutesParserInterface $rotesParser)
     {
-//        dd(1);
-        $brand = $rotesParser->getBrand();
-
-        $model ?? $model = $rotesParser->getModel();
+//        $brand = $rotesParser->getBrand();
+//
+//        $model ?? $model = $rotesParser->getModel();
 
         $categories = Category::where('parent_id', null)->get();
 
         $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->first();
+
 
         $models = PassangerCar::whereIn('modelid', [19,36,59])->with('attributes')->filter([
             [
@@ -85,7 +85,7 @@ class PagesController extends Controller
             'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
             'get-models-engines' => route('api.tecdoc.get-models-engines'),
             'get-filtered-modifications' => route('api.tecdoc.get-filtered-modifications'),
-            'auto.model' => route('auto.' . $brand . '.model', [$model]),
+            'auto.model' => route('frontend.model', [$brand, $model]),
         ];
 
         return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
@@ -97,13 +97,13 @@ class PagesController extends Controller
      * Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
      * $modification это $model ¯\_(ツ)_/¯
      */
-    public function modification($model, $modification = null, Garage $garage, RoutesParserInterface $rotesParser)
+    public function modification($brand, $model, $modification, Garage $garage, RoutesParserInterface $rotesParser)
     {
         if(!$modification) $modification = $model;
-
-        $brand = $rotesParser->getBrand();
-
-        $model = $rotesParser->getModel();
+//
+//        $brand = $rotesParser->getBrand();
+//
+//        $model = $rotesParser->getModel();
 //        dd($brand);
 
         $garage->setActiveCar($modification);
@@ -119,27 +119,24 @@ class PagesController extends Controller
 
         $categories = Category::where('parent_id', null)->get();
 
-        try {
-            $route_name = route($brand.'.'.$model.'.'.'frontend.categories.show', [$modification, $categories->first()->slug]);
-            $route_name = $brand.'.'.$model.'.'.'frontend.categories.show';
-            $route_parameters = [$modification];
-        } catch (\InvalidArgumentException $exception) {
-            $route_name = $brand.'.'.'frontend.categories.show';
-            $route_parameters = [$model, $modification];
-        }
+//        $categoryRouteNameAndParameters = $this->getRouteNameAndParameters($brand, $model, $modification, $categories->first()->slug);
 
-        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model', 'route_name', 'route_parameters'));
+//        $route_name = $categoryRouteNameAndParameters['name'];
+//        $route_parameters = $categoryRouteNameAndParameters['parameters'];
+
+        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));
     }
 
-    public function category(Garage $garageInstance, RoutesParserInterface $routesParser)
+    public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser)
     {
 
-        $brand = $routesParser->getBrand();
-        $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
-        $modification = $routesParser->getParameter('modification');
-        $category = $routesParser->getParameter('category');
+//        $brand = $routesParser->getBrand();
+//        $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
+//        $modification = $routesParser->getParameter('modification');
+//        $category = $routesParser->getParameter('category');
 
         $garage_list = $garageInstance->getGarageList();
+
         $garage = $garage_list->count()
             ? PassangerCar::whereIn('id', $garage_list->pluck('modification_id'))->with('attributes')->get()
             : null;
@@ -150,16 +147,13 @@ class PagesController extends Controller
 
         $categories = $category->children;
 
-        if($categories->count()) {
-            try {
-                $route_name = route($brand.'.'.$model.'.'.'frontend.categories.show', [$modification, $categories->first()->slug]);
-                $route_name = $brand.'.'.$model.'.'.'frontend.categories.show';
-                $route_parameters = [$modification];
-            } catch (\InvalidArgumentException $exception) {
-                $route_name = $brand.'.'.'frontend.categories.show';
-                $route_parameters = [$model, $modification];
-            }
-        }
+//        if($categories->count()) {
+//
+//            $categoryRouteNameAndParameters = $this->getRouteNameAndParameters($brand, $model, $modification, $categories->first()->slug);
+//            $route_name = $categoryRouteNameAndParameters['name'];
+//            $route_parameters = $categoryRouteNameAndParameters['parameters'];
+//
+//        }
         return view('frontend.car.index', compact('category', 'garage', 'current_auto', 'categories', 'brand', 'model', 'modification', 'route_name', 'route_parameters'));
     }
 
@@ -178,19 +172,30 @@ class PagesController extends Controller
 
     public function removeCar($id, Garage $garage)
     {
-//        dd(\Session::forget('garage'));
         try {
             $garage->removeCar($id);
         } catch (\Exception $exception) {
             dd($exception);
             exit();
         }
-
-        return back();
+        return redirect()->route('frontend.index');
     }
 
     public function setCarYear(Request $request, Garage $garage)
     {
         $garage->setCurrentYear($request->selected_year);
+    }
+
+    public function getRouteNameAndParameters($brand, $model, $modification, $slug)
+    {
+        try {
+            $route['name'] = route($brand.'.'.$model.'.'.'frontend.categories.show', [$modification, $slug]);
+            $route['name'] = $brand.'.'.$model.'.'.'frontend.categories.show';
+            $route['parameters'] = [$modification];
+        } catch (\InvalidArgumentException $exception) {
+            $route['name'] = $brand.'.'.'frontend.categories.show';
+            $route['parameters'] = [$model, $modification];
+        }
+        return $route;
     }
 }

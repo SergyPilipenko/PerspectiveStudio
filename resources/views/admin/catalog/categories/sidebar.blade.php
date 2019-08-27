@@ -7,6 +7,7 @@
             @endif
         </div>
         <div class="categories_tree">
+{{--            <categories-tree :items="'{{ $categories }}'" :current_category="'{{ json_encode(request()->route()->parameters()) }}'"></categories-tree>--}}
             <ul>
                 @foreach($categories as $category)
                     @include('admin.catalog.categories.categoriesTree', ['category' => $category])

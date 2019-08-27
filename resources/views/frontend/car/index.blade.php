@@ -10,7 +10,7 @@
             <ul>
                 @foreach($categories as $category)
                     <li>
-                        <a href="{{ route($route_name, array_merge($route_parameters, [$category->slug])) }}">{{ $category->title }}</a>
+                        <a href="{{ route('frontend.category', [$brand, $model, $modification, $category->slug]) }}">{{ $category->title }}</a>
                     </li>
                 @endforeach
             </ul>

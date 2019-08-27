@@ -28,12 +28,17 @@ Vue.component('modifications-tree', require('./components/products/Modifications
 Vue.component('catalog-settings', require('./components/catalog/settings.vue').default);
 Vue.component('import-edit', require('./components/parser/Edit.vue').default);
 Vue.component('import-price', require('./components/parser/ImportPrice.vue').default);
+Vue.component('categories-tree', require('./components/catalog/CategoriesTree').default);
+Vue.component('categories-tree-element', require('./components/catalog/CategoriesTreeElement').default);
+Vue.component('auto-types-table', require('./components/auto/AutoTypesTable').default);
 
 import CategoriesCheckboxes from './components/vuex/categories-checkboxes';
+import autoTypes from "../frontend/store/modules/auto-types";
 
 const store = new Vuex.Store({
     modules: {
         CategoriesCheckboxes,
+        autoTypes,
     }
 });
 

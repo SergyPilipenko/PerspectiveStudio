@@ -35,6 +35,7 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">index</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.categories.create') }}">Категории</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.auto.index') }}">Автомобили</a></li>
                 </ul>
             </div>
         </li>

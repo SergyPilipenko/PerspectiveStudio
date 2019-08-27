@@ -2392,7 +2392,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getSelectedModelURI: function getSelectedModelURI() {
       var brandSelected = this.getBrandById(this.brandSelected);
       var modelSelected = this.getModelById(this.modelSelected);
-      var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
+      var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
       var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
       modelName = modelName.toLowerCase();
       return brandName + "-" + modelName;

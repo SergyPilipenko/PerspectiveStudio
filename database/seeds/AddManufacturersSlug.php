@@ -21,9 +21,9 @@ class AddManufacturersSlug extends Seeder
 
             foreach ($manufacturers as $manufacturer) {
                 $manufacturer_uri = new ManufacturersUri;
-                $str = preg_replace('/\(|\)|\s|\//', '-', mb_strtolower($manufacturer->description));
-                $str = preg_replace('/\-\-/', '-', $str);
-                if(substr($str, -1) == "-") $str = substr($str, 0, -1);
+                $str = preg_replace('/\(|\)|\s|\//', '_', mb_strtolower($manufacturer->description));
+                $str = preg_replace('/\-\-/', '_', $str);
+                if(substr($str, -1) == "_") $str = substr($str, 0, -1);
                 $manufacturer_uri->slug = Transliterate::make($str);
                 $manufacturer_uri->manufacturer_id = $manufacturer->id;
                 $manufacturer_uri->save();

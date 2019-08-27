@@ -22,44 +22,44 @@
 //});
 
 
-$brand = '{brand}';
-$model = '{model}';
-$categories = '{categories}';
-$part = '{part}';
-$modification = '{modification}';
-
-if(!Cache::get('brands')) {
-    Cache::rememberForever('brands', function () {
-        return \App\Models\ManufacturersUri::get()->pluck('slug')->toArray();
-    });
-}
+//$brand = '{brand}';
+//$model = '{model}';
+//$categories = '{categories}';
+//$part = '{part}';
+//$modification = '{modification}';
+//
+//if(!Cache::get('brands')) {
+//    Cache::rememberForever('brands', function () {
+//        return \App\Models\ManufacturersUri::get()->pluck('slug')->toArray();
+//    });
+//}
 
 //dd(Cache::get('brands'));
-foreach (Cache::get('brands') as $key => $brand) {
-
-
-    if(!Cache::get('brands.' . $brand . 'models_uri')) {
-        $models_uri = \App\Models\ManufacturersUri::where('slug', $brand)->first()->models_uri()->get()->pluck('slug')->toArray();
-        Cache::forever('brands.' . $brand . 'models_uri', $models_uri);
-    };
-
-
-    foreach (Cache::get('brands.' . $brand . 'models_uri') as $item) {
-        if(preg_match('/-/', $item)) {
-
-            Route::get($brand . "-$item-{modification}-{category}", 'Frontend\PagesController@category')->name($brand.'.'.$item.'.'.'frontend.categories.show');
-            Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
-            Route::get($brand . "-$item", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
-
-
-        };
-    }
-    Route::get($brand . "-{model}", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
-    Route::get($brand . "-{model}-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
-
-    Route::get($brand . "-{model}-{modification}-{category}", 'Frontend\PagesController@category')->name($brand.'.'.'frontend.categories.show');
-    Route::get($brand, 'Frontend\PagesController@brand');
-}
+//foreach (Cache::get('brands') as $key => $brand) {
+//
+//
+//    if(!Cache::get('brands.' . $brand . 'models_uri')) {
+//        $models_uri = \App\Models\ManufacturersUri::where('slug', $brand)->first()->models_uri()->get()->pluck('slug')->toArray();
+//        Cache::forever('brands.' . $brand . 'models_uri', $models_uri);
+//    };
+//
+//    foreach (Cache::get('brands.' . $brand . 'models_uri') as $item) {
+//        if(preg_match('/-/', $item)) {
+//
+//            Route::get($brand . "-$item-{modification}-{category}", 'Frontend\PagesController@category')->name($brand.'.'.$item.'.'.'frontend.categories.show');
+//            Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
+//            Route::get($brand . "-$item", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
+//
+//
+//        };
+//    }
+//
+//    Route::get($brand . "-{model}", 'Frontend\PagesController@model')->name('auto.' . $brand . '.model');
+//    Route::get($brand . "-{model}-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
+//
+//    Route::get($brand . "-{model}-{modification}-{category}", 'Frontend\PagesController@category')->name($brand.'.'.'frontend.categories.show');
+//    Route::get($brand, 'Frontend\PagesController@brand');
+//}
 
 //dd(app('router'));
 
@@ -68,6 +68,11 @@ foreach (Cache::get('brands') as $key => $brand) {
 //Route::get(implode('-', [$brand, $model, $modification]), 'Frontend\PagesController@modification')->name('auto.model.modification');
 //Route::get(implode('-', [$brand, $model]), 'Frontend\CategoriesController@index');
 //Route::get(implode('-', [$brand, $model]), 'Frontend\PagesController@model')->name('auto.model');
+
+Route::get('{brand}-{model}-{modification}-{category}', 'Frontend\PagesController@category')->name('frontend.category');
+Route::get('{brand}-{model}-{modification}', 'Frontend\PagesController@modification')->name('frontend.modification');
+Route::get('{brand}-{model}', 'Frontend\PagesController@model')->name('frontend.model');
+Route::get('{brand}', 'Frontend\PagesController@brand')->name('frontend.brand');
 
 Route::get('change-current-car/{id}', 'Frontend\PagesController@changeCurrentCar')->name('garage-change-current-car');
 Route::get('garage-remove-car/{id}', 'Frontend\PagesController@removeCar')->name('garage-change-current-car');
