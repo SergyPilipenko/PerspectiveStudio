@@ -45,7 +45,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="sort">Сортировка:</label>
-                                                    <input type="number"  class="form-control" value="{{ $category->position ?: 1 }}">
+                                                    <input type="number" name="position" class="form-control" value="{{ old('position') ?? $category->position }}">
                                                 </div>
                                             </div>
                                         </div>

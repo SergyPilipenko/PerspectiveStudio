@@ -15,7 +15,19 @@
                 @endforeach
             </ul>
         @else
-            <h1>Category is empty</h1>
+            @if(count($parts))
+                <ul>
+                    @foreach($parts as $part)
+                        <li>
+                            <a href="">
+                                {{ $part->supplier_name }} {{ $part->product_name }} {{ $part->part_number }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+                @else            
+                <h1>Category is empty</h1>
+            @endif
         @endif
     </div>
 @endsection

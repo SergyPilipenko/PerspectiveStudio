@@ -58,7 +58,7 @@ class CategoriesController extends Controller
     {
 
         $category = Category::with('seo')->findOrFail($id);
-        $categories = Category::get()->toTree();
+        $categories = Category::orderBy('position', 'asc')->get()->toTree();
         $tec_doc_categories = DistinctPassangerCarTree::get();
 
 //        $category_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::getCategorySelects();
@@ -96,6 +96,7 @@ class CategoriesController extends Controller
             $category->title = $request->category_title;
             $category->activity = $request->category_activity ? true : false;
             $category->slug = $request->slug;
+            $category->position = $request->position;
 
             $file = $request->file('category_image');
             if($file) {

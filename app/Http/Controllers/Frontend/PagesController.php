@@ -40,7 +40,6 @@ class PagesController extends Controller
 
     public function brand(Request $request)
     {
-//        dd(1);
 
         dd(Route::getCurrentRoute()->uri);
 //        dd($brand);
@@ -118,9 +117,8 @@ class PagesController extends Controller
         return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));
     }
 
-    public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser)
+    public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser, PartfixTecDoc $tecDoc)
     {
-
 //        $brand = $routesParser->getBrand();
 //        $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
 //        $modification = $routesParser->getParameter('modification');
@@ -138,6 +136,10 @@ class PagesController extends Controller
 
         $categories = $category->children;
 
+        if(!$categories->count()) {
+            $parts = $category->getParts($modification);
+        }
+
 //        if($categories->count()) {
 //
 //            $categoryRouteNameAndParameters = $this->getRouteNameAndParameters($brand, $model, $modification, $categories->first()->slug);
@@ -145,7 +147,7 @@ class PagesController extends Controller
 //            $route_parameters = $categoryRouteNameAndParameters['parameters'];
 //
 //        }
-        return view('frontend.car.index', compact('category', 'garage', 'current_auto', 'categories', 'brand', 'model', 'modification', 'route_name', 'route_parameters'));
+        return view('frontend.car.index', compact('category', 'garage', 'current_auto', 'categories', 'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts'));
     }
 
     public function changeCurrentCar($id)
