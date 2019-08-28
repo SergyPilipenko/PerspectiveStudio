@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Classes\PartfixTecDoc;
+use App\Models\AutoType;
 use App\Models\Tecdoc\PassangerCar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,12 +13,12 @@ class TecdocController extends Controller
 {
     public function getBrands(PartfixTecDoc $tecDoc)
     {
-        return $tecDoc->getBrands();
+        return $tecDoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
     }
 
     public function getBrandsByModelsCreatedYear(Request $request, PartfixTecDoc $tecDoc)
     {
-        return $tecDoc->getBrandsByModelsCreatedYear($request->year);
+        return $tecDoc->getBrandsByModelsCreatedYear($request->year, AutoType::where('code', 'cars')->first()->id);
     }
 
     /**

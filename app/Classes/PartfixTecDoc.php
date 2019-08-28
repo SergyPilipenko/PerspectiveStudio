@@ -4,6 +4,7 @@
 namespace App\Classes;
 use App\Classes\Tecdoc;
 use Illuminate\Support\Facades\DB;
+use Cache;
 
 class PartfixTecDoc extends Tecdoc
 {
@@ -21,13 +22,31 @@ class PartfixTecDoc extends Tecdoc
     }
 
     /**
+     * (1) АВТОМОБИЛИ
+     * (1.2) Марки авто (производители) выбранные в админке
+     *
+     * @param int $auto_type
+     * @return mixed
+     */
+    public function getCheckedBrands(int $auto_type)
+    {
+        return DB::connection('mysql')->select("
+                    SELECT m.id, m.description FROM `auto_types_passenger_cars_manufacturers` a
+                        JOIN ".env('DB_TECDOC_DATABASE').".manufacturers m on a.manufacturer_id = m.id
+                        WHERE a.auto_type_id = {$auto_type} AND m.ispassengercar = 'true' AND canbedisplayed = 'True'"
+        );
+
+
+    }
+
+    /**
      * Бренды у которых есть модели в $year году
      *
      * (требуется заполненная таблица models_counstruction_interval с помощью seeder-a AddModelsConstructionIntervalTable)
      * @param $year
      * @return array
      */
-    public function getBrandsByModelsCreatedYear($year) : array
+    public function getBrandsByModelsCreatedYear($year, $auto_type) : array
     {
         return DB::connection('mysql')->select("
             SELECT DISTINCT mf.id, mf.description 
@@ -35,7 +54,8 @@ class PartfixTecDoc extends Tecdoc
                 (SELECT id, model_id, manufacturer_id, created, 
                     (CASE WHEN models_counstruction_interval.stopped = '' THEN YEAR(CURRENT_DATE) ELSE models_counstruction_interval.stopped END) stopped
                 FROM models_counstruction_interval) w 
-            JOIN ".env('DB_TECDOC_DATABASE').".manufacturers mf on w.manufacturer_id = mf.id
+            JOIN auto_types_passenger_cars_manufacturers a on w.manufacturer_id = a.manufacturer_id
+            JOIN ".env('DB_TECDOC_DATABASE').".manufacturers mf on a.manufacturer_id = mf.id
             LEFT JOIN ".env('DB_TECDOC_DATABASE').".models m ON mf.id = m.manufacturerid
             WHERE w.stopped >= '".$year."' 
                 AND w.created <= '".$year."' 
@@ -43,6 +63,7 @@ class PartfixTecDoc extends Tecdoc
                 AND mf.ispassengercar = 'true'
                 AND m.canbedisplayed = 'true'
                 AND m.ispassengercar = 'true'
+                AND a.auto_type_id = {$auto_type}
             ORDER BY mf.description");
     }
 

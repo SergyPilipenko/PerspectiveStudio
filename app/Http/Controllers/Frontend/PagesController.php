@@ -6,6 +6,7 @@ use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
 use App\Classes\RoutesParser\CarRoutesParser;
 use App\Classes\RoutesParser\RoutesParserInterface;
+use App\Models\AutoType;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
@@ -22,11 +23,7 @@ class PagesController extends Controller
 {
     public function index(PartfixTecDoc $tecdoc, Garage $garage)
     {
-//        $garage->clear();
-        $brands = $tecdoc->getBrands();
-
-//        $bm = ModelConstrucitonInterval::whereRaw('REPLACE(`stopped`, ``, CURRENT_DATE)', 2019)->get();
-//        dd($tecdoc->getBrandsByModelsCreatedYear(1960));
+        $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
 
         $garage = \Session::get('garage')
             ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
@@ -91,12 +88,6 @@ class PagesController extends Controller
         return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
     }
 
-    /**
-     * Требуется рефактор...
-     * В СЛУЧАЕ СРАБАТЫВАНИЯ РОУТА
-     * Route::get($brand . "-$item-{modification}", 'Frontend\PagesController@modification')->name('auto.model.modification');
-     * $modification это $model ¯\_(ツ)_/¯
-     */
     public function modification($brand, $model, $modification, Garage $garage, RoutesParserInterface $rotesParser)
     {
         if(!$modification) $modification = $model;

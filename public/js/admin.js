@@ -6066,17 +6066,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auto_types', 'brands'],
   data: function data() {
     return {
-      checked: []
+      checked: {}
     };
   },
   created: function created() {
@@ -6107,14 +6102,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   })),
   methods: _objectSpread({
     selectColumnAll: function selectColumnAll(value, type) {
-      console.log(value);
       var checked = [];
-      var brands = this.autoBrands;
 
-      if (value != undefined) {
-        this.autoBrands.map(function (brand) {// checked[brand.id][type.id] = true;
-        });
+      for (var el in this.checked) {
+        checked[el] = this.checked[el];
+        checked[el][type.id] = !checked[el][type.id];
       }
+
+      this.$set(this, 'checked', checked);
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
     'setAutoTypes': 'autoTypes/setAutoTypes',
@@ -57883,30 +57878,24 @@ var render = function() {
           _vm._v(" "),
           _vm._l(_vm.autoTypes, function(type, index) {
             return _c("th", [
-              _c(
-                "div",
-                {
-                  staticClass: "form-check form-check-flat form-check-primary"
-                },
-                [
-                  _c("label", { staticClass: "form-check-label" }, [
-                    _c("input", {
-                      staticClass: "form-check-input",
-                      attrs: { type: "checkbox", name: "auto_types[][]" },
-                      domProps: { value: _vm.selectAll },
-                      on: {
-                        input: function($event) {
-                          return _vm.selectColumnAll(index, type)
-                        }
+              _c("div", {}, [
+                _c("label", { staticClass: "form-check-label" }, [
+                  _c("input", {
+                    staticClass: "form-check-input",
+                    attrs: { type: "checkbox", name: "auto_types[][]" },
+                    domProps: { value: _vm.selectAll },
+                    on: {
+                      input: function($event) {
+                        return _vm.selectColumnAll(index, type)
                       }
-                    }),
-                    _vm._v(
-                      "\n                        Все\n                        "
-                    ),
-                    _c("i", { staticClass: "input-helper" })
-                  ])
-                ]
-              )
+                    }
+                  }),
+                  _vm._v(
+                    "\n                        Все\n                        "
+                  ),
+                  _c("i", { staticClass: "input-helper" })
+                ])
+              ])
             ])
           })
         ],
@@ -57924,65 +57913,53 @@ var render = function() {
             _vm._v(" "),
             _vm._l(_vm.autoTypes, function(type) {
               return _c("td", [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-check form-check-flat form-check-primary"
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.checked[brand.id][type.id],
+                      expression: "checked[brand.id][type.id]"
+                    }
+                  ],
+                  staticClass: "form-check-input",
+                  attrs: { type: "checkbox", name: "auto_types[][]" },
+                  domProps: {
+                    checked: Array.isArray(_vm.checked[brand.id][type.id])
+                      ? _vm._i(_vm.checked[brand.id][type.id], null) > -1
+                      : _vm.checked[brand.id][type.id]
                   },
-                  [
-                    _c("label", { staticClass: "form-check-label" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.checked[brand.id][type.id],
-                            expression: "checked[brand.id][type.id]"
-                          }
-                        ],
-                        staticClass: "form-check-input",
-                        attrs: { type: "checkbox", name: "auto_types[][]" },
-                        domProps: {
-                          value: brand.id,
-                          checked: Array.isArray(_vm.checked[brand.id][type.id])
-                            ? _vm._i(_vm.checked[brand.id][type.id], brand.id) >
-                              -1
-                            : _vm.checked[brand.id][type.id]
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.checked[brand.id][type.id],
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = brand.id,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.checked[brand.id],
-                                    type.id,
-                                    $$a.concat([$$v])
-                                  )
-                              } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.checked[brand.id],
-                                    type.id,
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
-                              }
-                            } else {
-                              _vm.$set(_vm.checked[brand.id], type.id, $$c)
-                            }
-                          }
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.checked[brand.id][type.id],
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.checked[brand.id],
+                              type.id,
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.checked[brand.id],
+                              type.id,
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("i", { staticClass: "input-helper" })
-                    ])
-                  ]
-                )
+                      } else {
+                        _vm.$set(_vm.checked[brand.id], type.id, $$c)
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("i", { staticClass: "input-helper" })
               ])
             })
           ],
@@ -73452,6 +73429,25 @@ window.onload = function () {
     el: '#app',
     store: store
   });
+
+  if ($(".auto_type_head_checkbox")) {
+    $(".auto_type_head_checkbox").on('change', function (e) {
+      var headerCheckBoxAttr = $(this).attr("attr");
+      var checked = this.checked;
+      $.each($('.category_checkbox[attr="' + headerCheckBoxAttr + '"]'), function (i, el) {
+        el.checked = checked;
+      });
+    });
+    $(".category_checkbox").on('change', function () {
+      var headerCheckBoxAttr = $(this).attr("attr");
+
+      if ($('.category_checkbox[attr="' + headerCheckBoxAttr + '"]:checked').length == $('.category_checkbox[attr="' + headerCheckBoxAttr + '"]').length) {
+        $('.auto_type_head_checkbox[attr="' + headerCheckBoxAttr + '"]').prop('checked', true);
+      } else {
+        $('.auto_type_head_checkbox[attr="' + headerCheckBoxAttr + '"]').prop('checked', false);
+      }
+    });
+  }
 };
 
 /***/ }),

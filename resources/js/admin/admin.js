@@ -48,5 +48,22 @@ window.onload = function () {
         store
 
     });
+    if($(".auto_type_head_checkbox")) {
+        $(".auto_type_head_checkbox").on('change', function (e) {
+            var headerCheckBoxAttr = $(this).attr("attr");
+            var checked = this.checked;
+            $.each($('.category_checkbox[attr="'+headerCheckBoxAttr+'"]'), function (i,el) {
+                el.checked = checked;
+            });
+        })
+        $(".category_checkbox").on('change', function () {
+            var headerCheckBoxAttr = $(this).attr("attr");
+            if($('.category_checkbox[attr="'+headerCheckBoxAttr+'"]:checked').length == $('.category_checkbox[attr="'+headerCheckBoxAttr+'"]').length) {
+                $('.auto_type_head_checkbox[attr="'+headerCheckBoxAttr+'"]').prop('checked', true)
+            } else  {
+                $('.auto_type_head_checkbox[attr="'+headerCheckBoxAttr+'"]').prop('checked', false)
+            }
+        });
+    }
 };
 
