@@ -8,7 +8,7 @@
             <tr>
                 <th></th>
                 <th v-for="(type, index) in autoTypes">
-                    <div class="form-check form-check-flat form-check-primary">
+                    <div class="">
                         <label class="form-check-label">
                             <input type="checkbox" name="auto_types[][]"
                                    :value="selectAll"
@@ -25,15 +25,10 @@
             <tr v-for="brand in autoBrands">
                 <td>{{ brand.name }}</td>
                 <td v-for="type in autoTypes">
-                    <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                            <input type="checkbox" name="auto_types[][]"
-                                   v-model="checked[brand.id][type.id]"
-                                   :value="brand.id"
-                                   class="form-check-input">
-                            <i class="input-helper"></i>
-                        </label>
-                    </div>
+                    <input type="checkbox" name="auto_types[][]"
+                           v-model="checked[brand.id][type.id]"
+                           class="form-check-input">
+                    <i class="input-helper"></i>
                 </td>
             </tr>
         </tbody>
@@ -46,7 +41,7 @@
 
         data() {
             return {
-                checked: []
+                checked: {}
             }
         },
         created() {
@@ -78,15 +73,12 @@
         },
         methods: {
             selectColumnAll(value, type) {
-                console.log(value);
                 var checked = [];
-                var brands = this.autoBrands;
-
-                if(value != undefined) {
-                    this.autoBrands.map(function (brand) {
-                        // checked[brand.id][type.id] = true;
-                    });
+                for(let el in this.checked) {
+                    checked[el] = this.checked[el];
+                    checked[el][type.id] = !checked[el][type.id];
                 }
+                this.$set(this, 'checked', checked);
             },
             ...mapActions({
                 'setAutoTypes': 'autoTypes/setAutoTypes',

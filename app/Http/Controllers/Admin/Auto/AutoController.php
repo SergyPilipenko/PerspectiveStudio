@@ -8,16 +8,23 @@ use App\Models\AutoTypesPassengerCarManufacturer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Cache;
 
 class AutoController extends Controller
 {
     public function index(PartfixTecDoc $tecDoc)
     {
-        $brands = json_encode($tecDoc->getBrands());
-        $auto_types = AutoType::all();
-        $auto_brands = $this->getSelectedAutoBrandsManufacturers();
+        $brands = $tecDoc->getBrands();
 
-        return view('admin.auto.index', compact('brands', 'auto_types', 'auto_brands'));
+
+
+        $auto_types = AutoType::getAll();
+
+        $table_values = AutoTypesPassengerCarManufacturer::getTableValues();
+
+        $auto_brands = $table_values->filtered;
+
+        return view('admin.auto.index', compact('brands', 'auto_types', 'auto_brands', 'table_values'));
     }
 
     /**
@@ -39,6 +46,7 @@ class AutoController extends Controller
                     }
                 }
             }
+            Cache::forget('admin.auto_types_passenger_car_manufacturer');
             DB::connection()->getPdo()->commit();
         } catch (\PDOException $exception) {
             DB::connection()->getPdo()->rollBack();

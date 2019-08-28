@@ -21,6 +21,7 @@
                     ></flash>
                     @yield('content')
                 </div>
+
             </div>
             @include('admin.layouts.footer')
         </div>
@@ -28,6 +29,7 @@
 </div>
 
 @include('admin.layouts.scripts')
+@yield('scripts')
 </body>
 
 </html>
