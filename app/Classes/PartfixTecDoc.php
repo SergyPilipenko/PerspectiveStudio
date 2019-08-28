@@ -262,6 +262,7 @@ class PartfixTecDoc extends Tecdoc
     }
 
 
+
     /**
      * (2.4) Выборка вложенного дерева категрий
      *
@@ -275,7 +276,6 @@ class PartfixTecDoc extends Tecdoc
         $sections = $this->getSections($modification_id, $section_id);
         if(count($sections)) {
             foreach ($sections as $section) {
-
                 $section->children = $this->getNestedSections($modification_id, $section->id);
             }
         } else {
@@ -286,6 +286,14 @@ class PartfixTecDoc extends Tecdoc
 
         return $sections;
     }
+
+    public function getNestedSectionParts($modification_id, $section_id = null)
+    {
+        $this->getNestedSections($modification_id, $section_id);
+
+        return $this->section_parts;
+    }
+
 
     public function getAllSectionParts()
     {

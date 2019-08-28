@@ -27,9 +27,35 @@ class Category extends Model
         });
     }
 
+
+
     public function tecdoc_categories()
     {
         return $this->belongsToMany(CategoryDistinctPassangerCarTree::class, 'category_distinct_passanger_car_trees', 'category_id', 'distinct_pct_id');
+    }
+
+//    protected function tecdoc_nodes($category)
+//    {
+//        return $this
+//    }
+
+
+    public function scopeGetParts($query, $modification) : array
+    {
+        $nodes = [];
+        $parts = [];
+
+        foreach ($this->td_categories()->with('passanger_car_tree')->get() as $item) {
+            $nodes[] = $item->passanger_car_tree->passanger_car_trees_id;
+        }
+
+        if(count($nodes)) {
+            foreach ($nodes as $node) {
+                $parts = array_merge($parts, app('PartfixTecDoc')->getNestedSectionParts($modification, $node));
+            }
+        }
+
+        return $parts;
     }
 
     public function td_categories()

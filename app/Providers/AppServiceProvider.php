@@ -25,5 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+        $this->app->singleton('PartfixTecDoc', function () {
+            return new \App\Classes\PartfixTecDoc;
+        });
     }
 }
