@@ -1,4 +1,3 @@
-
 @extends('admin')
 @section('content')
     <div class="category-control">
@@ -11,36 +10,51 @@
                 </div>
             </div>
         </div>
-        <form action="{{ !$category ? route('admin.categories.store') : route('admin.categories.store-subcategory', $category->id) }}" method="POST">
+        <form action="{{ $store }}" method="POST">
             @csrf
             <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="offset-md-10 col-md-2">
-                                <button class="btn btn-success float-right">Сохранить</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            @include('admin.catalog.categories.sidebar')
-                            <div class="col-md-10">
-                                <div class="category-active">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            Включить категорию
-                                            <input type="checkbox" checked="checked" class="form-check-input" name="category_activity">
-                                            <i class="input-helper"></i>
-                                        </label>
-                                    </div>
+                <div class="col-md-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="offset-md-10 col-md-2">
+                                    <button class="btn btn-success float-right">Сохранить</button>
                                 </div>
-                                <slugify-title></slugify-title>
+                            </div>
+                            <div class="row">
+                                @include('admin.catalog.categories.sidebar')
+                                <div class="col-md-10">
+                                    <div class="category-active">
+                                        <div class="form-check">
+{{--                                            <label class="form-check-label">--}}
+{{--                                                Включить категорию--}}
+{{--                                                <input--}}
+{{--                                                    type="checkbox" checked="checked" class="form-check-input" name="category_activity">--}}
+{{--                                                <i class="input-helper"></i>--}}
+{{--                                            </label>--}}
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span>
+                                                        Включить категорию
+                                                    </span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" checked="checked" name="category_activity">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <slugify-title
+                                        :old="'{{ json_encode(old()) }}'"
+                                        :errors_list="'{{ json_encode($errors->messages()) }}'"
+                                    ></slugify-title>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </form>
     </div>
 @endsection

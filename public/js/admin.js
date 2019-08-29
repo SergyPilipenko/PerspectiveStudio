@@ -6332,9 +6332,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-2;
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['old', 'current_title', 'current_slug'],
+  props: ['old', 'current_title', 'current_slug', 'errors_list'],
   data: function data() {
     return {
       title: '',
@@ -6344,6 +6349,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.current_title ? this.title = this.current_title : this.title = '';
+    this.oldData['category_title'] ? this.title = this.oldData['category_title'] : this.title = '';
   },
   methods: {
     find: function find(str) {
@@ -6363,6 +6369,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   computed: {
+    oldData: function oldData() {
+      return JSON.parse(this.old);
+    },
+    errors: function errors() {
+      return JSON.parse(this.errors_list);
+    },
     slugify: function slugify() {
       var splitTitle = this.title;
       splitTitle = splitTitle.toLowerCase();
@@ -58224,7 +58236,10 @@ var render = function() {
                   expression: "title"
                 }
               ],
-              staticClass: "form-control",
+              class: {
+                "form-control": true,
+                " error": _vm.errors["category_title"] != undefined
+              },
               attrs: { type: "text", name: "category_title" },
               domProps: { value: _vm.title },
               on: {
@@ -58235,7 +58250,20 @@ var render = function() {
                   _vm.title = $event.target.value
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors["category_title"]
+              ? _c(
+                  "div",
+                  _vm._l(_vm.errors["category_title"], function(error) {
+                    return _c("div", {
+                      staticClass: "text-danger",
+                      domProps: { textContent: _vm._s(error) }
+                    })
+                  }),
+                  0
+                )
+              : _vm._e()
           ])
         ])
       ])
@@ -58248,10 +58276,26 @@ var render = function() {
             _c("label", { attrs: { for: "category_title" } }, [_vm._v("URL")]),
             _vm._v(" "),
             _c("input", {
-              staticClass: "form-control",
+              class: {
+                "form-control": true,
+                " error": _vm.errors["slug"] != undefined
+              },
               attrs: { type: "text", name: "slug" },
               domProps: { value: _vm.slugify }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors["slug"]
+              ? _c(
+                  "div",
+                  _vm._l(_vm.errors["slug"], function(error) {
+                    return _c("div", {
+                      staticClass: "text-danger",
+                      domProps: { textContent: _vm._s(error) }
+                    })
+                  }),
+                  0
+                )
+              : _vm._e()
           ])
         ])
       ])
