@@ -1,5 +1,5 @@
 <li>
-    <a class="{{ request()->route('category')->id == $category->id ? "badge badge-warning" : '' }}" href="{{ route('admin.tecdoc.categories.edit', $category->id) }}">{{ $category->title }}</a>
+    <a class="{{ request()->route('category') == $category->id ? "badge badge-warning" : '' }}" href="{{ route('admin.tecdoc.categories.edit', $category->id) }}">{{ $category->title }}</a>
 </li>
 @if($category->children)
     <ul>

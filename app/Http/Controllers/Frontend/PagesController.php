@@ -136,9 +136,7 @@ class PagesController extends Controller
 
         $categories = $category->children;
 
-        if(!$categories->count()) {
-            $parts = $category->getParts($modification);
-        }
+        $parts = $category->getParts($modification);
 
 //        if($categories->count()) {
 //
@@ -147,7 +145,10 @@ class PagesController extends Controller
 //            $route_parameters = $categoryRouteNameAndParameters['parameters'];
 //
 //        }
-        return view('frontend.car.index', compact('category', 'garage', 'current_auto', 'categories', 'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts'));
+        return view('frontend.car.index',
+            compact('category', 'garage', 'current_auto', 'categories',
+                'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts')
+        );
     }
 
     public function changeCurrentCar($id)
