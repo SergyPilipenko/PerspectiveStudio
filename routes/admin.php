@@ -20,6 +20,24 @@ Route::prefix('admin')->group(function() {
     });
 
     Route::group(['prefix' => 'catalog', 'as' => 'admin.catalog.'], function() {
+        Route::group(['prefix' => 'products', 'as' => 'products.'], function() {
+            Route::get('/', 'Admin\Catalog\ProductsController@index')->name('index');
+            Route::get('create', 'Admin\Catalog\ProductsController@create')->name('create');
+        });
+
+        Route::group(['prefix' => 'attributes', 'as' => 'attributes.'], function() {
+            Route::get('/', 'Admin\Catalog\Attributes\AttributesController@index')->name('index');
+            Route::get('create', 'Admin\Catalog\Attributes\AttributesController@create')->name('create');
+            Route::post('store', 'Admin\Catalog\Attributes\AttributesController@store')->name('store');
+            Route::get('{attribute}/edit', 'Admin\Catalog\Attributes\AttributesController@edit')->name('edit');
+            Route::put('{attribute}/update', 'Admin\Catalog\Attributes\AttributesController@update')->name('update');
+            Route::delete('{attribute}/destroy', 'Admin\Catalog\Attributes\AttributesController@destroy')->name('destroy');
+        });
+
+        Route::group(['prefix' => 'attribute-groups', 'as' => 'attribute-groups.'], function() {
+            Route::get('/', 'Admin\Catalog\Attributes\AttributeGroupsController@index')->name('index');
+        });
+
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function() {
             Route::get('create', 'Admin\Catalog\CategoriesController@create')->name('create');
             Route::post('store', 'Admin\Catalog\CategoriesController@store')->name('store');

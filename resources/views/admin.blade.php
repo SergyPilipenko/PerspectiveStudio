@@ -15,11 +15,17 @@
         @include('admin.layouts.sidebar')
         <div class="main-panel">
             <div class="content-wrapper">
+
                 <div id="app">
-{{--                    {{ dd($errors) }}--}}
-                    <flash message="{{ session('flash') }}" :errors_list="{{  json_encode($errors->messages()) }}"
-                    ></flash>
-                    @yield('content')
+                    <div v-cloak class="main-app-container">
+                        <div class="v-cloak--inline"> <!-- Parts that will be visible before compiled your HTML -->
+                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <flash message="{{ session('flash') }}" :errors_list="{{  json_encode($errors->messages()) }}"
+                        ></flash>
+                        @yield('content')
+                    </div>
                 </div>
 
             </div>

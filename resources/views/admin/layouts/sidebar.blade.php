@@ -13,15 +13,17 @@
 {{--            </div>--}}
 {{--        </li>--}}
         <li class="nav-item">
-            <a class="nav-link collapsed" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+            <a class="nav-link collapsed" data-toggle="collapse" href="#catalogs" aria-expanded="false" aria-controls="catalogs">
                 <i class="ti-package menu-icon"></i>
                 <span class="menu-title">Каталог</span>
                 <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="auth" style="">
+            <div class="collapse" id="catalogs" style="">
                 <ul class="nav flex-column sub-menu">
-{{--                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">Товары</a></li>--}}
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.products.index') }}">Товары</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.categories.create') }}">Категории</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attributes.index') }}">Аттрибуты</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attribute-groups.index') }}">Группы аттрибутов</a></li>
                 </ul>
             </div>
         </li>
