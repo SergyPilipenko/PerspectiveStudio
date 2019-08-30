@@ -1692,3 +1692,91 @@ input:checked + .slider:before {
   margin-top: 0;
 }
 
+.accordian-header,
+.accordian-body {
+  padding: 20px 20px;
+}
+
+.accordian-header {
+  font-size: 22px;
+  border-top: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+[v-cloak] .v-cloak--block {
+  display: block;
+}
+
+[v-cloak] .v-cloak--inline {
+  display: inline;
+}
+
+[v-cloak] .v-cloak--inlineBlock {
+  display: inline-block;
+}
+
+[v-cloak] .v-cloak--hidden {
+  display: none;
+}
+
+[v-cloak] .v-cloak--invisible {
+  visibility: hidden;
+}
+
+.v-cloak--block,
+.v-cloak--inline,
+.v-cloak--inlineBlock {
+  display: none;
+}
+
+.accordian-header {
+  position: relative;
+  cursor: pointer;
+  margin-top: -1px;
+}
+
+.accordian .control-button i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #248afd;
+}
+
+.content-wrapper {
+  flex-direction: column;
+  display: flex;
+}
+
+.main-app-container,
+#app {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card {
+  display: flex;
+  flex-grow: 1;
+}
+
+.form-group.required label {
+  position: relative;
+}
+
+.form-group.required label:after {
+  content: "*";
+  color: red;
+  right: -10px;
+  position: absolute;
+  top: 0;
+}
+
+.card-control-header {
+  margin-bottom: 20px;
+}
+
+.card .pagination {
+  padding-left: 15px;
+}
+
