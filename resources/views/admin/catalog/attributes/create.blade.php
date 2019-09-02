@@ -103,19 +103,23 @@
                     <accordian>
                         <div slot="header">Конфигурация</div>
                         <div slot="body">
-                            <div class="form-group">
-                                <label for="is_filterable">Использовать в фильтре</label>
-                                <select name="is_filterable" id="is_filterable" class="form-control">
-                                    <option value="0">Нет</option>
-                                    <option value="1">Да</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="is_visible_on_front">Отображать в карточке товара</label>
-                                <select name="is_visible_on_front" id="is_visible_on_front" class="form-control">
-                                    <option value="0">Нет</option>
-                                    <option value="1">Да</option>
-                                </select>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="is_filterable">Использовать в фильтре</label>
+                                        <select name="is_filterable" id="is_filterable" class="form-control">
+                                            <option value="0">Нет</option>
+                                            <option value="1">Да</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="is_visible_on_front">Отображать в карточке товара</label>
+                                        <select name="is_visible_on_front" id="is_visible_on_front" class="form-control">
+                                            <option value="0">Нет</option>
+                                            <option value="1">Да</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </accordian>
