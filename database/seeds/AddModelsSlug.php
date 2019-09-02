@@ -24,6 +24,7 @@ class AddModelsSlug extends Seeder
                 $model_uri = new ModelsUri;
                 $model_uri->model_id = $model->id;
                 $model_name = explode(' ',$model->description);
+                $model_name = preg_replace('/-/', '_', $model_name);
                 $model_name = Transliterate::make(mb_strtolower(array_shift($model_name)));
                 $model_uri->slug = $model_name;
                 $model_uri->manufacturer_id = $model->manufacturerid;
