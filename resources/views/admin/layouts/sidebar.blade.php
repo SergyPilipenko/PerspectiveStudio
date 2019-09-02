@@ -23,7 +23,7 @@
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.products.index') }}">Товары</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.categories.create') }}">Категории</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attributes.index') }}">Аттрибуты</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attribute-groups.index') }}">Группы аттрибутов</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attribute-families.index') }}">Наборы аттрибутов</a></li>
                 </ul>
             </div>
         </li>

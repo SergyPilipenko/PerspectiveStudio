@@ -1780,3 +1780,11 @@ input:checked + .slider:before {
   padding-left: 15px;
 }
 
+.add-attributes-group-btn {
+  margin-bottom: 20px;
+}
+
+.add-attribute-btn {
+  margin-top: 20px;
+}
+

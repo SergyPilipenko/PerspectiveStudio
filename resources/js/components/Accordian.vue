@@ -3,8 +3,13 @@
         <div class="accordian-header" @click="toggleVisibility">
             <slot name="header"></slot>
             <div class="control-button">
-                <i class="ti-arrow-circle-down" v-if="!bodyVisibility"></i>
-                <i class="ti-arrow-circle-up" v-if="bodyVisibility"></i>
+                <div v-if="!hasIconSlot">
+                    <i class="ti-arrow-circle-down" v-if="!bodyVisibility"></i>
+                    <i class="ti-arrow-circle-up" v-if="bodyVisibility"></i>
+                </div>
+                <div v-else>
+                    <slot name="icon"></slot>
+                </div>
             </div>
         </div>
         <div class="accordian-body" v-if="bodyVisibility">
@@ -27,8 +32,8 @@
             }
         },
         computed: {
-            bodyVisibility() {
-
+            hasIconSlot() {
+                return !!this.$slots['icon'];
             }
         },
         methods: {

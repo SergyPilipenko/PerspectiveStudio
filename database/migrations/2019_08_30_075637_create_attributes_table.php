@@ -18,11 +18,13 @@ class CreateAttributesTable extends Migration
             $table->string('code');
             $table->string('title');
             $table->string('type');
+            $table->unsignedBigInteger('position')->nullable();
             $table->string('validation')->nullable();
             $table->boolean('is_required')->default(false);
             $table->boolean('is_unique')->default(false);
             $table->boolean('is_filterable')->default(false);
             $table->boolean('is_visible_on_front')->default(false);
+            $table->boolean('is_user_defined')->default(true);
             $table->string('swatch_type')->nullable();
             $table->timestamps();
         });
