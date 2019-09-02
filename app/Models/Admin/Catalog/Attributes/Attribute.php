@@ -26,4 +26,9 @@ class Attribute extends Model
             'url' => 'URL',
         ]
     ];
+
+    public function scopeCustom($query)
+    {
+        return $query->where('is_user_defined', true);
+    }
 }

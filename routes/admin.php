@@ -34,8 +34,13 @@ Route::prefix('admin')->group(function() {
             Route::delete('{attribute}/destroy', 'Admin\Catalog\Attributes\AttributesController@destroy')->name('destroy');
         });
 
-        Route::group(['prefix' => 'attribute-groups', 'as' => 'attribute-groups.'], function() {
-            Route::get('/', 'Admin\Catalog\Attributes\AttributeGroupsController@index')->name('index');
+        Route::group(['prefix' => 'attribute-families', 'as' => 'attribute-families.'], function() {
+            Route::get('/', 'Admin\Catalog\Attributes\AttributeFamiliesController@index')->name('index');
+            Route::get('create', 'Admin\Catalog\Attributes\AttributeFamiliesController@create')->name('create');
+
+            Route::group(['prefix' => 'attribute-groups', 'as' => 'attribute-groups.'], function() {
+                Route::post('store', 'Admin\Catalog\Attributes\AttributeGroupsController@store')->name('store');
+            });
         });
 
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function() {

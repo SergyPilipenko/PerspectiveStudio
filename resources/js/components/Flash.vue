@@ -56,6 +56,7 @@
         },
         methods: {
             flash(data){
+                console.log(data);
                 if(this.hideTimer) return;
                 this.body = data.message;
                 this.level = data.level;
@@ -93,7 +94,7 @@
         position: fixed;
         right: 40px;
         top: 95px;
-        z-index: 1000;
+        z-index: 1000000;
         background-color: #569211;
         color: #fff;
         font-family: inherit;

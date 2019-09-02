@@ -18,7 +18,6 @@
                         <div slot="body">
                             <div class="row">
                                 <div class="col-md-4">
-
                                     <div class="form-group required">
                                         <label for="code">Код аттрибута</label>
                                         <input type="text" id="code"
