@@ -32,11 +32,13 @@
                                             <i class="ti-pencil-alt"></i>
                                             Редактировать
                                         </a>
-                                        <form action="{{ route('admin.catalog.attributes.destroy', $attribute) }}" method="POST">
-                                            @csrf
-                                            {{ method_field('delete') }}
-                                            <button><i class="ti-trash"></i> Удалить</button>
-                                        </form>
+                                        @if($attribute['is_user_defined'])
+                                            <form action="{{ route('admin.catalog.attributes.destroy', $attribute) }}" method="POST">
+                                                @csrf
+                                                {{ method_field('delete') }}
+                                                <button><i class="ti-trash"></i> Удалить</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

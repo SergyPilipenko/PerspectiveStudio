@@ -23,7 +23,7 @@ class AttributeFamilyTableSeeder extends Seeder
             'code' => 'default',
             'name' => 'Стандартный',
             'status' => '0',
-            'is_user_defined' => '1'
+            'is_user_defined' => '0'
         ]);
     }
 }

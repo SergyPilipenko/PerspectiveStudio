@@ -19,7 +19,7 @@ class CreateAttributeGroupsTable extends Migration
             $table->unsignedBigInteger('position');
             $table->unsignedBigInteger('attribute_family_id');
             $table->foreign('attribute_family_id')
-                ->on('attribute_families')->references('id');
+                ->on('attribute_families')->references('id')->onDelete('cascade');
             $table->boolean('is_user_defined')->default(true);
             $table->timestamps();
         });
