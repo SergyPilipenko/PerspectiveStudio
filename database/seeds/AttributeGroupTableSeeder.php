@@ -56,6 +56,7 @@ class AttributeGroupTableSeeder extends Seeder
                 'attribute_family_id' => '1'
             ]
         ]);
+        AttributeGroupMapping::query()->delete();
 
         AttributeGroupMapping::insert([
             ['attribute_id' => '1','attribute_group_id' => '1','position' => '1'],

@@ -6566,6 +6566,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -6609,6 +6613,22 @@ __webpack_require__.r(__webpack_exports__);
         this.$refs.added.clearAndCloseForm();
       } else {
         flash('Группа с таким именем уже существует', 'error');
+      }
+    },
+    addToAvailableAttributesList: function addToAvailableAttributesList(attribute) {
+      var available = this.availableAttributes;
+      available.push(attribute);
+      this.availableAttributes = available;
+    },
+    removeFromAvailableAttributesList: function removeFromAvailableAttributesList(attributes) {
+      var filtered = this.availableAttributes.filter(function (item) {
+        return !attributes.includes(item.id);
+      });
+      this.availableAttributes = filtered;
+    },
+    hideAttrTable: function hideAttrTable() {
+      for (var i in this.groups) {
+        this.$refs.attr[i].hideAttributes();
       }
     },
     removeGroup: function removeGroup(rmGroup) {
@@ -6664,16 +6684,77 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['group', 'availableAttributes'],
   data: function data() {
     return {
-      visibility: false
+      visibility: false,
+      checked: [],
+      attributesList: []
     };
   },
+  mounted: function mounted() {
+    if (this.group.attributes) {
+      this.attributesList = this.group.attributes;
+    }
+  },
+  computed: {
+    groupAttributesIds: function groupAttributesIds() {
+      var obj = {
+        group: this.group,
+        attributes: this.attributesList
+      };
+      return JSON.stringify(obj);
+    }
+  },
   methods: {
+    hideAttributes: function hideAttributes() {
+      this.visibility = false;
+    },
+    clearChecked: function clearChecked() {
+      this.checked = [];
+    },
     toggleVisibility: function toggleVisibility() {
+      this.$emit('closeOtherAttributesLists');
       this.visibility = !this.visibility;
+    },
+    addAttributesInGroupList: function addAttributesInGroupList() {
+      var _this = this;
+
+      var checkedAttributes = this.attributesList,
+          newItemsIds = [];
+      this.checked.map(function (item, index) {
+        if (item) {
+          _this.availableAttributes[index]["new"] = true;
+          checkedAttributes.push(_this.availableAttributes[index]);
+          newItemsIds.push(_this.availableAttributes[index].id);
+        }
+      });
+      this.attributesList = checkedAttributes;
+      this.$emit('removeFromAvailableAttributesList', newItemsIds);
+      this.hideAttributes();
+      this.clearChecked();
+    },
+    removeAttributeFromGroupList: function removeAttributeFromGroupList(attribute) {
+      var filtered = [],
+          available = [];
+
+      for (var i in this.attributesList) {
+        if (this.attributesList[i].id != attribute.id) {
+          filtered.push(this.attributesList[i]);
+        } else {
+          available = this.attributesList[i];
+        }
+      }
+
+      this.attributesList = filtered;
+      this.$emit('addToAvailableAttributesList', available);
     }
   }
 });
@@ -6689,6 +6770,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -58886,9 +58968,18 @@ var render = function() {
                   { attrs: { slot: "body" }, slot: "body" },
                   [
                     _c("attributes-table", {
+                      ref: "attr",
+                      refInFor: true,
                       attrs: {
                         group: group,
                         availableAttributes: _vm.availableAttributes
+                      },
+                      on: {
+                        closeOtherAttributesLists: _vm.hideAttrTable,
+                        removeFromAvailableAttributesList:
+                          _vm.removeFromAvailableAttributesList,
+                        addToAvailableAttributesList:
+                          _vm.addToAvailableAttributesList
                       }
                     })
                   ],
@@ -58927,14 +59018,14 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.group.attributes && _vm.group.attributes.length
+    _vm.attributesList && _vm.attributesList.length
       ? _c("div", { staticClass: "table-responsive" }, [
           _c("table", { staticClass: "table" }, [
             _vm._m(0),
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.group.attributes, function(attribute) {
+              _vm._l(_vm.attributesList, function(attribute) {
                 return _c("tr", [
                   _c("td", {
                     domProps: { textContent: _vm._s(attribute.code) }
@@ -58946,7 +59037,27 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", {
                     domProps: { textContent: _vm._s(attribute.type) }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.removeAttributeFromGroupList(attribute)
+                          }
+                        }
+                      },
+                      [
+                        attribute.new | attribute.is_user_defined
+                          ? _c("i", { staticClass: "ti-trash" })
+                          : _vm._e()
+                      ]
+                    )
+                  ])
                 ])
               }),
               0
@@ -58959,6 +59070,7 @@ var render = function() {
       "button",
       {
         staticClass: "btn small btn-primary btn-sm add-attribute-btn",
+        attrs: { type: "button" },
         on: { click: _vm.toggleVisibility }
       },
       [_vm._v("Добавить аттрибут")]
@@ -58968,7 +59080,7 @@ var render = function() {
       ? _c(
           "div",
           [
-            _vm._l(_vm.availableAttributes, function(attribute) {
+            _vm._l(_vm.availableAttributes, function(attribute, index) {
               return _c(
                 "div",
                 {
@@ -58982,24 +59094,73 @@ var render = function() {
                         "\n                "
                     ),
                     _c("input", {
-                      staticClass: "form-check-input auto_type_head_checkbox",
-                      attrs: { type: "checkbox", name: "checkbox", attr: "1" }
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.checked[index],
+                          expression: "checked[index]"
+                        }
+                      ],
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox", name: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.checked[index])
+                          ? _vm._i(_vm.checked[index], null) > -1
+                          : _vm.checked[index]
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.checked[index],
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(_vm.checked, index, $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  _vm.checked,
+                                  index,
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(_vm.checked, index, $$c)
+                          }
+                        }
+                      }
                     }),
                     _vm._v(" "),
-                    _c("i", { staticClass: "input-helper" }),
                     _c("i", { staticClass: "input-helper" })
                   ])
                 ]
               )
             }),
             _vm._v(" "),
-            _c("button", { staticClass: "btn btn-sm btn-primary" }, [
-              _vm._v("Добавить")
-            ])
+            _vm.availableAttributes.length
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.addAttributesInGroupList }
+                  },
+                  [_vm._v("Добавить")]
+                )
+              : _c("div", [_vm._v("список пуст...")])
           ],
           2
         )
-      : _vm._e()
+      : _vm._e(),
+    _vm._v(" "),
+    _c("input", {
+      attrs: { type: "hidden", name: "groups[" + _vm.group.name + "]" },
+      domProps: { value: _vm.groupAttributesIds }
+    })
   ])
 }
 var staticRenderFns = [
@@ -59013,7 +59174,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Название")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Тип")])
+        _c("th", [_vm._v("Тип")]),
+        _vm._v(" "),
+        _c("th")
       ])
     ])
   }
@@ -59054,7 +59217,7 @@ var render = function() {
               }
             ],
             staticClass: "add-attributes-group-btn btn-sm",
-            attrs: { variant: "primary" },
+            attrs: { variant: "primary", type: "button" },
             on: {
               click: function($event) {
                 _vm.show = true
@@ -74993,7 +75156,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************************************************************************************!*\
   !*** ./resources/js/admin/components/catalog/attributes/NewAttributeGroupForm.vue?vue&type=template&id=100aff50& ***!
   \*******************************************************************************************************************/
-/*! no static exports found */
+/*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

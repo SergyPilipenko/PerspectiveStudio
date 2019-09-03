@@ -12,6 +12,10 @@
                     <div slot="body">
                         <attributes-table
                             :group="group"
+                            @closeOtherAttributesLists="hideAttrTable"
+                            @removeFromAvailableAttributesList="removeFromAvailableAttributesList"
+                            @addToAvailableAttributesList="addToAvailableAttributesList"
+                            ref="attr"
                             :availableAttributes="availableAttributes"
                         ></attributes-table>
                     </div>
@@ -33,7 +37,8 @@
             return {
                 groups: [],
                 newGroups: [],
-                availableAttributes: []
+                availableAttributes: [
+                ]
             }
         },
         created() {
@@ -61,6 +66,22 @@
                     this.$refs.added.clearAndCloseForm()
                 } else {
                     flash('Группа с таким именем уже существует', 'error');
+                }
+            },
+            addToAvailableAttributesList(attribute) {
+                var available = this.availableAttributes;
+                available.push(attribute);
+                this.availableAttributes = available;
+            },
+            removeFromAvailableAttributesList(attributes) {
+                var filtered = this.availableAttributes.filter(item => {
+                    return !attributes.includes(item.id);
+                });
+                this.availableAttributes = filtered;
+            },
+            hideAttrTable() {
+                for(let i in this.groups) {
+                    this.$refs.attr[i].hideAttributes()
                 }
             },
             removeGroup(rmGroup) {

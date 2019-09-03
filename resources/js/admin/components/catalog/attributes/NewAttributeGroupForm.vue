@@ -3,6 +3,7 @@
         <div>
             <b-button v-b-modal.my-modal
                       variant="primary"
+                      type="button"
                       class="add-attributes-group-btn btn-sm"
                       @click="show=true">Добавить группу</b-button>
             <b-modal
@@ -81,7 +82,6 @@
             addNewGroup() {
                 var self = this,
                     form = new FormData();
-
                 self.resetErrors();
                 form.append('name', this.name);
                 form.append('position', this.position);

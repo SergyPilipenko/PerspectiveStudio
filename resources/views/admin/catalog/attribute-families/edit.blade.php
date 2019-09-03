@@ -1,8 +1,9 @@
 @extends('admin')
 @section('content')
     <div class="card">
-        <form action="{{ route('admin.catalog.attribute-families.store') }}" method="POST">
+        <form action="{{ route('admin.catalog.attribute-families.update', $attributeFamily) }}" method="POST">
             @csrf
+            {{ method_field('PUT') }}
             <div class="card-body">
                 <div class="row card-control-header">
                     <div class="col-md-10">
@@ -22,7 +23,8 @@
                                         <label for="code">Код аттрибута</label>
                                         <input type="text" id="code"
                                                name="code"
-                                               value="{{ old('code') ?? '' }}"
+                                               disabled="disabled"
+                                               value="{{ $attributeFamily->code }}"
                                                class="form-control {{ ValidationHelper::errorExists($errors, 'code') ? 'error' : '' }}">
                                         @include('admin.partials.input-errors', ['input_name' => 'code'])
                                     </div>
@@ -30,7 +32,7 @@
                                         <label for="name">Название</label>
                                         <input type="text" id="name"
                                                name="name"
-                                               value="{{ old('name') ?? '' }}"
+                                               value="{{ old('name') ?? $attributeFamily->name }}"
                                                class="form-control {{ ValidationHelper::errorExists($errors, 'name') ? 'error' : '' }}">
                                         @include('admin.partials.input-errors', ['input_name' => 'name'])
                                     </div>
