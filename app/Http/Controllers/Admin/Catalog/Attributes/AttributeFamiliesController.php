@@ -88,18 +88,10 @@ class AttributeFamiliesController extends Controller
             DB::connection()->getPdo()->beginTransaction();
 
             $attributeFamily->name = $request->name;
-            $attributeFamily->update();
-            foreach ($request->groups as $group) {
-                $group = json_decode($group,true);
-                if(isset($group['group']['id']) && $attributeFamily->attribute_groups->contains('id', $group['group']['id'])) {
-                    $group_exist = $attributeFamily->attribute_groups->where('id', $group['group']['id'])->first();
-                    $group_exist->attributes()->sync(array_column($group['attributes'], 'id'));
-                } else {
-                    $attributeGroup = $this->createNewAttributeGroup($attributeFamily, $group);
-                    $attributeGroup->attributes()->sync(array_column($group['attributes'], 'id'));
-                }
-            }
 
+            $attributeFamily->update();
+
+            $attributeFamily->updateFamilyGroups($request->groups);
 
             Session::flash('flash', 'Набор аттрибутов был создан успешно');
 
@@ -145,21 +137,5 @@ class AttributeFamiliesController extends Controller
         }
 
         return $custom_attributes;
-    }
-
-    /**
-     * @param AttributeFamily $attributeFamily
-     * @param $group
-     * @return AttributeGroup
-     */
-    protected function createNewAttributeGroup(AttributeFamily $attributeFamily, $group): AttributeGroup
-    {
-        $attributeGroup = new AttributeGroup;
-        $attributeGroup->name = $group['group']['name'];
-        $attributeGroup->position = $group['group']['position'];
-        if(isset($group['group']['is_user_defined'])) $attributeGroup->is_user_defined = $group['group']['is_user_defined'];
-        $attributeGroup->attribute_family_id = $attributeFamily->id;
-        $attributeGroup->save();
-        return $attributeGroup;
     }
 }
