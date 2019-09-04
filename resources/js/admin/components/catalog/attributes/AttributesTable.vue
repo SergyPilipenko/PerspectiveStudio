@@ -45,11 +45,13 @@
             return {
                 visibility: false,
                 checked: [],
+                available: [],
                 attributesList: []
             }
         },
 
         mounted() {
+
             if(this.group.attributes) {
                 this.attributesList = this.group.attributes;
             }
@@ -105,7 +107,21 @@
                     }
                 }
                 this.attributesList = filtered;
+
                 this.$emit('addToAvailableAttributesList', available);
+            },
+
+            removeAllAttributes() {
+                this.attributesList.map(item => {
+                    this.$emit('addToAvailableAttributesList', item);
+                });
+                this.attributesList = [];
+            },
+
+            recoverAvailableAttributes() {
+                if(this.attributesList.length) {
+                    this.removeAllAttributes();
+                }
             }
         }
     }

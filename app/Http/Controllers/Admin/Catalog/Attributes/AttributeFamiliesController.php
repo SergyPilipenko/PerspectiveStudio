@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Catalog\Attributes;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Admin\Catalog\Attributes\AttributeGroup;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -43,14 +44,8 @@ class AttributeFamiliesController extends Controller
             $attributeFamily->save();
             foreach ($request->groups as $key => $group) {
                 $group = json_decode($group,true);
-                $attributeGroup = new AttributeGroup;
-                $attributeGroup->name = $group['group']['name'];
-                $attributeGroup->position = $group['group']['position'];
-                $attributeGroup->attribute_family_id = $attributeFamily->id;
-                $attributeGroup->save();
-
+                $attributeGroup = $this->createNewAttributeGroup($attributeFamily, $group);
                 $attributeGroup->attributes()->sync(array_column($group['attributes'], 'id'));
-
             }
 
             Session::flash('flash', 'Набор аттрибутов был создан успешно');
@@ -68,16 +63,55 @@ class AttributeFamiliesController extends Controller
     public function edit($id, AttributeFamily $attributeFamily)
     {
         $attributeFamily = $attributeFamily->whereId($id)->with('attribute_groups.attributes')->firstOrFail();
-
         $groups = $attributeFamily->attribute_groups;
-
-//        $custom_attributes = Attribute:;
-
-//        dd($custom_attributes);
-
-
+        $custom_attributes = $this->getAvailableAttributesInAttributeFamily($attributeFamily);
+        $new_collection = [];
+        foreach ($custom_attributes as $custom_attribute) {
+            $new_collection[] = $custom_attribute;
+        }
+        $custom_attributes = collect($new_collection);
 
         return view('admin.catalog.attribute-families.edit', compact('attributeFamily', 'custom_attributes', 'groups'));
+    }
+
+    public function update($id, Request $request)
+    {
+        $this->validate($request, array(
+            'name' => 'required',
+            'groups' => 'required'
+        ));
+
+        $attributeFamily =  AttributeFamily::whereId($id)->with('attribute_groups')->firstOrFail();
+
+
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+
+            $attributeFamily->name = $request->name;
+            $attributeFamily->update();
+            foreach ($request->groups as $group) {
+                $group = json_decode($group,true);
+                if(isset($group['group']['id']) && $attributeFamily->attribute_groups->contains('id', $group['group']['id'])) {
+                    $group_exist = $attributeFamily->attribute_groups->where('id', $group['group']['id'])->first();
+                    $group_exist->attributes()->sync(array_column($group['attributes'], 'id'));
+                } else {
+                    $attributeGroup = $this->createNewAttributeGroup($attributeFamily, $group);
+                    $attributeGroup->attributes()->sync(array_column($group['attributes'], 'id'));
+                }
+            }
+
+
+            Session::flash('flash', 'Набор аттрибутов был создан успешно');
+
+            DB::connection()->getPdo()->commit();
+
+            return redirect()->back();
+
+        } catch (\PDOException $e) {
+            dd($e);
+            DB::connection()->getPdo()->rollBack();
+        }
+
     }
 
     public function destroy(AttributeFamily $attributeFamily)
@@ -87,5 +121,45 @@ class AttributeFamiliesController extends Controller
         Session::flash('flash', 'Набор аттрибутов был удален создануспешно');
 
         return redirect()->back();
+    }
+
+    /**
+     * @param AttributeFamily $attributeFamily
+     * @param $custom_attributes
+     */
+    protected function getAvailableAttributesInAttributeFamily(AttributeFamily $attributeFamily) : Collection
+    {
+        $custom_attributes = Attribute::custom()->get();
+
+        foreach ($attributeFamily->attribute_groups as $attribute_group) {
+            foreach ($attribute_group->attributes as $attribute) {
+                if ($custom_attributes->contains('id', $attribute->id)) {
+                    foreach ($custom_attributes as $key => $custom_attribute) {
+                        if ($custom_attribute->id == $attribute->id) {
+                            $custom_attributes->forget($key);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return $custom_attributes;
+    }
+
+    /**
+     * @param AttributeFamily $attributeFamily
+     * @param $group
+     * @return AttributeGroup
+     */
+    protected function createNewAttributeGroup(AttributeFamily $attributeFamily, $group): AttributeGroup
+    {
+        $attributeGroup = new AttributeGroup;
+        $attributeGroup->name = $group['group']['name'];
+        $attributeGroup->position = $group['group']['position'];
+        if(isset($group['group']['is_user_defined'])) $attributeGroup->is_user_defined = $group['group']['is_user_defined'];
+        $attributeGroup->attribute_family_id = $attributeFamily->id;
+        $attributeGroup->save();
+        return $attributeGroup;
     }
 }
