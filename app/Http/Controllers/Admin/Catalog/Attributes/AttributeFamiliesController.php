@@ -42,11 +42,7 @@ class AttributeFamiliesController extends Controller
             $attributeFamily->name = $request->name;
             $attributeFamily->code = $request->code;
             $attributeFamily->save();
-            foreach ($request->groups as $key => $group) {
-                $group = json_decode($group,true);
-                $attributeGroup = $this->createNewAttributeGroup($attributeFamily, $group);
-                $attributeGroup->attributes()->sync(array_column($group['attributes'], 'id'));
-            }
+            $attributeFamily->updateFamilyGroups($request->groups);
 
             Session::flash('flash', 'Набор аттрибутов был создан успешно');
 
