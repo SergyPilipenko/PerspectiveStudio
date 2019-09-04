@@ -8,7 +8,7 @@
                     <div slot="header">
                         {{ group.name }}
                     </div>
-                    <div slot="icon" v-if="group.isNew"><i class="ti-trash" @click="removeGroup(group)"></i></div>
+                    <div slot="icon" v-if="group.isNew | group.is_user_defined"><i class="ti-trash" @click="removeGroup(group)"></i></div>
                     <div slot="body">
                         <attributes-table
                             :group="group"
@@ -85,9 +85,16 @@
                 }
             },
             removeGroup(rmGroup) {
+                for(let i in this.groups) {
+                    if(this.groups[i].name == rmGroup.name) {
+                        this.$refs.attr[i].recoverAvailableAttributes()
+                    }
+                }
+
                 var filteredGroups = this.groups.filter(group => {
                     return group.name != rmGroup.name
                 });
+
                 this.groups = filteredGroups;
             }
         }
