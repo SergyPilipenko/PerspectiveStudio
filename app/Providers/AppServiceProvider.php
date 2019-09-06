@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 

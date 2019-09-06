@@ -4,7 +4,7 @@
         <div class="card-body">
             <div class="row card-control-header">
                 <div class="col-md-10">
-                    <h3>Список аттрибутов</h3>
+                    <h3>Список атрибутов</h3>
                 </div>
                 <div class="col-md-2">
                     <a href="{{ route('admin.catalog.attribute-families.create') }}" class="btn btn-primary float-right">Добавить</a>

@@ -45,7 +45,7 @@ class AttributesController extends Controller
         $attribute->is_visible_on_front = $request->is_visible_on_front;
         $attribute->save();
 
-        Session::flash('flash', 'Новый аттрибут добавлен успешно');
+        Session::flash('flash', 'Новый атрибут добавлен успешно');
 
         return redirect()->route('admin.catalog.attributes.index');
     }
@@ -78,7 +78,7 @@ class AttributesController extends Controller
     {
         $attribute->delete();
 
-        Session::flash('flash', 'Аттрибут удален успешно');
+        Session::flash('flash', 'Атрибут удален успешно');
 
         return redirect()->route('admin.catalog.attributes.index');
     }

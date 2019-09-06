@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div class="accordian-body" v-if="bodyVisibility">
+        <div class="accordian-body" v-show="bodyVisibility">
             <slot name="body"></slot>
         </div>
     </div>

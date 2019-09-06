@@ -6,7 +6,7 @@
             <div class="card-body">
                 <div class="row card-control-header">
                     <div class="col-md-10">
-                        <h3>Наборы аттрибутов</h3>
+                        <h3>Наборы атрибутов</h3>
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-success float-right">Сохранить</button>
@@ -19,7 +19,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group required">
-                                        <label for="code">Код аттрибута</label>
+                                        <label for="code">Код набора атрибутов</label>
                                         <input type="text" id="code"
                                                name="code"
                                                value="{{ old('code') ?? '' }}"
