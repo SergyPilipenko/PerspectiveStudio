@@ -52,8 +52,8 @@
 
         mounted() {
 
-            if(this.group.attributes) {
-                this.attributesList = this.group.attributes;
+            if(this.group.group_attributes) {
+                this.attributesList = this.group.group_attributes;
             }
         },
 

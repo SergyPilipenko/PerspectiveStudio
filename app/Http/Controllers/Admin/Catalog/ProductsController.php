@@ -52,15 +52,17 @@ class ProductsController extends Controller
 
     public function edit($product_id)
     {
-        $product = $this->product->with('attribute_family.attribute_groups.attributes')->findOrFail($product_id);
-
+        $product = $this->product->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($product_id);
         return view('admin.catalog.products.edit', compact('product'));
     }
 
     public function update(ProductForm $request, $id)
     {
-        $this->product->productUpdate($request->all(), $id);
-//        dd($this->product->update(request()->all(), $id));
+        $product = $this->product->productUpdate($request->all(), $id);
+
+        Session::flash('flash', 'Новые данные были сохранены успешно');
+
+        return back();
     }
 
     public function destroy()

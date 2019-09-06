@@ -32,6 +32,7 @@ Vue.component('categories-tree', require('./components/catalog/CategoriesTree').
 Vue.component('categories-tree-element', require('./components/catalog/CategoriesTreeElement').default);
 Vue.component('auto-types-table', require('./components/auto/AutoTypesTable').default);
 Vue.component('attribute-groups', require('./components/catalog/attributes/AttributeGroups').default);
+Vue.component('product-images-upload', require('./components/catalog/product/ProductImagesUpload').default);
 Vue.component('accordian', require('../components/Accordian').default);
 
 import CategoriesCheckboxes from './components/vuex/categories-checkboxes';

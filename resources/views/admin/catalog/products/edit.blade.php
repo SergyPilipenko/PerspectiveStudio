@@ -1,7 +1,7 @@
 @extends('admin')
 @section('content')
     <div class="card">
-        <form action="{{ route('admin.catalog.products.update', $product) }}">
+        <form action="{{ route('admin.catalog.products.update', $product) }}" method="POST" enctype="multipart/form-data">
             @csrf
             {{ method_field('PUT') }}
             <div class="card-body">
@@ -15,11 +15,11 @@
                 </div>
                 <div class="v-cloak--hidden">
                     @foreach($product->attribute_family->attribute_groups as $attribute_group)
-                        @if($attribute_group->attributes->count())
+                        @if($attribute_group->group_attributes->count())
                             <accordian>
                                 <div slot="header">{{ $attribute_group->name }}</div>
                                 <div slot="body">
-                                    @foreach($attribute_group->attributes as $attribute)
+                                    @foreach($attribute_group->group_attributes as $attribute)
                                         @include('admin.catalog.products.field-types.' . $attribute->type, ['attribute' => $attribute, 'product' => $product])
 {{--                                        @if($type_view = view()->exists('admin.catalog.products.field-types' . $attribute->type))--}}
 {{--                                            --}}
@@ -30,6 +30,7 @@
                             </accordian>
                         @endif
                     @endforeach
+                    @include('admin.catalog.products.accordians.images', ['product' => $product])
                 </div>
             </div>
         </form>

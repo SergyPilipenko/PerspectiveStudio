@@ -23,7 +23,7 @@ class AttributeFamiliesController extends Controller
 
     public function create(AttributeGroup $attributeGroup)
     {
-        $groups = $attributeGroup->default()->with('attributes')->get();
+        $groups = $attributeGroup->default()->with('group_attributes')->get();
         $custom_attributes = Attribute::custom()->get();
 
         return view('admin.catalog.attribute-families.create', compact('groups','custom_attributes'));
@@ -59,7 +59,7 @@ class AttributeFamiliesController extends Controller
 
     public function edit($id, AttributeFamily $attributeFamily)
     {
-        $attributeFamily = $attributeFamily->whereId($id)->with('attribute_groups.attributes')->firstOrFail();
+        $attributeFamily = $attributeFamily->whereId($id)->with('attribute_groups.group_attributes')->firstOrFail();
         $groups = $attributeFamily->attribute_groups;
         $custom_attributes = $this->getAvailableAttributesInAttributeFamily($attributeFamily);
         $new_collection = [];
@@ -90,7 +90,7 @@ class AttributeFamiliesController extends Controller
 
             $attributeFamily->updateFamilyGroups($request->groups);
 
-            Session::flash('flash', 'Набор атрибутов был создан успешно');
+            Session::flash('flash', 'Набор атрибутов был обновлен успешно');
 
             DB::connection()->getPdo()->commit();
 
@@ -131,7 +131,7 @@ class AttributeFamiliesController extends Controller
         $custom_attributes = Attribute::custom()->get();
 
         foreach ($attributeFamily->attribute_groups as $attribute_group) {
-            foreach ($attribute_group->attributes as $attribute) {
+            foreach ($attribute_group->group_attributes as $attribute) {
                 if ($custom_attributes->contains('id', $attribute->id)) {
                     foreach ($custom_attributes as $key => $custom_attribute) {
                         if ($custom_attribute->id == $attribute->id) {
@@ -142,7 +142,6 @@ class AttributeFamiliesController extends Controller
                 }
             }
         }
-
         return $custom_attributes;
     }
 }
