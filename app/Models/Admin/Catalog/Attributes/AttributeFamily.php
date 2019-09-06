@@ -43,9 +43,10 @@ class AttributeFamily extends Model
                     $group_instance = $this->createNewAttributeGroup($group);
                 }
                 if(isset($group['attributes'])) {
-                    $group_instance->attributes()->sync(array_column($group['attributes'], 'id'));
+                    $group_instance->group_attributes()->sync(array_column($group['attributes'], 'id'));
                 }
                 $familyGroups[] = $group_instance->id;
+
             }
         }
         $this->removeOldGroups($familyGroups);

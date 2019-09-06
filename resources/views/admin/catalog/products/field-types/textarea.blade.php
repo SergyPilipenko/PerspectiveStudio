@@ -5,8 +5,7 @@
             name="{{ $attribute->code }}"
             id="{{ $attribute->code }}"
             class="form-control {{ ValidationHelper::errorExists($errors, $attribute->code) ? 'error' : '' }}"
-        >
-            {{ old($attribute->code) ?: $product[$attribute->code] }}
+        >{{ old($attribute->code) ?: $product->getAttrValue($attribute->code) }}
         </textarea>
         @include('admin.partials.input-errors', ['input_name' => $attribute->code])
     </div>

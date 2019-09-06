@@ -11,7 +11,7 @@ class AttributeGroup extends Model
         $query->where('is_user_defined', false);
     }
 
-    public function attributes()
+    public function group_attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attribute_group_mappings');
     }

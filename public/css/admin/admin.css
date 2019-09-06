@@ -1788,3 +1788,64 @@ input:checked + .slider:before {
   margin-top: 20px;
 }
 
+.product-image-upload-container .form-group {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.product-image-upload-container .image-item {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  height: 167px;
+  line-height: 1;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  position: relative;
+  width: 167px;
+}
+
+.product-image-upload-container .image-item img {
+  padding: 0 10px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+
+.image-item-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-item-container .image-item-remove-btn {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.image-item-container .image-item-remove-btn i {
+  color: #656565;
+  transition: 0.3s;
+}
+
+.image-item-container .image-item-remove-btn i:hover {
+  color: #000;
+  transition: 0.3s;
+}
+
+.upload-image-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.upload-image-button i {
+  font-size: 100px;
+  color: #cccccc;
+}
+

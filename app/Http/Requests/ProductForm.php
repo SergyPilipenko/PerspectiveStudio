@@ -5,17 +5,19 @@ namespace App\Http\Requests;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Admin\Catalog\Attributes\AttributeValue;
 use App\Models\Admin\Catalog\Product\Product;
+use App\Models\Admin\Catalog\Product\ProductImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductForm extends FormRequest
 {
-    protected $rules, $attributeFamily, $product, $attributeValue;
+    protected $rules, $attributeFamily, $product, $attributeValue, $productImage;
 
-    public function __construct(AttributeFamily $attributeFamily, Product $product, AttributeValue $attributeValue)
+    public function __construct(AttributeFamily $attributeFamily, Product $product, AttributeValue $attributeValue, ProductImage $productImage)
     {
         $this->attributeFamily = $attributeFamily;
         $this->product = $product;
         $this->attributeValue = $attributeValue;
+        $this->prodctImage = $productImage;
     }
 
 
@@ -68,6 +70,7 @@ class ProductForm extends FormRequest
                 $this->rules[$attribute->code] = $validations;
             }
         }
+        $this->prodctImage->uploadImages($this, $product);
 
         return $this->rules;
     }
