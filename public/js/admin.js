@@ -60810,9 +60810,22 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _vm.bodyVisibility
-      ? _c("div", { staticClass: "accordian-body" }, [_vm._t("body")], 2)
-      : _vm._e()
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.bodyVisibility,
+            expression: "bodyVisibility"
+          }
+        ],
+        staticClass: "accordian-body"
+      },
+      [_vm._t("body")],
+      2
+    )
   ])
 }
 var staticRenderFns = []

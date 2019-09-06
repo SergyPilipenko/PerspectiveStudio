@@ -11,6 +11,16 @@ class AttributeFamily extends Model
 
     private $group;
 
+    public function custom_attributes()
+    {
+        return Attribute::join('attribute_group_mappings', 'attributes.id', '=', 'attribute_group_mappings.attribute_id')
+            ->join('attribute_groups', 'attribute_group_mappings.attribute_group_id', '=', 'attribute_groups.id')
+            ->join('attribute_families', 'attribute_groups.attribute_family_id', '=', 'attribute_families.id')
+            ->where('attribute_families.id', $this->id)
+            ->select('attributes.*');
+    }
+
+
     public function attribute_groups()
     {
         return $this->hasMany(AttributeGroup::class);

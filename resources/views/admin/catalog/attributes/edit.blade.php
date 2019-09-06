@@ -7,7 +7,7 @@
                 {{ method_field('PUT') }}
                 <div class="row card-control-header">
                     <div class="col-md-10">
-                        <h3>Изменить аттрибут</h3>
+                        <h3>Изменить атрибут</h3>
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-success float-right">Сохранить</button>
@@ -21,7 +21,7 @@
                                 <div class="col-md-4">
 
                                     <div class="form-group">
-                                        <label for="code">Код аттрибута</label>
+                                        <label for="code">Код атрибута</label>
                                         <input type="text" id="code"
                                                name="code"
                                                value="{{ $attribute->code }}"

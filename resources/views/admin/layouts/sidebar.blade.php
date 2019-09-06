@@ -22,8 +22,8 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.products.index') }}">Товары</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.categories.create') }}">Категории</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attributes.index') }}">Аттрибуты</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attribute-families.index') }}">Наборы аттрибутов</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attributes.index') }}">Атрибуты</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.attribute-families.index') }}">Наборы атрибутов</a></li>
                 </ul>
             </div>
         </li>

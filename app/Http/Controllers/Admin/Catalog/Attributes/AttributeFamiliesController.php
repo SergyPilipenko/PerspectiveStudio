@@ -6,6 +6,7 @@ use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Admin\Catalog\Attributes\AttributeGroup;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -44,7 +45,7 @@ class AttributeFamiliesController extends Controller
             $attributeFamily->save();
             $attributeFamily->updateFamilyGroups($request->groups);
 
-            Session::flash('flash', 'Набор аттрибутов был создан успешно');
+            Session::flash('flash', 'Набор атрибутов был создан успешно');
 
             DB::connection()->getPdo()->commit();
 
@@ -89,7 +90,7 @@ class AttributeFamiliesController extends Controller
 
             $attributeFamily->updateFamilyGroups($request->groups);
 
-            Session::flash('flash', 'Набор аттрибутов был создан успешно');
+            Session::flash('flash', 'Набор атрибутов был создан успешно');
 
             DB::connection()->getPdo()->commit();
 
@@ -104,9 +105,19 @@ class AttributeFamiliesController extends Controller
 
     public function destroy(AttributeFamily $attributeFamily)
     {
-        $attributeFamily->delete();
 
-        Session::flash('flash', 'Набор аттрибутов был удален создануспешно');
+        try {
+
+            $attributeFamily->delete();
+
+        } catch (QueryException $exception) {
+
+            Session::flash('flash', 'Этот набор аттрибутов используется в товарах');
+
+            return redirect()->back();
+        }
+
+        Session::flash('flash', 'Набор атрибутов был удален создан успешно');
 
         return redirect()->back();
     }
