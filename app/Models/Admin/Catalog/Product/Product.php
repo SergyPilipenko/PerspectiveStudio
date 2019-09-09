@@ -5,6 +5,9 @@ namespace App\Models\Admin\Catalog\Product;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\Catalog\Product\ProductImage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -15,12 +18,30 @@ class Product extends Model
      */
     private $productAttributeValue;
 
+    /**
+     * @var ProductImage instance
+     */
+    public $productImage;
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleted(function($product) {
+            if($product->images->count()) {
+                File::deleteDirectory($product->productImage->path . $product->id);
+            }
+        });
+    }
 
     public function __construct()
     {
-        $this->productAttributeValue = new ProductAttributeValue;
+        parent::__construct();
 
+        $this->productAttributeValue = new ProductAttributeValue;
+        $this->productImage = app()->make(ProductImage::class);
     }
+
 
     public function attribute_family()
     {
@@ -83,7 +104,9 @@ class Product extends Model
                     'attribute_id' => $attribute->id,
                     'value' => $request[$attribute->code]
                 ]);
+
             } else {
+
                 $this->productAttributeValue->where('id', $attributeValue->id)->update([
                     ProductAttributeValue::$attributeTypeFields[$attribute->type] => $request[$attribute->code]
                 ]);

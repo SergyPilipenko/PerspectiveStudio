@@ -21,7 +21,9 @@ class ProductsController extends Controller
 
     public function index()
     {
-        return view('admin.catalog.products.index');
+        $products = Product::with('attribute_family.attribute_groups.group_attributes')->paginate(10);
+
+        return view('admin.catalog.products.index', compact('products'));
     }
 
     public function create(AttributeFamily $attributeFamily)
@@ -65,8 +67,12 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function destroy()
+    public function destroy($id, Product $product)
     {
+        $product->with('images')->findOrFail($id)->delete();
 
+        Session::flash('flash', 'Товар был удален успешно');
+
+        return back();
     }
 }

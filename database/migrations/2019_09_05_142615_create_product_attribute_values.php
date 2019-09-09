@@ -18,15 +18,15 @@ class CreateProductAttributeValues extends Migration
             $table->text('text_value')->nullable();
             $table->boolean('boolean_value')->nullable();
             $table->integer('integer_value')->nullable();
-            $table->float('float_value')->nullable();
-            $table->float('decimal_value')->nullable();
+            $table->decimal('float_value')->nullable();
+            $table->decimal('decimal_value')->nullable();
             $table->dateTime('datetime_value')->nullable();
             $table->date('date_value')->nullable();
             $table->longText('json_value')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('attribute_id');
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('attribute_id')->references('id')->on('attributes');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
             $table->timestamps();
         });
     }

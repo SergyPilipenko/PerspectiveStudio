@@ -7,9 +7,7 @@
                     <i class="ti-image"></i>
                 </div>
                 <div v-else>
-
-                    <img :src="img.path" alt="">
-
+                    <img :src="imgPath(img)" alt="">
                 </div>
             </div>
         </label>
@@ -44,6 +42,9 @@
             },
             removeImage(id) {
                 this.$emit('removeImage', id)
+            },
+            imgPath(img) {
+                return img.product_id ? '/' + img.path : img.path
             }
 
         }

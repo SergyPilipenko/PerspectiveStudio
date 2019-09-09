@@ -26,6 +26,7 @@ Route::prefix('admin')->group(function() {
             Route::get('store', 'Admin\Catalog\ProductsController@store')->name('store');
             Route::get('{product}/edit', 'Admin\Catalog\ProductsController@edit')->name('edit');
             Route::put('{id}/update', 'Admin\Catalog\ProductsController@update')->name('update');
+            Route::delete('{id}/destroy', 'Admin\Catalog\ProductsController@destroy')->name('destroy');
         });
 
         Route::group(['prefix' => 'attributes', 'as' => 'attributes.'], function() {
