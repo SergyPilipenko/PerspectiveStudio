@@ -4,8 +4,10 @@ namespace App\Models\Admin\Catalog\Product;
 
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
+use App\Models\Catalog\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\Catalog\Product\ProductImage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,6 +50,11 @@ class Product extends Model
         return $this->belongsTo(AttributeFamily::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_categories');
+    }
+
     public function attribute_value()
     {
         $this->belongsTo(Attribute::class);
@@ -84,38 +91,51 @@ class Product extends Model
     public function productUpdate(array $request, int $id)
     {
         $product = $this->findOrFail($id);
-        $product->update($request);
 
-        $attributes = $product->attribute_family->custom_attributes()->get();
+        try {
 
-        foreach ($attributes as $attribute) {
+            DB::connection()->getPdo()->beginTransaction();
 
-            if (!isset($request[$attribute->code]) || (in_array($attribute->type, ['date', 'datetime']) && !$request[$attribute->code]))
-                continue;
+            $product->update($request);
 
-            $attributeValue = $this->productAttributeValue->where([
-                'product_id' => $product->id,
-                'attribute_id' => $attribute->id
-            ])->first();
+            $attributes = $product->attribute_family->custom_attributes()->get();
 
-            if (!$attributeValue) {
-                $this->productAttributeValue->createProductValue([
+            foreach ($attributes as $attribute) {
+
+                if (!isset($request[$attribute->code]) || (in_array($attribute->type, ['date', 'datetime']) && !$request[$attribute->code]))
+                    continue;
+
+                $attributeValue = $this->productAttributeValue->where([
                     'product_id' => $product->id,
-                    'attribute_id' => $attribute->id,
-                    'value' => $request[$attribute->code]
-                ]);
+                    'attribute_id' => $attribute->id
+                ])->first();
 
-            } else {
+                if (!$attributeValue) {
+                    $this->productAttributeValue->createProductValue([
+                        'product_id' => $product->id,
+                        'attribute_id' => $attribute->id,
+                        'value' => $request[$attribute->code]
+                    ]);
 
-                $this->productAttributeValue->where('id', $attributeValue->id)->update([
-                    ProductAttributeValue::$attributeTypeFields[$attribute->type] => $request[$attribute->code]
-                ]);
-//                if ($attribute->type == 'image' || $attribute->type == 'file') {
-//                    Storage::delete($attributeValue->text_value);
-//                }
+                } else {
+                    $this->productAttributeValue->where('id', $attributeValue->id)->update([
+                        ProductAttributeValue::$attributeTypeFields[$attribute->type] => $request[$attribute->code]
+                    ]);
+                }
             }
-        }
+            if(isset($request['categories'])) {
+                $product->categories()->sync(explode(',', $request['categories']));
+            } else {
+                $product->categories()->delete();
+            }
 
-        return $product;
+            DB::connection()->getPdo()->commit();
+
+            return $product;
+
+        } catch (\PDOException $e) {
+            dd($e);
+            DB::connection()->getPdo()->rollBack();
+        }
     }
 }

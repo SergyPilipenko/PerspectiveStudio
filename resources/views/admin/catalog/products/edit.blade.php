@@ -20,17 +20,16 @@
                                 <div slot="header">{{ $attribute_group->name }}</div>
                                 <div slot="body">
                                     @foreach($attribute_group->group_attributes as $attribute)
-                                        @include('admin.catalog.products.field-types.' . $attribute->type, ['attribute' => $attribute, 'product' => $product])
-{{--                                        @if($type_view = view()->exists('admin.catalog.products.field-types' . $attribute->type))--}}
-{{--                                            --}}
-{{--                                            @include($type_view, $attribute)--}}
-{{--                                        @endif--}}
+                                        @if($type_view = view()->exists('admin.catalog.products.field-types.' . $attribute->type))
+                                            @include('admin.catalog.products.field-types.' . $attribute->type, ['attribute' => $attribute, 'product' => $product])
+                                        @endif
                                     @endforeach
                                 </div>
                             </accordian>
                         @endif
                     @endforeach
                     @include('admin.catalog.products.accordians.images', ['product' => $product])
+                    @include('admin.catalog.products.accordians.categories', ['product' => $product])
                 </div>
             </div>
         </form>
