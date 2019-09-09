@@ -19,7 +19,8 @@ class ProductAttributeValue extends Model
         'float_value',
         'datetime_value',
         'date_value',
-        'json_value'
+        'json_value',
+        'decimal_value'
     ];
 
     /**
@@ -46,12 +47,12 @@ class ProductAttributeValue extends Model
 
     public function createProductValue(array $data)
     {
+
         if (isset($data['attribute_id'])) {
             $attribute = Attribute::find($data['attribute_id']);
         } else {
             $attribute = Attribute::where('code', $data['attribute_code'])->first();
         }
-
         if (! $attribute) return;
 
 

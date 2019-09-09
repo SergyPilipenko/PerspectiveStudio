@@ -10,6 +10,7 @@
                 </product-image-item>
             </div>
         </div>
+        <input type="hidden" name="imagesList" :value="imgList">
         <button type="button" class="btn-primary btn-sm" @click="addImageForm">Добавить изображение</button>
     </div>
 </template>
@@ -30,6 +31,19 @@
             if(!this.imagesList.length) this.addImageForm();
             if(this.images_list) {
                 this.imagesList = JSON.parse(this.images_list);
+            };
+            if(this.imagesList.length) {
+                for(let i in this.imagesList) {
+                    if(this.imagesList[i].id > this.idCounter) {
+                        this.idCounter = this.imagesList[i].id;
+                    }
+                }
+                this.idCounter++;
+            }
+        },
+        computed: {
+            imgList() {
+                return JSON.stringify(this.imagesList)
             }
         },
         methods: {

@@ -70,6 +70,7 @@ class ProductForm extends FormRequest
                 $this->rules[$attribute->code] = $validations;
             }
         }
+
         $this->prodctImage->uploadImages($this, $product);
 
         return $this->rules;

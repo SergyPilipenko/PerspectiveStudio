@@ -6914,8 +6914,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['image', 'value', 'images_list'],
   data: function data() {
@@ -6940,6 +6938,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     removeImage: function removeImage(id) {
       this.$emit('removeImage', id);
+    },
+    imgPath: function imgPath(img) {
+      return img.product_id ? '/' + img.path : img.path;
     }
   }
 });
@@ -6956,6 +6957,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProductImageItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProductImageItem */ "./resources/js/admin/components/catalog/product/ProductImageItem.vue");
+//
 //
 //
 //
@@ -6989,6 +6991,23 @@ __webpack_require__.r(__webpack_exports__);
 
     if (this.images_list) {
       this.imagesList = JSON.parse(this.images_list);
+    }
+
+    ;
+
+    if (this.imagesList.length) {
+      for (var i in this.imagesList) {
+        if (this.imagesList[i].id > this.idCounter) {
+          this.idCounter = this.imagesList[i].id;
+        }
+      }
+
+      this.idCounter++;
+    }
+  },
+  computed: {
+    imgList: function imgList() {
+      return JSON.stringify(this.imagesList);
     }
   },
   methods: {
@@ -59569,7 +59588,9 @@ var render = function() {
           ? _c("div", { staticClass: "upload-image-button" }, [
               _c("i", { staticClass: "ti-image" })
             ])
-          : _c("div", [_c("img", { attrs: { src: _vm.img.path, alt: "" } })])
+          : _c("div", [
+              _c("img", { attrs: { src: _vm.imgPath(_vm.img), alt: "" } })
+            ])
       ])
     ]),
     _vm._v(" "),
@@ -59629,6 +59650,11 @@ var render = function() {
       }),
       0
     ),
+    _vm._v(" "),
+    _c("input", {
+      attrs: { type: "hidden", name: "imagesList" },
+      domProps: { value: _vm.imgList }
+    }),
     _vm._v(" "),
     _c(
       "button",
