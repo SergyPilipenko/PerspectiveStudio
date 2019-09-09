@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Catalog;
 
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Admin\Catalog\Product\Product;
+use App\Models\Catalog\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Event;
@@ -52,10 +53,13 @@ class ProductsController extends Controller
         return redirect()->route('admin.catalog.products.edit', $this->product);
     }
 
-    public function edit($product_id)
+    public function edit($product_id, Category $category)
     {
-        $product = $this->product->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($product_id);
-        return view('admin.catalog.products.edit', compact('product'));
+        $product = $this->product->with('attribute_family.attribute_groups.group_attributes', 'images', 'categories')->findOrFail($product_id);
+
+        $categories = $category->get()->toTree();
+
+        return view('admin.catalog.products.edit', compact('product', 'categories'));
     }
 
     public function update(ProductForm $request, $id)
