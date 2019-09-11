@@ -1,7 +1,7 @@
 @extends('admin')
 @section('content')
     <div class="card">
-        <form action="{{ route('admin.catalog.products.update', $product) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.catalog.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             {{ method_field('PUT') }}
             <div class="card-body">

@@ -27,18 +27,7 @@ class CategoriesController extends Controller
 
         $children = $categories->first()->children()->get();
 
-//        dd($children);
-//        $category_slug = array_pop($route_categories);
         $category = $categories->last();
-//        dd($category);
-//
-//        $parts = [];
-//
-//        foreach ($category->td_categories as $item) {
-//            $tecDoc->section_parts = [];
-//            $tecDoc->getNestedSections($model, $item->passanger_car_tree->passanger_car_trees_id);
-//            $parts = array_merge($parts, $tecDoc->section_parts);
-//        }
 
         return view('frontend.categories.show', compact('brand', 'model', 'category', 'children'));
     }

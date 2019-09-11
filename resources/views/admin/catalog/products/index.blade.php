@@ -16,7 +16,7 @@
                     <thead>
                     <tr>
                         <th>Артикул</th>
-                        <th>Код</th>
+                        <th>Название</th>
                         <th>Тип</th>
                         <th>Набор аттрибутов</th>
                         <th>Прайс</th>
@@ -34,11 +34,11 @@
                                 <td>{{ $product->getAttrValue('price') ?? '0.00' }}</td>
                                 <td>
                                     <div class="control-container">
-                                        <a href="{{ route('admin.catalog.products.edit', $product) }}">
+                                        <a href="{{ route('admin.catalog.products.edit', $product->id) }}">
                                             <i class="ti-pencil-alt"></i>
                                             Редактировать
                                         </a>
-                                        <form action="{{ route('admin.catalog.products.destroy', $product) }}" method="POST">
+                                        <form action="{{ route('admin.catalog.products.destroy', $product->id) }}" method="POST">
                                             @csrf
                                             {{ method_field('delete') }}
                                             <button><i class="ti-trash"></i> Удалить</button>

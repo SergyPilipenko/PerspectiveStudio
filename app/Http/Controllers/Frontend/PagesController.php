@@ -18,10 +18,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Transliterate;
+use App\Models\Catalog\Category as ProductCategory;
 
 class PagesController extends Controller
 {
-    public function index(PartfixTecDoc $tecdoc, Garage $garage)
+    public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
 
@@ -31,11 +32,13 @@ class PagesController extends Controller
 
         $current_auto = \Session::get('current-auto') ? : null;
 
+        $categories = $category->active()->orderBy('parent_id', 'asc')->get();
+
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
 
-        return view('frontend.index', compact('brands', 'garage', 'current_auto', 'routes'));
+        return view('frontend.index', compact('brands', 'garage', 'current_auto', 'routes', 'categories'));
     }
 
     public function brand(Request $request)
@@ -47,10 +50,6 @@ class PagesController extends Controller
 
     public function model($brand, $model, RoutesParserInterface $rotesParser)
     {
-//        $brand = $rotesParser->getBrand();
-//
-//        $model ?? $model = $rotesParser->getModel();
-
         $categories = Category::where('parent_id', null)->get();
 
         $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->first();
@@ -90,40 +89,18 @@ class PagesController extends Controller
     public function modification($brand, $model, $modification, Garage $garage, RoutesParserInterface $rotesParser)
     {
         if(!$modification) $modification = $model;
-//
-//        $brand = $rotesParser->getBrand();
-//
-//        $model = $rotesParser->getModel();
-//        dd($brand);
-
         $garage->setActiveCar($modification);
-
         $garage = \Session::get('garage')
             ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
-
         $current_auto = \Session::get('current-auto');
-
-
-
-
         $categories = Category::where('parent_id', null)->get();
-
-//        $categoryRouteNameAndParameters = $this->getRouteNameAndParameters($brand, $model, $modification, $categories->first()->slug);
-
-//        $route_name = $categoryRouteNameAndParameters['name'];
-//        $route_parameters = $categoryRouteNameAndParameters['parameters'];
 
         return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));
     }
 
     public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser, PartfixTecDoc $tecDoc)
     {
-//        $brand = $routesParser->getBrand();
-//        $model = $routesParser->getParameter('model') ?? $routesParser->getModel();
-//        $modification = $routesParser->getParameter('modification');
-//        $category = $routesParser->getParameter('category');
-
         $garage_list = $garageInstance->getGarageList();
 
         $garage = $garage_list->count()
@@ -138,17 +115,16 @@ class PagesController extends Controller
 
         $parts = $category->getParts($modification);
 
-//        if($categories->count()) {
-//
-//            $categoryRouteNameAndParameters = $this->getRouteNameAndParameters($brand, $model, $modification, $categories->first()->slug);
-//            $route_name = $categoryRouteNameAndParameters['name'];
-//            $route_parameters = $categoryRouteNameAndParameters['parameters'];
-//
-//        }
         return view('frontend.car.index',
             compact('category', 'garage', 'current_auto', 'categories',
                 'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts')
         );
+    }
+
+
+    public function product()
+    {
+
     }
 
     public function changeCurrentCar($id)
@@ -190,6 +166,7 @@ class PagesController extends Controller
             $route['name'] = $brand.'.'.'frontend.categories.show';
             $route['parameters'] = [$model, $modification];
         }
+
         return $route;
     }
 }

@@ -15,6 +15,11 @@ class Product extends Model
 {
     protected $fillable = ['type', 'attribute_family_id', 'article', 'parent_id'];
 
+    public function getRouteKeyName()
+    {
+        return ['id' => 'product', 'slug' => 'slug'];
+    }
+
     /**
      * @var ProductAttributeValue instance
      */
@@ -57,13 +62,24 @@ class Product extends Model
 
     public function attribute_value()
     {
-        $this->belongsTo(Attribute::class);
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
     }
 
     public function images()
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function getProductByIdSlug($slug)
+    {
+        return DB::connection('mysql')->selectOne("
+           SELECT p.id FROM attributes a
+            LEFT JOIN product_attribute_values pv on a.id = pv.attribute_id
+            LEFT JOIN products p ON pv.product_id = p.id
+            WHERE a.code = 'slug' AND pv.text_value = '".$slug."'
+        ")->id;
+    }
+
 
     public function getAttrValue(string $code, $attribute_id = null)
     {

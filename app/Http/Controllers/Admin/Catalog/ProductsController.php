@@ -22,7 +22,7 @@ class ProductsController extends Controller
 
     public function index()
     {
-        $products = Product::with('attribute_family.attribute_groups.group_attributes')->paginate(10);
+        $products = Product::paginate(10);
 
         return view('admin.catalog.products.index', compact('products'));
     }
@@ -50,7 +50,7 @@ class ProductsController extends Controller
 
         Session::flash('flash', 'Новый товар было создан успешно');
 
-        return redirect()->route('admin.catalog.products.edit', $this->product);
+        return redirect()->route('admin.catalog.products.edit', $this->product->id);
     }
 
     public function edit($product_id, Category $category)

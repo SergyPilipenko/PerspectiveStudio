@@ -1,96 +1,133 @@
 @extends('admin')
 @section('content')
-    <div class="category-control">
-        <div class="row">
-            <div class="col-md-12 grid-margin">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="font-weight-bold mb-0">{{ $category->category_title }}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <form action="{{ route('admin.catalog.categories.update', $category) }}" method="POST" enctype="multipart/form-data">
+    <div class="card">
+        <form action="{{ route('admin.catalog.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
             {{ method_field('put') }}
             @csrf
-            <div class="row">
-                <div class="col-md-12 grid-margin">
-                    <div class="card">
-                        <div class="card-body">
+        <div class="card-body v-cloak--hidden">
+        <div class="category-control">
+            <div class="row card-control-header">
+                <div class="col-md-10">
+                    <div class="product-category-header">
+                        <div class="product-category-title">
+                            <h3>Редактирование категории</h3>
+                        </div>
+                        <div class="product-category-language">
+                            <b-dropdown id="dropdown-1" text="Локализация: {{ $category->locale->getLocale() }}" variant="outline-default" class="m-md-2">
+                                <b-dropdown-item :href="'{{ route('switch-locale', 'ru') }}'">ru</b-dropdown-item>
+                                <b-dropdown-item :href="'{{ route('switch-locale', 'ua') }}'">ua</b-dropdown-item>
+                                <b-dropdown-item :href="'{{ route('switch-locale', 'en') }}'">en</b-dropdown-item>
+                            </b-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success float-right">Сохранить</button>
+                    <confirm
+                        :action="'{{ route('admin.catalog.categories.destroy', $category->id) }}'"
+                        :header="'Вы уверены что хотите удалить категорию?'"
+                        :body="'(Все дочерние категории будут тоже удалены)'"
+                    ></confirm>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-md-12 grid-margin">
                             <div class="row">
                                 <div class="offset-md-10 col-md-2">
-                                    <button class="btn btn-success float-right">Сохранить</button>
-                                    <confirm
-                                        :action="'{{ route('admin.catalog.categories.destroy', $category->id) }}'"
-                                        :header="'Вы уверены что хотите удалить категорию?'"
-                                        :body="'(Все дочерние категории будут тоже удалены)'"
-                                    ></confirm>
+
                                 </div>
                             </div>
-                            <div class="row">
-                                @include('admin.catalog.categories.sidebar')
-                                <div class="col-md-10">
-                                    <div class="category-active">
-                                        <div class="form-check">
-                                            Включить категорию
-                                            <label class="switch">
-                                                <input type="checkbox" {{ $category->activity > 0 ? 'checked' : '' }} name="category_activity">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="sort">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="sort">Сортировка:</label>
-                                                    <input type="number" name="position" class="form-control" value="{{ old('position') ?? $category->position }}">
+                            <div class="product-category-body">
+                                <div class="row">
+                                    @include('admin.catalog.categories.sidebar')
+                                    <div class="col-md-10">
+                                        <accordian>
+                                            <div slot="header">Общее</div>
+                                            <div slot="body">
+                                                <div class="category-active">
+                                                    <div class="form-check">
+                                                        Показывать в меню
+                                                        <label class="switch">
+                                                            <input type="checkbox" {{ $category->activity > 0 ? 'checked' : '' }} name="category_activity">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="category-title">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="category_title">Название: [{{ $category->locale->getLocale() }}]</label>
+                                                                <input type="text" class="form-control" name="{{ $category->locale->locatedInputName('category_title') }}" value="{{ old('category_title') ?? $category->category_title }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="sort">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="sort">Сортировка:</label>
+                                                                <input type="number" name="position" class="form-control" value="{{ old('position') ?? $category->position }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="category-title">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="category_title">Название</label>
-                                                    <input type="text" class="form-control" name="category_title" value="{{ old('category_title') ?? $category->category_title }}">
+                                        </accordian>
+                                        <accordian>
+                                            <div slot="header">Изображение</div>
+                                            <div slot="body">
+                                                <div class="image">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <category-image-upload :category_image="'{{ $category->image }}'"></category-image-upload>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="slug">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="url">URL:</label>
-                                                    <input type="text"  class="form-control" name="slug" value="{{ $category->slug ?: '' }}">
+                                        </accordian>
+                                        <accordian>
+                                            <div slot="header">Seo</div>
+                                            <div slot="body">
+                                                <div class="slug">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="{{ $category->locale->locatedInputName('slug') }}">URL: [{{ $category->locale->getLocale() }}]</label>
+                                                                <input type="text"  class="form-control" name="{{ $category->locale->locatedInputName('slug') }}" value="{{ $category->slug ?: '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="{{ $category->locale->locatedInputName('meta_title') }}">Meta title: [{{ $category->locale->getLocale() }}]</label>
+                                                            <textarea class="form-control" id="{{ $category->locale->locatedInputName('meta_title') }}" name="{{ $category->locale->locatedInputName('meta_title') }}" rows="4">{{ $category->meta_title }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="{{ $category->locale->locatedInputName('meta_description') }}">Meta description: [{{ $category->locale->getLocale() }}]</label>
+                                                            <textarea class="form-control" id="{{ $category->locale->locatedInputName('meta_description') }}" name="{{ $category->locale->locatedInputName('meta_description') }}" rows="4">{{ $category->meta_description }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="{{ $category->locale->locatedInputName('meta_keywords') }}">Meta keywords: [{{ $category->locale->getLocale() }}]</label>
+                                                            <textarea class="form-control" id="{{ $category->locale->locatedInputName('meta_keywords') }}" name="{{ $category->locale->locatedInputName('meta_keywords') }}" rows="4">{{ $category->meta_keywords }}</textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="image">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-{{--                                                    <category-image--}}
-{{--                                                        :current_image="'{{ $category->image }}'"--}}
-{{--                                                        :category_id="'{{ $category->id }}'"--}}
-{{--                                                        :action="'{{ route('admin.tecdoc.categories.image', $category->id) }}'"--}}
-{{--                                                    ></category-image>--}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-{{--                                            <tecdoc-categories-tree--}}
-{{--                                                :categories="{{ $tec_doc_categories }}"--}}
-{{--                                                :category_distinct_tecdoc_categories="{{ $category_distinct_tecdoc_categories }}"--}}
-{{--                                                :disabled_distinct_tecdoc_categories="{{ $disabled_distinct_tecdoc_categories }}"--}}
-{{--                                            ></tecdoc-categories-tree>--}}
-                                        </div>
+                                        </accordian>
                                     </div>
                                 </div>
                             </div>

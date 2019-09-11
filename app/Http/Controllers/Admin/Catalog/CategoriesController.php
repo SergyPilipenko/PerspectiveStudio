@@ -2,28 +2,43 @@
 
 namespace App\Http\Controllers\Admin\Catalog;
 
+use App\Http\Requests\RequestInterface;
 use App\Models\Catalog\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Session;
+use App\Helpers\Locale;
 
 class CategoriesController extends Controller
 {
-    public function __construct()
+    /**
+     * @var Category
+     */
+    private $category;
+    private $locale;
+
+    public function __construct(Category $category)
     {
         $this->middleware('auth:admin');
+        $this->category = $category;
+        $this->locale = app()->getLocale();
+        App::singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\ProductCategoryRequest');
+
     }
 
     /**
      * Создание категории
      *
-     * @param Category|null $category
+     * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Category $category = null)
+    public function create($id = null)
     {
         $categories = Category::get()->toTree();
-        $store = $category ? route('admin.catalog.categories.store-subcategory', $category) : route('admin.catalog.categories.store');
+
+        $store = $id ? route('admin.catalog.categories.store-subcategory', $this->category->findOrFail($id)->id) : route('admin.catalog.categories.store');
 
         return view('admin.catalog.categories.create', compact('category', 'store', 'categories'));
     }
@@ -32,15 +47,22 @@ class CategoriesController extends Controller
      * Запись новой категории
      *
      * @param Request $request
-     * @param Category $category
+     * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, Category $category)
+    public function store(Request $request, $id = null)
     {
+        if($id) {
+            $category = $this->category->findOrFail($id);
+        } else {
+            $category = $this->category;
+        }
+        $loc = config('app.fallback_locale');
+
         $this->validate($request, array(
-            'category_title' => 'required|max:255|min:2',
-            'slug' => 'required|unique:catalog_categories|max:255|min:2',
+            $loc.'.category_title' => 'required|max:255|min:2',
+            $loc.'.slug' => 'required|unique:catalog_categories,slug|max:255|min:2',
         ));
 
         if($category->exists) {
@@ -48,15 +70,15 @@ class CategoriesController extends Controller
             $category = new Category();
         }
 
-        $category->category_title = $request->category_title;
-        $category->slug = $request->slug;
+        $category->setTranslation('category_title', $this->locale, $request->$loc['category_title']);
+        $category->setTranslation('slug', $this->locale, $request->$loc['slug']);
         $category->activity = $request->category_activity ? true : false;
 
         isset($parent) && $parent->exists ? $category->appendToNode($parent)->save() : $category->save();
 
         Session::flash('flash', 'Новая категория добавлена успешно');
 
-        return redirect()->route('admin.catalog.categories.edit', $category);
+        return redirect()->route('admin.catalog.categories.edit', $category->id);
     }
 
     /**
@@ -65,8 +87,10 @@ class CategoriesController extends Controller
      * @param Category $category
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
+        $category = $this->category->findOrFail($id);
+
         $categories = Category::orderBy('position', 'asc')->get()->toTree();
 
         return view('admin.catalog.categories.edit', compact('category', 'categories'));
@@ -76,26 +100,21 @@ class CategoriesController extends Controller
      * Обновление категории
      *
      * @param Request $request
-     * @param Category $category
+     * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(Request $request, Category $category)
+    public function update(RequestInterface $request, $id)
     {
-        $this->validate($request, array(
-            'category_title' => 'required|max:255|min:2',
-            'slug' => 'required|max:255|min:2|unique:catalog_categories,slug,'.$category->id,
-        ));
+//        dd($request);
+        $category = $this->category->findOrFail($id);
 
-        $category->category_title = $request->category_title;
-        $category->slug = $request->slug;
-        $category->activity = $request->category_activity ? true : false;
-        $category->position = $request->position;
-        $category->update();
+        $category->updateCategory($request);
+
 
         Session::flash('flash', 'Новые данные сохранены успешно');
 
-        return redirect()->route('admin.catalog.categories.edit', $category);
+        return redirect()->route('admin.catalog.categories.edit', $category->id);
     }
 
     /**

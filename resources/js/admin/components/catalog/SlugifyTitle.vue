@@ -4,8 +4,8 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="category_title">Название</label>
-                        <input type="text" :class="{'form-control' : true,' error': errors['category_title'] != undefined}" name="category_title" v-model="title">
+                        <label for="category_title">Название: [{{ locale }}]</label>
+                        <input type="text" :class="{'form-control' : true,' error': errors['category_title'] != undefined}" :name="locale+'[category_title]'" v-model="title">
                         <div v-if="errors['category_title']">
                             <div class="text-danger" v-for="error in errors['category_title']" v-text="error"></div>
                         </div>
@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="category_title">URL</label>
-                        <input type="text" :class="{'form-control' : true,' error': errors['slug'] != undefined}" name="slug" :value="slugify">
+                        <label for="category_title">URL: [{{ locale }}]</label>
+                        <input type="text" :class="{'form-control' : true,' error': errors['slug'] != undefined}" :name="locale+'[slug]'" :value="slugify">
                         <div v-if="errors['slug']">
                             <div class="text-danger" v-for="error in errors['slug']" v-text="error"></div>
                         </div>
@@ -31,7 +31,7 @@
 <script>
 
     export default {
-        props: ['old', 'current_title', 'current_slug', 'errors_list'],
+        props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale'],
 
         data() {
             return {

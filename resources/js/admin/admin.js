@@ -33,6 +33,8 @@ Vue.component('categories-tree-element', require('./components/catalog/Categorie
 Vue.component('auto-types-table', require('./components/auto/AutoTypesTable').default);
 Vue.component('attribute-groups', require('./components/catalog/attributes/AttributeGroups').default);
 Vue.component('product-images-upload', require('./components/catalog/product/ProductImagesUpload').default);
+Vue.component('category-image-upload', require('./components/catalog/product/categories/CategoryImageUploadForm').default);
+
 Vue.component('product-categories', require('./components/catalog/product/ProductCategories').default);
 Vue.component('accordian', require('../components/Accordian').default);
 

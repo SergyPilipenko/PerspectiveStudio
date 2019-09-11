@@ -12,5 +12,6 @@
                         :routes="'{{ json_encode($routes) }}'"
             ></select-car>
         </div>
+        @include('frontend.product-categories.categories.index', ['categories', $categories])
     </div>
 @endsection
