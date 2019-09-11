@@ -14,6 +14,7 @@ class ChangeCatalogCategoriesFieldsType extends Migration
     public function up()
     {
         Schema::table('catalog_categories', function (Blueprint $table) {
+            $table->dropUnique('category_title');
             $table->text('category_title')->change();
             $table->dropUnique('slug');
             $table->text('slug')->change();
