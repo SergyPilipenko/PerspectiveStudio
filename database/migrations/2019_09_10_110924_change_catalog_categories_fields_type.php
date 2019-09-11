@@ -14,14 +14,9 @@ class ChangeCatalogCategoriesFieldsType extends Migration
     public function up()
     {
         Schema::table('catalog_categories', function (Blueprint $table) {
-            if(Schema::hasColumn('category_title', 'slug')) {
-                $table->dropColumn('category_title');
-                $table->dropColumn('slug');
-            }
-        });
-        Schema::table('catalog_categories', function (Blueprint $table) {
-            $table->text('category_title');
-            $table->text('slug');
+            $table->text('category_title')->change();
+            $table->dropUnique('slug');
+            $table->text('slug')->change();
             $table->text('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
@@ -36,6 +31,8 @@ class ChangeCatalogCategoriesFieldsType extends Migration
     public function down()
     {
         Schema::table('catalog_categories', function (Blueprint $table) {
+            $table->string('slug')->change();
+            $table->unique('slug');
             $table->dropColumn('meta_title');
             $table->dropColumn('meta_description');
             $table->dropColumn('meta_keywords');
