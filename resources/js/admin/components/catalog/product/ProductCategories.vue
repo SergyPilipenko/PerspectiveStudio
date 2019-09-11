@@ -16,7 +16,7 @@
 
     export default {
         components: { Treeselect },
-        props: ['product_categories', 'selected_categories'],
+        props: ['product_categories', 'selected_categories', 'locale'],
 
         data() {
             return {
@@ -43,7 +43,7 @@
                 for (let i in categories) {
                     var option = {};
                     option.id = categories[i].id;
-                    option.label = categories[i].category_title;
+                    option.label = categories[i].category_title[this.locale];
                     if(categories[i].children.length) {
                         option.children = this.toTree(categories[i].children);
                     }

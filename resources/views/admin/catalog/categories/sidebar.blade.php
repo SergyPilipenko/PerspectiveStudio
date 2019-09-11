@@ -1,6 +1,6 @@
 <div class="col-md-2">
     <div class="categories_sidebar">
-        <div class="top-buttons">
+        <div class="top-buttons grid-margin">
             <a href="{{ route('admin.catalog.categories.create') }}" class="btn btn-primary btn-sm grid-margin">Добавить корневую категорию</a>
             @if(isset($category))
                 <a href="{{ route('admin.catalog.categories.create-subcategory', $category->id) }}" class="btn btn-secondary btn-sm">Добавить дочернюю категорию</a>

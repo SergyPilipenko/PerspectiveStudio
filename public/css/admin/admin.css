@@ -1849,3 +1849,9 @@ input:checked + .slider:before {
   color: #cccccc;
 }
 
+.product-category-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+

@@ -1,5 +1,5 @@
 <li>
-    <a class="{{ request()->route('category') && request()->route('category')->id == $category->id ? "badge badge-warning" : '' }}" href="{{ route('admin.catalog.categories.edit', $category->id) }}">{{ $category->category_title }}</a>
+    <a class="{{ request()->route('id') && request()->route('id') == $category->id ? "badge badge-warning" : '' }}" href="{{ route('admin.catalog.categories.edit', $category->id) }}">{{ $category->category_title }}</a>
 </li>
 @if($category->children)
     <ul>

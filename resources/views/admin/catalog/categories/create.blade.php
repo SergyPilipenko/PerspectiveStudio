@@ -35,10 +35,10 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span>
-                                                        Включить категорию
+                                                        Показывать в меню
                                                     </span>
                                                     <label class="switch">
-                                                        <input type="checkbox" checked="checked" name="category_activity">
+                                                        <input type="checkbox" name="category_activity">
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
@@ -48,6 +48,7 @@
                                     <slugify-title
                                         :old="'{{ json_encode(old()) }}'"
                                         :errors_list="'{{ json_encode($errors->messages()) }}'"
+                                        :locale="'{{ config('app.fallback_locale') }}'"
                                     ></slugify-title>
                                 </div>
                             </div>

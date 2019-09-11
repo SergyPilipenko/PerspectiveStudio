@@ -6339,7 +6339,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['old', 'current_title', 'current_slug', 'errors_list'],
+  props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale'],
   data: function data() {
     return {
       title: '',
@@ -6916,7 +6916,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Treeselect: _riophae_vue_treeselect__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['product_categories', 'selected_categories'],
+  props: ['product_categories', 'selected_categories', 'locale'],
   data: function data() {
     return {
       categories: null,
@@ -6945,7 +6945,7 @@ __webpack_require__.r(__webpack_exports__);
       for (var i in categories) {
         var option = {};
         option.id = categories[i].id;
-        option.label = categories[i].category_title;
+        option.label = categories[i].category_title[this.locale];
 
         if (categories[i].children.length) {
           option.children = this.toTree(categories[i].children);
@@ -7100,6 +7100,75 @@ __webpack_require__.r(__webpack_exports__);
         if (image.id != id) return image;
       });
       this.imagesList = images;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['category_image'],
+  data: function data() {
+    return {
+      path: false
+    };
+  },
+  created: function created() {
+    if (this.category_image) {
+      this.path = '/' + this.category_image;
+    }
+  },
+  methods: {
+    addImage: function addImage(file) {
+      this.$set(this, 'path', file);
+    },
+    uploadImage: function uploadImage() {
+      var file = this.$refs.file.files[0];
+      var reg = new RegExp('image');
+
+      if (file.type && reg.test(file.type)) {
+        this.addImage(URL.createObjectURL(file));
+      }
+    },
+    removeImage: function removeImage() {
+      this.path = false;
     }
   }
 });
@@ -58853,7 +58922,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-4" }, [
           _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "category_title" } }, [
-              _vm._v("Название")
+              _vm._v("Название: [" + _vm._s(_vm.locale) + "]")
             ]),
             _vm._v(" "),
             _c("input", {
@@ -58869,7 +58938,7 @@ var render = function() {
                 "form-control": true,
                 " error": _vm.errors["category_title"] != undefined
               },
-              attrs: { type: "text", name: "category_title" },
+              attrs: { type: "text", name: _vm.locale + "[category_title]" },
               domProps: { value: _vm.title },
               on: {
                 input: function($event) {
@@ -58902,14 +58971,16 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-md-4" }, [
           _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "category_title" } }, [_vm._v("URL")]),
+            _c("label", { attrs: { for: "category_title" } }, [
+              _vm._v("URL: [" + _vm._s(_vm.locale) + "]")
+            ]),
             _vm._v(" "),
             _c("input", {
               class: {
                 "form-control": true,
                 " error": _vm.errors["slug"] != undefined
               },
-              attrs: { type: "text", name: "slug" },
+              attrs: { type: "text", name: _vm.locale + "[slug]" },
               domProps: { value: _vm.slugify }
             }),
             _vm._v(" "),
@@ -59789,6 +59860,108 @@ var render = function() {
       },
       [_vm._v("Добавить изображение")]
     )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060&":
+/*!***********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "product-image-upload-container" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c("div", [
+          _c("div", { staticClass: "image-item-container" }, [
+            _c("label", [
+              _c("div", { staticClass: "image-item" }, [
+                _c("input", {
+                  ref: "file",
+                  staticClass: "file-upload-default",
+                  attrs: { type: "file", name: "category_image" },
+                  on: { change: _vm.uploadImage }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.path,
+                      expression: "path"
+                    }
+                  ],
+                  attrs: { type: "hidden", name: "has_image" },
+                  domProps: { value: _vm.path },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.path = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.path,
+                      expression: "path"
+                    }
+                  ],
+                  attrs: { type: "hidden", name: "category_image" },
+                  domProps: { value: _vm.path },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.path = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                !_vm.path
+                  ? _c("div", { staticClass: "upload-image-button" }, [
+                      _c("i", { staticClass: "ti-image" })
+                    ])
+                  : _c("div", [_c("img", { attrs: { src: _vm.path } })])
+              ])
+            ]),
+            _vm._v(" "),
+            _vm.path
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "image-item-remove-btn",
+                    on: { click: _vm.removeImage }
+                  },
+                  [_c("i", { staticClass: "ti-close" })]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = []
@@ -74806,6 +74979,7 @@ Vue.component('categories-tree-element', __webpack_require__(/*! ./components/ca
 Vue.component('auto-types-table', __webpack_require__(/*! ./components/auto/AutoTypesTable */ "./resources/js/admin/components/auto/AutoTypesTable.vue")["default"]);
 Vue.component('attribute-groups', __webpack_require__(/*! ./components/catalog/attributes/AttributeGroups */ "./resources/js/admin/components/catalog/attributes/AttributeGroups.vue")["default"]);
 Vue.component('product-images-upload', __webpack_require__(/*! ./components/catalog/product/ProductImagesUpload */ "./resources/js/admin/components/catalog/product/ProductImagesUpload.vue")["default"]);
+Vue.component('category-image-upload', __webpack_require__(/*! ./components/catalog/product/categories/CategoryImageUploadForm */ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue")["default"]);
 Vue.component('product-categories', __webpack_require__(/*! ./components/catalog/product/ProductCategories */ "./resources/js/admin/components/catalog/product/ProductCategories.vue")["default"]);
 Vue.component('accordian', __webpack_require__(/*! ../components/Accordian */ "./resources/js/components/Accordian.vue")["default"]);
 
@@ -75791,6 +75965,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductImagesUpload_vue_vue_type_template_id_22d0f837___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductImagesUpload_vue_vue_type_template_id_22d0f837___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CategoryImageUploadForm.vue?vue&type=template&id=57802060& */ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060&");
+/* harmony import */ var _CategoryImageUploadForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CategoryImageUploadForm.vue?vue&type=script&lang=js& */ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CategoryImageUploadForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************!*\
+  !*** ./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryImageUploadForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryImageUploadForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryImageUploadForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060&":
+/*!*****************************************************************************************************************************!*\
+  !*** ./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060& ***!
+  \*****************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryImageUploadForm.vue?vue&type=template&id=57802060& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/admin/components/catalog/product/categories/CategoryImageUploadForm.vue?vue&type=template&id=57802060&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryImageUploadForm_vue_vue_type_template_id_57802060___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
