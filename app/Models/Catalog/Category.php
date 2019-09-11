@@ -19,6 +19,8 @@ class Category extends Model
     protected $table = 'catalog_categories';
     public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords'];
     public $locale;
+    public $oldValue;
+
     protected $image_path = 'img/upload/product-categories/';
 
     public function __construct()
