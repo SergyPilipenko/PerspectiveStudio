@@ -2,6 +2,7 @@
 
 namespace App\Models\Cart;
 
+use App\Exceptions\CartException;
 use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model implements CartItemInterface
@@ -13,6 +14,9 @@ class CartItem extends Model implements CartItemInterface
         parent::boot();
 
         static::creating(function($cartItem) {
+            if($cartItem->quantity > $product_quantity = $cartItem->product->quantity) {
+                throw CartException::make($product_quantity);
+            }
             $cartItem->refreshTotal();
         });
 
@@ -21,6 +25,9 @@ class CartItem extends Model implements CartItemInterface
         });
 
         static::updating(function($cartItem) {
+            if($cartItem->quantity > $product_quantity = $cartItem->product->quantity) {
+                throw CartException::make($product_quantity);
+            }
             $cartItem->refreshTotal();
         });
 

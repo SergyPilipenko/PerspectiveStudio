@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Exceptions\CartException;
 use App\Http\Requests\RequestInterface;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Cart\CartItemInterface;
