@@ -106,11 +106,9 @@ class CategoriesController extends Controller
      */
     public function update(RequestInterface $request, $id)
     {
-//        dd($request);
         $category = $this->category->findOrFail($id);
 
         $category->updateCategory($request);
-
 
         Session::flash('flash', 'Новые данные сохранены успешно');
 

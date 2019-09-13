@@ -1,9 +1,19 @@
+<div>
+    <img style="max-width: 100px" src="{{ asset($category->image) }}" alt="">
+</div>
 <h1>{{ $category->category_title }}</h1>
 @if(isset($category->children) && $category->children->count())
     <ul>
         @foreach($category->children as $category_child)
             <li>
-                <a href="{{ route('frontend.product-categories.show', $category_child->slug) }}">{{ $category_child->category_title }}</a>
+                <a href="{{ route('frontend.product-categories.show', $category_child->slug) }}">
+                    <div>
+                        <img style="max-width: 100px" src="{{ asset($category->image) }}" alt="">
+                    </div>
+                    <div>
+                        {{ $category_child->category_title }}
+                    </div>
+                </a>
             </li>
         @endforeach
     </ul>

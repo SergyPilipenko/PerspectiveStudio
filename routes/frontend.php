@@ -4,6 +4,8 @@ Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-lo
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
+Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
+Route::post('cart/add/{product}', 'Frontend\CartController@add')->name('frontend.cart.add');
 
 Route::get('{brand}-{model}-{modification}-{category}', 'Frontend\PagesController@category')->name('frontend.category');
 Route::get('{brand}-{model}-{modification}', 'Frontend\PagesController@modification')->name('frontend.modification');
