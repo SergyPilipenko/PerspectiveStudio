@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
-class Product extends Model
+class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'article', 'parent_id'];
 
