@@ -292,10 +292,10 @@
             getSelectedModelURI() {
                 var brandSelected = this.getBrandById(this.brandSelected);
                 var modelSelected = this.getModelById(this.modelSelected);
-
                 var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g,'_');
                 var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
                 modelName = modelName.toLowerCase();
+                modelName = modelName.replace(/[-]/g, '_')
 
                 return brandName + "-" + modelName;
             },
@@ -308,7 +308,7 @@
                 }
 
                 var modelSelectedIds = this.getModelSelectedIds();
-
+                this.getSelectedModelURI();
                 window.location.href = this.getSelectedModelURI();
 
                 var self = this;

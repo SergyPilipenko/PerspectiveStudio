@@ -6,6 +6,8 @@ Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
 Route::post('cart/add/{product}', 'Frontend\CartController@add')->name('frontend.cart.add');
+Route::put('cart/change-item-quantity/{product}', 'Frontend\CartController@changeCartItemQuantity')->name('frontend.cart.change-quantiry');
+Route::delete('cart/remove-cart-item/{product}', 'Frontend\CartController@destroyCartItem')->name('frontend.cart.remove');
 
 Route::get('{brand}-{model}-{modification}-{category}', 'Frontend\PagesController@category')->name('frontend.category');
 Route::get('{brand}-{model}-{modification}', 'Frontend\PagesController@modification')->name('frontend.modification');

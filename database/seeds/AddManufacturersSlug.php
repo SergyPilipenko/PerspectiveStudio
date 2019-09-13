@@ -14,15 +14,17 @@ class AddManufacturersSlug extends Seeder
      */
     public function run()
     {
+
         try {
             DB::connection()->getPdo()->beginTransaction();
+            ManufacturersUri::query()->delete();
 
             $manufacturers = Manufacturer::where('ispassengercar', 'true')->where('canbedisplayed', 'true')->get();
 
             foreach ($manufacturers as $manufacturer) {
                 $manufacturer_uri = new ManufacturersUri;
                 $str = preg_replace('/\(|\)|\s|\//', '_', mb_strtolower($manufacturer->description));
-                $str = preg_replace('/\-\-/', '_', $str);
+                $str = preg_replace('/[-]/', '_', $str);
                 if(substr($str, -1) == "_") $str = substr($str, 0, -1);
                 $manufacturer_uri->slug = Transliterate::make($str);
                 $manufacturer_uri->manufacturer_id = $manufacturer->id;

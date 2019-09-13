@@ -34,12 +34,10 @@ class CartItemRepository implements CartItemInterface
         $this->cartItem->name = $product->getAttrValue('name');
         $this->cartItem->type = $product->type;
         $this->cartItem->quantity = $request->quantity;
-
         $this->cartItem->price = $price;
-
         $this->cartItem->base_price = $price;
-        $this->cartItem->total = $request->quantity * $price;
-        $this->cartItem->base_total = $request->quantity * $price;
+//        $this->cartItem->total = $request->quantity * $price;
+//        $this->cartItem->base_total = $request->quantity * $price;
         $this->cartItem->product_id = $product->id;
         $this->cartItem->cart_id = $cart->id;
         $this->cartItem->save();

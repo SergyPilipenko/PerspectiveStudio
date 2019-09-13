@@ -7,6 +7,7 @@ use App\Classes\PartfixTecDoc;
 use App\Classes\RoutesParser\CarRoutesParser;
 use App\Classes\RoutesParser\RoutesParserInterface;
 use App\Models\AutoType;
+use App\Models\Cart\CartInterface;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
@@ -22,8 +23,18 @@ use App\Models\Catalog\Category as ProductCategory;
 
 class PagesController extends Controller
 {
+
+    /**
+     * PagesController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('frontend');
+    }
+
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
+
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
 
         $garage = \Session::get('garage')
@@ -52,8 +63,7 @@ class PagesController extends Controller
     {
         $categories = Category::where('parent_id', null)->get();
 
-        $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->first();
-
+        $manufacturer = ManufacturersUri::where('slug', $brand)->with('passangercar.models')->firstOrFail();
 
         $models = PassangerCar::whereIn('modelid', [19,36,59])->with('attributes')->filter([
             [
@@ -69,6 +79,7 @@ class PagesController extends Controller
                 'displayvalue' => '2 l',
             ],
         ])->get();
+//        dd($models);
 
         $models = ModelsUri::where([
             'slug' => $model,

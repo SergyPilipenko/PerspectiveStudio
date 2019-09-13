@@ -12,13 +12,46 @@ class CartItem extends Model implements CartItemInterface
     {
         parent::boot();
 
+        static::creating(function($cartItem) {
+            $cartItem->refreshTotal();
+        });
+
+        static::created(function ($cartItem) {
+            $cartItem->cart->refreshCart();
+        });
+
+        static::updating(function($cartItem) {
+            $cartItem->refreshTotal();
+        });
+
         static::updated(function($cartItem) {
             $cartItem->cart->refreshCart();
         });
+
+        static::deleted(function($cartItem) {
+            $cartItem->cart->refreshCart();
+        });
+    }
+
+    public function updateQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+        $this->update();
+    }
+
+    public function refreshTotal()
+    {
+        $this->total = $this->price * $this->quantity;
+        $this->base_total = $this->price * $this->quantity;
     }
 
     public function cart()
     {
         return $this->belongsTo(get_class(app('App\Models\Cart\CartInterface')));
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(get_class(app('App\Models\Admin\Catalog\Product\ProductInterface')));
     }
 }

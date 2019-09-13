@@ -21,6 +21,7 @@ class Frontend
         App::singleton('App\Repositories\Cart\CartItemRepositoryInterface', 'App\Repositories\Cart\CartItemRepository');
         App::singleton('App\Models\Cart\CartInterface', 'App\Models\Cart\Cart');
         App::singleton('App\Models\Cart\CartItemInterface', 'App\Models\Cart\CartItem');
+        App::singleton('App\Models\Admin\Catalog\Product\ProductInterface', 'App\Models\Admin\Catalog\Product\Product');
         App::singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\CartRequest');
         return $next($request);
     }
