@@ -28,11 +28,11 @@ class CartRepository implements CartRepositoryInterface
 
     public function create(RequestInterface $request, ProductInterface $product)
     {
-        $product_price = $product->getAttrValue('price');
-        $this->cart->items_count = $request->quantity;
-        $this->cart->items_qty = $request->quantity;
-        $this->cart->grand_total = $request->quantity * $product_price;
-        $this->cart->base_grand_total = $request->quantity * $product_price;
+//        $product_price = $product->getAttrValue('price');
+//        $this->cart->items_count = $request->quantity;
+//        $this->cart->items_qty = $request->quantity;
+//        $this->cart->grand_total = $request->quantity * $product_price;
+//        $this->cart->base_grand_total = $request->quantity * $product_price;
         $this->cart->save();
         $this->approved = true;
     }

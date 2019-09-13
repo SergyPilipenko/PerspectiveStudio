@@ -80,6 +80,16 @@ class Product extends Model implements ProductInterface
         ")->id;
     }
 
+    public function getAttrValues(array $attributes_codes)
+    {
+        $attributes = [];
+        foreach ($attributes_codes as $attributes_code) {
+            $attributes[] = $this->getAttributeValue($attributes_code);
+        }
+
+        return $attributes;
+    }
+
 
     public function getAttrValue(string $code, $attribute_id = null)
     {

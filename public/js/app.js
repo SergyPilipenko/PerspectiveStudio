@@ -1964,7 +1964,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['app_cart', 'destroy'],
+  data: function data() {
+    return {
+      cart: null,
+      token: window.axios.defaults.headers.common['X-CSRF-TOKEN']
+    };
+  },
+  created: function created() {
+    this.cart = JSON.parse(this.app_cart);
+  }
+});
 
 /***/ }),
 
@@ -2413,6 +2477,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
       var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
       modelName = modelName.toLowerCase();
+      modelName = modelName.replace(/[-]/g, '_');
       return brandName + "-" + modelName;
     },
     loadModifications: function loadModifications() {
@@ -2423,6 +2488,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       var modelSelectedIds = this.getModelSelectedIds();
+      this.getSelectedModelURI();
       window.location.href = this.getSelectedModelURI();
       var self = this;
       var form = new FormData();
@@ -22827,7 +22893,146 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    here is cart going\n")])
+  return _c("div", [
+    _vm.cart.cart_items.length
+      ? _c(
+          "div",
+          [
+            _c(
+              "ul",
+              _vm._l(_vm.cart.cart_items, function(item) {
+                return _c("li", [
+                  _c("ul", [
+                    _c("li", [
+                      _c("strong", [
+                        _vm._v(
+                          "\n                            name:\n                            " +
+                            _vm._s(item.product.name) +
+                            "\n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _vm._v(
+                        "\n                        article:\n                        " +
+                          _vm._s(item.product.article) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _vm._v(
+                        "\n                        quantity:\n                        " +
+                          _vm._s(item.quantity) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _vm._v(
+                        "\n                        price:\n                        " +
+                          _vm._s(item.price) +
+                          "\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("li", [
+                      _vm._v(
+                        "\n                        total:\n                        " +
+                          _vm._s(item.total) +
+                          "\n                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", [
+                    _c(
+                      "form",
+                      {
+                        staticStyle: {
+                          display: "flex !important",
+                          "flex-direction": "row !important"
+                        },
+                        attrs: {
+                          action: "/cart/change-item-quantity/" + item.id,
+                          method: "POST"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          attrs: { type: "hidden", name: "_token" },
+                          domProps: { value: _vm.token }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "_method",
+                            value: "put"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: { type: "number", min: "1", name: "quantity" },
+                          domProps: { value: item.quantity }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          { staticClass: "btn btn-sm btn-primary" },
+                          [_vm._v("submit")]
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { "margin-top": "20px" } }, [
+                    _c(
+                      "form",
+                      {
+                        attrs: {
+                          action: "/cart/remove-cart-item/" + item.id,
+                          method: "POST"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          attrs: { type: "hidden", name: "_token" },
+                          domProps: { value: _vm.token }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: {
+                            type: "hidden",
+                            name: "_method",
+                            value: "delete"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("button", { staticClass: "btn btn-sm btn-danger" }, [
+                          _vm._v("remove")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("H6", [
+              _vm._v(
+                "\n            Cart total:\n            " +
+                  _vm._s(_vm.cart.grand_total) +
+                  "\n        "
+              )
+            ])
+          ],
+          1
+        )
+      : _c("div", [_vm._v("\n        cart is empty\n    ")])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
