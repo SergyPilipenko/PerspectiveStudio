@@ -19,6 +19,7 @@ import selectCar from './frontend/store/modules/select-car';
 import garage from './frontend/store/modules/garage';
 
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
+Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
 Vue.component('garage', require('./frontend/components/Garage').default);
 Vue.component('product-show', require('./frontend/components/product/Show').default);
 Vue.component('cart', require('./frontend/components/cart/Cart').default);

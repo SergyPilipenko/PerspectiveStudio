@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Product extends Model implements ProductInterface
 {
-    protected $fillable = ['type', 'attribute_family_id', 'article', 'parent_id'];
+    protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id'];
 
     public function getRouteKeyName()
     {
@@ -89,7 +89,6 @@ class Product extends Model implements ProductInterface
             foreach ($this->attribute_family->attribute_groups as $group)
             {
                 $get_attribute = $group->group_attributes->where('code', $code)->first();
-
                 if($get_attribute) {
                     $field_code = ProductAttributeValue::$attributeTypeFields[$get_attribute['type']];
                     $attribute = ProductAttributeValue::where('product_id', $this->id)->where('attribute_id', $get_attribute->id)->first();

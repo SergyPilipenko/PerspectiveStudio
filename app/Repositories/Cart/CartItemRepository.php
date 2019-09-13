@@ -25,7 +25,6 @@ class CartItemRepository implements CartItemInterface
 
     public function add(RequestInterface $request, ProductInterface $product, CartInterface $cart)
     {
-
         if($this->productExistInCart($product->id, $cart->id)) {
             return $this->updateProductItemQuantity($request, $product);
         }

@@ -12,6 +12,6 @@ interface CartRepositoryInterface
 {
     public function create(RequestInterface $request, ProductInterface $product);
     public function add(RequestInterface $request, ProductInterface $product);
-    public function remove();
     public function reset();
+    public function refresh();
 }

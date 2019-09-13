@@ -50,6 +50,10 @@ class CartRepository implements CartRepositoryInterface
 
         $this->cartItem->add($request, $product, $this->cart);
     }
-    public function remove() {}
+
+    public function refresh()
+    {
+
+    }
     public function reset() {}
 }

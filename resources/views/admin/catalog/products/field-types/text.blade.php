@@ -2,7 +2,6 @@
     <div class="form-group {{ $attribute->is_required ? 'required' : '' }}">
         <label for="{{ $attribute->code }}">{{ $attribute->title }}</label>
 {{--        {{ dd($product->getAttrValue($attribute->code)) }}--}}
-
     @if($attribute->code == 'short_description')
         @endif
         <input type="text"
