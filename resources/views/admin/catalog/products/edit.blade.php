@@ -28,6 +28,7 @@
                             </accordian>
                         @endif
                     @endforeach
+                    @include('admin.catalog.products.accordians.quantity', ['product' => $product])
                     @include('admin.catalog.products.accordians.images', ['product' => $product])
                     @include('admin.catalog.products.accordians.categories', ['product' => $product])
                 </div>
