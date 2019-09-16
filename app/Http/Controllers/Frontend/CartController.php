@@ -48,7 +48,7 @@ class CartController extends Controller
 //        return back();
     }
 
-    public function changeCartItemQuantity(Request $request, $id, CartItemInterface $cartItem)
+    public function changeCartItemQuantity(Request $request, $id, CartItemInterface $cartItem, CartInterface $cart)
     {
         $this->validate($request, array(
             'quantity' => 'required|numeric|min:1'
@@ -60,11 +60,13 @@ class CartController extends Controller
             $cartItem->updateQuantity($request->quantity);
 
             DB::connection()->getPdo()->commit();
+
+            return $cart->getCart();
         } catch (\PDOException $exception) {
             DB::connection()->getPdo()->rollBack();
             dd($exception);
         }
-        return back();
+//        return back();
     }
 
     public function destroyCartItem($id, CartItemInterface $cartItem, CartInterface $cart)
@@ -83,8 +85,5 @@ class CartController extends Controller
             DB::connection()->getPdo()->rollBack();
             dd($exception);
         }
-
-
-//        return back();
     }
 }

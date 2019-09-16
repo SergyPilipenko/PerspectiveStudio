@@ -25,7 +25,6 @@
                         alert(error.response.data.message);
                     })
                     .then(data => {
-                        console.log(data);
                         this.$emit('productAdded', data.data)
                         // self.addBodyTypes(data.data);
                     })
