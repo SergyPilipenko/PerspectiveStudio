@@ -28,16 +28,28 @@
                         </li>
                     </ul>
                     <div >
-                        <form :action="'/cart/change-item-quantity/'+item.id" method="POST" style="display: flex !important; flex-direction: row !important;">
-                            <input type="hidden" name="_token" :value="token">
-                            <input type="hidden" name="_method" value="put">
-                            <input type="number" min="1" name="quantity" :value="item.quantity">
-                            <button class="btn btn-sm btn-primary">submit</button>
-                        </form>
+                        <change-product-quantity-in-cart
+                            :product="item" :action="'/cart/change-item-quantity/'+item.id"
+                            @productQuantityChanged="productQuantityChanged"
+                            :key="item.id"
+                        >
 
+                        </change-product-quantity-in-cart>
+
+<!--                        <form :action="'/cart/change-item-quantity/'+item.id" method="POST" style="display: flex !important; flex-direction: row !important;">-->
+
+<!--                            <input type="hidden" name="_token" :value="token">-->
+<!--                            <input type="hidden" name="_method" value="put">-->
+<!--                            <input type="number" min="1" name="quantity" :value="item.quantity">-->
+<!--                            <button class="btn btn-sm btn-primary">submit</button>-->
+<!--                        </form>-->
                     </div>
                     <div style="margin-top: 20px">
-                        <delete-product-from-cart-form :action="'/cart/remove-cart-item/'+item.id" @productDeleted="productDeleted"></delete-product-from-cart-form>
+                        <delete-product-from-cart-form
+                            :action="'/cart/remove-cart-item/'+item.id"
+                            @productDeleted="productDeleted"
+                            :key="item.id"
+                        ></delete-product-from-cart-form>
                     </div>
                 </li>
 
@@ -58,12 +70,14 @@
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+    import ChangeProductQuantityInCart from "./ChangeProductQuantityInCart";
     import DeleteProductFromCartForm from "./DeleteProductFromCartForm";
 
     export default {
 
         props: ['app_cart', 'destroy'],
         components: {
+            ChangeProductQuantityInCart,
             DeleteProductFromCartForm
         },
 
@@ -79,12 +93,18 @@
             ...mapGetters({
                 'getCart': 'Cart/getCart',
             }),
+            options() {
+                console.log();
+            }
         },
         methods: {
             ...mapMutations({
                 'setCart': 'Cart/setCart'
             }),
             productDeleted(cart) {
+                this.setCart(cart);
+            },
+            productQuantityChanged(cart) {
                 this.setCart(cart);
             }
         }
