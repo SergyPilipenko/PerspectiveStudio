@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Exceptions\CartException;
 use App\Http\Requests\RequestInterface;
 use App\Models\Admin\Catalog\Product\Product;
+use App\Models\Cart\CartInterface;
 use App\Models\Cart\CartItemInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -26,7 +27,7 @@ class CartController extends Controller
         $this->product = $product;
     }
 
-    public function add(RequestInterface $request, $id, CartRepositoryInterface $cartRepository)
+    public function add(RequestInterface $request, $id, CartRepositoryInterface $cartRepository, CartInterface $cart)
     {
 
         $product = $this->product->findOrFail($id);
@@ -37,12 +38,14 @@ class CartController extends Controller
             $cartRepository->add($request, $product);
 
             DB::connection()->getPdo()->commit();
+
+            return $cart->getCart();
         } catch (\PDOException $exception) {
             DB::connection()->getPdo()->rollBack();
             dd($exception);
         }
 
-        return back();
+//        return back();
     }
 
     public function changeCartItemQuantity(Request $request, $id, CartItemInterface $cartItem)
@@ -64,7 +67,7 @@ class CartController extends Controller
         return back();
     }
 
-    public function destroyCartItem($id, CartItemInterface $cartItem)
+    public function destroyCartItem($id, CartItemInterface $cartItem, CartInterface $cart)
     {
         $cartItem = $cartItem->findOrFail($id);
 
@@ -74,12 +77,14 @@ class CartController extends Controller
             $cartItem->delete();
 
             DB::connection()->getPdo()->commit();
+
+            return $cart->getCart();
         } catch (\PDOException $exception) {
             DB::connection()->getPdo()->rollBack();
             dd($exception);
         }
 
 
-        return back();
+//        return back();
     }
 }

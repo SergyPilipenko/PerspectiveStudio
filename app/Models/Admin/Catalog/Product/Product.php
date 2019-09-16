@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Product extends Model implements ProductInterface
 {
-    protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id'];
+    protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
 
     public function getRouteKeyName()
     {
@@ -58,6 +58,25 @@ class Product extends Model implements ProductInterface
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_categories');
+    }
+
+    public function getProductAttributes()
+    {
+        $sql = "
+        SELECT pav.*, a.* FROM `products` p 
+        JOIN product_attribute_values pav ON p.id = pav.product_id
+        JOIN attributes a ON pav.attribute_id = a.id
+        WHERE p.id = {$this->id}";
+        $attributes = DB::connection('mysql')->select($sql);
+        $formatted = [];
+        foreach ($attributes as $attribute) {
+            if(!in_array($attribute->code, ProductAttributeValue::$ignoreAttributes)) {
+                $value = ProductAttributeValue::$attributeTypeFields[$attribute->type];
+                $formatted[$attribute->code] = $attribute->$value;
+            }
+        }
+
+        return $formatted;
     }
 
     public function attribute_value()
@@ -120,6 +139,12 @@ class Product extends Model implements ProductInterface
         try {
 
             DB::connection()->getPdo()->beginTransaction();
+
+            if(isset($request['depends_quantity'])) {
+                $request['depends_quantity'] = true;
+            } else {
+                $request['depends_quantity'] = false;
+            }
 
             $product->update($request);
 
