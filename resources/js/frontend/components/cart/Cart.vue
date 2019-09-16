@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-if="cart.cart_items.length">
+        <div v-if="getCart.cart_items.length">
             <ul>
-                <li v-for="item in cart.cart_items">
+                <li v-for="item in getCart.cart_items">
                     <ul>
                         <li>
                             <strong>
@@ -37,19 +37,19 @@
 
                     </div>
                     <div style="margin-top: 20px">
-                        <form :action="'/cart/remove-cart-item/'+item.id" method="POST">
-                            <input type="hidden" name="_token" :value="token">
-                            <input type="hidden" name="_method" value="delete">
-                            <button class="btn btn-sm btn-danger">remove</button>
-                        </form>
+                        <delete-product-from-cart-form :action="'/cart/remove-cart-item/'+item.id" @productDeleted="productDeleted"></delete-product-from-cart-form>
                     </div>
                 </li>
 
             </ul>
-            <H6>
+            <h6>
                 Cart total:
-                {{ cart.grand_total }}
-            </H6>
+                {{ getCart.grand_total }}
+            </h6>
+            <h6>
+                Cart items count:
+                {{ getCart.items_count }}
+            </h6>
         </div>
         <div v-else>
             cart is empty
@@ -57,17 +57,36 @@
     </div>
 </template>
 <script>
+    import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+    import DeleteProductFromCartForm from "./DeleteProductFromCartForm";
+
     export default {
+
         props: ['app_cart', 'destroy'],
+        components: {
+            DeleteProductFromCartForm
+        },
 
         data() {
             return {
-                cart: null,
                 token: window.axios.defaults.headers.common['X-CSRF-TOKEN'],
             }
         },
         created() {
-            this.cart = JSON.parse(this.app_cart);
+            this.setCart(JSON.parse(this.app_cart));
+        },
+        computed: {
+            ...mapGetters({
+                'getCart': 'Cart/getCart',
+            }),
+        },
+        methods: {
+            ...mapMutations({
+                'setCart': 'Cart/setCart'
+            }),
+            productDeleted(cart) {
+                this.setCart(cart);
+            }
         }
 
     }

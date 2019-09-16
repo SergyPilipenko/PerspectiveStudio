@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductAttributeValue extends Model
 {
+    public static $ignoreAttributes = [
+        'article'
+    ];
     protected $fillable = [
         'product_id',
         'attribute_id',

@@ -29,6 +29,9 @@ class ProductController extends Controller
         }
 
         $product = $this->product->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($productId);
+        $attributes = $product->getProductAttributes();
+        $product->custom_attributes = $product->getProductAttributes();
+
 
         return view('frontend.product.show', compact('product', 'cart'));
     }

@@ -17,6 +17,8 @@ Vue.use(Vuex);
  */
 import selectCar from './frontend/store/modules/select-car';
 import garage from './frontend/store/modules/garage';
+import productShow from './frontend/store/modules/productShow';
+import Cart from './frontend/store/modules/cart';
 
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
@@ -28,6 +30,8 @@ const store = new Vuex.Store({
     modules: {
         selectCar,
         garage,
+        Cart,
+        productShow
     }
 });
 

@@ -14,7 +14,9 @@ class CartItem extends Model implements CartItemInterface
         parent::boot();
 
         static::creating(function($cartItem) {
-            if($cartItem->quantity > $product_quantity = $cartItem->product->quantity) {
+            $product = $cartItem->product;
+            $product_quantity = $product->quantity;
+            if($cartItem->quantity > $product_quantity && $product->depends_quantity == false) {
                 throw CartException::make($product_quantity);
             }
             $cartItem->refreshTotal();
@@ -25,7 +27,10 @@ class CartItem extends Model implements CartItemInterface
         });
 
         static::updating(function($cartItem) {
-            if($cartItem->quantity > $product_quantity = $cartItem->product->quantity) {
+            $product = $cartItem->product;
+            $product_quantity = $product->quantity;
+
+            if($cartItem->quantity > $product_quantity && $product->depends_quantity == false) {
                 throw CartException::make($product_quantity);
             }
             $cartItem->refreshTotal();
