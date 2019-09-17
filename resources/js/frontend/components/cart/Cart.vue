@@ -27,22 +27,13 @@
                             {{ item.total }}
                         </li>
                     </ul>
-                    <div >
+                    <div>
                         <change-product-quantity-in-cart
                             :product="item" :action="'/cart/change-item-quantity/'+item.id"
                             @productQuantityChanged="productQuantityChanged"
                             :key="item.id"
                         >
-
                         </change-product-quantity-in-cart>
-
-<!--                        <form :action="'/cart/change-item-quantity/'+item.id" method="POST" style="display: flex !important; flex-direction: row !important;">-->
-
-<!--                            <input type="hidden" name="_token" :value="token">-->
-<!--                            <input type="hidden" name="_method" value="put">-->
-<!--                            <input type="number" min="1" name="quantity" :value="item.quantity">-->
-<!--                            <button class="btn btn-sm btn-primary">submit</button>-->
-<!--                        </form>-->
                     </div>
                     <div style="margin-top: 20px">
                         <delete-product-from-cart-form
@@ -62,6 +53,7 @@
                 Cart items count:
                 {{ getCart.items_count }}
             </h6>
+            <a :href="checkout_link" class="btn btn-success">Checkout</a>
         </div>
         <div v-else>
             cart is empty
@@ -75,7 +67,7 @@
 
     export default {
 
-        props: ['app_cart', 'destroy'],
+        props: ['app_cart', 'destroy', 'checkout_link'],
         components: {
             ChangeProductQuantityInCart,
             DeleteProductFromCartForm
@@ -92,10 +84,7 @@
         computed: {
             ...mapGetters({
                 'getCart': 'Cart/getCart',
-            }),
-            options() {
-                console.log();
-            }
+            })
         },
         methods: {
             ...mapMutations({

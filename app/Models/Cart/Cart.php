@@ -38,9 +38,9 @@ class Cart extends Model implements CartInterface
            $cart = $this->where('id', $cart->id)->with('cartItems.product.images')->first();
            foreach ($cart->cartItems as $cartItem) {
                $cartItem->product->name = $cartItem->product->getAttrValue('name');
+               $cartItem->product->path = route('frontend.product.show', $cartItem->product->getAttrValue('slug'));
            }
        }
-
        return $cart;
     }
 }
