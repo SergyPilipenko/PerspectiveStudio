@@ -7,6 +7,9 @@ export default {
         getCart(state) {
             return state.cart;
         },
+        getCartTotal(state) {
+            return state.cart ? state.cart.grand_total : null
+        }
     },
     mutations: {
         setCart(state, newValue) {

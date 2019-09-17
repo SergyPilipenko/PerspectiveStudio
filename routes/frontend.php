@@ -4,7 +4,11 @@ Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-lo
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
-Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
+
+Route::group(['prefix' => 'checkout', 'as' => 'frontend.checkout.'], function() {
+    Route::get('/', 'Frontend\CheckoutController@index')->name('index');
+});
+
 Route::post('cart/add/{product}', 'Frontend\CartController@add')->name('frontend.cart.add');
 Route::post('cart/change-item-quantity/{product}', 'Frontend\CartController@changeCartItemQuantity')->name('frontend.cart.change-quantiry');
 Route::delete('cart/remove-cart-item/{product}', 'Frontend\CartController@destroyCartItem')->name('frontend.cart.remove');

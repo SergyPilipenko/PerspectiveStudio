@@ -13,3 +13,4 @@ yarn-error.log
 public/upload/
 .idea
 docker/mysql/
+tecdoc_images/
