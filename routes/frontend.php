@@ -1,5 +1,7 @@
 <?php
 
+//use Illuminate\Routing\Route;
+
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
@@ -7,6 +9,7 @@ Route::get('{product}.html', 'Frontend\ProductController@detail')->name('fronten
 
 Route::group(['prefix' => 'checkout', 'as' => 'frontend.checkout.'], function() {
     Route::get('/', 'Frontend\CheckoutController@index')->name('index');
+    Route::post('save-order', 'Frontend\CheckoutController@saveOrder')->name('save-order');
 });
 
 Route::post('cart/add/{product}', 'Frontend\CartController@add')->name('frontend.cart.add');

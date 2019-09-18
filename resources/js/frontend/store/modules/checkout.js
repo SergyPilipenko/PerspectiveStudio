@@ -1,6 +1,8 @@
 export default {
     namespaced: true,
     state: {
+        cartId: null,
+        submitAction: "",
         cartTotal: 0,
         deliveryPrice: 0,
         orderTotal: 0,
@@ -8,9 +10,17 @@ export default {
         name: "",
         phone: "",
         email: "",
-        last_name: "",
+        lastName: "",
+        orderComment: "",
+        errors: []
     },
     getters: {
+        getCartId(state) {
+            return state.cartId
+        },
+        getSubmitAction(state) {
+            return state.submitAction
+        },
         getCartTotal(state) {
             return parseFloat(state.cartTotal)
         },
@@ -36,7 +46,7 @@ export default {
             return state.name
         },
         getLastName(state) {
-            return state.last_name
+            return state.lastName
         },
         getEmail(state) {
             return state.email
@@ -44,8 +54,17 @@ export default {
         getPhone(state) {
             return state.phone
         },
+        getOrderComment(state) {
+            return state.orderComment
+        },
+        getErrors(state) {
+            return state.errors
+        }
     },
     mutations: {
+        setCartId(state, newValue) {
+            state.cartId = newValue;
+        },
         setCartTotal(state, newValue) {
             state.cartTotal = newValue;
         },
@@ -56,7 +75,7 @@ export default {
             state.name = newValue
         },
         setLastName(state, newValue) {
-            state.last_name = newValue
+            state.lastName = newValue
         },
         setPhone(state, newValue) {
             state.phone = newValue
@@ -64,19 +83,53 @@ export default {
         setEmail(state, newValue) {
             state.email = newValue
         },
+        setOrderComment(state, newValue) {
+            state.orderComment = newValue
+        },
+        setSubmitAction(state, newValue) {
+            state.submitAction = newValue
+        },
+        setErrors(state, newValue) {
+            state.errors = newValue
+        },
+        resetErrors(state) {
+            state.errors = []
+        }
     },
     actions: {
-        refreshOrderTotal: function(context, payload) {
+        refreshOrderTotal(context, payload) {
             var getters = context.getters;
             var total = getters.getCartTotal + getters.getDeliveryPrice - getters.getBonuses;
             context.commit('setOrderTotal', total.toFixed(4));
         },
-        setCartTotal: function (context, payload) {
+        setCartTotal(context, payload) {
             context.commit('setCartTotal', payload);
             context.dispatch('refreshOrderTotal', payload);
         },
-        // updateName: function (context, payload) {
-        //     context.commit('setName', payload)
-        // }
+        orderSubmit({commit, getters}, payload) {
+            var form = new FormData();
+            form.append('customer_first_name', getters.getName);
+            form.append('customer_last_name', getters.getLastName);
+            form.append('customer_phone', getters.getPhone);
+            form.append('customer_email', getters.getEmail);
+            form.append('cart_id', getters.getCartId);
+            form.append('order_comment', getters.getOrderComment);
+            axios.post(getters.getSubmitAction, form)
+                .catch(error => {
+                        commit('setErrors', error.response.data);
+                        if(error.response.data.message) {
+                            alert(error.response.data.message);
+                        }
+                })
+                .then(data => {
+                    if(data) {
+                        commit('resetErrors')
+                        if(data.data == "success") {
+                            alert('Заказ был сохранен успешно');
+                            window.location.href = "/";
+                        };
+                    }
+                });
+        }
     }
 }
