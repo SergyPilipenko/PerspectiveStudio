@@ -16,19 +16,23 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('status')->nullable();
-            $table->boolean('is_guest')->nullable();
+            $table->boolean('is_guest')->nullable()->default(true);
             $table->string('customer_email')->nullable();
+            $table->string('customer_phone')->nullable();
             $table->string('customer_first_name')->nullable();
             $table->string('customer_last_name')->nullable();
             $table->string('shipping_method')->nullable();
             $table->string('shipping_title')->nullable();
             $table->string('shipping_description')->nullable();
+            $table->text('order_comment')->nullable();
             $table->unsignedInteger('total_item_count')->nullable();
             $table->unsignedInteger('total_qty_ordered')->nullable();
             $table->decimal('grand_total',12,4)->nullable()->default(0);
             $table->decimal('base_grand_total', 12,4)->nullable()->default(0);
             $table->decimal('sub_total',12,4)->nullable()->default(0);
-            $table->decimal('base_sub_total')->nullable()->default(0);
+            $table->decimal('base_sub_total', 12,4)->nullable()->default(0);
+            $table->unsignedBigInteger('cart_id');
+            $table->foreign('cart_id')->references('id')->on('cart');
             $table->timestamps();
         });
     }

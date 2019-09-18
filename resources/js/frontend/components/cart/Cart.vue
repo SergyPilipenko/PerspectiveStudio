@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="getCart.cart_items.length">
+        <div v-if="getCart && getCart.cart_items.length">
             <ul>
                 <li v-for="item in getCart.cart_items">
                     <ul>
@@ -79,7 +79,9 @@
             }
         },
         created() {
-            this.setCart(JSON.parse(this.app_cart));
+            if(this.app_cart) {
+                this.setCart(JSON.parse(this.app_cart));
+            }
         },
         computed: {
             ...mapGetters({

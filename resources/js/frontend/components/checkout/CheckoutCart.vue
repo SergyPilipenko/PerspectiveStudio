@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="getCart">
         <strong>Ваш заказ</strong>
         <div style="border-bottom: 1px solid red; padding-bottom: 20px">
             <div v-for="product in getCart.cart_items">
@@ -40,20 +40,22 @@
             </div>
         </div>
         <div>
-            <button type="button" class="btn btn-block btn-success">Заказ подтверждаю</button>
+            <checkout-submit></checkout-submit>
         </div>
     </div>
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-    import ChangeProductQuantityInCart from "../cart/ChangeProductQuantityInCart";
-    import DeleteProductFromCartForm from "../cart/DeleteProductFromCartForm";
+    import ChangeProductQuantityInCart from "../cart/ChangeProductQuantityInCart"
+    import DeleteProductFromCartForm from "../cart/DeleteProductFromCartForm"
+    import CheckoutSubmit from "./CheckoutSubmit";
 
     export default {
-        props: ['app_cart'],
+        props: ['app_cart', 'save_order_action'],
         components: {
             ChangeProductQuantityInCart,
-            DeleteProductFromCartForm
+            DeleteProductFromCartForm,
+            CheckoutSubmit
         },
         data() {
             return {
@@ -61,7 +63,13 @@
             }
         },
         created() {
-            this.setCart(JSON.parse(this.app_cart));
+            if(this.app_cart) {
+                if(!this.getCart) {
+                    this.setCart(JSON.parse(this.app_cart));
+                }
+                this.setCartId(this.getCart.id);
+                this.setSubmitAction(this.save_order_action)
+            }
         },
         computed: {
             ...mapGetters({
@@ -77,10 +85,12 @@
         },
         methods: {
             ...mapActions({
-                'setCheckoutCartTotal': 'Checkout/setCartTotal'
+                'setCheckoutCartTotal': 'Checkout/setCartTotal',
             }),
             ...mapMutations({
                 'setCart': 'Cart/setCart',
+                'setCartId': 'Checkout/setCartId',
+                'setSubmitAction': 'Checkout/setSubmitAction',
             }),
             productQuantityChanged(cart) {
                 this.setCart(cart);
@@ -88,11 +98,6 @@
             productDeleted(cart) {
                 this.setCart(cart);
             },
-        },
-        watch: {
-            getCartTotal(newValue, oldValue) {
-                this.setCheckoutCartTotal(newValue);
-            }
         }
     }
 </script>

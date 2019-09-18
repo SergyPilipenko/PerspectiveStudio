@@ -56,4 +56,11 @@ class CartRepository implements CartRepositoryInterface
 
     }
     public function reset() {}
+
+    public function closeCart(CartInterface $cart)
+    {
+        Session::forget('cart');
+        $cart->is_active = false;
+        $cart->save();
+    }
 }

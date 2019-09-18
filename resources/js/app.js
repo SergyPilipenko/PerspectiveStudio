@@ -29,6 +29,7 @@ Vue.component('cart', require('./frontend/components/cart/Cart').default);
 Vue.component('checkout', require('./frontend/components/checkout/Checkout').default);
 Vue.component('checkout-cart', require('./frontend/components/checkout/CheckoutCart').default);
 Vue.component('checkout-user-info-form', require('./frontend/components/checkout/CheckoutUserInfoForm').default);
+Vue.component('checkout-order-comment', require('./frontend/components/checkout/CheckoutOrderComment').default);
 
 const store = new Vuex.Store({
     modules: {

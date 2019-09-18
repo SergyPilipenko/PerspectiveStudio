@@ -34,12 +34,17 @@ class Cart extends Model implements CartInterface
     public function getCart()
     {
        $cart = Session::get('cart');
+
        if(isset($cart)) {
-           $cart = $this->where('id', $cart->id)->with('cartItems.product.images')->first();
-           foreach ($cart->cartItems as $cartItem) {
-               $cartItem->product->name = $cartItem->product->getAttrValue('name');
-               $cartItem->product->path = route('frontend.product.show', $cartItem->product->getAttrValue('slug'));
-           }
+           $cart = $this->where('id', $cart->id)->where('is_active', true)->with('cartItems.product.images')->first();
+            if($cart) {
+                foreach ($cart->cartItems as $cartItem) {
+                    $cartItem->product->name = $cartItem->product->getAttrValue('name');
+                    $cartItem->product->path = route('frontend.product.show', $cartItem->product->getAttrValue('slug'));
+                }
+            } else {
+                Session::forget('cart');
+            }
        }
        return $cart;
     }
