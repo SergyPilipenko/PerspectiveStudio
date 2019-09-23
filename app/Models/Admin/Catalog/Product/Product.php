@@ -79,6 +79,25 @@ class Product extends Model implements ProductInterface
         return $this->hasMany(Price::class, 'article_id', 'id');
     }
 
+    public function getProductById($id)
+    {
+        $product = $this->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($id);
+        $product->custom_attributes = $product->getProductAttributes();
+        $product->price = $product->getPrice();
+
+        return $product;
+    }
+
+    public function getProduct($slug)
+    {
+        $id = $this->getProductByIdSlug($slug);
+        if(!$id) {
+            abort(404);
+        }
+
+        return $this->getProductById($id);
+    }
+
 
     public function getProductAttributes()
     {

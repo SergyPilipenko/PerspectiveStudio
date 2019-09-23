@@ -6,8 +6,8 @@
                 <div>
                     артикул: {{ getProduct.article }}
                 </div>
-                <div>
-                    цена: {{ getProduct.custom_attributes.price }}
+                <div v-if="getProduct.price > 0">
+                    цена: {{ getProduct.price }}
                 </div>
                 <div>
                     {{ getProduct.custom_attributes.short_description }}
@@ -18,13 +18,17 @@
                 <img  v-if="getProduct.images.length" style="max-width: 100px" :src="'/'+image.path" alt="" v-for="image in getProduct.images">
             </div>
         </div>
-        <add-to-cart-form :product="getProduct" :action="add_action" @productAdded="refreshCart"></add-to-cart-form>
+        <add-to-cart-form :product="getProduct" :action="add_action" @productAdded="refreshCart" v-if="getProduct.price > 0"></add-to-cart-form>
+        <div v-else>
+            <button type="button" disabled class="btn btn-secondary">Нет в наличии</button>
+        </div>
     </div>
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
     import AddToCartForm from "./AddToCartForm";
+
     export default {
         props: ['product', 'add_action'],
         components: {
