@@ -1,5 +1,5 @@
 <template>
-    <form :action="action" method="POST" @submit.prevent="addProduct" v-if="product.custom_attributes.price > 0">
+    <form :action="action" method="POST" @submit.prevent="addProduct" >
         <select v-model="selectedQuantity"  class="form-control">
             <option v-for="(option, index) in quantity" v-text="option"></option>
         </select>
