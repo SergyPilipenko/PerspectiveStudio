@@ -6,6 +6,7 @@ use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
 use App\Classes\RoutesParser\CarRoutesParser;
 use App\Classes\RoutesParser\RoutesParserInterface;
+use App\Models\Admin\Catalog\Product\Product;
 use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
 use App\Models\Categories\Category;
@@ -123,9 +124,11 @@ class PagesController extends Controller
         $current_auto = $garageInstance->getActiveCar();
 
         $categories = $category->children;
-
-        $parts = $category->getParts($modification);
-
+//        $products = Product::whereIn('id', collect($category->getParts($modification))->pluck('product_id'))->get();
+//
+//        dd($products);
+        $parts = Product::whereIn('id', collect($category->getParts($modification))->pluck('product_id'))->get();
+//        dd($parts);
         return view('frontend.car.index',
             compact('category', 'garage', 'current_auto', 'categories',
                 'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts')

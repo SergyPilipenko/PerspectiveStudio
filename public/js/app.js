@@ -2084,9 +2084,23 @@ __webpack_require__.r(__webpack_exports__);
   props: ['product', 'action', 'item_quantity'],
   data: function data() {
     return {
-      // productItemQuantity: this.product.quantity,
+      productItemQuantity: this.product.quantity,
       token: window.axios.defaults.headers.common['X-CSRF-TOKEN']
     };
+  },
+  computed: {
+    qty: function qty() {
+      if (this.productItemQuantity <= this.product.quantity && this.product.quantity < 30) {
+        this.productItemQuantity = 30;
+        return this.productItemQuantity;
+      } else if (this.productItemQuantity <= this.product.quantity && this.product.quantity >= 30) {
+        this.productItemQuantity = this.product.quantity;
+        return this.productItemQuantity;
+      } else {
+        // this.productItemQuantity = 30;
+        return this.productItemQuantity;
+      }
+    }
   },
   // created() {
   //     this.productItemQuantity = this.product.quantity;
@@ -2095,15 +2109,18 @@ __webpack_require__.r(__webpack_exports__);
     changeQuantity: function changeQuantity() {
       var _this = this;
 
-      if (this.productItemQuantity != this.product.quantity) {
-        var self = this;
-        var form = new FormData();
-        form.append('quantity', this.product.quantity);
-        axios.post(this.action, form)["catch"](function (error) {
-          alert(error.response.data.message);
-        }).then(function (data) {
-          _this.$emit('productQuantityChanged', data.data);
-        });
+      var self = this;
+      var form = new FormData();
+      form.append('quantity', this.product.quantity);
+      axios.post(this.action, form)["catch"](function (error) {
+        alert(error.response.data.message);
+      }).then(function (data) {
+        _this.$emit('productQuantityChanged', data.data);
+      });
+    },
+    maxQuantity: function maxQuantity(qty) {
+      if (qty > this.productItemQuantity) {
+        this.productItemQuantity = this.product.quantity;
       }
     }
   }
@@ -2986,10 +3003,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['product', 'action'],
   data: function data() {
     return {
+      quantity: 30,
+      selectedQuantity: 1,
       token: window.axios.defaults.headers.common['X-CSRF-TOKEN']
     };
   },
@@ -3000,7 +3022,7 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       var form = new FormData();
       form.append('product', this.product.id);
-      form.append('quantity', 1);
+      form.append('quantity', this.selectedQuantity);
       axios.post(this.action, form)["catch"](function (error) {
         alert(error.response.data.message);
       }).then(function (data) {
@@ -24260,7 +24282,7 @@ var render = function() {
         ]
       }
     },
-    _vm._l(_vm.product.product.quantity, function(option, index) {
+    _vm._l(_vm.qty, function(option, index) {
       return _c("option", {
         domProps: { value: index + 1, textContent: _vm._s(index + 1) }
       })
@@ -25117,6 +25139,40 @@ var render = function() {
       }
     },
     [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selectedQuantity,
+              expression: "selectedQuantity"
+            }
+          ],
+          staticClass: "form-control",
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.selectedQuantity = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        _vm._l(_vm.quantity, function(option, index) {
+          return _c("option", { domProps: { textContent: _vm._s(option) } })
+        }),
+        0
+      ),
+      _vm._v(" "),
       _c("input", {
         attrs: { type: "hidden", name: "_token" },
         domProps: { value: _vm.token }

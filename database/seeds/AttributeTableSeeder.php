@@ -140,9 +140,9 @@ class AttributeTableSeeder extends Seeder
             ],
             [
                 'id' => '9',
-                'code' => 'cost',
-                'title' => 'Себестоимость',
-                'type' => 'price',
+                'code' => 'meta_title',
+                'title' => 'Meta title',
+                'type' => 'textarea',
                 'validation' => NULL,
                 'position' => '9',
                 'is_required' => '0',
@@ -155,8 +155,8 @@ class AttributeTableSeeder extends Seeder
             ],
             [
                 'id' => '10',
-                'code' => 'meta_title',
-                'title' => 'Meta title',
+                'code' => 'meta_keywords',
+                'title' => 'Meta keywords',
                 'type' => 'textarea',
                 'validation' => NULL,
                 'position' => '10',
@@ -170,8 +170,8 @@ class AttributeTableSeeder extends Seeder
             ],
             [
                 'id' => '11',
-                'code' => 'meta_keywords',
-                'title' => 'Meta keywords',
+                'code' => 'meta_description',
+                'title' => 'Meta description',
                 'type' => 'textarea',
                 'validation' => NULL,
                 'position' => '11',
@@ -185,9 +185,9 @@ class AttributeTableSeeder extends Seeder
             ],
             [
                 'id' => '12',
-                'code' => 'meta_description',
-                'title' => 'Meta description',
-                'type' => 'textarea',
+                'code' => 'manufacturer',
+                'title' => 'Бренд',
+                'type' => 'text',
                 'validation' => NULL,
                 'position' => '12',
                 'is_required' => '0',
@@ -197,7 +197,7 @@ class AttributeTableSeeder extends Seeder
                 'is_visible_on_front' => '0',
                 'created_at' => $now,
                 'updated_at' => $now
-            ],
+            ]
         ]);
     }
 }

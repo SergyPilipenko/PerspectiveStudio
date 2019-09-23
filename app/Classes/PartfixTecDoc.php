@@ -313,9 +313,10 @@ class PartfixTecDoc extends Tecdoc
     {
         switch ($this->type) {
             case 'passenger':
-                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
+                return DB::connection($this->connection)->select("SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name, an.id product_id
                     FROM article_links al 
                     JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
+                    LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid
                     JOIN suppliers s on s.id = al.supplierid
                     JOIN passanger_car_prd prd on prd.id = al.productid
                     WHERE al.productid = pds.productid

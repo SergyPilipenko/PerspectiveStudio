@@ -6910,7 +6910,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -7709,6 +7708,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -35596,7 +35597,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.category-image {\n    max-width: 150px;\n}\n#importFileUpload {\n    display: none;\n}\n.category-image {\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.category-image {\n    max-width: 150px;\n}\n#importFileUpload {\n    /*display: none;*/\n}\n.category-image {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -60711,14 +60712,16 @@ var render = function() {
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-md-2" }, [
       _c("div", { staticClass: "input-group" }, [
-        _c("input", {
-          ref: "file",
-          staticClass: "form-control file-upload-info",
-          attrs: { type: "file", name: "file", id: "importFileUpload" },
-          on: { change: _vm.handleFileUpload }
-        }),
-        _vm._v(" "),
-        _vm._m(0)
+        _c("label", { attrs: { for: "importFileUpload" } }, [
+          _c("input", {
+            ref: "file",
+            staticClass: "form-control file-upload-info",
+            attrs: { type: "file", name: "file", id: "importFileUpload" },
+            on: { change: _vm.handleFileUpload }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "input-group-append" })
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -60735,23 +60738,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-append" }, [
-      _c(
-        "button",
-        {
-          staticClass: "file-upload-browse btn btn-primary",
-          attrs: { type: "button" }
-        },
-        [_vm._v("Upload")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

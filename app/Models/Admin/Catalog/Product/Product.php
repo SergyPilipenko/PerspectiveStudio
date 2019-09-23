@@ -2,9 +2,11 @@
 
 namespace App\Models\Admin\Catalog\Product;
 
+use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Catalog\Category;
+use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\Catalog\Product\ProductImage;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
+    public $priceFilter;
 
     public function getRouteKeyName()
     {
@@ -47,6 +50,7 @@ class Product extends Model implements ProductInterface
 
         $this->productAttributeValue = new ProductAttributeValue;
         $this->productImage = app()->make(ProductImage::class);
+        $this->priceFilter = app(PriceFilterInterface::class);
     }
 
 
@@ -59,6 +63,22 @@ class Product extends Model implements ProductInterface
     {
         return $this->belongsToMany(Category::class, 'product_categories');
     }
+
+    public function getDefaultPrice()
+    {
+        return $this->getAttrValue('price');
+    }
+
+    public function getPrice()
+    {
+        return $this->priceFilter->getProductPrice($this);
+    }
+
+    public function tecdocPrices()
+    {
+        return $this->hasMany(Price::class, 'article_id', 'id');
+    }
+
 
     public function getProductAttributes()
     {

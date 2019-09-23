@@ -6,7 +6,6 @@
                     :flat="true"
                     :sort-value-by="sortValueBy"
                     :default-expand-level="1"
-
         />
         <input type="hidden" name="categories" :value="value">
     </div>

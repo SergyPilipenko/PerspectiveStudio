@@ -2,11 +2,13 @@
     <div class="row">
         <div class="col-md-2">
             <div class="input-group">
-                <input type="file" name="file" ref="file" class="form-control file-upload-info" id="importFileUpload"
-                       @change="handleFileUpload">
-                <span class="input-group-append">
-                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                <label for="importFileUpload">
+                    <input type="file" name="file" ref="file" class="form-control file-upload-info" id="importFileUpload"
+                           @change="handleFileUpload">
+                    <span class="input-group-append">
+<!--                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>-->
                 </span>
+                </label>
 
             </div>
         </div>

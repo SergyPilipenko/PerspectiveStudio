@@ -20,6 +20,7 @@
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
     import AddToCartForm from "./AddToCartForm";
     export default {
         props: ['product', 'add_action'],

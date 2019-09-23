@@ -27,7 +27,7 @@ class Order extends Model implements OrderInterface
             $productRepository = app('App\Repositories\Product\ProductRepositoryInterface');
             $cart = app('App\Models\Cart\CartInterface')->with('cartItems')->findOrFail($order->cart_id);
             $orderItems = $orderItemRepository->insert($cart->cartItems, $order);
-            $productRepository->writeOffProductQuantity($orderItems);
+//            $productRepository->writeOffProductQuantity($orderItems);
             $cartRepository->closeCart($cart);
         });
     }
