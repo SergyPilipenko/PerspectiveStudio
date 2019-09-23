@@ -22,9 +22,11 @@
 @if(isset($category->products) && $category->products->count())
     <ul>
         @foreach($category->products as $product)
-            <li>
-                <a href="{{ route('frontend.product.show', $product->getAttrValue('slug')) }}">{{ $product->getAttrValue('name') }}</a>
-            </li>
+            @if($productSlug = $product->getAttrValue('slug'))
+                <li>
+                    <a href="{{ route('frontend.product.show', $productSlug) }}">{{ $product->getAttrValue('name') }}</a>
+                </li>
+            @endif
         @endforeach
     </ul>
 @endif

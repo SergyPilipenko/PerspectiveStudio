@@ -2725,41 +2725,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   //удачи! ^_^
@@ -2856,6 +2821,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     filterModificationsBySelectedYear: function filterModificationsBySelectedYear() {
       var _this2 = this;
 
+      this.brandSelected = "";
+      this.modelSelected = "";
+      this.step = 2;
       this.setBrands({
         action: this.route['get-brands-by-models-created-year'],
         selected_year: this.selectedYear
@@ -2953,8 +2921,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getSelectedModelURI: function getSelectedModelURI() {
       var brandSelected = this.getBrandById(this.brandSelected);
-      var modelSelected = this.getModelById(this.modelSelected);
-      var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+      var modelSelected = this.getModelById(this.modelSelected); // var brandName = "";
+      //     if(brandSelected.description == 'CITROËN') {
+      //         brandName = brandSelected.description.replace(/Ë/, 'E');
+      //     }
+
+      var brandName = brandSelected.description.toLowerCase().replace(/[^\w]/g, '_');
+      if (brandName == 'citro_n') brandName = 'citroen';
       var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
       modelName = modelName.toLowerCase();
       modelName = modelName.replace(/[-]/g, '_');
@@ -25025,90 +24998,7 @@ var render = function() {
           ],
           2
         )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.step >= 4
-      ? _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.bodyTypeSelected,
-                expression: "bodyTypeSelected"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { name: "" },
-            on: {
-              change: [
-                function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.bodyTypeSelected = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                },
-                _vm.loadEngines
-              ]
-            }
-          },
-          [
-            _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
-            _vm._v(" "),
-            _vm._l(_vm.getBodyTypes, function(body) {
-              return _c("option", {
-                domProps: {
-                  value: body,
-                  textContent: _vm._s(body.displayvalue)
-                }
-              })
-            })
-          ],
-          2
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", [
-      _c(
-        "ul",
-        _vm._l(_vm.getEngines, function(engine, index) {
-          return _c("li", [
-            _vm._v(
-              "\n                    " +
-                _vm._s(index) +
-                "\n                    "
-            ),
-            _c(
-              "ul",
-              _vm._l(engine, function(capacity) {
-                return _c("li", [
-                  _c("a", {
-                    attrs: { href: "#" },
-                    domProps: { textContent: _vm._s(capacity) },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.test(capacity)
-                      }
-                    }
-                  })
-                ])
-              }),
-              0
-            )
-          ])
-        }),
-        0
-      )
-    ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
