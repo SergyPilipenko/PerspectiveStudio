@@ -8,6 +8,7 @@ class CarModel extends Model
 {
 
     protected $table = 'models';
+    public $timestamps = false;
 
     public function __construct()
     {

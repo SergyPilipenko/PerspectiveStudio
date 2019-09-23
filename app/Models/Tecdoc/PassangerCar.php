@@ -8,6 +8,7 @@ class PassangerCar extends Model
 {
 
     protected $table = 'passanger_cars';
+    public $timestamps = false;
 
 
     public function __construct()

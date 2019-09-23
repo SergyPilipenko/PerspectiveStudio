@@ -25,41 +25,6 @@
 
             ></option>
         </select>
-        <select v-if="step >=4" name="" v-model="bodyTypeSelected" class="form-control" @change="loadEngines">
-            <option value="">Не выбрано</option>
-            <option
-                :value="body"
-                v-for="(body) in getBodyTypes"
-                v-text="body.displayvalue"
-
-            ></option>
-        </select>
-        <div>
-            <ul>
-                <li v-for="(engine, index) in getEngines">
-                    {{index}}
-                    <ul>
-                        <li v-for="capacity in engine">
-                            <a href="#" v-text="capacity" @click.prevent="test(capacity)"></a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-<!--        <select v-if="step >=4" name="" v-model="bodyTypeSelected" class="form-control" @change="loadEngines">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="body"-->
-<!--                v-for="(body) in engines"-->
-<!--                v-text="body.displayvalue"-->
-
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <p>{{filteredModifications}}</p>-->
-<!--        <select v-if="step >=4" name="" v-model="modificationSelected" class="form-control" @change="choseModification">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option :value="modification.id" v-for="modification in filteredModifications" v-text="modification.name"></option>-->
-<!--        </select>-->
     </div>
 </template>
 <script>
@@ -172,6 +137,9 @@
             },
 
             filterModificationsBySelectedYear() {
+                this.brandSelected = "";
+                this.modelSelected = "";
+                this.step = 2;
                 this.setBrands({
                     action: this.route['get-brands-by-models-created-year'],
                     selected_year: this.selectedYear
@@ -292,10 +260,16 @@
             getSelectedModelURI() {
                 var brandSelected = this.getBrandById(this.brandSelected);
                 var modelSelected = this.getModelById(this.modelSelected);
-                var brandName = brandSelected.description.toLowerCase().replace(/[^a-zA-Z0-9]/g,'_');
+                // var brandName = "";
+                //     if(brandSelected.description == 'CITROËN') {
+                //         brandName = brandSelected.description.replace(/Ë/, 'E');
+                //     }
+                var brandName = brandSelected.description.toLowerCase().replace(/[^\w]/g,'_');
+                if(brandName == 'citro_n') brandName = 'citroen';
+
                 var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
                 modelName = modelName.toLowerCase();
-                modelName = modelName.replace(/[-]/g, '_')
+                modelName = modelName.replace(/[-]/g, '_');
 
                 return brandName + "-" + modelName;
             },

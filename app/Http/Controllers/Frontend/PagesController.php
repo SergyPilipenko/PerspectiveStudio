@@ -80,7 +80,6 @@ class PagesController extends Controller
                 'displayvalue' => '2 l',
             ],
         ])->get();
-//        dd($models);
 
         $models = ModelsUri::where([
             'slug' => $model,
