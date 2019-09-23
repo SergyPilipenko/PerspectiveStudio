@@ -4,6 +4,7 @@
 namespace App\Repositories\Cart;
 
 
+use App\Exceptions\CartException;
 use App\Http\Requests\RequestInterface;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Models\Cart\CartInterface;
@@ -17,6 +18,7 @@ class CartItemRepository implements CartItemInterface
      */
     private $cartItem;
     private $productInCart;
+    private $cartException;
 
     public function __construct(CartItemInterface $cartItem)
     {
@@ -30,7 +32,12 @@ class CartItemRepository implements CartItemInterface
         }
 
         $this->cartItem->article = $product->getAttrValue('article');
+
         $price = $product->getPrice();
+        if($price <= 0) {
+            throw CartException::invalidPrice($price);
+        }
+
         $this->cartItem->name = $product->getAttrValue('name');
         $this->cartItem->type = $product->type;
         $this->cartItem->quantity = $request->quantity;

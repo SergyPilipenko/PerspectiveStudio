@@ -19,11 +19,20 @@ class AttributeFamilyTableSeeder extends Seeder
         $now = Carbon::now();
 
         AttributeFamily::insert([
-            'id' => '1',
-            'code' => 'default',
-            'name' => 'Стандартный',
-            'status' => '0',
-            'is_user_defined' => '0'
+            [
+                'id' => '1',
+                'code' => 'default',
+                'name' => 'Стандартный',
+                'status' => '0',
+                'is_user_defined' => '0'
+            ],
+            [
+                'id' => '2',
+                'code' => 'tecdoc',
+                'name' => 'Tecdoc',
+                'status' => '0',
+                'is_user_defined' => '0'
+            ]
         ]);
     }
 }

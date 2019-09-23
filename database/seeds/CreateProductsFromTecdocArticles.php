@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Tecdoc\Article;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,7 @@ class CreateProductsFromTecdocArticles extends Seeder
     private $last_id;
     private $products;
     private $pr;
+    private $tecdoc_attribute_family_id;
 
     /**
      * CreateProductsFromTecdocArticles constructor.
@@ -18,6 +20,7 @@ class CreateProductsFromTecdocArticles extends Seeder
     public function __construct()
     {
         $this->product = new Product();
+        $this->tecdoc_attribute_family_id = AttributeFamily::where('code', 'tecdoc')->first()->id;
     }
 
     /**
@@ -41,7 +44,7 @@ class CreateProductsFromTecdocArticles extends Seeder
                 $this->pr[$key]['article'] = $article->datasupplierarticlenumber;
                 $this->pr[$key]['id'] = $article->id;
                 $this->pr[$key]['type'] = 'tecdoc';
-                $this->pr[$key]['attribute_family_id'] = 38;
+                $this->pr[$key]['attribute_family_id'] = $this->tecdoc_attribute_family_id;
             }
             $this->product->insert($this->pr);
             dd('stopped');

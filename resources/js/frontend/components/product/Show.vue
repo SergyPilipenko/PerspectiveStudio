@@ -1,8 +1,11 @@
 <template>
     <div>
         <h1 v-text="getProduct.custom_attributes.name"></h1>
-        <div v-if="getProduct.images.length">
+        <div>
             <div>
+                <div>
+                    артикул: {{ getProduct.article }}
+                </div>
                 <div>
                     цена: {{ getProduct.custom_attributes.price }}
                 </div>
@@ -12,7 +15,7 @@
                 <div>
                     {{ getProduct.custom_attributes.description }}
                 </div>
-                <img style="max-width: 100px" :src="'/'+image.path" alt="" v-for="image in getProduct.images">
+                <img  v-if="getProduct.images.length" style="max-width: 100px" :src="'/'+image.path" alt="" v-for="image in getProduct.images">
             </div>
         </div>
         <add-to-cart-form :product="getProduct" :action="add_action" @productAdded="refreshCart"></add-to-cart-form>

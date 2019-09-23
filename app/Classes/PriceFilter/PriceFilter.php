@@ -14,6 +14,7 @@ class PriceFilter implements PriceFilterInterface
 
     public function getProductPrice(ProductInterface $product)
     {
+
         $price = null;
         foreach ($this->productTypePrice as $type)
         {
@@ -22,7 +23,6 @@ class PriceFilter implements PriceFilterInterface
                 $price = $this->$type($product);
             }
         }
-
         if(!$price) $price = $product->getDefaultPrice();
 
         return $price;

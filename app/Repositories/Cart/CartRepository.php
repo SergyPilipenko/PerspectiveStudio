@@ -2,6 +2,7 @@
 
 
 namespace App\Repositories\Cart;
+use App\Exceptions\CartException;
 use App\Http\Requests\RequestInterface;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Models\Cart\CartInterface;
@@ -47,7 +48,6 @@ class CartRepository implements CartRepositoryInterface
         if(!$this->approved) {
             $this->cart = $this->cart->find($this->session_cart->id);
         }
-
         $this->cartItem->add($request, $product, $this->cart);
     }
 
