@@ -53,7 +53,7 @@
         max-width: 150px;
     }
     #importFileUpload {
-        display: none;
+        /*display: none;*/
     }
     .category-image {
         cursor: pointer;

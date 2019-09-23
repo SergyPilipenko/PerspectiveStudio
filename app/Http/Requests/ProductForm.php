@@ -39,7 +39,7 @@ class ProductForm extends FormRequest
     public function rules()
     {
         $this->rules = [
-            'article' => 'required|unique:products,article,'. $this->id
+            'article' => 'required'
         ];
 
         $inputs = $this->all();
