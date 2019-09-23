@@ -10,4 +10,9 @@ class CartException extends Exception
     {
         return new static("Доступное количество товара - $quantity");
     }
+
+    public static function invalidPrice($price)
+    {
+        return new static ("Некорректная цена - $price");
+    }
 }

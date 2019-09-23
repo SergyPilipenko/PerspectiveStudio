@@ -3072,6 +3072,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -25127,70 +25130,74 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      attrs: { action: _vm.action, method: "POST" },
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
-          return _vm.addProduct($event)
-        }
-      }
-    },
-    [
-      _c(
-        "select",
+  return _vm.product.custom_attributes.price > 0
+    ? _c(
+        "form",
         {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.selectedQuantity,
-              expression: "selectedQuantity"
-            }
-          ],
-          staticClass: "form-control",
+          attrs: { action: _vm.action, method: "POST" },
           on: {
-            change: function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.selectedQuantity = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.addProduct($event)
             }
           }
         },
-        _vm._l(_vm.quantity, function(option, index) {
-          return _c("option", { domProps: { textContent: _vm._s(option) } })
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "_token" },
-        domProps: { value: _vm.token }
-      }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "product" },
-        domProps: { value: _vm.product.id }
-      }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "quantity" },
-        domProps: { value: 1 }
-      }),
-      _vm._v(" "),
-      _c("button", { staticClass: "btn btn-primary" }, [_vm._v("Add to cart")])
-    ]
-  )
+        [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedQuantity,
+                  expression: "selectedQuantity"
+                }
+              ],
+              staticClass: "form-control",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.selectedQuantity = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.quantity, function(option, index) {
+              return _c("option", { domProps: { textContent: _vm._s(option) } })
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("input", {
+            attrs: { type: "hidden", name: "_token" },
+            domProps: { value: _vm.token }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            attrs: { type: "hidden", name: "product" },
+            domProps: { value: _vm.product.id }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            attrs: { type: "hidden", name: "quantity" },
+            domProps: { value: 1 }
+          }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn btn-primary" }, [
+            _vm._v("Add to cart")
+          ])
+        ]
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -25221,48 +25228,54 @@ var render = function() {
         domProps: { textContent: _vm._s(_vm.getProduct.custom_attributes.name) }
       }),
       _vm._v(" "),
-      _vm.getProduct.images.length
-        ? _c("div", [
-            _c(
-              "div",
-              [
-                _c("div", [
-                  _vm._v(
-                    "\n                цена: " +
-                      _vm._s(_vm.getProduct.custom_attributes.price) +
-                      "\n            "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(
-                        _vm.getProduct.custom_attributes.short_description
-                      ) +
-                      "\n            "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.getProduct.custom_attributes.description) +
-                      "\n            "
-                  )
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.getProduct.images, function(image) {
-                  return _c("img", {
+      _c("div", [
+        _c(
+          "div",
+          [
+            _c("div", [
+              _vm._v(
+                "\n                артикул: " +
+                  _vm._s(_vm.getProduct.article) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _vm._v(
+                "\n                цена: " +
+                  _vm._s(_vm.getProduct.custom_attributes.price) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.getProduct.custom_attributes.short_description) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.getProduct.custom_attributes.description) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.getProduct.images, function(image) {
+              return _vm.getProduct.images.length
+                ? _c("img", {
                     staticStyle: { "max-width": "100px" },
                     attrs: { src: "/" + image.path, alt: "" }
                   })
-                })
-              ],
-              2
-            )
-          ])
-        : _vm._e(),
+                : _vm._e()
+            })
+          ],
+          2
+        )
+      ]),
       _vm._v(" "),
       _c("add-to-cart-form", {
         attrs: { product: _vm.getProduct, action: _vm.add_action },
