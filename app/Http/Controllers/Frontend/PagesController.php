@@ -80,12 +80,13 @@ class PagesController extends Controller
                 'displayvalue' => '2 l',
             ],
         ])->get();
+//        dd($models);
 
         $models = ModelsUri::where([
             'slug' => $model,
             'manufacturer_id' => $manufacturer->manufacturer_id
         ])->with('model')->get();
-
+//        dd($models->where('id', 60087));
         $routes = [
             'set-car-year' => route('set-car-year'),
             'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
@@ -99,12 +100,14 @@ class PagesController extends Controller
 
     public function modification($brand, $model, $modification, Garage $garage, RoutesParserInterface $rotesParser)
     {
+
         if(!$modification) $modification = $model;
         $garage->setActiveCar($modification);
         $garage = \Session::get('garage')
             ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
         $current_auto = \Session::get('current-auto');
+//        dd($modification);
         $categories = Category::where('parent_id', null)->get();
 
         return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));

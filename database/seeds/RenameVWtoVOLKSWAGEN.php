@@ -39,6 +39,7 @@ class RenameVWtoVOLKSWAGEN extends Seeder
             $modification->fulldescription = preg_replace('/VW/', 'VOLKSWAGEN', $modification->fulldescription);
             $modification->update();
         }
+
         $volkswagenUri = ManufacturersUri::where('slug', $this->from)->first();
         $volkswagenUri->slug = strtolower($this->to);
         $volkswagenUri->update();

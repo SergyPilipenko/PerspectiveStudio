@@ -131,7 +131,7 @@
             },
 
             convertModelsBackendData() {
-                let models = JSON.parse(this.models);
+                let models = this.models;
                 let data = [];
                 if(models.length) {
                     for (let el in models) {

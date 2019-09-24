@@ -22,7 +22,7 @@ export default {
     },
     actions: {
         setCars(context, payload) {
-            context.commit('addCars', JSON.parse(payload));
+            context.commit('addCars', payload);
         },
         setCurrentAuto(context, payload) {
             context.commit('addCurrentAuto', payload);
