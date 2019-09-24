@@ -44,7 +44,7 @@
             }
         },
         created() {
-            if(this.garage) {
+            if(this.garage.length) {
                 this.setCars(this.garage);
                 this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
             }

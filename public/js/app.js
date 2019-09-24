@@ -1888,7 +1888,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   created: function created() {
-    if (this.garage) {
+    if (this.garage.length) {
       this.setCars(this.garage);
       this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
     }
@@ -2320,7 +2320,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     convertModelsBackendData: function convertModelsBackendData() {
-      var models = JSON.parse(this.models);
+      var models = this.models;
       var data = [];
 
       if (models.length) {
@@ -39616,7 +39616,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   actions: {
     setCars: function setCars(context, payload) {
-      context.commit('addCars', JSON.parse(payload));
+      context.commit('addCars', payload);
     },
     setCurrentAuto: function setCurrentAuto(context, payload) {
       context.commit('addCurrentAuto', payload);

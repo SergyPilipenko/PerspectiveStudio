@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <garage
-            :garage="'{{ $garage }}'"
+            :garage="{{ $garage }}"
             :current_auto="'{{ json_encode($current_auto) }}'"
         ></garage>
         @if($categories->count())

@@ -81,6 +81,7 @@ class TecdocController extends Controller
             'selected_year' => 'required',
         ]);
 
+
         $models = PassangerCar::with('attributes')->whereIn('modelid', explode(',',$request->model_Ids))->filter([
             [
                 'attributetype' => 'BodyType',
@@ -89,7 +90,7 @@ class TecdocController extends Controller
         ])->get();
 
         $filtered_models = PassangerCar::filterByYear($request->selected_year, $models);
-
+//        return json_encode($models);
 
         return $tecDoc->getModificationsEngines(
             implode(collect($filtered_models)->pluck('id')->toArray(), ','),
