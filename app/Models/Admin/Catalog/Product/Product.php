@@ -18,20 +18,22 @@ class Product extends Model implements ProductInterface
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
 
     public $priceFilter;
+
     public function getAttribute($key)
     {
-//        if (! method_exists(self::class, $key) && ! in_array($key, ['parent_id', 'attribute_family_id']) && ! isset($this->attributes[$key])) {
-//            if (isset($this->id)) {
-//                $this->attributes[$key] = '';
-//
-//                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
-//                    ->getAttributeByCode($key);
-//
-//                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
-//
-//                return $this->getAttributeValue($key);
-//            }
-//        }
+//        dd($this->attributes['type']);
+        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key])) {
+            if (isset($this->id)) {
+                $this->attributes[$key] = '';
+
+                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
+                    ->getAttributeByCode($key);
+
+                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
+
+                return $this->getAttributeValue($key);
+            }
+        }
 
         return parent::getAttribute($key);
     }
