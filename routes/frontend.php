@@ -1,33 +1,5 @@
 <?php
 
-//use Illuminate\Routing\Route;
-use Dotzero\LaravelAmoCrm\AmoCrmManager;
-use Dotzero\LaravelAmoCrm\Facades\AmoCrm;
-//
-//
-//Route::get('/amo', function (AmoCrmManager $amocrm) {
-//    try {
-//
-//        /** @var \AmoCRM\Client $client */
-//        $amo = AmoCrm::getClient();
-//
-//        /** @var \AmoCRM\Helpers\Fields $fields */
-//        $fields = AmoCrm::getFields();
-//        $contact = $amo->contact;
-//        $contact['id'] = 234;
-//
-//        $ct = $amo->contact->apiList([
-//            'query' => 14796511
-//        ]);
-//
-//        dd($ct);
-//
-//    } catch (\Exception $e) {
-//        abort(400, $e->getMessage());
-//    }
-//});
-
-
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
