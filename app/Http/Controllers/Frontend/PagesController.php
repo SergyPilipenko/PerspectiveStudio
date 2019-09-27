@@ -12,9 +12,6 @@ use App\Models\Cart\CartInterface;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
-use App\Models\Tecdoc\CarModel;
-use App\Models\Tecdoc\Manufacturer;
-use App\Models\Tecdoc\ModelConstrucitonInterval;
 use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -35,7 +32,6 @@ class PagesController extends Controller
 
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
-
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
 
         $garage = \Session::get('garage')

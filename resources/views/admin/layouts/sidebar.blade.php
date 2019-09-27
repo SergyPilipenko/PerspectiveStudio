@@ -54,5 +54,17 @@
                 </ul>
             </div>
         </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" href="#settings" aria-expanded="false" aria-controls="settings">
+                <i class="ti-settings menu-icon"></i>
+                <span class="menu-title">Настройки</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="settings" style="">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.settings.locales.index') }}">Локализации</a></li>
+                </ul>
+            </div>
+        </li>
     </ul>
 </nav>

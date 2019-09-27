@@ -95,7 +95,13 @@ Route::prefix('admin')->group(function() {
         });
     });
 
-
-
-
+    Route::group(['prefix' => 'settings', 'as' => 'admin.settings.'], function(){
+        Route::group(['prefix' => 'locales', 'as' => 'locales.'], function(){
+            Route::get('/', 'Admin\Locale\LocaleController@index')->name('index');
+            Route::get('creates', 'Admin\Locale\LocaleController@create')->name('create');
+            Route::post('store', 'Admin\Locale\LocaleController@store')->name('store');
+            Route::get('{id}/edit', 'Admin\Locale\LocaleController@edit')->name('edit');
+            Route::put('{id}/update', 'Admin\Locale\LocaleController@update')->name('update');
+        });
+    });
 });
