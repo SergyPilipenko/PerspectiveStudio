@@ -1,9 +1,14 @@
 <?php
+Route::group(['prefix' => 'test'], function() {
+    Route::get('', 'TestController@index');
+    Route::get('elastic', 'TestController@elastic');
+});
 
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
+Route::post('search', 'Frontend\ProductController@search');
 
 Route::group(['prefix' => 'checkout', 'as' => 'frontend.checkout.'], function() {
     Route::get('/', 'Frontend\CheckoutController@index')->name('index');

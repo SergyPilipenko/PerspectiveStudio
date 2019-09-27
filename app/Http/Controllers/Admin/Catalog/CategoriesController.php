@@ -72,7 +72,8 @@ class CategoriesController extends Controller
 
         $category->setTranslation('category_title', $this->locale, $request->$loc['category_title']);
         $category->setTranslation('slug', $this->locale, $request->$loc['slug']);
-        $category->activity = $request->category_activity ? true : false;
+
+        $category->activity = $request->category_activity ? 1 : 0;
 
         isset($parent) && $parent->exists ? $category->appendToNode($parent)->save() : $category->save();
 

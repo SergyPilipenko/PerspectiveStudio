@@ -5,7 +5,7 @@
  */
 
 require('./bootstrap');
-
+window.lang = document.documentElement.lang;
 window.Vue = require('vue');
 import Vuex from 'vuex';
 Vue.config.devtools = true;
@@ -24,6 +24,7 @@ import Checkout from './frontend/store/modules/checkout';
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
 Vue.component('garage', require('./frontend/components/Garage').default);
+Vue.component('search', require('./frontend/components/Search/Search').default);
 Vue.component('product-show', require('./frontend/components/product/Show').default);
 Vue.component('cart', require('./frontend/components/cart/Cart').default);
 Vue.component('checkout', require('./frontend/components/checkout/Checkout').default);

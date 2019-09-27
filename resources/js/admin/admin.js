@@ -13,6 +13,7 @@ window.flash = function (message, level = 'success', errors = undefined) {
     window.events.$emit('flash', {message, level, errors});
 };
 
+
 Vue.component('flash', require('../components/Flash.vue').default);
 Vue.component('confirm', require('../components/Confirm.vue').default);
 Vue.component('accordion-list', require('../components/Accordion.vue').default);

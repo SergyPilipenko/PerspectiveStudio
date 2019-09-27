@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\NewOrderEvent;
+use App\Events\ProductUpdatedEvent;
+use App\Listeners\ProductSearchReindex;
 use App\Listeners\SendOrderToAmoCrm;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewOrderEvent::class => [
             SendOrderToAmoCrm::class
+        ],
+        ProductUpdatedEvent::class => [
+            ProductSearchReindex::class
         ]
     ];
 

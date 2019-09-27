@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Catalog\Category;
+use App\Models\Catalog\CategoryInterface;
+use App\Models\Locale\Locale;
+use App\Models\Locale\LocaleInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -28,8 +32,9 @@ class AppServiceProvider extends ServiceProvider
         App::singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\CartRequest');
         App::singleton('App\Repositories\Order\OrderRepositoryInterface', 'App\Repositories\Order\OrderRepository');
         App::singleton('App\Models\Order\OrderInterface', 'App\Models\Order\Order');
-        App::singleton('App\Models\Order\OrderInterface', 'App\Models\Order\Order');
+        App::singleton(CategoryInterface::class, Category::class);
         App::singleton(PriceFilterInterface::class, PriceFilter::class);
+        App::singleton(LocaleInterface::class, Locale::class);
     }
 
     /**

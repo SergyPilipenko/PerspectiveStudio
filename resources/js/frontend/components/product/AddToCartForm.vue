@@ -1,6 +1,6 @@
 <template>
     <form :action="action" method="POST" @submit.prevent="addProduct" >
-        <select v-model="selectedQuantity"  class="form-control">
+        <select v-model="selectedQuantity"  class="form-control" v-if="!hideSelect">
             <option v-for="(option, index) in quantity" v-text="option"></option>
         </select>
         <input type="hidden" name="_token" :value="token">
@@ -11,7 +11,7 @@
 </template>
 <script>
     export default {
-        props: ['product', 'action'],
+        props: ['product', 'action', 'hideSelect'],
         data() {
             return {
                 quantity: 30,

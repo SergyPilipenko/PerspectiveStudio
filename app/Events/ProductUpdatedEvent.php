@@ -10,15 +10,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewOrderEvent
+class ProductUpdatedEvent
 {
     use Dispatchable, SerializesModels;
+    public $product;
 
-    public $order;
 
-    public function __construct($order, $orderItems)
+    /**
+     * Create a new event instance.
+     *
+     * @param $product
+     */
+    public function __construct($product)
     {
-        $this->order = $order;
-        $this->order->orderItems = $orderItems;
+        $this->product = $product;
     }
 }

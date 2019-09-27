@@ -3,15 +3,15 @@
 namespace App\Models\Admin\Catalog\Product;
 
 use App\Classes\PriceFilter\PriceFilterInterface;
+use App\Events\ProductUpdatedEvent;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
+use App\Models\Admin\Catalog\Product\ProductImage;
 use App\Models\Catalog\Category;
 use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Admin\Catalog\Product\ProductImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class Product extends Model implements ProductInterface
 {
@@ -19,21 +19,50 @@ class Product extends Model implements ProductInterface
 
     public $priceFilter;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($product) {
+            app()->make('App\Search\Indexers\ProductsIndexer')->index($product);
+        });
+
+//        static::updated(function ($product) {
+//            app()->make('App\Search\Indexers\ProductsIndexer')->reindex($product);
+//        });
+
+        static::deleted(function($product) {
+            app()->make('App\Search\Indexers\ProductsIndexer')->remove($product);
+            if($product->images->count()) {
+                File::deleteDirectory($product->productImage->path . $product->id);
+            }
+        });
+    }
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->productAttributeValue = new ProductAttributeValue;
+        $this->productImage = app()->make(ProductImage::class);
+        $this->priceFilter = app(PriceFilterInterface::class);
+    }
+
     public function getAttribute($key)
     {
 //        dd($this->attributes['type']);
-        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key])) {
-            if (isset($this->id)) {
-                $this->attributes[$key] = '';
-
-                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
-                    ->getAttributeByCode($key);
-
-                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
-
-                return $this->getAttributeValue($key);
-            }
-        }
+//        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key])) {
+//            if (isset($this->id)) {
+//                $this->attributes[$key] = '';
+//
+//                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
+//                    ->getAttributeByCode($key);
+//
+//                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
+//
+//                return $this->getAttributeValue($key);
+//            }
+//        }
 
         return parent::getAttribute($key);
     }
@@ -54,24 +83,7 @@ class Product extends Model implements ProductInterface
     public $productImage;
 
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::deleted(function($product) {
-            if($product->images->count()) {
-                File::deleteDirectory($product->productImage->path . $product->id);
-            }
-        });
-    }
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->productAttributeValue = new ProductAttributeValue;
-        $this->productImage = app()->make(ProductImage::class);
-        $this->priceFilter = app(PriceFilterInterface::class);
-    }
 
 
     public function attribute_family()
@@ -94,9 +106,45 @@ class Product extends Model implements ProductInterface
         return $this->priceFilter->getProductPrice($this);
     }
 
+    public function canBeDisplayed()
+    {
+        if($this->getPrice() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function tecdocPrices()
     {
         return $this->hasMany(Price::class, 'article_id', 'id');
+    }
+
+    public function getProducts(array $ids)
+    {
+        if(!count($ids)) return $ids;
+
+        $products = $this->with('images')->whereIn('id', $ids)->get();
+
+        foreach ($products as $product)
+        {
+            $attributes = $product->getProductAttributes();
+            foreach ($attributes as $key => $attribute)
+            {
+                if(!$product->getAttribute($key))
+                {
+                    if($key == 'price') {
+                        $product->$key = $product->getPrice();
+                        continue;
+                    }
+                    $product->$key = $attribute;
+                } else {
+                    $product->custom_attributes = $attribute;
+                }
+            }
+        }
+
+        return $products;
     }
 
     public function getProductById($id)
@@ -138,15 +186,15 @@ class Product extends Model implements ProductInterface
         return $formatted;
     }
 
-    public function attribute_values()
-    {
-        return $this->hasMany(ProductAttributeValue::class);
-    }
-
-    public function attribute_value()
-    {
-        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
-    }
+//    public function attribute_values()
+//    {
+//        return $this->hasMany(ProductAttributeValue::class);
+//    }
+//
+//    public function attribute_value()
+//    {
+//        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
+//    }
 
     public function images()
     {
@@ -209,7 +257,6 @@ class Product extends Model implements ProductInterface
             } else {
                 $request['depends_quantity'] = false;
             }
-
             $product->update($request);
 
             $attributes = $product->attribute_family->custom_attributes()->get();
@@ -242,6 +289,8 @@ class Product extends Model implements ProductInterface
             } else {
                 $product->categories()->delete();
             }
+
+            event(new ProductUpdatedEvent($product));
 
             DB::connection()->getPdo()->commit();
 

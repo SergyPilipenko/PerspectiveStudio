@@ -4,6 +4,7 @@ namespace App\Models\Catalog;
 
 use App\Helpers\Locale;
 use App\Models\Admin\Catalog\Product\Product;
+use App\Search\Indexers\CategoriesIndexer;
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -11,7 +12,7 @@ use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
 use Illuminate\Support\Facades\App;
 
-class Category extends Model
+class Category extends Model implements CategoryInterface
 {
     use NodeTrait;
     use HasTranslations;
@@ -23,10 +24,25 @@ class Category extends Model
 
     protected $image_path = 'img/upload/product-categories/';
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($category) {
+            $categoriesIndexer = app(CategoriesIndexer::class);
+            $categoriesIndexer->index($category);
+        });
+
+        static::updated(function ($category) {
+            $categoriesIndexer = app(CategoriesIndexer::class);
+            $categoriesIndexer->reindex($category);
+        });
+
+    }
+
     public function __construct()
     {
         parent::__construct();
-
         if(!$this->locale) {
             $this->locale = new Locale();
         }
@@ -46,7 +62,7 @@ class Category extends Model
 
         $this->setCategoryTranslations($request);
 
-        $this->activity = $request->category_activity ? true : false;
+        $this->activity = $request->category_activity ? 1 : 0;
         $this->position = $request->position;
 
         $this->updateImage($request);

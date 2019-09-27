@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Models\Cart\CartInterface;
+use App\Search\Searchers\CategoriesSearcher;
+use App\Search\Searchers\ProductsSearcher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Catalog\Product\Product;
@@ -41,5 +43,16 @@ class ProductController extends Controller
 
 
         return view('frontend.product.show', compact('product', 'cart'));
+    }
+
+    public function search(Request $request, ProductsSearcher $productsSearcher, CategoriesSearcher $categoriesSearcher)
+    {
+        $this->validate($request, array(
+            'searchString' => 'required|min:3'
+        ));
+        $response['categories'] = $categoriesSearcher->search($request->searchString);
+        $response['products'] = $productsSearcher->search($request->searchString);
+
+        return $response;
     }
 }

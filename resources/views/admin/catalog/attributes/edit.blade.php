@@ -19,7 +19,6 @@
                         <div slot="body">
                             <div class="row">
                                 <div class="col-md-4">
-
                                     <div class="form-group">
                                         <label for="code">Код атрибута</label>
                                         <input type="text" id="code"
