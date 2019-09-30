@@ -42,7 +42,7 @@ class InitCommand extends Command
     )
     {
         parent::__construct();
-        $this->elastic = $elastic->create()->build();
+        $this->elastic = $elastic->create()->setHosts(config('elasticsearch.connections.default.hosts'))->build();
         $this->entitiesCommands[] = $productCommand;
         $this->entitiesCommands[] = $categoryCommand;
     }
