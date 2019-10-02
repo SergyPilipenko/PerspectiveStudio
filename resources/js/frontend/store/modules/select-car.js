@@ -2,6 +2,9 @@ export default {
     namespaced: true,
     state: {
         years: [1980, new Date().getFullYear()],
+        selectedYear: null,
+        selectedBrand: null,
+        selectedModel: null,
         yearsList: [],
         brands: [],
         models: [],
@@ -16,6 +19,15 @@ export default {
     getters: {
         getYears: function (state) {
             return state.years
+        },
+        getSelectedYear: function(state) {
+            return state.selectedYear
+        },
+        getSelectedBrand: function(state) {
+            return state.selectedBrand
+        },
+        getSelectedModel: function(state) {
+            return state.selectedModel
         },
         getBrands: function (state) {
             return state.brands
@@ -49,6 +61,27 @@ export default {
         },
     },
     mutations: {
+        addSelectedYead: function(state, newValue) {
+            state.selectedYear = newValue;
+        },
+        addSelectedBrand: function(state, newValue) {
+            state.selectedBrand = newValue;
+        },
+        addSelectedModel: function(state, newValue) {
+            state.selectedModel = newValue;
+        },
+        clearSelectedBrand: function(state, newValue) {
+            state.selectedBrand = null
+        },
+        clearSelectedModel: function(state, newValue) {
+            state.selectedModel = null
+        },
+        clearModels: function(state) {
+            state.models = []
+        },
+        clearDistinctModels: function(state) {
+            state.distinctModels = []
+        },
         addBrands: function(state, newValue){
             state.brands = newValue;
         },
@@ -120,6 +153,11 @@ export default {
         },
         setModels: function (context, payload) {
             context.commit('addModels', payload)
+        },
+        clearModels: function(context) {
+            context.commit('clearDistinctModels');
+            context.commit('clearSelectedModel');
+            context.commit('clearModels');
         },
         setModifications: function (context, payload) {
             let form = new FormData();

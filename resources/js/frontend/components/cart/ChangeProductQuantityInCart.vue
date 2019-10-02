@@ -1,6 +1,6 @@
 <template>
     <select v-model="product.quantity" class="form-control" @change="changeQuantity">
-        <option :value="index+1" v-for="(option, index) in qty" v-text="index+1"></option>
+        <option :value="index+1" v-for="(option, index) in qty" v-text="index+1 + ' шт'"></option>
     </select>
 </template>
 <script>
@@ -28,9 +28,6 @@
                 }
             }
         },
-        // created() {
-        //     this.productItemQuantity = this.product.quantity;
-        // },
         methods: {
             changeQuantity() {
                     var self = this;
