@@ -12,7 +12,7 @@ class ProductsIndexer
 
     public function __construct(ClientBuilder $elastic)
     {
-        $this->elastic = $elastic->create()->build();
+        $this->elastic = $elastic->create()->setHosts(config('elasticsearch.connections.default.hosts'))->build();
     }
 
     public function clear() : void
