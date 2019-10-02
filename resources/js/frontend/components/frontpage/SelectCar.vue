@@ -1,31 +1,76 @@
 <template>
-    <div>
-        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">
-            <option value="">Не выбрано</option>
-            <option
-                :value="year"
-                v-for="year in rangeYears"
-                v-text="year"
-            ></option>
-        </select>
-        <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">
-            <option value="">Не выбрано</option>
-            <option
-                :value="brand.id"
-                v-for="brand in brands"
-                v-text="brand.description"
-            ></option>
-        </select>
-        <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">
-            <option value="">Не выбрано</option>
-            <option
-                :value="model.id"
-                v-for="model in getModelsDistinct"
-                v-text="model.name"
+    <form class="search__body search__model align-items-center justify-content-center" id="model">
+        <div class="search__model-cover" @click="showSelect('year')">
+            <div class="d-flex align-items-center">
+                <span class="search__model-number">1</span>
+                <div class="d-flex flex-column">
+                    <span class="search__model-text">Год выпуска</span>
+                    <span class="search__model-subtext" v-if="selectedYear" v-text="selectedYear"></span>
+                </div>
+            </div>
+            <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>
+            <div @click.stop :class="{'search__model-dropdown active' : isVisible('year'), 'search__model-dropdown' : !isVisible('year')}">
+                <span v-for="year in rangeYears" v-text="year" @click="setYear(year)"></span>
+            </div>
+        </div>
+        <div class="search__model-cover" @click="showSelect('brand')">
+            <div class="d-flex align-items-center">
+                <span class="search__model-number">2</span>
+                <div class="d-flex flex-column">
+                    <span class="search__model-text">Марка</span>
+                    <span class="search__model-subtext" v-if="brandSelected" v-text="brandSelected.description"></span>
+                </div>
+            </div>
+            <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>
+            <div @click.stop :class="{'search__model-dropdown active' : isVisible('brand'), 'search__model-dropdown' : !isVisible('brand')}">
+                <span v-for="brand in brands"
+                      v-text="brand.description" @click="setBrand(brand)"></span>
+            </div>
+        </div>
+        <div class="search__model-cover" @click="showSelect('models')">
+            <div class="d-flex align-items-center">
+                <span class="search__model-number">3</span>
+                <div class="d-flex flex-column">
+                    <span class="search__model-text">Модель</span>
+                    <span class="search__model-subtext" v-if="modelSelected" v-text="modelSelected.name"></span>
+                </div>
+            </div>
+            <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>
+            <div @click.stop :class="{'search__model-dropdown active' : isVisible('models'), 'search__model-dropdown' : !isVisible('models')}">
+                <span
+                    v-for="model in getModelsDistinct"
+                    v-text="model.name" @click="setModel(model)"></span>
+            </div>
+        </div>
+        <button type="submit">Выбрать</button>
+    </form>
+<!--    <div>-->
+<!--        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">-->
+<!--            <option value="">Не выбрано</option>-->
+<!--            <option-->
+<!--                :value="year"-->
+<!--                v-for="year in rangeYears"-->
+<!--                v-text="year"-->
+<!--            ></option>-->
+<!--        </select>-->
+<!--        <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">-->
+<!--            <option value="">Не выбрано</option>-->
+<!--            <option-->
+<!--                :value="brand.id"-->
+<!--                v-for="brand in brands"-->
+<!--                v-text="brand.description"-->
+<!--            ></option>-->
+<!--        </select>-->
+<!--        <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">-->
+<!--            <option value="">Не выбрано</option>-->
+<!--            <option-->
+<!--                :value="model.id"-->
+<!--                v-for="model in getModelsDistinct"-->
+<!--                v-text="model.name"-->
 
-            ></option>
-        </select>
-    </div>
+<!--            ></option>-->
+<!--        </select>-->
+<!--    </div>-->
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
@@ -35,14 +80,29 @@
         props: ['auto_brands', 'routes'],
         data() {
             return {
-                selectedYear: "",
-                brandSelected: "",
-                modelSelected: "",
                 modificationSelected: "",
                 step: 0,
                 rangeYears: [],
                 bodyTypeSelected: "",
                 selectedEngine: "",
+                selects: [
+                    {
+                        id: 1,
+                        name: 'year',
+                        visible: false
+                    },
+                    {
+                        id: 2,
+                        name: 'brand',
+                        visible: false
+                    },
+                    {
+                        id: 3,
+                        name: 'models',
+                        visible: false
+                    }
+                ],
+                // selectedYear: ""
             }
         },
         created() {
@@ -52,13 +112,8 @@
                 years.push(first);
                 first++;
             }
-            this.rangeYears = years.reverse()
+            this.rangeYears = years.reverse();
         },
-
-        // mounted() {
-        //     this.addBrands(this.auto_brands);
-        // },
-
         computed: {
             route() {
                 return JSON.parse(this.routes);
@@ -73,6 +128,9 @@
                 getModelsDistinct: 'selectCar/getDistinctModels',
                 getBodyTypes: 'selectCar/getBodyTypes',
                 getEngines: 'selectCar/getEngines',
+                selectedYear: 'selectCar/getSelectedYear',
+                brandSelected: 'selectCar/getSelectedBrand',
+                modelSelected: 'selectCar/getSelectedModel',
             }),
 
 
@@ -90,13 +148,66 @@
                 addDistinctModels: 'selectCar/addDistinctModels',
                 addBodyTypes: 'selectCar/addBodyTypes',
                 addEngines: 'selectCar/addEngines',
+                addSelectedYead: 'selectCar/addSelectedYead',
+                clearSelectedBrand: 'selectCar/clearSelectedBrand',
+                clearSelectedModel: 'selectCar/clearSelectedModel',
+                addSelectedModel: 'selectCar/addSelectedModel',
+                addSelectedBrand: 'selectCar/addSelectedBrand',
             }),
 
             ...mapActions({
                 setCarYear: 'selectCar/setCarYear',
-                setBrands: 'selectCar/setBrands'
+                setBrands: 'selectCar/setBrands',
+                clearModels: 'selectCar/clearModels'
             }),
+            setYear(year){
+                this.addSelectedYead(year);
+                this.filterModificationsBySelectedYear();
+                this.hideAllSelects();
+                this.showSelect('brand');
 
+            },
+            setBrand(brand) {
+                this.addSelectedBrand(brand);
+                this.loadModels(brand.id);
+                this.hideAllSelects();
+                this.showSelect('models');
+            },
+            setModel(model) {
+                this.addSelectedModel(model);
+                this.hideAllSelects();
+                this.loadModifications();
+            },
+            hideAllSelects(except = null) {
+                var selects = this.selects;
+                for(let i in selects) {
+                    if(except) {
+                        if(selects[i].name != except) {
+                            selects[i].visible = false
+                        }
+                    } else {
+                        selects[i].visible = false
+                    }
+                };
+                this.selects = selects;
+            },
+            showSelect(name) {
+                this.hideAllSelects(name);
+                var selects = this.selects;
+                for(let i in selects) {
+                    if(selects[i].name == name) {
+                        selects[i].visible = !selects[i].visible;
+                    }
+                };
+                this.selects = selects;
+            },
+            isVisible(name) {
+                for(let i in this.selects) {
+                    if(this.selects[i].name == name) {
+                        return this.selects[i].visible
+                    }
+                }
+            },
             distinctModels(models) {
 
                 var dm = [];
@@ -137,8 +248,8 @@
             },
 
             filterModificationsBySelectedYear() {
-                this.brandSelected = "";
-                this.modelSelected = "";
+                this.clearSelectedBrand();
+                this.clearModels();
                 this.step = 2;
                 this.setBrands({
                     action: this.route['get-brands-by-models-created-year'],
@@ -192,13 +303,14 @@
             },
 
             getModelById(id) {
+
                 for(let i = 0; i <= this.models.length; i++) {
                     if(this.models[i].id == id) return this.models[i];
                 }
             },
 
             resetModelsSelect() {
-                this.modelSelected = "";
+                this.clearSelectedModel();
             },
 
             loadModels(brand) {
@@ -232,15 +344,14 @@
             },
 
             getModelSelectedIds() {
-                var modelSelected = this.getModelById(this.modelSelected);
+
+                var modelSelected = this.getModelById(this.modelSelected.id);
+
                 var modelName = modelSelected.name.substr(0, modelSelected.name.indexOf(' '));
                 var sameModelIds = this.getSameModelIds(modelName);
 
                 return sameModelIds;
             },
-
-
-
             loadEngines() {
                 var modelSelectedIds = this.getModelSelectedIds();
 
@@ -258,8 +369,8 @@
             },
 
             getSelectedModelURI() {
-                var brandSelected = this.getBrandById(this.brandSelected);
-                var modelSelected = this.getModelById(this.modelSelected);
+                var brandSelected = this.getBrandById(this.brandSelected.id);
+                var modelSelected = this.getModelById(this.modelSelected.id);
                 // var brandName = "";
                 //     if(brandSelected.description == 'CITROËN') {
                 //         brandName = brandSelected.description.replace(/Ë/, 'E');
@@ -281,7 +392,9 @@
                     return this.modificationSelected = "";
                 }
 
+
                 var modelSelectedIds = this.getModelSelectedIds();
+
                 this.getSelectedModelURI();
                 window.location.href = this.getSelectedModelURI();
 
