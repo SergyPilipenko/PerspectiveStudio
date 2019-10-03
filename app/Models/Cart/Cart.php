@@ -40,12 +40,14 @@ class Cart extends Model implements CartInterface
            if($cart) {
                 foreach ($cart->cartItems as $cartItem) {
                     $cartItem->product->name = $cartItem->product->getAttrValue('name');
+                    $cartItem->product->manufacturer = $cartItem->product->getAttrValue('manufacturer');
                     $cartItem->product->path = route('frontend.product.show', $cartItem->product->getAttrValue('slug'));
                 }
             } else {
                 Session::forget('cart');
             }
        }
+
        return $cart;
     }
 }

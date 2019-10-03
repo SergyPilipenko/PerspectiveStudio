@@ -6,7 +6,7 @@
         <input type="hidden" name="_token" :value="token">
         <input type="hidden" name="product" :value="product.id">
         <input type="hidden" name="quantity" :value="1">
-        <button class="btn btn-primary">Add to cart</button>
+        <button class="last-goods__buy">Купить</button>
     </form>
 </template>
 <script>
@@ -31,7 +31,6 @@
                     })
                     .then(data => {
                         this.$emit('productAdded', data.data)
-                        // self.addBodyTypes(data.data);
                     })
             }
         }

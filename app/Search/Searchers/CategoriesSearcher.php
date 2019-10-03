@@ -24,7 +24,7 @@ class CategoriesSearcher extends Searcher
      */
     public function __construct(ClientBuilder $elastic, CategoryInterface $category, LocaleInterface $locale)
     {
-        $this->elastic = $elastic->create()->build();
+        $this->elastic = $elastic->create()->setHosts(config('elasticsearch.connections.default.hosts'))->build();
         $this->category = $category;
         $this->locale = $locale;
     }

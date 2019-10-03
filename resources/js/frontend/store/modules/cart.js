@@ -9,7 +9,7 @@ export default {
         },
         getCartTotal(state) {
             return state.cart ? state.cart.grand_total : null
-        }
+        },
     },
     mutations: {
         setCart(state, newValue) {

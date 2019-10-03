@@ -20,9 +20,13 @@ import garage from './frontend/store/modules/garage';
 import productShow from './frontend/store/modules/productShow';
 import Cart from './frontend/store/modules/cart';
 import Checkout from './frontend/store/modules/checkout';
+import Search from './frontend/store/modules/search';
 
+Vue.component('search-button', require('./frontend/components/Search/SearchButton').default);
+Vue.component('search-tabs', require('./frontend/components/frontpage/SearchTabs').default);
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
+Vue.component('add-to-cart', require('./frontend/components/product/AddToCart').default);
 Vue.component('garage', require('./frontend/components/Garage').default);
 Vue.component('search', require('./frontend/components/Search/Search').default);
 Vue.component('product-show', require('./frontend/components/product/Show').default);
@@ -38,7 +42,8 @@ const store = new Vuex.Store({
         garage,
         Cart,
         Checkout,
-        productShow
+        productShow,
+        Search,
     }
 });
 
@@ -53,4 +58,5 @@ window.onload = function () {
         el: '#app',
         store
     });
+    require('./themejs/script');
 };

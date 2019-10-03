@@ -24,7 +24,7 @@ class ProductsSearcher extends Searcher
      */
     public function __construct(ClientBuilder $elastic, ProductInterface $product)
     {
-        $this->elastic = $elastic->create()->build();
+        $this->elastic = $elastic->create()->setHosts(config('elasticsearch.connections.default.hosts'))->build();
         $this->product = $product;
     }
 

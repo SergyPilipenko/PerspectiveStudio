@@ -1,5 +1,5 @@
 @include('frontend.partials._header')
-<div id="app">
+<div id="app" v-cloak>
     @include('frontend.partials._pages_header')
     @yield('content')
 </div>
