@@ -26,6 +26,7 @@ Vue.component('search-button', require('./frontend/components/Search/SearchButto
 Vue.component('search-tabs', require('./frontend/components/frontpage/SearchTabs').default);
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
+Vue.component('add-to-cart', require('./frontend/components/product/AddToCart').default);
 Vue.component('garage', require('./frontend/components/Garage').default);
 Vue.component('search', require('./frontend/components/Search/Search').default);
 Vue.component('product-show', require('./frontend/components/product/Show').default);

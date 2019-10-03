@@ -1,10 +1,10 @@
 <template>
     <div>
-        <button type="button" class="btn btn-block btn-success" @click="orderSubmit">Заказ подтверждаю</button>
+        <button type="submit" class="checkout__submit" @click="orderSubmit">Заказ подтверждаю</button>
     </div>
 </template>
 <script>
-    import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+    import { mapActions } from 'vuex'
 
     export default {
         methods: {
