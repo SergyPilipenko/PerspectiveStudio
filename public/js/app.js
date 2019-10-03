@@ -3037,6 +3037,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3121,8 +3123,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    TheMask: vue_the_mask__WEBPACK_IMPORTED_MODULE_1__["TheMask"]
+  },
   data: function data() {
     return {
       phone: "",
@@ -3143,18 +3153,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     'setPhone': 'Checkout/setPhone',
     'setLastName': 'Checkout/setLastName',
     'setEmail': 'Checkout/setEmail'
+  }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
+    'clearFieldErrors': 'Checkout/clearFieldErrors'
   }), {
     updateName: function updateName(e) {
+      this.clearFieldErrors('customer_first_name');
       this.setName(e.target.value);
     },
     updatePhone: function updatePhone(e) {
+      this.clearFieldErrors('customer_phone');
       this.setPhone(e.target.value);
     },
     updateLastName: function updateLastName(e) {
+      this.clearFieldErrors('customer_last_name');
       this.setLastName(e.target.value);
     },
     updateEmail: function updateEmail(e) {
+      this.clearFieldErrors('customer_email');
       this.setEmail(e.target.value);
+    },
+    isInvalid: function isInvalid(inputName) {
+      var errors = this.getErrors.errors;
+
+      if (errors != undefined && errors[inputName] != undefined) {
+        return true;
+      }
+
+      return false;
     }
   })
 });
@@ -36600,61 +36625,115 @@ var render = function() {
     _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
-    _c("div", { staticClass: "checkout__input" }, [
-      _c("p", [_vm._v("Телефон")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex align-items-center" }, [
-        _c("input", {
-          attrs: { type: "text", name: "phone", id: "phone" },
-          on: { input: _vm.updatePhone }
-        }),
+    _c(
+      "div",
+      {
+        class: {
+          "checkout__input invalid": _vm.isInvalid("customer_phone"),
+          checkout__input: !_vm.isInvalid("customer_phone")
+        }
+      },
+      [
+        _c("p", [_vm._v("Телефон")]),
         _vm._v(" "),
-        _c("span", [_vm._v("Ошибка: Введите имя")])
-      ])
-    ]),
+        _c("div", { staticClass: "d-flex align-items-center" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "mask",
+                rawName: "v-mask",
+                value: "+38 (0##) ### ## ##",
+                expression: "'+38 (0##) ### ## ##'"
+              }
+            ],
+            attrs: { type: "tel", name: "phone", id: "phone", masked: "true" },
+            on: { input: _vm.updatePhone }
+          }),
+          _vm._v(" "),
+          _vm.getErrors.errors && _vm.getErrors.errors.customer_phone
+            ? _c(
+                "div",
+                _vm._l(_vm.getErrors.errors.customer_phone, function(error) {
+                  return _c("div", [
+                    _c("span", [_vm._v("Ошибка: Введите номер телефона")])
+                  ])
+                }),
+                0
+              )
+            : _vm._e()
+        ])
+      ]
+    ),
     _vm._v(" "),
-    _c("div", { staticClass: "checkout__input" }, [
-      _c("p", [_vm._v("Имя")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex align-items-center" }, [
-        _c("input", {
-          attrs: { type: "text", name: "name", id: "name" },
-          on: { input: _vm.updateName }
-        }),
+    _c(
+      "div",
+      {
+        class: {
+          "checkout__input invalid": _vm.isInvalid("customer_first_name"),
+          checkout__input: !_vm.isInvalid("customer_first_name")
+        }
+      },
+      [
+        _c("p", [_vm._v("Имя")]),
         _vm._v(" "),
-        _c("span", [_vm._v("Ошибка: Введите имя")])
-      ])
-    ]),
+        _c("div", { staticClass: "d-flex align-items-center" }, [
+          _c("input", {
+            attrs: { type: "text", name: "name", id: "name" },
+            on: { input: _vm.updateName }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v("Ошибка: Введите имя")])
+        ])
+      ]
+    ),
     _vm._v(" "),
-    _c("div", { staticClass: "checkout__input" }, [
-      _c("p", [_vm._v("Фамилия")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex align-items-center" }, [
-        _c("input", {
-          attrs: { type: "text", name: "last_name", id: "last_name" },
-          on: { input: _vm.updateLastName }
-        }),
+    _c(
+      "div",
+      {
+        class: {
+          "checkout__input invalid": _vm.isInvalid("customer_last_name"),
+          checkout__input: !_vm.isInvalid("customer_last_name")
+        }
+      },
+      [
+        _c("p", [_vm._v("Фамилия")]),
         _vm._v(" "),
-        _c("span", [_vm._v("Ошибка: Введите имя")])
-      ])
-    ]),
+        _c("div", { staticClass: "d-flex align-items-center" }, [
+          _c("input", {
+            attrs: { type: "text", name: "last_name", id: "last_name" },
+            on: { input: _vm.updateLastName }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v("Ошибка: Введите фамилию")])
+        ])
+      ]
+    ),
     _vm._v(" "),
-    _c("div", { staticClass: "checkout__input" }, [
-      _c("p", [_vm._v("E-mail")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex align-items-center" }, [
-        _c("input", {
-          attrs: { type: "text", name: "email", id: "email" },
-          on: { input: _vm.updateEmail }
-        }),
+    _c(
+      "div",
+      {
+        class: {
+          "checkout__input invalid": _vm.isInvalid("customer_email"),
+          checkout__input: !_vm.isInvalid("customer_email")
+        }
+      },
+      [
+        _c("p", [_vm._v("E-mail")]),
         _vm._v(" "),
-        _c("span", [_vm._v("Ошибка: Введите имя")])
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "email" }, [
-        _vm._v("Пожалуйста, заполните e-mail для отслеживания статуса заказа")
-      ])
-    ])
+        _c("div", { staticClass: "d-flex align-items-center" }, [
+          _c("input", {
+            attrs: { type: "text", name: "email", id: "email" },
+            on: { input: _vm.updateEmail }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v("Ошибка: Введите email")])
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "email" }, [
+          _vm._v("Пожалуйста, заполните e-mail для отслеживания статуса заказа")
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -37402,6 +37481,17 @@ function normalizeComponent (
   }
 }
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-the-mask/dist/vue-the-mask.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vue-the-mask/dist/vue-the-mask.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=10)}([function(e,t){e.exports={"#":{pattern:/\d/},X:{pattern:/[0-9a-zA-Z]/},S:{pattern:/[a-zA-Z]/},A:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleUpperCase()}},a:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleLowerCase()}},"!":{escape:!0}}},function(e,t,n){"use strict";function r(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var a=n(2),o=n(0),i=n.n(o);t.a=function(e,t){var o=t.value;if((Array.isArray(o)||"string"==typeof o)&&(o={mask:o,tokens:i.a}),"INPUT"!==e.tagName.toLocaleUpperCase()){var u=e.getElementsByTagName("input");if(1!==u.length)throw new Error("v-mask directive requires 1 input, found "+u.length);e=u[0]}e.oninput=function(t){if(t.isTrusted){var i=e.selectionEnd,u=e.value[i-1];for(e.value=n.i(a.a)(e.value,o.mask,!0,o.tokens);i<e.value.length&&e.value.charAt(i-1)!==u;)i++;e===document.activeElement&&(e.setSelectionRange(i,i),setTimeout(function(){e.setSelectionRange(i,i)},0)),e.dispatchEvent(r("input"))}};var s=n.i(a.a)(e.value,o.mask,!0,o.tokens);s!==e.value&&(e.value=s,e.dispatchEvent(r("input")))}},function(e,t,n){"use strict";var r=n(6),a=n(5);t.a=function(e,t){var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=arguments[3];return Array.isArray(t)?n.i(a.a)(r.a,t,i)(e,t,o,i):n.i(r.a)(e,t,o,i)}},function(e,t,n){"use strict";function r(e){e.component(s.a.name,s.a),e.directive("mask",i.a)}Object.defineProperty(t,"__esModule",{value:!0});var a=n(0),o=n.n(a),i=n(1),u=n(7),s=n.n(u);n.d(t,"TheMask",function(){return s.a}),n.d(t,"mask",function(){return i.a}),n.d(t,"tokens",function(){return o.a}),n.d(t,"version",function(){return c});var c="0.11.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),a=n(0),o=n.n(a),i=n(2);t.default={name:"TheMask",props:{value:[String,Number],mask:{type:[String,Array],required:!0},masked:{type:Boolean,default:!1},tokens:{type:Object,default:function(){return o.a}}},directives:{mask:r.a},data:function(){return{lastValue:null,display:this.value}},watch:{value:function(e){e!==this.lastValue&&(this.display=e)},masked:function(){this.refresh(this.display)}},computed:{config:function(){return{mask:this.mask,tokens:this.tokens,masked:this.masked}}},methods:{onInput:function(e){e.isTrusted||this.refresh(e.target.value)},refresh:function(e){this.display=e;var e=n.i(i.a)(e,this.mask,this.masked,this.tokens);e!==this.lastValue&&(this.lastValue=e,this.$emit("input",e))}}}},function(e,t,n){"use strict";function r(e,t,n){return t=t.sort(function(e,t){return e.length-t.length}),function(r,a){for(var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=0;i<t.length;){var u=t[i];i++;var s=t[i];if(!(s&&e(r,s,!0,n).length>u.length))return e(r,u,o,n)}return""}}t.a=r},function(e,t,n){"use strict";function r(e,t){var n=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],r=arguments[3];e=e||"",t=t||"";for(var a=0,o=0,i="";a<t.length&&o<e.length;){var u=t[a],s=r[u],c=e[o];s&&!s.escape?(s.pattern.test(c)&&(i+=s.transform?s.transform(c):c,a++),o++):(s&&s.escape&&(a++,u=t[a]),n&&(i+=u),c===u&&o++,a++)}for(var f="";a<t.length&&n;){var u=t[a];if(r[u]){f="";break}f+=u,a++}return i+f}t.a=r},function(e,t,n){var r=n(8)(n(4),n(9),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var a,o=e=e||{},i=typeof e.default;"object"!==i&&"function"!==i||(a=e,o=e.default);var u="function"==typeof o?o.options:o;if(t&&(u.render=t.render,u.staticRenderFns=t.staticRenderFns),n&&(u._scopeId=n),r){var s=u.computed||(u.computed={});Object.keys(r).forEach(function(e){var t=r[e];s[e]=function(){return t}})}return{esModule:a,exports:o,options:u}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"mask",rawName:"v-mask",value:e.config,expression:"config"}],attrs:{type:"text"},domProps:{value:e.display},on:{input:e.onInput}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
 
 /***/ }),
 
@@ -51939,17 +52029,27 @@ __webpack_require__.r(__webpack_exports__);
       context.commit('setCartTotal', payload);
       context.dispatch('refreshOrderTotal', payload);
     },
+    clearFieldErrors: function clearFieldErrors(context, payload) {
+      var errors = context.getters.getErrors;
+
+      if (errors.errors != undefined && errors.errors[payload] != undefined) {
+        delete errors.errors[payload];
+        context.commit('setErrors', JSON.parse(JSON.stringify(errors)));
+      }
+    },
     orderSubmit: function orderSubmit(_ref, payload) {
       var commit = _ref.commit,
           getters = _ref.getters;
       var form = new FormData();
+      var phone = getters.getPhone;
       form.append('customer_first_name', getters.getName);
       form.append('customer_last_name', getters.getLastName);
-      form.append('customer_phone', getters.getPhone);
+      form.append('customer_phone', phone.replace(/\D+/g, ''));
       form.append('customer_email', getters.getEmail);
       form.append('cart_id', getters.getCartId);
       form.append('order_comment', getters.getOrderComment);
       axios.post(getters.getSubmitAction, form)["catch"](function (error) {
+        console.log(error.response.data);
         commit('setErrors', error.response.data);
 
         if (error.response.data.message) {

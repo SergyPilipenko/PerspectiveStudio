@@ -40,9 +40,9 @@ class AddImagesToTecdocProducts extends Seeder
         $productImages = [];
         if(count($images)) {
             foreach ($images as $image) {
-//                $image->supplierid = 1;
-//                $image->PictureName = '1_001_SP3938_5197.jpg';
+                $image->PictureName = mb_strtolower($image->PictureName);
                 if(File::exists(public_path().'/'.env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName)) {
+                    echo public_path().'/'.env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName."\n";
                     $productImages[] = [
                         'type' => 'tecdoc',
                         'path' => env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName,

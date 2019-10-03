@@ -26,10 +26,12 @@ class CheckoutController extends Controller
         $this->validate($request, array(
             'cart_id' => 'required',
             'customer_first_name' => 'required',
-            'customer_phone' => 'required',
+            'customer_phone' => 'required|min:12',
             'customer_email' => 'required|email',
             'customer_last_name' => 'required',
         ));
+
+
         try {
             DB::connection()->getPdo()->beginTransaction();
 

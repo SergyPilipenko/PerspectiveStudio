@@ -106,16 +106,25 @@ export default {
             context.commit('setCartTotal', payload);
             context.dispatch('refreshOrderTotal', payload);
         },
+        clearFieldErrors(context, payload) {
+            var errors = context.getters.getErrors;
+            if(errors.errors != undefined && errors.errors[payload] != undefined) {
+                delete errors.errors[payload];
+                context.commit('setErrors', JSON.parse(JSON.stringify(errors)));
+            }
+        },
         orderSubmit({commit, getters}, payload) {
-            var form = new FormData();
+            var form = new FormData()
+            var phone = getters.getPhone;
             form.append('customer_first_name', getters.getName);
             form.append('customer_last_name', getters.getLastName);
-            form.append('customer_phone', getters.getPhone);
+            form.append('customer_phone', phone.replace(/\D+/g, ''));
             form.append('customer_email', getters.getEmail);
             form.append('cart_id', getters.getCartId);
             form.append('order_comment', getters.getOrderComment);
             axios.post(getters.getSubmitAction, form)
                 .catch(error => {
+                        console.log(error.response.data);
                         commit('setErrors', error.response.data);
                         if(error.response.data.message) {
                             alert(error.response.data.message);
