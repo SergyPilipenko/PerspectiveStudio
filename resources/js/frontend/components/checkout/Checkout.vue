@@ -1,11 +1,21 @@
 <template>
-    <div class="col-md-12">
-        <slot name="content" v-if="getCart && getCart.cart_items.length"></slot>
-        <div v-else>
-            your cart is empty :(
-            <a href="/">go shopping</a>
+    <section class="checkout">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <slot name="content"></slot>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!--    <div class="col-md-12">-->
+<!--        <slot name="content" v-if="getCart && getCart.cart_items.length"></slot>-->
+<!--        <div v-else>-->
+<!--            your cart is empty :(-->
+<!--            <a href="/">go shopping</a>-->
+<!--        </div>-->
+<!--    </div>-->
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
