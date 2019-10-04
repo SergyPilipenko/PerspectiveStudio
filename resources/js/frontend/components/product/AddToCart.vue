@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex align-items-center">
         <select v-model="selectedQuantity"  class="form-control" v-if="quantity_select == 'true'">
             <option v-for="(option, index) in quantity" v-text="option"></option>
         </select>

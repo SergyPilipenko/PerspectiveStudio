@@ -21,6 +21,21 @@ class PassangerCar extends Model
         return $this->hasMany(PassangerCarAttribute::class, 'passangercarid', 'id');
     }
 
+    public function getPassangerCarAttributes()
+    {
+        $attributes = [];
+        foreach ($this->relations['attributes'] as $attribute) {
+            $attributes[$attribute['attributetype']] = $attribute['displayvalue'];
+        }
+
+        return $attributes;
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(CarModel::class, 'modelid', 'id');
+    }
+
     public function scopeFilter($query, $attributes)
     {
 
