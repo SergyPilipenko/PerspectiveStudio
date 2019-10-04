@@ -5,6 +5,7 @@ use App\Models\Admin\Catalog\Product\ProductImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class AddImagesToTecdocProducts extends Seeder
 {
@@ -40,7 +41,10 @@ class AddImagesToTecdocProducts extends Seeder
         $productImages = [];
         if(count($images)) {
             foreach ($images as $image) {
-                $image->PictureName = mb_strtolower($image->PictureName);
+                $image->PictureName = preg_replace_callback('/\.\w+$/', function($m){
+                    return strtolower('.jpg');
+                }, $image->PictureName);
+
                 if(File::exists(public_path().'/'.env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName)) {
                     echo public_path().'/'.env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName."\n";
                     $productImages[] = [
@@ -49,6 +53,8 @@ class AddImagesToTecdocProducts extends Seeder
                         'product_id' => $image->product_id,
                         'name' => $image->PictureName
                     ];
+                } else {
+                    Log::debug(public_path().'/'.env('TECDOC_IMAGES_PATH').'/'.$image->supplierid.'/'.$image->PictureName."\n");
                 }
             }
         }
