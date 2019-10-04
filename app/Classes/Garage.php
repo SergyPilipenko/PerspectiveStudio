@@ -3,7 +3,9 @@
 
 namespace App\Classes;
 
-use Session;
+use App\Classes\Car\CarInterface;
+use App\Models\Tecdoc\PassangerCar;
+use Illuminate\Support\Facades\Session;
 use Exception;
 
 class Garage
@@ -14,22 +16,39 @@ class Garage
     const CURRENT_AUTO = 'current-auto';
     const CURRENT_CAR_YEAR = 'car-year';
 
-    private $garage;
+    private $garage = [];
+    private $car;
+    public $cars;
+    public $activeCar;
 
     private $session;
 
-    public function __construct()
+    public function __construct(CarInterface $car)
     {
         $this->session = session();
+        $this->car = $car;
     }
 
+    public function getGarage()
+    {
+        $list = $this->getGarageList();
+
+        if(count($list)) {
+            $this->cars = collect($this->car->getCars($list));
+            $this->activeCar = $this->getActiveCar();
+        }
+
+        return $this;
+    }
+
+
+
     /**
-     * Добавить машину (модификацию в гараж)
      *
      * @param int $modification
      * @param null $year
      */
-    public function addCarToGarage(int $modification, $year = null)
+    public function addCarToSessionGarageList(int $modification, $year = null)
     {
         $this->session->push(self::GARAGE, [
             self::MODIFICATION_ID => $modification,
@@ -47,11 +66,11 @@ class Garage
     {
 
         if($this->carInGarage($modification) == false) {
-            $this->addCarToGarage($modification, $year);
+            $this->addCarToSessionGarageList($modification, $year);
         }
 
 
-        \Session::put(self::CURRENT_AUTO, [
+        Session::put(self::CURRENT_AUTO, [
             self::MODIFICATION_ID => $modification,
             self::MODIFICATION_YEAR => $year ?? $this->getSelectedYear()
         ]);
@@ -59,7 +78,9 @@ class Garage
 
     public function getActiveCar()
     {
-        return Session::get(self::CURRENT_AUTO);
+        $current = Session::get(self::CURRENT_AUTO);
+        dd($current);
+        return;
     }
 
 

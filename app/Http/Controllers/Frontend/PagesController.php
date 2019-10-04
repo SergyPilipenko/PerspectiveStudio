@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;
+use Illuminate\Support\Facades\Session;
 
 class PagesController extends Controller
 {
@@ -33,12 +34,11 @@ class PagesController extends Controller
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
-
-        $garage = \Session::get('garage')
-            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
+        $garage = Session::get('garage')
+            ? PassangerCar::whereIn('id', collect(Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
 
-        $current_auto = \Session::get('current-auto') ? : null;
+        $current_auto = Session::get('current-auto') ? : null;
 
         $categories = $category->active()->orderBy('parent_id', 'asc')->get();
 
@@ -99,14 +99,17 @@ class PagesController extends Controller
 
         if(!$modification) $modification = $model;
         $garage->setActiveCar($modification);
-        $garage = \Session::get('garage')
-            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
+        $garageCars = $garage->getGarage();
+
+        $garage = Session::get('garage')
+            ? PassangerCar::whereIn('id', collect(Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
             : null;
-        $current_auto = \Session::get('current-auto');
-//        dd($modification);
+
+        $current_auto = Session::get('current-auto');
+
         $categories = Category::where('parent_id', null)->get();
 
-        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));
+        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model', 'garageCars'));
     }
 
     public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser, PartfixTecDoc $tecDoc)
@@ -139,10 +142,10 @@ class PagesController extends Controller
 
     public function changeCurrentCar($id)
     {
-        $garage = collect(\Session::get('garage'));
+        $garage = collect(Session::get('garage'));
 
         $current_modification = $garage->where('modification_id', $id)->first();
-        \Session::put('current-auto', [
+        Session::put('current-auto', [
             'modification_id' => $current_modification['modification_id'],
             'modification_year' => $current_modification['modification_year']
         ]);

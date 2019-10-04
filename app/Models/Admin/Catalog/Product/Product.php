@@ -34,7 +34,7 @@ class Product extends Model implements ProductInterface
         static::deleted(function($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->remove($product);
             if($product->images->count()) {
-                File::deleteDirectory($product->productImage->path . $product->id);
+                File::deleteDirectory($product->productImage->savePath . $product->id);
             }
         });
     }

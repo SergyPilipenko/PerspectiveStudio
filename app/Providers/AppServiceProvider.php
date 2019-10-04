@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Classes\Car\Car;
+use App\Classes\Car\CarInterface;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Locale\Locale;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         App::singleton(CategoryInterface::class, Category::class);
         App::singleton(PriceFilterInterface::class, PriceFilter::class);
         App::singleton(LocaleInterface::class, Locale::class);
+        App::singleton(CarInterface::class, Car::class);
     }
 
     /**
