@@ -35557,7 +35557,7 @@ var render = function() {
                             " " +
                             _vm.ucfirst(car.FuelType) +
                             ", " +
-                            car.DriveType.toLowerCase() +
+                            car.BodyType.toLowerCase() +
                             ", " +
                             _vm.formatPower(car.Power)
                         )
