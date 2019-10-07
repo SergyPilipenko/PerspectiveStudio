@@ -15,7 +15,7 @@
                         <span
                             v-text="formatCapacity(car.Capacity) + ' '
                             + ucfirst(car.FuelType) + ', '
-                            + car.DriveType.toLowerCase() + ', '
+                            + car.BodyType.toLowerCase() + ', '
                             + formatPower(car.Power)"> CRTF</span>
                     </div>
                     <a :href="car.path" class="catalog">Каталог</a>
