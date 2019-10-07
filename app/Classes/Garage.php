@@ -29,6 +29,14 @@ class Garage
         $this->car = $car;
     }
 
+    public function empty()
+    {
+        $list = $this->getGarageList();
+        if(!$list->count()) return true;
+
+        return false;
+    }
+
     public function getGarage()
     {
         $list = $this->getGarageList();
@@ -78,9 +86,21 @@ class Garage
 
     public function getActiveCar()
     {
-        $current = Session::get(self::CURRENT_AUTO);
-        dd($current);
-        return;
+        if($this->cars && $this->cars->count())
+        {
+            $active = $this->getSessionActiveCar();
+            foreach ($this->cars as $car) {
+                if($car->modification_id == $active['modification_id'])
+                {
+                    return $car;
+                }
+            }
+        }
+    }
+
+    public function getSessionActiveCar()
+    {
+        return Session::get(self::CURRENT_AUTO);
     }
 
 
@@ -88,7 +108,7 @@ class Garage
     public function removeCar($id)
     {
         $garage = Session::get(self::GARAGE);
-        $current_auto = $this->getActiveCar();
+        $current_auto = $this->getSessionActiveCar();
 
 
         foreach ($garage as $key => $car) {

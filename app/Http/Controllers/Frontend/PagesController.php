@@ -100,6 +100,7 @@ class PagesController extends Controller
         if(!$modification) $modification = $model;
         $garage->setActiveCar($modification);
         $garageCars = $garage->getGarage();
+//        dd($garageCars);
 
         $garage = Session::get('garage')
             ? PassangerCar::whereIn('id', collect(Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
@@ -135,9 +136,11 @@ class PagesController extends Controller
     }
 
 
-    public function product()
+    public function clearGarage(Garage $garage)
     {
+        $garage->clear();
 
+        return redirect()->route('frontend.index');
     }
 
     public function changeCurrentCar($id)

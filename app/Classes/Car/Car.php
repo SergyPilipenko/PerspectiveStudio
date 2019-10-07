@@ -8,17 +8,19 @@ use App\Models\Tecdoc\PassangerCar;
 
 class Car implements CarInterface
 {
-    public $brand, $model, $modification, $year;
+    public $brand, $model, $modification, $year, $modification_id;
 
 
 
     public function prepareData(PassangerCar $passangerCar) : self
     {
         $car = new self();
-        $car->brand = $passangerCar->model->brand->description;
-        $car->model = $passangerCar->model->description;
-        $car->modification = $passangerCar->description;
+        $car->modification_id = $passangerCar->id;
+        $car->brand = $passangerCar->model->brand;
+        $car->model = $passangerCar->model;
+        $car->modification = $passangerCar;
         $car->year = $passangerCar->year;
+        $car->path = $passangerCar->getPath();
         $car->getAttributes($passangerCar);
 
         return $car;
