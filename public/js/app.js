@@ -1879,18 +1879,54 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['garage', 'current_auto'],
+  props: ['garage', 'current_auto', 'new_garage'],
   data: function data() {
     return {
-      garageList: false
+      garageList: false,
+      grg: []
     };
   },
   created: function created() {
-    if (this.garage.length) {
-      this.setCars(this.garage);
-      this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+    var garage = this.new_garage;
+
+    if (garage && garage.cars) {
+      this.setCars(garage.cars);
+      this.setCurrentAuto(garage.activeCar);
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
@@ -1898,6 +1934,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     'getCurrentAuto': 'garage/getCurrentAuto'
   })),
   methods: _objectSpread({
+    formatCapacity: function formatCapacity(capacity) {
+      var _float = parseFloat(capacity.replace(/[^0-9\.,]/g, ''));
+
+      return _float.toFixed(1);
+    },
+    formatPower: function formatPower(power) {
+      return power.replace(/\D+/g, '') + ' л.с';
+    },
+    ucfirst: function ucfirst(str) {
+      if (typeof str !== 'string') return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    clearGarage: function clearGarage() {
+      console.log(1);
+      window.location.href = "/garage-clear";
+    },
     getCurrentAutoById: function getCurrentAutoById(current_auto) {
       var cars = this.getCars;
 
@@ -3395,6 +3447,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       rangeYears: [],
       bodyTypeSelected: "",
       selectedEngine: "",
+      redirecting: false,
       selects: [{
         id: 1,
         name: 'year',
@@ -3421,6 +3474,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     this.rangeYears = years.reverse();
+
+    if (this.getCurrentAuto) {
+      this.addSelectedYead(this.getCurrentAuto.year);
+      this.addSelectedBrand({
+        description: this.getCurrentAuto.brand.description,
+        id: this.getCurrentAuto.brand.id
+      });
+      this.setBrands({
+        action: this.route['get-brands-by-models-created-year'],
+        selected_year: this.selectedYear
+      });
+      this.addSelectedModel({
+        id: this.getCurrentAuto.model.id,
+        constructioninterval: this.getCurrentAuto.model.constructioninterval,
+        name: this.getCurrentAuto.model.description
+      });
+      this.getModelsFromApi(this.brandSelected.id);
+    }
   },
   computed: _objectSpread({
     route: function route() {
@@ -3437,7 +3508,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getEngines: 'selectCar/getEngines',
     selectedYear: 'selectCar/getSelectedYear',
     brandSelected: 'selectCar/getSelectedBrand',
-    modelSelected: 'selectCar/getSelectedModel'
+    modelSelected: 'selectCar/getSelectedModel',
+    getCurrentAuto: 'garage/getCurrentAuto'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])({
     addBrands: 'selectCar/addBrands',
@@ -3493,6 +3565,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.selects = selects;
     },
     showSelect: function showSelect(name) {
+      console.log(1);
       this.hideAllSelects(name);
       var selects = this.selects;
 
@@ -3610,13 +3683,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadModels: function loadModels(brand) {
       this.step = 3;
       if (!brand) return;
+      this.getModelsFromApi(brand);
+      this.resetModelsSelect();
+      this.clearModifications();
+    },
+    getModelsFromApi: function getModelsFromApi(brand) {
       var self = this;
       var form = new FormData();
       form.append('brand_id', brand);
       axios.post('/api/tecdoc/get-models', form).then(function (data) {
         self.addModels(self.filterModelsBySelectedYear(data.data));
-        self.resetModelsSelect();
-        self.clearModifications();
       });
     },
     getSameModelIds: function getSameModelIds(modelName) {
@@ -3672,7 +3748,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var modelSelectedIds = this.getModelSelectedIds();
       this.getSelectedModelURI();
+      this.redirecting = true;
       window.location.href = this.getSelectedModelURI();
+      console.log(333);
       var self = this;
       var form = new FormData();
       form.append('model_Ids', modelSelectedIds);
@@ -3683,6 +3761,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     choseEngine: function choseEngine() {},
     choseModification: function choseModification() {
       window.location.href = this.modificationSelected + "/categories/";
+    },
+    goToCarCatalog: function goToCarCatalog() {
+      if (!this.selectedYear) {
+        this.showSelect('year');
+        return;
+      }
+
+      if (!this.brandSelected) {
+        this.showSelect('brand');
+        return;
+      }
+
+      if (!this.modelSelected) {
+        this.showSelect('models');
+        return;
+      }
+
+      if (!this.redirecting) {
+        window.location.href = this.getCurrentAuto.path;
+      }
     }
   })
 });
@@ -35406,115 +35504,124 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.getCars.length
-    ? _c("div", { staticStyle: { "padding-bottom": "100px" } }, [
-        _c("h1", [_vm._v("Ваш гараж")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
+  return _c("div", { staticClass: "header__punkt header__car" }, [
+    _c("img", {
+      staticClass: "icon",
+      attrs: { src: "/img/frontend/img/svg/car.svg", alt: "car" }
+    }),
+    _vm._v(" "),
+    _c("span", {
+      staticClass: "header__punkt-counter",
+      domProps: { textContent: _vm._s(_vm.getCars.length) }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "header__punkt-title" }, [_vm._v("Гараж")]),
+    _vm._v(" "),
+    _c("img", {
+      staticClass: "arrow",
+      attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+    }),
+    _vm._v(" "),
+    _vm.getCars.length
+      ? _c("div", { staticClass: "header__car-dropdown" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("h3", [_vm._v("Ваш гараж")]),
+          _vm._v(" "),
           _c(
-            "button",
-            {
-              staticClass: "btn btn-default dropdown-toggle garage-item",
-              attrs: {
-                id: "garag-select",
-                type: "button",
-                "aria-expanded": "false"
-              },
-              domProps: {
-                textContent: _vm._s(_vm.getCurrentAuto.fulldescription)
-              },
-              on: { click: _vm.toggleGarageList }
-            },
-            [_c("span", { staticClass: "caret" })]
+            "div",
+            { staticClass: "d-flex flex-column header__car-dropdown-list" },
+            _vm._l(_vm.getCars, function(car) {
+              return _c("div", { staticClass: "header__car-dropdown-item" }, [
+                _c("div", { staticClass: "d-flex flex-column" }, [
+                  _c("a", {
+                    staticClass: "header__car-dropdown-item-title",
+                    attrs: { href: car.path },
+                    domProps: {
+                      textContent: _vm._s(
+                        car.year +
+                          " " +
+                          car.brand.description +
+                          " " +
+                          car.model.description
+                      )
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      domProps: {
+                        textContent: _vm._s(
+                          _vm.formatCapacity(car.Capacity) +
+                            " " +
+                            _vm.ucfirst(car.FuelType) +
+                            ", " +
+                            car.DriveType.toLowerCase() +
+                            ", " +
+                            _vm.formatPower(car.Power)
+                        )
+                      }
+                    },
+                    [_vm._v(" CRTF")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("a", { staticClass: "catalog", attrs: { href: car.path } }, [
+                  _vm._v("Каталог")
+                ])
+              ])
+            }),
+            0
           ),
           _vm._v(" "),
-          _c("div", [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.getCurrentAuto.selectedYear) +
-                "г.,\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "Capacity",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "EngineType",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "BodyType",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            (" +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "EngineCode",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoPower({
-                    attribute: "Power",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ")\n        "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm.garageList
-          ? _c(
-              "div",
-              _vm._l(_vm.getCars, function(car) {
-                return _c("div", [
-                  _c("div", { staticClass: "row" }, [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.changeCar(car.id)
-                          }
-                        }
-                      },
-                      [
-                        _c("div", {
-                          domProps: { textContent: _vm._s(car.fulldescription) }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "button btn btn-danger",
-                        staticStyle: { "margin-left": "15px" },
-                        attrs: { href: "/garage-remove-car/" + car.id }
-                      },
-                      [_vm._v("X")]
-                    )
-                  ])
-                ])
-              }),
-              0
-            )
-          : _vm._e()
-      ])
-    : _vm._e()
+          _c(
+            "div",
+            {
+              staticClass:
+                "d-flex align-items-center justify-content-between header__car-buttons"
+            },
+            [
+              _c("button", { staticClass: "header__car-dropdown-add" }, [
+                _vm._v("Добавить")
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "header__car-dropdown-clear",
+                  on: { click: _vm.clearGarage }
+                },
+                [_vm._v("Очистить")]
+              )
+            ]
+          )
+        ])
+      : _c("div", { staticClass: "header__car-dropdown" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("h3", [_vm._v("Ваш гараж пуст")])
+        ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "close" }, [
+      _c("img", { attrs: { src: "/img/frontend/img/cross.png", alt: "img" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "close" }, [
+      _c("img", { attrs: { src: "/img/frontend/img/cross.png", alt: "img" } })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -35543,7 +35650,7 @@ var render = function() {
           on: { click: _vm.hideModalSearch }
         }),
         _vm._v(" "),
-        _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "container popup-black2-container" }, [
           _c("div", { staticClass: "search-modal-wrapper row" }, [
             _c("form", { staticClass: "header__popup-search" }, [
               _c("div", { staticClass: "close" }, [
@@ -37126,7 +37233,11 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("button", { attrs: { type: "submit" } }, [_vm._v("Выбрать")])
+      _c(
+        "button",
+        { attrs: { type: "button" }, on: { click: _vm.goToCarCatalog } },
+        [_vm._v("Выбрать")]
+      )
     ]
   )
 }
@@ -52243,7 +52354,7 @@ __webpack_require__.r(__webpack_exports__);
   namespaced: true,
   state: {
     cars: [],
-    currentAuto: []
+    currentAuto: null
   },
   getters: {
     getCars: function getCars(state) {

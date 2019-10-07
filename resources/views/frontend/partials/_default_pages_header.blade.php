@@ -185,36 +185,7 @@
             @include('frontend.partials._logo')
             <div class="col-10 d-flex align-items-center">
                 <search-button></search-button>
-                <div class="header__punkt header__car">
-                    <img src="{{ asset('img/frontend/img/svg/car.svg') }}" alt="car" class="icon">
-                    <span class="header__punkt-counter">55</span>
-                    <span class="header__punkt-title">Гараж</span>
-                    <img src="{{ asset('img/frontend/img/arrow-down.png') }}" alt="img" class="arrow">
-                    <div class="header__car-dropdown">
-                        <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
-                        <h3>Ваш гараж</h3>
-                        <div class="d-flex flex-column header__car-dropdown-list">
-                            <div class="header__car-dropdown-item">
-                                <div class="d-flex flex-column">
-                                    <a href="#" class="header__car-dropdown-item-title">2013 Volkswagen Transporter</a>
-                                    <span>3.0 Дизель, хэтчбек, CRTF</span>
-                                </div>
-                                <a href="#" class="catalog">Каталог</a>
-                            </div>
-                            <div class="header__car-dropdown-item">
-                                <div class="d-flex flex-column">
-                                    <a href="#" class="header__car-dropdown-item-title">2016 Audi Q7</a>
-                                    <span>3.0 Дизель, хэтчбек, CRTF</span>
-                                </div>
-                                <a href="#" class="catalog">Каталог</a>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between header__car-buttons">
-                            <button class="header__car-dropdown-add">Добавить</button>
-                            <button class="header__car-dropdown-clear">Очистить</button>
-                        </div>
-                    </div>
-                </div>
+                <garage :new_garage="{{ json_encode(app('App\Classes\Garage')->getGarage()) }}"></garage>
                 <div class="header__punkt header__featured">
                     <img src="{{ asset('img/frontend/img/svg/heart.svg') }}" alt="heart" class="icon">
                     <span class="header__punkt-counter">96</span>

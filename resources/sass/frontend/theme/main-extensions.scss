@@ -1,0 +1,43 @@
+.popup-black2 {
+    display: unset;
+}
+.header__popup-search {
+    top: 95px;
+}
+
+.popup-black2-container {
+    position: relative;
+}
+.header__popup-search {
+    display: block;
+}
+
+.header__cart-dropdown {
+    display: block;
+}
+
+.header__cart {
+    margin-right: 0;
+    cursor: pointer
+}
+
+.search__model-cover {
+    &:hover {
+        .search__model-dropdown {
+            display: none;
+            &.active {
+                display: flex;
+            }
+        }
+    }
+    .search__model-dropdown {
+        &.active {
+            display: flex;
+        }
+    }
+    .search__model-subtext {
+        display: block;
+    }
+}
+
+
