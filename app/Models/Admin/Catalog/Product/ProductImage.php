@@ -12,7 +12,7 @@ class ProductImage extends Model
     public $timestamps = false;
     protected $fillable = ['path', 'product_id', 'name'];
 
-    public $path = 'upload/img/product/';
+    public $savePath = 'upload/img/product/';
 
     public function uploadImages(ProductForm $request, Product $product)
     {
@@ -23,7 +23,7 @@ class ProductImage extends Model
         if(isset($request->img)) {
             foreach ($request->img as $key => $image) {
                 $file_name = time() . $image->getClientOriginalName();
-                $file_path = $this->path . $product->id . '/';
+                $file_path = $this->savePath . $product->id . '/';
                 $image->move($file_path, $file_name);
                 $this->create([
                     'path' => $file_path . $file_name,
@@ -45,7 +45,7 @@ class ProductImage extends Model
 
     protected function getProductImagePath($product, $imageName)
     {
-        return $this->path . $product->id . '/' . $imageName;
+        return $this->savePath . $product->id . '/' . $imageName;
     }
 
     protected function imgNameExists($requestedImagesList, $image)

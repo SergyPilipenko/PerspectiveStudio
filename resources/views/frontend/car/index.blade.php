@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container">
-        <garage
-            :garage="{{ $garage }}"
-            :current_auto="'{{ json_encode($current_auto) }}'"
-        ></garage>
+{{--        <garage--}}
+{{--            :garage="{{ $garage }}"--}}
+{{--            :current_auto="'{{ json_encode($current_auto) }}'"--}}
+{{--        ></garage>--}}
         @if($categories->count())
             <ul>
                 @foreach($categories as $category)

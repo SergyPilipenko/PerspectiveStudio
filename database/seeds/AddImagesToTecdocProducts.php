@@ -17,7 +17,6 @@ class AddImagesToTecdocProducts extends Seeder
      */
     public function __construct(ProductImage $productImage)
     {
-
         $this->productImage = $productImage;
     }
 

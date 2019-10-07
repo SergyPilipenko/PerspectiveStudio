@@ -2,7 +2,7 @@ export default {
     namespaced: true,
     state: {
         cars: [],
-        currentAuto: []
+        currentAuto: null
     },
     getters: {
         getCars(state) {

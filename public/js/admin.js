@@ -6913,7 +6913,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -7017,7 +7016,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('removeImage', id);
     },
     imgPath: function imgPath(img) {
-      return img.product_id ? '/' + img.path : img.path;
+      var reg = new RegExp('blob:http');
+      return !reg.test(img.path) ? '/' + img.path : img.path;
     }
   }
 });
@@ -71307,7 +71307,6 @@ var render = function() {
           multiple: true,
           options: _vm.options,
           flat: true,
-          "sort-value-by": _vm.sortValueBy,
           "default-expand-level": 1
         },
         model: {

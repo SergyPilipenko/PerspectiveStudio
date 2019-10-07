@@ -1879,18 +1879,54 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['garage', 'current_auto'],
+  props: ['garage', 'current_auto', 'new_garage'],
   data: function data() {
     return {
-      garageList: false
+      garageList: false,
+      grg: []
     };
   },
   created: function created() {
-    if (this.garage.length) {
-      this.setCars(this.garage);
-      this.setCurrentAuto(this.getCurrentAutoById(JSON.parse(this.current_auto)));
+    var garage = this.new_garage;
+
+    if (garage && garage.cars) {
+      this.setCars(garage.cars);
+      this.setCurrentAuto(garage.activeCar);
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
@@ -1898,6 +1934,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     'getCurrentAuto': 'garage/getCurrentAuto'
   })),
   methods: _objectSpread({
+    formatCapacity: function formatCapacity(capacity) {
+      var _float = parseFloat(capacity.replace(/[^0-9\.,]/g, ''));
+
+      return _float.toFixed(1);
+    },
+    formatPower: function formatPower(power) {
+      return power.replace(/\D+/g, '') + ' л.с';
+    },
+    ucfirst: function ucfirst(str) {
+      if (typeof str !== 'string') return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    clearGarage: function clearGarage() {
+      console.log(1);
+      window.location.href = "/garage-clear";
+    },
     getCurrentAutoById: function getCurrentAutoById(current_auto) {
       var cars = this.getCars;
 
@@ -3395,6 +3447,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       rangeYears: [],
       bodyTypeSelected: "",
       selectedEngine: "",
+      redirecting: false,
       selects: [{
         id: 1,
         name: 'year',
@@ -3421,6 +3474,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     this.rangeYears = years.reverse();
+
+    if (this.getCurrentAuto) {
+      this.addSelectedYead(this.getCurrentAuto.year);
+      this.addSelectedBrand({
+        description: this.getCurrentAuto.brand.description,
+        id: this.getCurrentAuto.brand.id
+      });
+      this.setBrands({
+        action: this.route['get-brands-by-models-created-year'],
+        selected_year: this.selectedYear
+      });
+      this.addSelectedModel({
+        id: this.getCurrentAuto.model.id,
+        constructioninterval: this.getCurrentAuto.model.constructioninterval,
+        name: this.getCurrentAuto.model.description
+      });
+      this.getModelsFromApi(this.brandSelected.id);
+    }
   },
   computed: _objectSpread({
     route: function route() {
@@ -3437,7 +3508,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getEngines: 'selectCar/getEngines',
     selectedYear: 'selectCar/getSelectedYear',
     brandSelected: 'selectCar/getSelectedBrand',
-    modelSelected: 'selectCar/getSelectedModel'
+    modelSelected: 'selectCar/getSelectedModel',
+    getCurrentAuto: 'garage/getCurrentAuto'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])({
     addBrands: 'selectCar/addBrands',
@@ -3493,6 +3565,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.selects = selects;
     },
     showSelect: function showSelect(name) {
+      console.log(1);
       this.hideAllSelects(name);
       var selects = this.selects;
 
@@ -3610,13 +3683,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadModels: function loadModels(brand) {
       this.step = 3;
       if (!brand) return;
+      this.getModelsFromApi(brand);
+      this.resetModelsSelect();
+      this.clearModifications();
+    },
+    getModelsFromApi: function getModelsFromApi(brand) {
       var self = this;
       var form = new FormData();
       form.append('brand_id', brand);
       axios.post('/api/tecdoc/get-models', form).then(function (data) {
         self.addModels(self.filterModelsBySelectedYear(data.data));
-        self.resetModelsSelect();
-        self.clearModifications();
       });
     },
     getSameModelIds: function getSameModelIds(modelName) {
@@ -3672,7 +3748,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var modelSelectedIds = this.getModelSelectedIds();
       this.getSelectedModelURI();
+      this.redirecting = true;
       window.location.href = this.getSelectedModelURI();
+      console.log(333);
       var self = this;
       var form = new FormData();
       form.append('model_Ids', modelSelectedIds);
@@ -3683,6 +3761,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     choseEngine: function choseEngine() {},
     choseModification: function choseModification() {
       window.location.href = this.modificationSelected + "/categories/";
+    },
+    goToCarCatalog: function goToCarCatalog() {
+      if (!this.selectedYear) {
+        this.showSelect('year');
+        return;
+      }
+
+      if (!this.brandSelected) {
+        this.showSelect('brand');
+        return;
+      }
+
+      if (!this.modelSelected) {
+        this.showSelect('models');
+        return;
+      }
+
+      if (!this.redirecting) {
+        window.location.href = this.getCurrentAuto.path;
+      }
     }
   })
 });
@@ -3792,6 +3890,47 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (data) {
         _this.$emit('productAdded', data.data);
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['product_images'],
+  data: function data() {
+    return {
+      mainImg: ''
+    };
+  },
+  created: function created() {
+    if (this.product_images.length) {
+      this.mainImg = '/' + this.product_images[0].path;
+    }
+  },
+  methods: {
+    changeMainImg: function changeMainImg(image) {
+      this.mainImg = '/' + image.path;
     }
   }
 });
@@ -35365,115 +35504,124 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.getCars.length
-    ? _c("div", { staticStyle: { "padding-bottom": "100px" } }, [
-        _c("h1", [_vm._v("Ваш гараж")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
+  return _c("div", { staticClass: "header__punkt header__car" }, [
+    _c("img", {
+      staticClass: "icon",
+      attrs: { src: "/img/frontend/img/svg/car.svg", alt: "car" }
+    }),
+    _vm._v(" "),
+    _c("span", {
+      staticClass: "header__punkt-counter",
+      domProps: { textContent: _vm._s(_vm.getCars.length) }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "header__punkt-title" }, [_vm._v("Гараж")]),
+    _vm._v(" "),
+    _c("img", {
+      staticClass: "arrow",
+      attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+    }),
+    _vm._v(" "),
+    _vm.getCars.length
+      ? _c("div", { staticClass: "header__car-dropdown" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("h3", [_vm._v("Ваш гараж")]),
+          _vm._v(" "),
           _c(
-            "button",
-            {
-              staticClass: "btn btn-default dropdown-toggle garage-item",
-              attrs: {
-                id: "garag-select",
-                type: "button",
-                "aria-expanded": "false"
-              },
-              domProps: {
-                textContent: _vm._s(_vm.getCurrentAuto.fulldescription)
-              },
-              on: { click: _vm.toggleGarageList }
-            },
-            [_c("span", { staticClass: "caret" })]
+            "div",
+            { staticClass: "d-flex flex-column header__car-dropdown-list" },
+            _vm._l(_vm.getCars, function(car) {
+              return _c("div", { staticClass: "header__car-dropdown-item" }, [
+                _c("div", { staticClass: "d-flex flex-column" }, [
+                  _c("a", {
+                    staticClass: "header__car-dropdown-item-title",
+                    attrs: { href: car.path },
+                    domProps: {
+                      textContent: _vm._s(
+                        car.year +
+                          " " +
+                          car.brand.description +
+                          " " +
+                          car.model.description
+                      )
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      domProps: {
+                        textContent: _vm._s(
+                          _vm.formatCapacity(car.Capacity) +
+                            " " +
+                            _vm.ucfirst(car.FuelType) +
+                            ", " +
+                            car.DriveType.toLowerCase() +
+                            ", " +
+                            _vm.formatPower(car.Power)
+                        )
+                      }
+                    },
+                    [_vm._v(" CRTF")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("a", { staticClass: "catalog", attrs: { href: car.path } }, [
+                  _vm._v("Каталог")
+                ])
+              ])
+            }),
+            0
           ),
           _vm._v(" "),
-          _c("div", [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.getCurrentAuto.selectedYear) +
-                "г.,\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "Capacity",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "EngineType",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "BodyType",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            (" +
-                _vm._s(
-                  _vm.getAutoAttribute({
-                    attribute: "EngineCode",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ",\n            " +
-                _vm._s(
-                  _vm.getAutoPower({
-                    attribute: "Power",
-                    auto: _vm.getCurrentAuto
-                  })
-                ) +
-                ")\n        "
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm.garageList
-          ? _c(
-              "div",
-              _vm._l(_vm.getCars, function(car) {
-                return _c("div", [
-                  _c("div", { staticClass: "row" }, [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.changeCar(car.id)
-                          }
-                        }
-                      },
-                      [
-                        _c("div", {
-                          domProps: { textContent: _vm._s(car.fulldescription) }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "button btn btn-danger",
-                        staticStyle: { "margin-left": "15px" },
-                        attrs: { href: "/garage-remove-car/" + car.id }
-                      },
-                      [_vm._v("X")]
-                    )
-                  ])
-                ])
-              }),
-              0
-            )
-          : _vm._e()
-      ])
-    : _vm._e()
+          _c(
+            "div",
+            {
+              staticClass:
+                "d-flex align-items-center justify-content-between header__car-buttons"
+            },
+            [
+              _c("button", { staticClass: "header__car-dropdown-add" }, [
+                _vm._v("Добавить")
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "header__car-dropdown-clear",
+                  on: { click: _vm.clearGarage }
+                },
+                [_vm._v("Очистить")]
+              )
+            ]
+          )
+        ])
+      : _c("div", { staticClass: "header__car-dropdown" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("h3", [_vm._v("Ваш гараж пуст")])
+        ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "close" }, [
+      _c("img", { attrs: { src: "/img/frontend/img/cross.png", alt: "img" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "close" }, [
+      _c("img", { attrs: { src: "/img/frontend/img/cross.png", alt: "img" } })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -35502,7 +35650,7 @@ var render = function() {
           on: { click: _vm.hideModalSearch }
         }),
         _vm._v(" "),
-        _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "container popup-black2-container" }, [
           _c("div", { staticClass: "search-modal-wrapper row" }, [
             _c("form", { staticClass: "header__popup-search" }, [
               _c("div", { staticClass: "close" }, [
@@ -37085,7 +37233,11 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("button", { attrs: { type: "submit" } }, [_vm._v("Выбрать")])
+      _c(
+        "button",
+        { attrs: { type: "button" }, on: { click: _vm.goToCarCatalog } },
+        [_vm._v("Выбрать")]
+      )
     ]
   )
 }
@@ -37142,7 +37294,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "d-flex align-items-center" }, [
     _vm.quantity_select == "true"
       ? _c(
           "select",
@@ -37270,6 +37422,52 @@ var render = function() {
       _c("button", { staticClass: "last-goods__buy" }, [_vm._v("Купить")])
     ]
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card__main-left" }, [
+    _c(
+      "div",
+      { staticClass: "card__main-list" },
+      _vm._l(_vm.product_images, function(image) {
+        return _c("div", [
+          _c("img", {
+            attrs: { src: "/" + image.path, alt: "card-img" },
+            on: {
+              click: function($event) {
+                return _vm.changeMainImg(image)
+              }
+            }
+          })
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "card__main-img" }, [
+      _c("img", { attrs: { src: _vm.mainImg, alt: "card-img" } })
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -50598,6 +50796,7 @@ Vue.component('search-tabs', __webpack_require__(/*! ./frontend/components/front
 Vue.component('select-car', __webpack_require__(/*! ./frontend/components/frontpage/SelectCar */ "./resources/js/frontend/components/frontpage/SelectCar.vue")["default"]);
 Vue.component('select-car-body', __webpack_require__(/*! ./frontend/components/categories/SelectCarBody */ "./resources/js/frontend/components/categories/SelectCarBody.vue")["default"]);
 Vue.component('add-to-cart', __webpack_require__(/*! ./frontend/components/product/AddToCart */ "./resources/js/frontend/components/product/AddToCart.vue")["default"]);
+Vue.component('product-gallery', __webpack_require__(/*! ./frontend/components/product/ProductGallery */ "./resources/js/frontend/components/product/ProductGallery.vue")["default"]);
 Vue.component('garage', __webpack_require__(/*! ./frontend/components/Garage */ "./resources/js/frontend/components/Garage.vue")["default"]);
 Vue.component('search', __webpack_require__(/*! ./frontend/components/Search/Search */ "./resources/js/frontend/components/Search/Search.vue")["default"]);
 Vue.component('product-show', __webpack_require__(/*! ./frontend/components/product/Show */ "./resources/js/frontend/components/product/Show.vue")["default"]);
@@ -51811,6 +52010,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/frontend/components/product/ProductGallery.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/frontend/components/product/ProductGallery.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProductGallery.vue?vue&type=template&id=2862ef06& */ "./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06&");
+/* harmony import */ var _ProductGallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProductGallery.vue?vue&type=script&lang=js& */ "./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ProductGallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/frontend/components/product/ProductGallery.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductGallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProductGallery.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductGallery_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ProductGallery.vue?vue&type=template&id=2862ef06& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/product/ProductGallery.vue?vue&type=template&id=2862ef06&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductGallery_vue_vue_type_template_id_2862ef06___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/frontend/components/product/Show.vue":
 /*!***********************************************************!*\
   !*** ./resources/js/frontend/components/product/Show.vue ***!
@@ -52086,7 +52354,7 @@ __webpack_require__.r(__webpack_exports__);
   namespaced: true,
   state: {
     cars: [],
-    currentAuto: []
+    currentAuto: null
   },
   getters: {
     getCars: function getCars(state) {

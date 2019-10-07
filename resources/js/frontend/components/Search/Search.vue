@@ -1,7 +1,7 @@
 <template>
     <div v-if="getShow">
         <div class="popup-black2" @click="hideModalSearch"></div>
-        <div class="container">
+        <div class="container popup-black2-container">
             <div class="search-modal-wrapper row">
                 <form class="header__popup-search">
                     <div class="close"><img src="/img/frontend/img/svg/cross.svg" alt="img" @click="hideModalSearch"></div>
