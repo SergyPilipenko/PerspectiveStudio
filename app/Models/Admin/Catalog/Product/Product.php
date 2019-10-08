@@ -106,7 +106,7 @@ class Product extends Model implements ProductInterface
         return $this->priceFilter->getProductPrice($this);
     }
 
-    public function canBeDisplayed()
+    public function productCanBeDisplayed()
     {
         if($this->getPrice() > 0) {
             return true;

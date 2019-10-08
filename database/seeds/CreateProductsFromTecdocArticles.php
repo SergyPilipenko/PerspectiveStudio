@@ -30,6 +30,7 @@ class CreateProductsFromTecdocArticles extends Seeder
      */
     public function run($id_from = false)
     {
+        $this->product->where('attribute_family_id', $this->tecdoc_attribute_family_id)->delete();
         $sql = "SELECT id, supplierid, datasupplierarticlenumber FROM article_numbers ";
         if($id_from) {
             $sql = $sql . "WHERE id > $id_from ";

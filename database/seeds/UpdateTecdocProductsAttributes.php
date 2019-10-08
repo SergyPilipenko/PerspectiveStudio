@@ -12,12 +12,18 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $productAttributeValue;
     private $productAttributesData = [];
     private $productImage;
+    private $last_id;
+    private $tecdoc_attribute_family_id;
+    private $total;
+    private $iteration = 0;
 
     public function __construct(AttributeFamily $attributeFamily, ProductAttributeValue $productAttributeValue, ProductImage $productImage)
     {
         $this->attributeFamily = $attributeFamily->where('code', 'tecdoc')->firstOrFail();
         $this->productAttributeValue = $productAttributeValue;
         $this->productImage = $productImage;
+        $this->tecdoc_attribute_family_id = AttributeFamily::where('code', 'tecdoc')->first()->id;
+
     }
 
     /**
@@ -25,15 +31,29 @@ class UpdateTecdocProductsAttributes extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run($id_from = false)
     {
+        if(!$this->total) {
+            $this->total = \App\Models\Admin\Catalog\Product\Product::all()->count();
+        }
         $sql = "SELECT pp.id, ta.NormalizedDescription as name, ts.description as manufacturer, tan.supplierId as supplierId
                 FROM ".env('DB_DATABASE').".products pp
                 JOIN ".env('DB_TECDOC_DATABASE').".article_numbers tan ON pp.id = tan.id
                 JOIN ".env('DB_TECDOC_DATABASE').".articles ta ON tan.datasupplierarticlenumber = ta.DataSupplierArticleNumber AND tan.supplierId = ta.supplierId
                 JOIN ".env('DB_TECDOC_DATABASE').".suppliers ts ON tan.supplierId = ts.id
+                WHERE pp.attribute_family_id = ".$this->tecdoc_attribute_family_id."
                 ";
+        if($id_from) {
+            $sql .= " AND pp.id > {$id_from}";
+        }
+        $sql .= " LIMIT 500";
+
         $products = DB::connection('mysql')->select($sql);
+        $this->iteration += count($products);
+        if(!count($products)) {
+
+            dd("done");
+        }
         $attributes = $this->attributeFamily->custom_attributes()->get();
 
         $product_images = [];
@@ -71,6 +91,7 @@ class UpdateTecdocProductsAttributes extends Seeder
 //                'name' => env('TECDOC_IMAGES_PATH').'/'.$product->supplierId.'/'.$product->PictureName,
 //                'product_id' => $product->id
 //            ];
+            $this->last_id = $product->id;
         }
 
         foreach ($this->productAttributesData as $data) {
@@ -78,6 +99,8 @@ class UpdateTecdocProductsAttributes extends Seeder
                 $this->productAttributeValue->insert($item);
             }
         }
+        echo $this->iteration.'/'.$this->total."\n";
+        $this->run($this->last_id);
 //        $this->productImage->insert($product_images);
 
         dd('ok');

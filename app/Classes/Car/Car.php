@@ -4,13 +4,13 @@
 namespace App\Classes\Car;
 
 
+use App\Classes\Garage;
 use App\Models\Tecdoc\PassangerCar;
+use Illuminate\Support\Facades\Session;
 
 class Car implements CarInterface
 {
     public $brand, $model, $modification, $year, $modification_id;
-
-
 
     public function prepareData(PassangerCar $passangerCar) : self
     {
@@ -38,6 +38,30 @@ class Car implements CarInterface
 
         return $cars;
     }
+
+    public function getCar($modification)
+    {
+        $passangercar = PassangerCar::where('id', $modification)->with(['attributes', 'model.brand'])->first();
+        $car = $this->prepareData($passangercar);
+        $sessionActiveCar = $this->getSessionActiveCar();
+        if(isset($sessionActiveCar[Garage::MODIFICATION_ID]) && isset($sessionActiveCar[Garage::MODIFICATION_ID]) && $sessionActiveCar[Garage::MODIFICATION_ID] == $passangercar->id) {
+            $car->year = $sessionActiveCar[Garage::MODIFICATION_YEAR];
+        }
+
+        return $car;
+    }
+
+    public function formatCapacity($capacity)
+    {
+        return number_format(preg_replace('/[^0-9\.,]/', '',$capacity), 1);
+    }
+
+
+    public function getSessionActiveCar()
+    {
+        return Session::get(Garage::CURRENT_AUTO);
+    }
+
 
     private function getPassangerCarYear($id, $list)
     {
