@@ -1918,7 +1918,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       garageList: false,
-      grg: []
+      grg: [],
+      show: false
     };
   },
   created: function created() {
@@ -1938,6 +1939,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _float = parseFloat(capacity.replace(/[^0-9\.,]/g, ''));
 
       return _float.toFixed(1);
+    },
+    showGarage: function showGarage() {
+      this.show = !this.show;
     },
     formatPower: function formatPower(power) {
       return power.replace(/\D+/g, '') + ' л.с';
@@ -35504,105 +35508,117 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "header__punkt header__car" }, [
-    _c("img", {
-      staticClass: "icon",
-      attrs: { src: "/img/frontend/img/svg/car.svg", alt: "car" }
-    }),
-    _vm._v(" "),
-    _c("span", {
-      staticClass: "header__punkt-counter",
-      domProps: { textContent: _vm._s(_vm.getCars.length) }
-    }),
-    _vm._v(" "),
-    _c("span", { staticClass: "header__punkt-title" }, [_vm._v("Гараж")]),
-    _vm._v(" "),
-    _c("img", {
-      staticClass: "arrow",
-      attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
-    }),
-    _vm._v(" "),
-    _vm.getCars.length
-      ? _c("div", { staticClass: "header__car-dropdown" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("h3", [_vm._v("Ваш гараж")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "d-flex flex-column header__car-dropdown-list" },
-            _vm._l(_vm.getCars, function(car) {
-              return _c("div", { staticClass: "header__car-dropdown-item" }, [
-                _c("div", { staticClass: "d-flex flex-column" }, [
-                  _c("a", {
-                    staticClass: "header__car-dropdown-item-title",
-                    attrs: { href: car.path },
-                    domProps: {
-                      textContent: _vm._s(
-                        car.year +
-                          " " +
-                          car.brand.description +
-                          " " +
-                          car.model.description
-                      )
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    {
+  return _c(
+    "div",
+    {
+      class: {
+        "header__punkt header__car active": _vm.show,
+        "header__punkt header__car": !_vm.show
+      },
+      on: { click: _vm.showGarage }
+    },
+    [
+      _c("img", {
+        staticClass: "icon",
+        attrs: { src: "/img/frontend/img/svg/car.svg", alt: "car" }
+      }),
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "header__punkt-counter",
+        domProps: { textContent: _vm._s(_vm.getCars.length) }
+      }),
+      _vm._v(" "),
+      _c("span", { staticClass: "header__punkt-title" }, [_vm._v("Гараж")]),
+      _vm._v(" "),
+      _c("img", {
+        staticClass: "arrow",
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      }),
+      _vm._v(" "),
+      _vm.getCars.length
+        ? _c("div", { staticClass: "header__car-dropdown" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("h3", [_vm._v("Ваш гараж")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "d-flex flex-column header__car-dropdown-list" },
+              _vm._l(_vm.getCars, function(car) {
+                return _c("div", { staticClass: "header__car-dropdown-item" }, [
+                  _c("div", { staticClass: "d-flex flex-column" }, [
+                    _c("a", {
+                      staticClass: "header__car-dropdown-item-title",
+                      attrs: { href: car.path },
                       domProps: {
                         textContent: _vm._s(
-                          _vm.formatCapacity(car.Capacity) +
+                          car.year +
                             " " +
-                            _vm.ucfirst(car.FuelType) +
-                            ", " +
-                            car.BodyType.toLowerCase() +
-                            ", " +
-                            _vm.formatPower(car.Power)
+                            car.brand.description +
+                            " " +
+                            car.model.description
                         )
                       }
-                    },
-                    [_vm._v(" CRTF")]
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.formatCapacity(car.Capacity) +
+                              " " +
+                              _vm.ucfirst(car.FuelType) +
+                              ", " +
+                              car.BodyType.toLowerCase() +
+                              ", " +
+                              _vm.formatPower(car.Power)
+                          )
+                        }
+                      },
+                      [_vm._v(" CRTF")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    { staticClass: "catalog", attrs: { href: car.path } },
+                    [_vm._v("Каталог")]
                   )
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "d-flex align-items-center justify-content-between header__car-buttons"
+              },
+              [
+                _c("button", { staticClass: "header__car-dropdown-add" }, [
+                  _vm._v("Добавить")
                 ]),
                 _vm._v(" "),
-                _c("a", { staticClass: "catalog", attrs: { href: car.path } }, [
-                  _vm._v("Каталог")
-                ])
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "d-flex align-items-center justify-content-between header__car-buttons"
-            },
-            [
-              _c("button", { staticClass: "header__car-dropdown-add" }, [
-                _vm._v("Добавить")
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "header__car-dropdown-clear",
-                  on: { click: _vm.clearGarage }
-                },
-                [_vm._v("Очистить")]
-              )
-            ]
-          )
-        ])
-      : _c("div", { staticClass: "header__car-dropdown" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("h3", [_vm._v("Ваш гараж пуст")])
-        ])
-  ])
+                _c(
+                  "button",
+                  {
+                    staticClass: "header__car-dropdown-clear",
+                    on: { click: _vm.clearGarage }
+                  },
+                  [_vm._v("Очистить")]
+                )
+              ]
+            )
+          ])
+        : _c("div", { staticClass: "header__car-dropdown" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("h3", [_vm._v("Ваш гараж пуст")])
+          ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {

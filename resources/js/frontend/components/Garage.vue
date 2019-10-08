@@ -1,5 +1,5 @@
 <template>
-    <div class="header__punkt header__car">
+    <div :class="{'header__punkt header__car active':show,'header__punkt header__car':!show}" @click="showGarage">
         <img src="/img/frontend/img/svg/car.svg" alt="car" class="icon">
         <span class="header__punkt-counter" v-text="getCars.length"></span>
         <span class="header__punkt-title">Гараж</span>
@@ -74,7 +74,8 @@
         data() {
             return {
                 garageList: false,
-                grg: []
+                grg: [],
+                show: false
             }
         },
         created() {
@@ -95,6 +96,9 @@
                 var float = parseFloat(capacity.replace(/[^0-9\.,]/g, ''));
 
                 return float.toFixed(1);
+            },
+            showGarage() {
+                this.show = !this.show;
             },
             formatPower(power) {
                 return power.replace(/\D+/g, '') + ' л.с'

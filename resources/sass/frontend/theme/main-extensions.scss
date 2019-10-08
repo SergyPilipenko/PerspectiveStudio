@@ -40,4 +40,22 @@
     }
 }
 
+.header__punkt.header__car {
+    cursor: pointer;
+}
 
+.header__punkt.header__car.active {
+    .header__car-dropdown {
+        display: block;
+    }
+}
+.header__punkt.header__car:hover {
+    .header__car-dropdown {
+        display: none;
+    }
+}
+.header__punkt.header__car.active:hover {
+    .header__car-dropdown {
+        display: block;
+    }
+}

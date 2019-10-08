@@ -72,6 +72,7 @@ class Garage
      */
     public function setActiveCar(int $modification, $year = null)
     {
+        if(!$this->getSelectedYear()) return;
 
         if($this->carInGarage($modification) == false) {
             $this->addCarToSessionGarageList($modification, $year);
