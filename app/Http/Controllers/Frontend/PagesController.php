@@ -104,7 +104,6 @@ class PagesController extends Controller
         $car = $car->getCar($modification);
 
         $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
-
         if($categories->count() && $categories->children->count()) {
             $categories = $categories->children;
         }
@@ -120,14 +119,14 @@ class PagesController extends Controller
 //            ? PassangerCar::whereIn('id', $garage_list->pluck('modification_id'))->with('attributes')->get()
 //            : null;
 //
-        $category = Category::whereSlug($category)->firstOrFail();
-//
+        $category = Category::whereSlug($category)->with('children')->firstOrFail();
 //        $current_auto = $garageInstance->getActiveCar();
 //
 //        $categories = $category->children;
 //
-        $ids = collect($category->getParts($modification))->pluck('product_id')->toArray();
-        $products = $product->getProducts($ids);
+//        $ids = collect($category->getParts($modification))->pluck('product_id')->toArray();
+        $products = $category->getProducts([$modification], 15);
+
 //        dd($products);
 
 //

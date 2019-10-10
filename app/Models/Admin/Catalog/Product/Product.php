@@ -120,15 +120,22 @@ class Product extends Model implements ProductInterface
         return $this->hasMany(Price::class, 'article_id', 'id');
     }
 
-    public function getProducts(array $ids)
+    public function getProducts(array $ids, $paginate = false)
     {
         if(!count($ids)) return $ids;
 
-        $products = $this->with('images')->whereIn('id', $ids)->get();
+        $products = $this->with('images')->whereIn('id', $ids)->paginate(15);
+//        if($paginate && $paginate > 0) {
+//            $products = $products->paginate($paginate);
+//        } else {
+//            $products = $products->get();
+//        };
 
         foreach ($products as $product)
         {
             $attributes = $product->getProductAttributes();
+            dd($product);
+
             foreach ($attributes as $key => $attribute)
             {
                 if(!$product->getAttribute($key))
@@ -175,6 +182,7 @@ class Product extends Model implements ProductInterface
         JOIN attributes a ON pav.attribute_id = a.id
         WHERE p.id = {$this->id}";
         $attributes = DB::connection('mysql')->select($sql);
+
         $formatted = [];
         foreach ($attributes as $attribute) {
             if(!in_array($attribute->code, ProductAttributeValue::$ignoreAttributes)) {

@@ -11,6 +11,7 @@ class PartfixTecDoc extends Tecdoc
     public $linkageTypeId = [];
 
     public $section_parts = [];
+    private $res;
 
     /**
      * PartfixTecDoc constructor.
@@ -274,6 +275,7 @@ class PartfixTecDoc extends Tecdoc
     public function getNestedSections($modification_id, $section_id = null)
     {
         $sections = $this->getSections($modification_id, $section_id);
+        dd($sections);
         if(count($sections)) {
             foreach ($sections as $section) {
                 $section->children = $this->getNestedSections($modification_id, $section->id);
@@ -298,6 +300,41 @@ class PartfixTecDoc extends Tecdoc
     public function getAllSectionParts()
     {
         $sections = $this->getNestedSections();
+    }
+
+    /**
+     * Выборка всех запчастей категории, включая подкатегории
+     *
+     * @param array $modifications
+     * @param \App\Models\Categories\Category $category
+     * @return array
+     */
+    public function getPartfixTecdocSectionPartsIds(
+        array $modifications,
+        \App\Models\Categories\Category $category
+    )
+    {
+        $sql = "SELECT DISTINCT an.id product_id FROM article_links al 
+                JOIN passanger_car_pds pds on al.supplierid = pds.supplierid 
+                LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid 
+                JOIN suppliers s on s.id = al.supplierid 
+                JOIN passanger_car_prd prd on prd.id = al.productid 
+                WHERE al.productid = pds.productid AND al.linkageid = pds.passangercarid AND al.linkageid in (".implode(',',$modifications).") 
+                AND pds.nodeid IN (SELECT d.passanger_car_trees_id from pfx.distinct_passanger_car_trees d,
+                (SELECT MIN(d._lft) as min_left, MAX(d._rgt) as max_right  FROM pfx.`categories` c
+                JOIN pfx.category_distinct_passanger_car_trees cd on c.id = cd.category_id
+                JOIN pfx.distinct_passanger_car_trees d on cd.distinct_pct_id = d.id
+                WHERE c._lft >= {$category->_lft} AND c._rgt <= {$category->_rgt}) w
+                WHERE d._lft >= w.min_left AND d._rgt <= w.max_right) 
+                AND al.linkagetypeid = 2";
+        $ids = [];
+        $result = DB::connection($this->connection)->select($sql);
+        if(count($result)) {
+            foreach ($result as $item) {
+                $ids[] = $item->product_id;
+            }
+        }
+        return $ids;
     }
 
 
