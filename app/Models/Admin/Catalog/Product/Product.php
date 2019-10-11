@@ -125,31 +125,28 @@ class Product extends Model implements ProductInterface
         if(!count($ids)) return $ids;
 
         $products = $this->with('images')->whereIn('id', $ids)->paginate(15);
-//        if($paginate && $paginate > 0) {
-//            $products = $products->paginate($paginate);
-//        } else {
-//            $products = $products->get();
-//        };
 
-        foreach ($products as $product)
-        {
-            $attributes = $product->getProductAttributes();
-            dd($product);
+        $products = resolve('App\Models\Admin\Catalog\Attributes\Attribute')->setProductsAttributes($products);
 
-            foreach ($attributes as $key => $attribute)
-            {
-                if(!$product->getAttribute($key))
-                {
-                    if($key == 'price') {
-                        $product->$key = $product->getPrice();
-                        continue;
-                    }
-                    $product->$key = $attribute;
-                } else {
-                    $product->custom_attributes = $attribute;
-                }
-            }
-        }
+//        foreach ($products as $product)
+//        {
+//            $attributes = $product->getProductAttributes();
+//
+//            foreach ($attributes as $key => $attribute)
+//            {
+//                if(!$product->getAttribute($key))
+//                {
+//                    if($key == 'price') {
+//                        $product->$key = $product->getPrice();
+//                        continue;
+//                    }
+//                    $product->$key = $attribute;
+//                } else {
+//                    $product->custom_attributes = $attribute;
+//                }
+//            }
+//        }
+//        dd($products);
 
         return $products;
     }
@@ -193,6 +190,8 @@ class Product extends Model implements ProductInterface
 
         return $formatted;
     }
+
+
 
 //    public function attribute_values()
 //    {

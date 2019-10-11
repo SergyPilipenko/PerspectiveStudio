@@ -126,7 +126,6 @@ class PagesController extends Controller
 //
 //        $ids = collect($category->getParts($modification))->pluck('product_id')->toArray();
         $products = $category->getProducts([$modification], 15);
-
 //        dd($products);
 
 //

@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
 //             AttributeFamilyTableSeeder::class,
 //             AttributeGroupTableSeeder::class,
 //             AttributeGroupTableSeeder::class,
-             RenameVWtoVOLKSWAGEN::class,
-             CreateProductsFromTecdocArticles::class,
-             UpdateTecdocProductsAttributes::class
+//             RenameVWtoVOLKSWAGEN::class,
+//             CreateProductsFromTecdocArticles::class,
+//             UpdateTecdocProductsAttributes::class
          ]);
     }
 }
