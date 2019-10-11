@@ -13,9 +13,9 @@ class ProductAttributeValue extends Model
     protected $fillable = [
         'product_id',
         'attribute_id',
-        'channel_id',
-        'locale',
-        'channel',
+//        'channel_id',
+//        'locale',
+//        'channel',
         'text_value',
         'boolean_value',
         'integer_value',
@@ -62,5 +62,10 @@ class ProductAttributeValue extends Model
         $data[self::$attributeTypeFields[$attribute->type]] = $data['value'];
 
         return $this->create($data);
+    }
+
+    public function getFillableFields()
+    {
+        return $this->fillable;
     }
 }

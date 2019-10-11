@@ -88,9 +88,9 @@ class TecdocController extends Controller
                 'displayvalue' => $request->body_type
             ]
         ])->get();
-
+//        return $request->selected_year;
         $filtered_models = PassangerCar::filterByYear($request->selected_year, $models);
-//        return json_encode($models);
+
 
         return $tecDoc->getModificationsEngines(
             implode(collect($filtered_models)->pluck('id')->toArray(), ','),

@@ -36,6 +36,7 @@ class CategoriesController extends Controller
 
     public function store(Request $request, $parent_category = null)
     {
+//        dd($request);
         $this->validate($request, [
             'category_title' => 'required',
             'slug' => 'required|string'

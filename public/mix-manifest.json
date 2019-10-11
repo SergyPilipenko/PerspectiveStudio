@@ -1,6 +1,10 @@
 {
-    "/js/admin.js": "/js/admin.js?id=6b2042e2e79e30e11cd9",
-    "/css/app.css": "/css/app.css?id=c3e7004175afec87046d",
-    "/css/admin/admin.css": "/css/admin/admin.css?id=cf52ef8caa110585d9c3",
-    "/js/app.js": "/js/app.js?id=a702d1d1558a25ac10f9"
+    "/js/admin.js": "/js/admin.js?id=af1cce0b3bf8809ff6db",
+    "/css/app.css": "/css/app.css?id=1bc11f74e9d4fa3c0047",
+    "/css/admin/admin.css": "/css/admin/admin.css?id=d60c39b12e5e56519bf7",
+    "/js/admin.js.map": "/js/admin.js.map?id=9d49e4817d6346143919",
+    "/css/app.css.map": "/css/app.css.map?id=398d58010e9a826da921",
+    "/css/admin/admin.css.map": "/css/admin/admin.css.map?id=f6d0d109dd4f82839134",
+    "/js/app.js": "/js/app.js?id=aa86996778a8c8f58dde",
+    "/js/app.js.map": "/js/app.js.map?id=f8c785f6c5c31645fd0a"
 }

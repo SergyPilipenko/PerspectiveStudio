@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             <div class="subcategory__main">
-                                @foreach($products as $product)
+                            @foreach($products as $product)
                                     @if($product->productCanBeDisplayed())
                                         <div class="subcategory__cell">
                                             <div class="subcategory__img">
@@ -208,6 +208,8 @@
                                         </div>
                                     @else
                                         <div class="subcategory__cell subcategory__cell--na">
+                                            <h1>{{ $product->id }}</h1>
+
                                             <div class="subcategory__img">
                                                 <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                             </div>
@@ -216,9 +218,11 @@
                                             <span class="subcategory__type">{{ $product->name }}</span>
                                             <a href="#" class="subcategory__notify">Сообщить о поступлении</a>
                                         </div>
-                                    @endifdev
+                                    @endif
                                 @endforeach
-{{--                                <div class="subcategory__cell">--}}
+                                {{ $products->links() }}
+
+                                {{--                                <div class="subcategory__cell">--}}
 {{--                                    <div class="subcategory__img">--}}
 {{--                                        <img src="/img/frontend/img/subcategory2.png" alt="photo">--}}
 {{--                                    </div>--}}

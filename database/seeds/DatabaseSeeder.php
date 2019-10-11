@@ -11,7 +11,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(DistinctPassangerCarTree::class);
-         $this->call(ImportColumnSeeder::class);
+         $this->call([
+//             DistinctPassangerCarTree::class,
+//             ImportColumnSeeder::class,
+//             AutoTypes::class,
+//             AddManufacturersSlug::class,
+//             AddModelsSlug::class,
+//             AddModelsConstructionIntervalTable::class,
+//             AttributeFamilyTableSeeder::class,
+//             AttributeGroupTableSeeder::class,
+//             AttributeGroupTableSeeder::class,
+//             RenameVWtoVOLKSWAGEN::class,
+//             CreateProductsFromTecdocArticles::class,
+//             UpdateTecdocProductsAttributes::class
+         ]);
     }
 }
