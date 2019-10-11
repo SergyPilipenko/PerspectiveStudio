@@ -216,7 +216,7 @@
                                             <span class="subcategory__type">{{ $product->name }}</span>
                                             <a href="#" class="subcategory__notify">Сообщить о поступлении</a>
                                         </div>
-                                    @endif
+                                    @endifdev
                                 @endforeach
 {{--                                <div class="subcategory__cell">--}}
 {{--                                    <div class="subcategory__img">--}}
