@@ -227,7 +227,9 @@
                 axios.post('/search', Form)
                     .then(function (data) {
                         self.categories = data.data.categories;
-                        self.products = data.data.products;
+                        if(data.data.products.data != undefined && data.data.products.data.length) {
+                            self.products = data.data.products.data;
+                        }
                     })
             },
             addToCartAction(id) {

@@ -27,7 +27,6 @@ class ProductsController extends Controller
     {
         $prices = ArticleNumber::with('supplier', 'article', 'prices')->filter($filter)->paginate(10);
 
-
         return view('admin.products.index', compact('prices'));
     }
 

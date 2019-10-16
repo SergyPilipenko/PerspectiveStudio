@@ -14,6 +14,21 @@
                 </div>
             </div>
         </div>
+        <div class="category-type" v-if="types && types.length">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="category_title">Тип: [{{ locale }}]</label>
+                        <select name="type" id="type" class="form-control"
+                                v-model="categoryTitle">
+                            <option :value="type"
+                                    v-for="type in types"
+                                    v-text="type"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="category-slug">
             <div class="row">
                 <div class="col-md-4">
@@ -34,13 +49,14 @@
 <script>
 
     export default {
-        props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale'],
+        props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale', 'types'],
 
         data() {
             return {
                 title: '',
                 slug: this.current_slug,
                 spt: '',
+                categoryTitle: 'default'
             }
         },
         created() {

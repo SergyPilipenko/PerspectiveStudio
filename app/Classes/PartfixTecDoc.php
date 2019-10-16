@@ -311,8 +311,8 @@ class PartfixTecDoc extends Tecdoc
      * @return array
      */
     public function getPartfixTecdocSectionPartsIds(
-        array $modifications,
-        \App\Models\Categories\Category $category
+        \App\Models\Catalog\Category $category,
+        array $modifications = null
     )
     {
 //        $cacheKey = 'car.products.'.md5(implode(',',$modifications).$category->id);
@@ -329,7 +329,7 @@ class PartfixTecDoc extends Tecdoc
                 JOIN passanger_car_prd prd on prd.id = al.productid 
                 WHERE al.productid = pds.productid AND al.linkageid = pds.passangercarid AND al.linkageid in (".implode(',',$modifications).") 
                 AND pds.nodeid IN (SELECT d.passanger_car_trees_id from ".env('DB_DATABASE').".distinct_passanger_car_trees d,
-                (SELECT MIN(d._lft) as min_left, MAX(d._rgt) as max_right  FROM ".env('DB_DATABASE').".`categories` c
+                (SELECT MIN(d._lft) as min_left, MAX(d._rgt) as max_right  FROM ".env('DB_DATABASE').".`catalog_categories` c
                 JOIN ".env('DB_DATABASE').".category_distinct_passanger_car_trees cd on c.id = cd.category_id
                 JOIN ".env('DB_DATABASE').".distinct_passanger_car_trees d on cd.distinct_pct_id = d.id
                 WHERE c._lft >= {$category->_lft} AND c._rgt <= {$category->_rgt}) w
@@ -341,7 +341,6 @@ class PartfixTecDoc extends Tecdoc
             foreach ($result as $item) {
                 $ids[] = $item->product_id;
             }
-//            Cache::put($cacheKey, $ids);
         }
 
         return $ids;

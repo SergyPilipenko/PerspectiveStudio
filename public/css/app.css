@@ -6545,6 +6545,18 @@ a:hover {
   display: block;
 }
 
+.subcategory__pagination li:first-child a {
+  font-size: 20px;
+}
+
+.subcategory__pagination li a.current {
+  color: #212121;
+}
+
+.subcategory__pagination li:last-child a {
+  font-size: 20px;
+}
+
 [v-cloak] .v-cloak--block {
   display: block;
 }

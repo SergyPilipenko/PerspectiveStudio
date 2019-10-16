@@ -6345,13 +6345,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale'],
+  props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale', 'types'],
   data: function data() {
     return {
       title: '',
       slug: this.current_slug,
-      spt: ''
+      spt: '',
+      categoryTitle: 'default'
     };
   },
   created: function created() {
@@ -70583,6 +70599,57 @@ var render = function() {
         ])
       ])
     ]),
+    _vm._v(" "),
+    _vm.types && _vm.types.length
+      ? _c("div", { staticClass: "category-type" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "category_title" } }, [
+                  _vm._v("Тип: [" + _vm._s(_vm.locale) + "]")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.categoryTitle,
+                        expression: "categoryTitle"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "type", id: "type" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.categoryTitle = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  _vm._l(_vm.types, function(type) {
+                    return _c("option", {
+                      domProps: { value: type, textContent: _vm._s(type) }
+                    })
+                  }),
+                  0
+                )
+              ])
+            ])
+          ])
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "category-slug" }, [
       _c("div", { staticClass: "row" }, [

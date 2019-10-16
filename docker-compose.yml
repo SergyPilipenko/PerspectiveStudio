@@ -15,7 +15,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./elasticdata/esdata01:/usr/share/elasticsearch/data
+      - ./docker/elasticdata/esdata01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -35,7 +35,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./elasticdata/esdata02:/usr/share/elasticsearch/data
+      - ./docker/elasticdata/esdata02:/usr/share/elasticsearch/data
     networks:
       - esnet
 

@@ -166,6 +166,9 @@ return [
          * Package Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
+        Partfix\Nav\NavServiceProvider::class,
+        Partfix\CategoriesAdapter\CategoriesAdapterServiceProvider::class,
+
 
         /*
          * Application Service Providers...

@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h1>{{ $category->title }} для <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->formatCapacity($car->Capacity) }}</span></h1>
+                        <h1>{{ $category->category_title }} для <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->formatCapacity($car->Capacity) }}</span></h1>
                         <button>Изменить</button>
                     </div>
                 </div>
@@ -31,140 +31,141 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex">
-                        <div class="subcategory__sidebar">
-                            <div class="subcategory__sidebar-block">
-                                <p><span class="plus">+</span><span class="minus">−</span>Тип запчасти</p>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                        @if($products->count())
+                            <div class="subcategory__sidebar">
+                                <div class="subcategory__sidebar-block">
+                                    <p><span class="plus">+</span><span class="minus">−</span>Тип запчасти</p>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>Оригинал</span>
                                         </div>
-                                        <span>Оригинал</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line mb0">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox checked">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>Аналог</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="subcategory__sidebar-line mb0">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox checked">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                <div class="subcategory__sidebar-block">
+                                    <p><span class="plus">+</span><span class="minus">−</span>Производитель</p>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>A.B.S</span>
                                         </div>
-                                        <span>Аналог</span>
+                                        <span class="quantity">2</span>
                                     </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox checked">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>ABE</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>ATE</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>BEHR/HELLA</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>BLUE PRINT</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>BREMBO</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <img src="/img/frontend/img/febest.png" alt="febest">
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <img src="/img/frontend/img/ferodo.png" alt="ferodo">
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-line">
+                                        <div class="d-flex align-items-center curp">
+                                            <div class="checkbox">
+                                                <img src="/img/frontend/img/svg/checked.svg" alt="checked">
+                                            </div>
+                                            <span>FIT</span>
+                                        </div>
+                                        <span class="quantity">5</span>
+                                    </div>
+                                    <div class="subcategory__sidebar-show">
+                                        <img src="/img/frontend/img/plus.png" alt="plus">
+                                        <span>Показать еще</span>
+                                    </div>
+                                </div>
+                                <div class="subcategory__sidebar-block toggled">
+                                    <p><span class="plus">+</span><span class="minus">−</span>Тип тормозного механизма</p>
+                                </div>
+                                <div class="subcategory__sidebar-block">
+                                    <p><span class="plus">+</span><span class="minus">−</span>Цена, грн</p>
+                                    <div class="d-flex align-items-center subcategory__sidebar-price">
+                                        <input type="text">
+                                        <span></span>
+                                        <input type="text">
+                                        <button type="submit">OK</button>
+                                    </div>
+                                </div>
+                                <button class="subcategory__sidebar-clear">
+                                    Отменить всё
+                                </button>
+                                <div class="subcategory__sidebar-more">
+                                    <h3>Смотрите еще</h3>
+                                    <p><a href="#">Ссылка 1</a>, <a href="#">Ссылка первая</a>, <a href="#">Ссылка
+                                            короткая</a>, <a href="#">Ссылка мощнейшего тока</a>, <a href="#">Ссылка
+                                            микролинк</a>, <a href="#">Ссылка
+                                            сталинская</a>, <a href="#">Отссылка</a>, <a href="#">Как у пацана</a>, <a href="#">Номер
+                                            восемь</a>
+                                    </p>
                                 </div>
                             </div>
-                            <div class="subcategory__sidebar-block">
-                                <p><span class="plus">+</span><span class="minus">−</span>Производитель</p>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>A.B.S</span>
-                                    </div>
-                                    <span class="quantity">2</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox checked">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>ABE</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>ATE</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>BEHR/HELLA</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>BLUE PRINT</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>BREMBO</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <img src="/img/frontend/img/febest.png" alt="febest">
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <img src="/img/frontend/img/ferodo.png" alt="ferodo">
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-line">
-                                    <div class="d-flex align-items-center curp">
-                                        <div class="checkbox">
-                                            <img src="/img/frontend/img/svg/checked.svg" alt="checked">
-                                        </div>
-                                        <span>FIT</span>
-                                    </div>
-                                    <span class="quantity">5</span>
-                                </div>
-                                <div class="subcategory__sidebar-show">
-                                    <img src="/img/frontend/img/plus.png" alt="plus">
-                                    <span>Показать еще</span>
-                                </div>
-                            </div>
-                            <div class="subcategory__sidebar-block toggled">
-                                <p><span class="plus">+</span><span class="minus">−</span>Тип тормозного механизма</p>
-                            </div>
-                            <div class="subcategory__sidebar-block">
-                                <p><span class="plus">+</span><span class="minus">−</span>Цена, грн</p>
-                                <div class="d-flex align-items-center subcategory__sidebar-price">
-                                    <input type="text">
-                                    <span></span>
-                                    <input type="text">
-                                    <button type="submit">OK</button>
-                                </div>
-                            </div>
-                            <button class="subcategory__sidebar-clear">
-                                Отменить всё
-                            </button>
-                            <div class="subcategory__sidebar-more">
-                                <h3>Смотрите еще</h3>
-                                <p><a href="#">Ссылка 1</a>, <a href="#">Ссылка первая</a>, <a href="#">Ссылка
-                                        короткая</a>, <a href="#">Ссылка мощнейшего тока</a>, <a href="#">Ссылка
-                                        микролинк</a>, <a href="#">Ссылка
-                                        сталинская</a>, <a href="#">Отссылка</a>, <a href="#">Как у пацана</a>, <a href="#">Номер
-                                        восемь</a>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="subcategory__items">
+                            <div class="subcategory__items">
                             <div class="subcategory__header">
                                 <span>Найдено {{ $products->count() }} товаров</span>
                                 <div class="d-flex align-items-center">
@@ -182,37 +183,47 @@
                             @foreach($products as $product)
                                     @if($product->productCanBeDisplayed())
                                         <div class="subcategory__cell">
-                                            <div class="subcategory__img">
-                                                <img src="{{ asset($product->image) }}" alt="photo">
-                                            </div>
-                                            <span class="subcategory__code">Код: {{ $product->article }} </span>
-                                            <span class="subcategory__company">{{ $product->manufacturer }}</span>
-                                            <span class="subcategory__type">{{ $product->name }}</span>
-                                            <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                            <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
-                                            <div class="subcategory__cell subcategory__cell--overlay">
+                                            <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                 <div class="subcategory__img">
-                                                    <img src="/img/frontend/img/subcategory1.png" alt="photo">
+                                                    <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                 </div>
-                                                <span class="subcategory__code">Код: {{ $product->article }} </span>
+                                            </a>
+                                            <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                 <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                 <span class="subcategory__type">{{ $product->name }}</span>
                                                 <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
                                                 <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
-                                                <div class="subcategory__buy">
-                                                    <button>Купить</button>
-                                                    <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="delivery-truck">
-                                                    <span>В наличии</span>
+                                                <div class="subcategory__cell subcategory__cell--overlay">
+                                                    <a href="{{ route('frontend.product.show', $product->slug) }}">
+                                                        <div class="subcategory__img">
+                                                            <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                        </div>
+                                                    </a>
+                                                    <span class="subcategory__code">Код: {{ $product->article }} </span>
+                                                    <span class="subcategory__company">{{ $product->manufacturer }}</span>
+                                                    <span class="subcategory__type">{{ $product->name }}</span>
+                                                    <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
+                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+                                                    <div class="subcategory__buy">
+                                                        <add-to-cart
+                                                            product="{{ $product }}"
+                                                            action="{{ route('frontend.cart.add', $product->id) }}">
+                                                            <div slot="button">
+                                                                <button>Купить</button>
+                                                            </div>
+                                                        </add-to-cart>
+                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="delivery-truck">
+                                                        <span>В наличии</span>
+                                                    </div>
                                                 </div>
-                                            </div>
                                         </div>
                                     @else
                                         <div class="subcategory__cell subcategory__cell--na">
-                                            <h1>{{ $product->id }}</h1>
-
-                                            <div class="subcategory__img">
-                                                <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
-                                            </div>
+                                            <a href="{{ route('frontend.product.show', $product->slug) }}">
+                                                <div class="subcategory__img">
+                                                    <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                </div>
+                                            </a>
                                             <span class="subcategory__code">Код: {{ $product->article }} </span>
                                             <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                             <span class="subcategory__type">{{ $product->name }}</span>
@@ -220,7 +231,6 @@
                                         </div>
                                     @endif
                                 @endforeach
-                                {{ $products->links() }}
 
                                 {{--                                <div class="subcategory__cell">--}}
 {{--                                    <div class="subcategory__img">--}}
@@ -336,15 +346,7 @@
 								<span class="subcategory__total">
 									Показано 6 товаров из 455
 								</span>
-                                <ul class="subcategory__pagination">
-                                    <li><a href="#">Назад</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">Вперед</a></li>
-                                </ul>
+                                {{ $products->links('frontend.UiComponents.pagination.partfix') }}
                             </div>
                             <div class="subcategory__more">
                                 <button>
@@ -353,11 +355,15 @@
                                 </button>
                             </div>
                         </div>
+                        @else
+                            <p>Ничего не найдено...</p>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <section class="subcategory__links">
         <div class="container">
             <div class="row">

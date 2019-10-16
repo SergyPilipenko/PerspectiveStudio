@@ -11,51 +11,21 @@
                     </ul>
                     <div class="white-bg">
                         <h2 class="category__title">Каталог запчастей на <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->year }}</span></h2>
-                        @foreach($categories as $category)
                             @if($category->children->count())
-                                <div class="category__block">
-                                    <h3 class="category__block-title">
-                                        <span>{{ $category->title }}</span>
-                                    </h3>
-                                    <span class="category__block-subtitle">
-                                    {{ $car->brand->description }} {{ $car->model->description }}
-                                </span>
-                                    <div class="category__block-items">
-                                        @foreach($category->children as $child)
-                                            <a href="{{ route('frontend.category', [$brand, $model, $modification, $child->slug]) }}" class="category__block-item"><img src="{{ file_exists($child->image) ? asset($child->image) : asset('img/frontend/img/images-empty.png') }}" alt="list"><span>{{ $child->title }}</span></a>
-                                        @endforeach
+                                    <div class="category__block">
+                                        <h3 class="category__block-title">
+                                            <span>{{ $category->category_title }}</span>
+                                        </h3>
+                                        <span class="category__block-subtitle">
+                                        {{ $car->brand->description }} {{ $car->model->description }}
+                                    </span>
+                                        <div class="category__block-items">
+                                            @foreach($category->children as $child)
+                                                <a href="{{ route('frontend.car.category', [$brand, $model, $modification, $child->slug]) }}" class="category__block-item"><img src="{{ file_exists($child->image) ? asset($child->image) : asset('img/frontend/img/images-empty.png') }}" alt="list"><span>{{ $child->category_title }}</span></a>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
                             @endif
-                        @endforeach
-{{--                        <div class="category__block">--}}
-{{--                            <h3 class="category__block-title">--}}
-{{--                                <span style="min-width: 278px;">Тормозная система</span>--}}
-{{--                            </h3>--}}
-{{--                            <span class="category__block-subtitle">--}}
-{{--								Volkswagen Transporter--}}
-{{--							</span>--}}
-{{--                            <div class="category__block-items">--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные--}}
-{{--										колодки</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи--}}
-{{--										зажигания</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list6.png"--}}
-{{--                                                                              alt="list"><span>Аммортизаторы</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные--}}
-{{--										колодки</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи--}}
-{{--										зажигания</span></a>--}}
-{{--                                <a href="#" class="category__block-item"><img src="/img/frontend/img/list6.png"--}}
-{{--                                                                              alt="list"><span>Аммортизаторы</span></a>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
                         <div class="category__block">
                             <h3 class="category__block-title">
                                 <span>Шины и диски</span>
@@ -495,34 +465,4 @@
         </div>
     </section>
     @include('frontend.partials._advatages')
-{{--    <div class="container">--}}
-{{--        <garage--}}
-{{--            :garage="{{ $garage }}"--}}
-{{--            :current_auto="'{{ json_encode($current_auto) }}'"--}}
-{{--        ></garage>--}}
-{{--        @if($categories->count())--}}
-{{--            <ul>--}}
-{{--                @foreach($categories as $category)--}}
-{{--                    <li>--}}
-{{--                        <a href="{{ route('frontend.category', [$brand, $model, $modification, $category->slug]) }}">{{ $category->title }}</a>--}}
-{{--                    </li>--}}
-{{--                @endforeach--}}
-{{--            </ul>--}}
-{{--        @else--}}
-{{--            <h1>Category has not children</h1>--}}
-{{--        @endif--}}
-{{--        @if(isset($parts) && count($parts))--}}
-{{--            <ul>--}}
-{{--                @foreach($parts as $part)--}}
-{{--                    <li>--}}
-{{--                        <a href="">--}}
-{{--                            {{ $part->supplier_name }} {{ $part->product_name }} {{ $part->part_number }}--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                @endforeach--}}
-{{--            </ul>--}}
-{{--        @else--}}
-{{--            <h1>Parts not found</h1>--}}
-{{--        @endif--}}
-{{--    </div>--}}
 @endsection
