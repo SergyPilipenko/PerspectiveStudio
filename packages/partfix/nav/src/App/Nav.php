@@ -4,7 +4,6 @@
 namespace Partfix\Nav\App;
 
 use App\Models\Catalog\CategoryInterface;
-use Partfix\CategoriesAdapter\App\CategoriesAdapterInterface;
 
 class Nav implements NavInterface
 {
