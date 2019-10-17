@@ -49,6 +49,7 @@
                                         :old="'{{ json_encode(old()) }}'"
                                         :errors_list="'{{ json_encode($errors->messages()) }}'"
                                         :locale="'{{ config('app.fallback_locale') }}'"
+                                        :types="{{ $categoryTypes }}"
                                     ></slugify-title>
                                 </div>
                             </div>

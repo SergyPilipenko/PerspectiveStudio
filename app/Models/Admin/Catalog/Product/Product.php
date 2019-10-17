@@ -122,31 +122,11 @@ class Product extends Model implements ProductInterface
 
     public function getProducts(array $ids, $paginate = false)
     {
-        if(!count($ids)) return $ids;
+        $products = $this->with('images')->whereIn('id', $ids)->paginate($paginate);
 
-        $products = $this->with('images')->whereIn('id', $ids)->paginate(15);
+        if(!$products->count()) return $products;
 
         $products = resolve('App\Models\Admin\Catalog\Attributes\Attribute')->setProductsAttributes($products);
-
-//        foreach ($products as $product)
-//        {
-//            $attributes = $product->getProductAttributes();
-//
-//            foreach ($attributes as $key => $attribute)
-//            {
-//                if(!$product->getAttribute($key))
-//                {
-//                    if($key == 'price') {
-//                        $product->$key = $product->getPrice();
-//                        continue;
-//                    }
-//                    $product->$key = $attribute;
-//                } else {
-//                    $product->custom_attributes = $attribute;
-//                }
-//            }
-//        }
-//        dd($products);
 
         return $products;
     }

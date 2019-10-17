@@ -138,6 +138,9 @@ export default {
             context.commit('resetModifications')
         },
         setCarYear(context, payload) {
+            context.commit('unsetBodyTypes');
+            context.commit('unsetEngines');
+            context.commit('unsetModifications');
             let form = new FormData();
             form.append('selected_year', payload.yearSelected);
             axios.post(payload.action, form);
@@ -160,6 +163,7 @@ export default {
             context.commit('clearModels');
         },
         setModifications: function (context, payload) {
+            context.commit('unsetModifications');
             let form = new FormData();
             form.append('model_Ids', payload.model_Ids);
             form.append('EngineType', payload.EngineType);
@@ -210,6 +214,8 @@ export default {
                 })
         },
         setEngines: function(context, payload) {
+            context.commit('unsetEngines');
+            context.commit('unsetModifications');
             let form = new FormData();
             form.append('model_Ids', payload.modelIds);
             form.append('body_type', payload.selectedBodyType);

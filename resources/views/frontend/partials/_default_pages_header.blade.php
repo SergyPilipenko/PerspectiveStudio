@@ -226,7 +226,7 @@
             </div>
             <div class="col-10">
                 <ul class="header__menu">
-                    @include('frontend.partials._nav')
+                    @include('partfix\nav::frontend._nav')
                     <li class="sale">
                         <a href="#">
                             <img src="{{ asset('img/frontend/img/fire.png') }}" alt="fire">

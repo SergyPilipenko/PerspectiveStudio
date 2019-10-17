@@ -1,6 +1,5 @@
 @extends('frontend')
 @section('content')
-{{--    {{ dd($product) }}--}}
     <section class="card">
         <div class="container">
             <div class="row">
@@ -44,7 +43,7 @@
                             </div>
                             <div class="d-flex align-items-start mb25">
                                 <div class="d-flex flex-column">
-                                    <span class="card__main-newprice">{{ $product->custom_attributes['price'] }} <sup>грн</sup></span>
+                                    <span class="card__main-newprice">{{ $product->price }} <sup>грн</sup></span>
                                     <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>
                                 </div>
                                 <div class="d-flex align-items-start card__main-suitable">

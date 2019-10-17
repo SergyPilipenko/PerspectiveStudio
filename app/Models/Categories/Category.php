@@ -64,6 +64,11 @@ class Category extends Model
         return $this->hasMany(CategoryDistinctPassangerCarTree::class);
     }
 
+    public function scopeRootCategories($query)
+    {
+        return $query->where('parent_id', null);
+    }
+
     public function seo()
     {
        return $this->morphOne(Seo::class, 'entity','entity_model');

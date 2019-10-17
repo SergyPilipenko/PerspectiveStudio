@@ -2249,7 +2249,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       Form.append('searchString', this.searchString);
       axios.post('/search', Form).then(function (data) {
         self.categories = data.data.categories;
-        self.products = data.data.products;
+
+        if (data.data.products.data != undefined && data.data.products.data.length) {
+          self.products = data.data.products.data;
+        }
       });
     },
     addToCartAction: function addToCartAction(id) {
@@ -2652,6 +2655,75 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['year', 'actions', 'models'],
@@ -2661,7 +2733,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       route: JSON.parse(this.actions),
       filteredModels: this.getFilteredModelsByYear,
       bodyTypes: this.getBodyTypes,
-      selectedBodyType: ""
+      selectedBodyType: "",
+      selects: [{
+        id: 1,
+        name: 'year',
+        visible: false
+      }, {
+        id: 2,
+        name: 'bodyType',
+        visible: false
+      }, {
+        id: 3,
+        name: 'engineType',
+        visible: false
+      }, {
+        id: 4,
+        name: 'modification',
+        visible: false
+      }]
     };
   },
   created: function created() {
@@ -2704,7 +2793,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setEngines: 'selectCar/setEngines',
     setModifications: 'selectCar/setModifications'
   }), {
-    setCarBodyType: function setCarBodyType() {
+    setCarBodyType: function setCarBodyType(bodyType) {
+      this.selectedBodyType = bodyType;
       this.pluck({
         value: 'id',
         items: this.getFilteredModelsByYear
@@ -2715,6 +2805,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         selectedYear: this.yearSelected,
         action: this.route['get-models-engines']
       });
+      this.showSelect('engineType');
     },
     setCarCapacity: function setCarCapacity(capacity, engineType) {
       this.pluck({
@@ -2728,8 +2819,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         BodyType: this.selectedBodyType,
         Capacity: capacity
       });
+      this.showSelect('modification');
     },
-    setYear: function setYear() {
+    setYear: function setYear(year) {
+      this.yearSelected = year; // this.hideAllSelects();
+
       this.selectedBodyType = "";
       this.setCarYear({
         action: this.route['set-car-year'],
@@ -2747,6 +2841,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         action: this.route['get-models-body-types'],
         model_Ids: this.getPluckedData
       });
+      this.showSelect('bodyType');
+    },
+    showSelect: function showSelect(name) {
+      this.hideAllSelects(name);
+      var selects = this.selects;
+
+      for (var i in selects) {
+        if (selects[i].name == name) {
+          selects[i].visible = !selects[i].visible;
+        }
+      }
+
+      ;
+      this.selects = selects;
+    },
+    chooseModification: function chooseModification(route) {
+      window.location.href = route;
     },
     convertModelsBackendData: function convertModelsBackendData() {
       var models = this.models;
@@ -2759,6 +2870,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       return data;
+    },
+    hideAllSelects: function hideAllSelects() {
+      var except = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var selects = this.selects;
+
+      for (var i in selects) {
+        if (except) {
+          if (selects[i].name != except) {
+            selects[i].visible = false;
+          }
+        } else {
+          selects[i].visible = false;
+        }
+      }
+
+      ;
+      this.selects = selects;
+    },
+    isVisible: function isVisible(name) {
+      for (var i in this.selects) {
+        if (this.selects[i].name == name) {
+          return this.selects[i].visible;
+        }
+      }
     }
   })
 });
@@ -3569,7 +3704,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.selects = selects;
     },
     showSelect: function showSelect(name) {
-      console.log(1);
       this.hideAllSelects(name);
       var selects = this.selects;
 
@@ -36264,164 +36398,308 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", [
-      !_vm.yearSelected ? _c("label", { attrs: { for: "year" } }) : _vm._e(),
-      _vm._v(" "),
+  return _c(
+    "form",
+    {
+      staticClass:
+        "search__body search__model align-items-center justify-content-center",
+      attrs: { id: "model" }
+    },
+    [
       _c(
-        "select",
+        "div",
         {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.yearSelected,
-              expression: "yearSelected"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { name: "year" },
+          staticClass: "search__model-cover",
           on: {
-            change: [
-              function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.yearSelected = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              },
-              _vm.setYear
-            ]
+            click: function($event) {
+              return _vm.showSelect("year")
+            }
           }
         },
         [
-          _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
+          _vm._m(0),
           _vm._v(" "),
-          _vm._l(_vm.getYearsList, function(year) {
-            return _c("option", {
-              domProps: { value: year, textContent: _vm._s(year) }
-            })
-          })
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.selectedBodyType,
-            expression: "selectedBodyType"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { name: "" },
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.selectedBodyType = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "search__model-dropdown active": _vm.isVisible("year"),
+                "search__model-dropdown": !_vm.isVisible("year")
+              },
+              on: {
+                click: function($event) {
+                  $event.stopPropagation()
+                }
+              }
             },
-            _vm.setCarBodyType
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "" } }, [_vm._v("Не выбрано")]),
-        _vm._v(" "),
-        _vm._l(_vm.getBodyTypes, function(bodyType) {
-          return _c("option", {
-            domProps: {
-              value: bodyType.displayvalue,
-              textContent: _vm._s(bodyType.displayvalue)
-            }
-          })
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("div", [
+            _vm._l(_vm.getYearsList, function(year) {
+              return _c("span", {
+                domProps: { textContent: _vm._s(year) },
+                on: {
+                  click: function($event) {
+                    return _vm.setYear(year)
+                  }
+                }
+              })
+            }),
+            0
+          )
+        ]
+      ),
+      _vm._v(" "),
       _c(
-        "ul",
-        _vm._l(_vm.getEngines, function(engine, engineType) {
-          return _c("li", [
-            _vm._v(
-              "\n                " + _vm._s(engineType) + "\n                "
-            ),
-            _c(
-              "ul",
-              _vm._l(engine, function(capacity) {
-                return _c("li", [
-                  _c("a", {
-                    attrs: { href: "#" },
-                    domProps: { textContent: _vm._s(capacity) },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.setCarCapacity(capacity, engineType)
-                      }
-                    }
-                  })
-                ])
-              }),
-              0
-            )
-          ])
-        }),
-        0
-      )
-    ]),
-    _vm._v(" "),
-    _vm.getModifications
-      ? _c(
-          "div",
-          _vm._l(_vm.getModifications, function(modification) {
-            return _c("div", [
-              _c(
-                "a",
+        "div",
+        {
+          staticClass: "search__model-cover",
+          on: {
+            click: function($event) {
+              return _vm.showSelect("bodyType")
+            }
+          }
+        },
+        [
+          _vm._m(2),
+          _vm._v(" "),
+          _vm._m(3),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "search__model-dropdown active": _vm.isVisible("bodyType"),
+                "search__model-dropdown": !_vm.isVisible("bodyType")
+              },
+              on: {
+                click: function($event) {
+                  $event.stopPropagation()
+                }
+              }
+            },
+            _vm._l(_vm.getBodyTypes, function(bodyType) {
+              return _c("span", {
+                domProps: { textContent: _vm._s(bodyType.displayvalue) },
+                on: {
+                  click: function($event) {
+                    return _vm.setCarBodyType(bodyType.displayvalue)
+                  }
+                }
+              })
+            }),
+            0
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "search__model-cover",
+          on: {
+            click: function($event) {
+              return _vm.showSelect("engineType")
+            }
+          }
+        },
+        [
+          _vm._m(4),
+          _vm._v(" "),
+          _vm._m(5),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "search__model-dropdown active": _vm.isVisible("engineType"),
+                "search__model-dropdown": !_vm.isVisible("engineType")
+              },
+              on: {
+                click: function($event) {
+                  $event.stopPropagation()
+                }
+              }
+            },
+            _vm._l(_vm.getEngines, function(engine, engineType) {
+              return _c("span", [
+                _c("div", { domProps: { textContent: _vm._s(engineType) } }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "capacity-container" },
+                  _vm._l(engine, function(capacity) {
+                    return _c("div", { staticClass: "capacity" }, [
+                      _c("span", {
+                        domProps: { textContent: _vm._s(capacity) },
+                        on: {
+                          click: function($event) {
+                            return _vm.setCarCapacity(capacity, engineType)
+                          }
+                        }
+                      })
+                    ])
+                  }),
+                  0
+                )
+              ])
+            }),
+            0
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "search__model-cover",
+          on: {
+            click: function($event) {
+              return _vm.showSelect("modification")
+            }
+          }
+        },
+        [
+          _vm._m(6),
+          _vm._v(" "),
+          _vm._m(7),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class: {
+                "search__model-dropdown active": _vm.isVisible("modification"),
+                "search__model-dropdown": !_vm.isVisible("modification")
+              },
+              on: {
+                click: function($event) {
+                  $event.stopPropagation()
+                }
+              }
+            },
+            _vm._l(_vm.getModifications, function(modification) {
+              return _c(
+                "span",
                 {
-                  attrs: {
-                    href: _vm.route["auto.model"] + "-" + modification.id
+                  on: {
+                    click: function($event) {
+                      return _vm.chooseModification(
+                        _vm.route["auto.model"] + "-" + modification.id
+                      )
+                    }
                   }
                 },
                 [
                   _vm._v(
-                    "\n                " +
+                    "\n                    " +
                       _vm._s(modification.fulldescription) +
                       " (" +
                       _vm._s(modification.enginePower) +
-                      ")\n            "
+                      ")\n                "
                   )
                 ]
               )
-            ])
-          }),
-          0
-        )
-      : _vm._e()
-  ])
+            }),
+            0
+          )
+        ]
+      )
+    ]
+  )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex align-items-center" }, [
+      _c("span", { staticClass: "search__model-number" }, [_vm._v("1")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex flex-column" }, [
+        _c("span", { staticClass: "search__model-text" }, [_vm._v("Год")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "search__model-arrow" }, [
+      _c("img", {
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex align-items-center" }, [
+      _c("span", { staticClass: "search__model-number" }, [_vm._v("2")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex flex-column" }, [
+        _c("span", { staticClass: "search__model-text" }, [_vm._v("Кузов")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "search__model-arrow" }, [
+      _c("img", {
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex align-items-center" }, [
+      _c("span", { staticClass: "search__model-number" }, [_vm._v("3")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex flex-column" }, [
+        _c("span", { staticClass: "search__model-text" }, [
+          _vm._v("Тип Двигателя")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "search__model-arrow" }, [
+      _c("img", {
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex align-items-center" }, [
+      _c("span", { staticClass: "search__model-number" }, [_vm._v("4")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-flex flex-column" }, [
+        _c("span", { staticClass: "search__model-text" }, [
+          _vm._v("Модификация")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "search__model-arrow" }, [
+      _c("img", {
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -52609,6 +52887,9 @@ __webpack_require__.r(__webpack_exports__);
       context.commit('resetModifications');
     },
     setCarYear: function setCarYear(context, payload) {
+      context.commit('unsetBodyTypes');
+      context.commit('unsetEngines');
+      context.commit('unsetModifications');
       var form = new FormData();
       form.append('selected_year', payload.yearSelected);
       axios.post(payload.action, form);
@@ -52633,6 +52914,7 @@ __webpack_require__.r(__webpack_exports__);
       context.commit('clearModels');
     },
     setModifications: function setModifications(context, payload) {
+      context.commit('unsetModifications');
       var form = new FormData();
       form.append('model_Ids', payload.model_Ids);
       form.append('EngineType', payload.EngineType);
@@ -52681,6 +52963,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     setEngines: function setEngines(context, payload) {
+      context.commit('unsetEngines');
+      context.commit('unsetModifications');
       var form = new FormData();
       form.append('model_Ids', payload.modelIds);
       form.append('body_type', payload.selectedBodyType);

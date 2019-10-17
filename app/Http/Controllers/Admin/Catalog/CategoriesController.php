@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin\Catalog;
 
 use App\Http\Requests\RequestInterface;
 use App\Models\Catalog\Category;
+use App\Models\Catalog\CategoryInterface;
+use App\Models\Categories\CategoryDistinctPassangerCarTree;
+use App\Models\Tecdoc\DistinctPassangerCarTree;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
@@ -23,6 +26,7 @@ class CategoriesController extends Controller
     {
         $this->middleware('auth:admin');
         $this->category = $category;
+
         $this->locale = app()->getLocale();
         App::singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\ProductCategoryRequest');
 
@@ -32,6 +36,7 @@ class CategoriesController extends Controller
      * Создание категории
      *
      * @param null $id
+     * @param CategoryInterface $category
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create($id = null)
@@ -39,8 +44,9 @@ class CategoriesController extends Controller
         $categories = Category::get()->toTree();
 
         $store = $id ? route('admin.catalog.categories.store-subcategory', $this->category->findOrFail($id)->id) : route('admin.catalog.categories.store');
+        $categoryTypes = json_encode($this->category->categoryTypes, true);
 
-        return view('admin.catalog.categories.create', compact('category', 'store', 'categories'));
+        return view('admin.catalog.categories.create', compact('category', 'store', 'categories', 'categoryTypes'));
     }
 
     /**
@@ -74,6 +80,9 @@ class CategoriesController extends Controller
         $category->setTranslation('slug', $this->locale, $request->$loc['slug']);
 
         $category->activity = $request->category_activity ? 1 : 0;
+        if($request->type != 'default' && in_array($request->type, $this->category->categoryTypes)) {
+            $category->type = $request->type;
+        }
 
         isset($parent) && $parent->exists ? $category->appendToNode($parent)->save() : $category->save();
 
@@ -93,8 +102,24 @@ class CategoriesController extends Controller
         $category = $this->category->findOrFail($id);
 
         $categories = Category::orderBy('position', 'asc')->get()->toTree();
+        if($category->type == 'tecdoc') {
+            $tec_doc_categories = DistinctPassangerCarTree::get();
 
-        return view('admin.catalog.categories.edit', compact('category', 'categories'));
+            $category_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', $id)->pluck('distinct_pct_id');
+            $disabled_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', '!=', $id)->pluck('distinct_pct_id');
+
+            foreach ($tec_doc_categories as &$tec_doc_category) {
+                if(in_array($tec_doc_category->id, $category_distinct_tecdoc_categories->toArray())) {
+                    $tec_doc_category->checked = true;
+                }
+            }
+
+            $tec_doc_categories = $this->prepareNodes($tec_doc_categories, $disabled_distinct_tecdoc_categories)->toTree();
+
+            $category_distinct_tecdoc_categories = $category_distinct_tecdoc_categories->toJson();
+        }
+
+        return view('admin.catalog.categories.edit', compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories'));
     }
 
     /**
@@ -130,5 +155,23 @@ class CategoriesController extends Controller
         Session::flash('flash', 'Категория была удалена успешно');
 
         return redirect()->route('admin.catalog.categories.create');
+    }
+
+    private function prepareNodes($nodes, $disabled_distinct_tecdoc_categories)
+    {
+        if($nodes) {
+            foreach ($nodes as $key => &$node) {
+                if(!$node) {
+                    unset($nodes[$key]);
+                } else {
+                    $node->label = $node->description;
+                    if(in_array($node->id, $disabled_distinct_tecdoc_categories->toArray())) {
+                        $node->isDisabled = "true";
+                    };
+                    unset($node->description);
+                };
+            }
+        }
+        return $nodes;
     }
 }

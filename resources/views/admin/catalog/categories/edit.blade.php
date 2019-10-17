@@ -53,6 +53,20 @@
                                                         </label>
                                                     </div>
                                                 </div>
+                                                <div class="category-type">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="type" id="type">Тип: [{{ $category->locale->getLocale() }}]</label>
+                                                                <select name="type" id="type" class="form-control" disabled>
+                                                                    @foreach($category->categoryTypes as $type)
+                                                                        <option value="type" {{ $category->type == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="category-title">
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -128,6 +142,18 @@
                                                 </div>
                                             </div>
                                         </accordian>
+                                        @if($category->type == 'tecdoc')
+                                            <accordian>
+                                                <div slot="header">Соотношение с tecdoc категориями</div>
+                                                <div slot="body">
+                                                    <tecdoc-categories-tree
+                                                        :categories="{{ $tec_doc_categories }}"
+                                                        :category_distinct_tecdoc_categories="{{ $category_distinct_tecdoc_categories }}"
+                                                        :disabled_distinct_tecdoc_categories="{{ $disabled_distinct_tecdoc_categories }}"
+                                                    ></tecdoc-categories-tree>
+                                                </div>
+                                            </accordian>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

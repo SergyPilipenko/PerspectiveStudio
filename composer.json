@@ -43,7 +43,10 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Partfix\\Nav\\": "packages/partfix/nav/src",
+            "Partfix\\CategoriesAdapter\\": "packages/partfix/categories-adapter/src",
+            "Partfix\\Category\\": "packages/partfix/category/src"
         },
         "classmap": [
             "database/seeds",

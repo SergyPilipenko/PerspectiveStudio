@@ -11,6 +11,7 @@ use App\Classes\RoutesParser\RoutesParserInterface;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
+use App\Models\Catalog\CategoryInterface;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
@@ -36,14 +37,6 @@ class PagesController extends Controller
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
-
-//        $garage = Session::get('garage')
-//            ? PassangerCar::whereIn('id', collect(Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
-//            : null;
-
-//        $current_auto = Session::get('current-auto') ?: null;
-
-//        $categories = $category->active()->orderBy('parent_id', 'asc')->get();
 
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
@@ -85,7 +78,7 @@ class PagesController extends Controller
             'slug' => $model,
             'manufacturer_id' => $manufacturer->manufacturer_id
         ])->with('model')->get();
-//        dd($models->where('id', 60087));
+
         $routes = [
             'set-car-year' => route('set-car-year'),
             'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
@@ -103,36 +96,27 @@ class PagesController extends Controller
 
         $car = $car->getCar($modification);
 
-        $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
-        if($categories->count() && $categories->children->count()) {
-            $categories = $categories->children;
+//        $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
+        $category = resolve(CategoryInterface::class)
+            ->where('slug->' . app()->getLocale(), 'legkovye')
+            ->with('children.children')
+            ->firstOrFail();
+
+        if($category->children->count()) {
+            $children = $category->children;
         }
 
-        return view('frontend.car.index', compact('categories', 'car', 'brand', 'model', 'modification'));
+        return view('frontend.car.index', compact('category','children', 'car', 'brand', 'model', 'modification'));
     }
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
     {
-//        $garage_list = $garageInstance->getGarageList();
-//
-//        $garage = $garage_list->count()
-//            ? PassangerCar::whereIn('id', $garage_list->pluck('modification_id'))->with('attributes')->get()
-//            : null;
-//
-        $category = Category::whereSlug($category)->with('children')->firstOrFail();
-//        $current_auto = $garageInstance->getActiveCar();
-//
-//        $categories = $category->children;
-//
-//        $ids = collect($category->getParts($modification))->pluck('product_id')->toArray();
-        $products = $category->getProducts([$modification], 15);
-//        dd($products);
+        $category = resolve(CategoryInterface::class)
+            ->where('slug->' . app()->getLocale(), $category)
+            ->with('children')
+            ->firstOrFail();
 
-//
-//        return view('frontend.car.index',
-//            compact('category', 'garage', 'current_auto', 'categories',
-//                'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts')
-//        );
+        $products = $category->getProducts([$modification], 2);
 
         $car = $car->getCar($modification);
 

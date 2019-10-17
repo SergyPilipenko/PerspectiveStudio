@@ -6545,6 +6545,61 @@ a:hover {
   display: block;
 }
 
+.subcategory__pagination li:first-child a {
+  font-size: 20px;
+}
+
+.subcategory__pagination li a.current {
+  color: #212121;
+}
+
+.subcategory__pagination li:last-child a {
+  font-size: 20px;
+}
+
+.category #model {
+  background-color: #c20f14;
+  margin-top: 30px;
+}
+
+.category #model .search__model-cover {
+  background-color: #fff;
+}
+
+.category #model .search__model-cover:first-child {
+  width: 10%;
+}
+
+.category #model .search__model-cover:nth-child(2),
+.category #model .search__model-cover:nth-child(3) {
+  width: 23%;
+}
+
+.category #model .search__model-cover:last-child {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 37%;
+}
+
+.category #model .search__model-dropdown {
+  width: calc(100% + 2px);
+  top: 40px;
+  height: auto;
+  max-height: 240px;
+}
+
+.category #model .search__model-dropdown .capacity span {
+  display: block;
+}
+
+.category #model .search__model-dropdown .capacity:first-child span {
+  border-top: none;
+}
+
+.category #model .search__model-dropdown .capacity:last-child span {
+  border-bottom: none;
+}
+
 [v-cloak] .v-cloak--block {
   display: block;
 }

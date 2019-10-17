@@ -12,8 +12,26 @@ class ProductCategoryController extends Controller
     public function productCategory($slug, ProductCategory $productCategory)
     {
         $category = $productCategory->with('children', 'products.attribute_family.attribute_groups.group_attributes')
-            ->where('slug->' . app()->getLocale(), $slug)->firstOrFail();
+            ->where('slug->' . app()->getLocale(), $slug)->with('children.children')->firstOrFail();
 
-        return view('frontend.product-categories.categories.show', compact('category'));
+        switch ($category->parent_id) {
+            case null:
+                return $this->index($category);
+                break;
+            default:
+                return $this->show($category);
+        }
+    }
+
+    public function index($category)
+    {
+        return view('frontend.product-categories.categories.index', compact('category'));
+    }
+
+    public function show($category)
+    {
+        $products = $category->getProducts(null, 1);
+
+        return view('frontend.product-categories.categories.show', compact('category', 'products'));
     }
 }

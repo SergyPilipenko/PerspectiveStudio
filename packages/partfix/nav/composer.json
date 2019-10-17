@@ -1,0 +1,11 @@
+{
+    "name": "partfix/nav",
+    "description": "Customer navigation module",
+    "authors": [
+        {
+            "name": "Viktor Hordieiev",
+            "email": "gordeev@flabers.com.ua"
+        }
+    ],
+    "require": {}
+}

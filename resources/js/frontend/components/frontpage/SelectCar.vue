@@ -184,7 +184,6 @@
                 this.filterModificationsBySelectedYear();
                 this.hideAllSelects();
                 this.showSelect('brand');
-
             },
             setBrand(brand) {
                 this.addSelectedBrand(brand);
@@ -211,7 +210,6 @@
                 this.selects = selects;
             },
             showSelect(name) {
-                console.log(1);
                 this.hideAllSelects(name);
                 var selects = this.selects;
                 for(let i in selects) {

@@ -4,6 +4,8 @@ namespace App\Models\Catalog;
 
 use App\Helpers\Locale;
 use App\Models\Admin\Catalog\Product\Product;
+use App\Models\Admin\Catalog\Product\ProductInterface;
+use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Search\Indexers\CategoriesIndexer;
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
@@ -18,11 +20,26 @@ class Category extends Model implements CategoryInterface
     use HasTranslations;
 
     protected $table = 'catalog_categories';
+    public $categoryTypes = ['default', 'tecdoc'];
     public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords'];
     public $locale;
-    public $oldValue;
 
     protected $image_path = 'img/upload/product-categories/';
+    /**
+     * @var ProductInterface
+     */
+    private $product;
+
+
+    public function __construct(array $attributes = [])
+    {
+        if(!$this->locale) {
+            $this->locale = new Locale();
+        }
+        $this->product = resolve(ProductInterface::class);
+
+        parent::__construct($attributes);
+    }
 
     protected static function boot()
     {
@@ -40,13 +57,9 @@ class Category extends Model implements CategoryInterface
 
     }
 
-    public function __construct()
+    public function tecdoc_categories()
     {
-        parent::__construct();
-        if(!$this->locale) {
-            $this->locale = new Locale();
-        }
-
+        return $this->belongsToMany(CategoryDistinctPassangerCarTree::class, 'category_distinct_passanger_car_trees', 'category_id', 'distinct_pct_id');
     }
 
     public function newCollection(array $models = Array())
@@ -66,6 +79,17 @@ class Category extends Model implements CategoryInterface
         $this->position = $request->position;
 
         $this->updateImage($request);
+
+        $tree = null;
+
+        if($request->tree234) {
+            $tree = explode(',', $request->tree234);
+            foreach ($tree as &$item) {
+                $item = (int) $item;
+            }
+        }
+
+        $this->tecdoc_categories()->sync($tree);
 
         $this->update();
     }
@@ -105,8 +129,32 @@ class Category extends Model implements CategoryInterface
         return $this->belongsToMany(Product::class, 'product_categories');
     }
 
+    public function getTecdocProducts($modifications, $limit)
+    {
+        $tecdoc = resolve('PartfixTecDoc');
+        $parts = $tecdoc->getPartfixTecdocSectionPartsIds($this, $modifications);
+
+        return $this->product->getProducts($parts, $limit);
+    }
+
+    public function getProducts(array $modifications = null, $limit = false)
+    {
+        switch ($this->type) {
+            case 'tecdoc':
+                return $this->getTecdocProducts($modifications, $limit);
+                break;
+            default:
+                return $this->product->getProducts($this->products()->get()->pluck('id')->toArray(), $limit);
+        }
+    }
+
     public function scopeActive($query)
     {
         return $query->where('activity', true);
+    }
+
+    public function scopeRootCategories($query)
+    {
+        return $query->where('parent_id', null);
     }
 }
