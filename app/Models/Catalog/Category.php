@@ -44,17 +44,17 @@ class Category extends Model implements CategoryInterface
     protected static function boot()
     {
         parent::boot();
+        if(env('APP_DEBUG')) {
+            static::created(function ($category) {
+                $categoriesIndexer = app(CategoriesIndexer::class);
+                $categoriesIndexer->index($category);
+            });
 
-        static::created(function ($category) {
-            $categoriesIndexer = app(CategoriesIndexer::class);
-            $categoriesIndexer->index($category);
-        });
-
-        static::updated(function ($category) {
-            $categoriesIndexer = app(CategoriesIndexer::class);
-            $categoriesIndexer->reindex($category);
-        });
-
+            static::updated(function ($category) {
+                $categoriesIndexer = app(CategoriesIndexer::class);
+                $categoriesIndexer->reindex($category);
+            });
+        }
     }
 
     public function tecdoc_categories()
