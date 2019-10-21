@@ -10,21 +10,24 @@
                         <li><a href="#">Запчасти для Volkswagen Transporter</a></li>
                     </ul>
                     <div class="white-bg">
+
                         <h2 class="category__title">Каталог запчастей на <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->year }}</span></h2>
                             @if($category->children->count())
+                                @foreach($category->children as $categoryBlock)
                                     <div class="category__block">
                                         <h3 class="category__block-title">
-                                            <span>{{ $category->category_title }}</span>
+                                            <span>{{ $categoryBlock->category_title }}</span>
                                         </h3>
                                         <span class="category__block-subtitle">
-                                        {{ $car->brand->description }} {{ $car->model->description }}
-                                    </span>
+                                            {{ $car->brand->description }} {{ $car->model->description }}
+                                        </span>
                                         <div class="category__block-items">
-                                            @foreach($category->children as $child)
+                                            @foreach($categoryBlock->children as $child)
                                                 <a href="{{ route('frontend.car.category', [$brand, $model, $modification, $child->slug]) }}" class="category__block-item"><img src="{{ file_exists($child->image) ? asset($child->image) : asset('img/frontend/img/images-empty.png') }}" alt="list"><span>{{ $child->category_title }}</span></a>
                                             @endforeach
                                         </div>
                                     </div>
+                                @endforeach
                             @endif
                         <div class="category__block">
                             <h3 class="category__block-title">

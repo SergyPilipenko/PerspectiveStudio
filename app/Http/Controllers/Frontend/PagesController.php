@@ -113,7 +113,7 @@ class PagesController extends Controller
     {
         $category = resolve(CategoryInterface::class)
             ->where('slug->' . app()->getLocale(), $category)
-            ->with('children')
+            ->with('children.children')
             ->firstOrFail();
 
         $products = $category->getProducts([$modification], 2);

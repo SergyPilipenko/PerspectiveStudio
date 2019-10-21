@@ -142,6 +142,27 @@
                                                 </div>
                                             </div>
                                         </accordian>
+                                        <accordian>
+                                            <div slot="header">Аттрибуты фильтра</div>
+                                            <div slot="body">
+                                                <div class="form-group">
+                                                    <div class="filterable-attributes">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="filterable-attributes">Доступные для фильтра аттрибуты</label>
+                                                                    <select multiple name="filterableAttributes[]" class="form-control" id="filterable-attributes">
+                                                                        @foreach ($filterableAttributes as $attribute)
+                                                                            <option {{ $category->filterableAttributes->contains('id', $attribute->id) ? 'selected' : ''  }} value="{{ $attribute->id }}">{{ $attribute->title }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </accordian>
                                         @if($category->type == 'tecdoc')
                                             <accordian>
                                                 <div slot="header">Соотношение с tecdoc категориями</div>

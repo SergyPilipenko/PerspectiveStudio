@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Catalog;
 
 use App\Http\Requests\RequestInterface;
+use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
@@ -101,7 +102,8 @@ class CategoriesController extends Controller
     {
         $category = $this->category->findOrFail($id);
 
-        $categories = Category::orderBy('position', 'asc')->get()->toTree();
+        $categories = Category::orderBy('position', 'asc')->with('filterableAttributes')->get()->toTree();
+        $filterableAttributes = Attribute::where('is_filterable', true)->get();
         if($category->type == 'tecdoc') {
             $tec_doc_categories = DistinctPassangerCarTree::get();
 
@@ -119,7 +121,8 @@ class CategoriesController extends Controller
             $category_distinct_tecdoc_categories = $category_distinct_tecdoc_categories->toJson();
         }
 
-        return view('admin.catalog.categories.edit', compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories'));
+        return view('admin.catalog.categories.edit',
+            compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories', 'filterableAttributes'));
     }
 
     /**

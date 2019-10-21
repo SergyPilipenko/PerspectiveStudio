@@ -3,6 +3,9 @@
 namespace App\Models\Catalog;
 
 use App\Helpers\Locale;
+use App\Models\Admin\Catalog\Attributes\Attribute;
+use App\Models\Admin\Catalog\Attributes\CategoryFilterableAttribute;
+use App\Models\Admin\Catalog\Attributes\FilterableAttribute;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
@@ -12,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
-use Illuminate\Support\Facades\App;
 
 class Category extends Model implements CategoryInterface
 {
@@ -62,14 +64,18 @@ class Category extends Model implements CategoryInterface
         return $this->belongsToMany(CategoryDistinctPassangerCarTree::class, 'category_distinct_passanger_car_trees', 'category_id', 'distinct_pct_id');
     }
 
+
+
+    public function filterableAttributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'category_filterable_attributes', 'catalog_category_id', 'attribute_id');
+    }
+
     public function newCollection(array $models = Array())
     {
         return new \Kalnoy\Nestedset\Collection($models);
     }
 
-    /**
-     * @param RequestInterface $request
-     */
     public function updateCategory(RequestInterface $request)
     {
 
@@ -90,7 +96,7 @@ class Category extends Model implements CategoryInterface
         }
 
         $this->tecdoc_categories()->sync($tree);
-
+        $this->filterableAttributes()->sync($request->filterableAttributes);
         $this->update();
     }
 
@@ -129,10 +135,15 @@ class Category extends Model implements CategoryInterface
         return $this->belongsToMany(Product::class, 'product_categories');
     }
 
+    public function productsFiltered()
+    {
+        return $this->belongsToMany(ProductInterface::class, 'product_categories');
+    }
+
     public function getTecdocProducts($modifications, $limit)
     {
         $tecdoc = resolve('PartfixTecDoc');
-        $parts = $tecdoc->getPartfixTecdocSectionPartsIds($this, $modifications);
+        $parts = $modifications ? $tecdoc->getModificationSectionPartsIds($this, $modifications) : $tecdoc->getAllSectionPartsIds($this);
 
         return $this->product->getProducts($parts, $limit);
     }

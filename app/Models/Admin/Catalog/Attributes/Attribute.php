@@ -4,6 +4,7 @@ namespace App\Models\Admin\Catalog\Attributes;
 
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Admin\Catalog\Product\ProductAttributeValue;
+use App\Models\Catalog\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

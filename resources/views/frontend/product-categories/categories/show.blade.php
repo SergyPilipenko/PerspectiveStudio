@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="subcategory__main">
                                     @foreach($products as $product)
-                                        @if($product->productCanBeDisplayed())
+                                        @if($product->price > 0)
                                             <div class="subcategory__cell">
                                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                     <div class="subcategory__img">
