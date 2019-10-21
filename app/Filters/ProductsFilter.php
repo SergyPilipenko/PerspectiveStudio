@@ -9,8 +9,19 @@ class ProductsFilter extends Filters
     protected $filters = array(
         'article',
         'supplier',
-        'model'
+        'model',
+        'brand'
     );
+
+    private $filterableAttributes;
+
+    public function __construct()
+    {
+        if(!$this->filterableAttributes) {
+            $this->filterableAttributes = $this->builder->filterableAttributes->get();
+        }
+    }
+
 
     protected function article($article)
     {
@@ -22,5 +33,12 @@ class ProductsFilter extends Filters
         return $this->builder->whereHas('supplier', function ($query) use ($supplier) {
             $query->where('description', 'like', "%{$supplier}%");
         });
+    }
+
+    protected function brand($brand)
+    {
+//        return $this->builder->whereHas('attribute_value', function ($query) use ($brand){
+//            $query->where('');
+//        });
     }
 }

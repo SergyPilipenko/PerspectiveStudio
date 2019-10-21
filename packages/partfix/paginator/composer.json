@@ -1,0 +1,11 @@
+{
+    "name": "partfix/paginator",
+    "description": "Paginator",
+    "authors": [
+        {
+            "name": "Viktor Hordieiev",
+            "email": "gordeev@flabers.com.ua"
+        }
+    ],
+    "require": {}
+}

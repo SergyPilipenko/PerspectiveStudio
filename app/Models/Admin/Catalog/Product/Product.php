@@ -6,6 +6,7 @@ use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Events\ProductUpdatedEvent;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
+use App\Models\Admin\Catalog\Attributes\AttributeValue;
 use App\Models\Admin\Catalog\Product\ProductImage;
 use App\Models\Catalog\Category;
 use App\Models\Prices\Price;
@@ -82,10 +83,6 @@ class Product extends Model implements ProductInterface
      */
     public $productImage;
 
-
-
-
-
     public function attribute_family()
     {
         return $this->belongsTo(AttributeFamily::class);
@@ -94,6 +91,11 @@ class Product extends Model implements ProductInterface
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_categories');
+    }
+
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class, 'product_id', 'id');
     }
 
     public function getDefaultPrice()

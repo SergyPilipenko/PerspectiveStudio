@@ -2724,6 +2724,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['year', 'actions', 'models'],
@@ -2734,6 +2738,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       filteredModels: this.getFilteredModelsByYear,
       bodyTypes: this.getBodyTypes,
       selectedBodyType: "",
+      selectedEngineType: "",
+      selectedModification: "",
       selects: [{
         id: 1,
         name: 'year',
@@ -2794,6 +2800,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setModifications: 'selectCar/setModifications'
   }), {
     setCarBodyType: function setCarBodyType(bodyType) {
+      this.clearSelectedEngineType();
       this.selectedBodyType = bodyType;
       this.pluck({
         value: 'id',
@@ -2819,11 +2826,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         BodyType: this.selectedBodyType,
         Capacity: capacity
       });
+      this.selectedEngineType = engineType + ' ' + capacity;
       this.showSelect('modification');
     },
+    clearSelectedEngineType: function clearSelectedEngineType() {
+      this.selectedEngineType = "";
+      this.clearSelectedModification();
+    },
+    clearSelectedModification: function clearSelectedModification() {
+      this.selectedModification = "";
+    },
     setYear: function setYear(year) {
-      this.yearSelected = year; // this.hideAllSelects();
-
+      this.yearSelected = year;
+      this.clearSelectedEngineType();
       this.selectedBodyType = "";
       this.setCarYear({
         action: this.route['set-car-year'],
@@ -2856,8 +2871,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       ;
       this.selects = selects;
     },
-    chooseModification: function chooseModification(route) {
+    chooseModification: function chooseModification(route, modification) {
       window.location.href = route;
+      this.selectedModification = modification.fulldescription + modification.enginePower;
+      this.hideAllSelects();
     },
     convertModelsBackendData: function convertModelsBackendData() {
       var models = this.models;
@@ -36417,9 +36434,24 @@ var render = function() {
           }
         },
         [
-          _vm._m(0),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("span", { staticClass: "search__model-number" }, [_vm._v("1")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex flex-column" }, [
+              _c("span", { staticClass: "search__model-text" }, [
+                _vm._v("Год")
+              ]),
+              _vm._v(" "),
+              _vm.yearSelected
+                ? _c("span", {
+                    staticClass: "search__model-subtext",
+                    domProps: { textContent: _vm._s(_vm.yearSelected) }
+                  })
+                : _vm._e()
+            ])
+          ]),
           _vm._v(" "),
-          _vm._m(1),
+          _vm._m(0),
           _vm._v(" "),
           _c(
             "div",
@@ -36460,9 +36492,24 @@ var render = function() {
           }
         },
         [
-          _vm._m(2),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("span", { staticClass: "search__model-number" }, [_vm._v("2")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex flex-column" }, [
+              _c("span", { staticClass: "search__model-text" }, [
+                _vm._v("Кузов")
+              ]),
+              _vm._v(" "),
+              _vm.selectedBodyType
+                ? _c("span", {
+                    staticClass: "search__model-subtext",
+                    domProps: { textContent: _vm._s(_vm.selectedBodyType) }
+                  })
+                : _vm._e()
+            ])
+          ]),
           _vm._v(" "),
-          _vm._m(3),
+          _vm._m(1),
           _vm._v(" "),
           _c(
             "div",
@@ -36503,9 +36550,24 @@ var render = function() {
           }
         },
         [
-          _vm._m(4),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("span", { staticClass: "search__model-number" }, [_vm._v("3")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex flex-column" }, [
+              _c("span", { staticClass: "search__model-text" }, [
+                _vm._v("Тип Двигателя")
+              ]),
+              _vm._v(" "),
+              _vm.selectedEngineType
+                ? _c("span", {
+                    staticClass: "search__model-subtext",
+                    domProps: { textContent: _vm._s(_vm.selectedEngineType) }
+                  })
+                : _vm._e()
+            ])
+          ]),
           _vm._v(" "),
-          _vm._m(5),
+          _vm._m(2),
           _vm._v(" "),
           _c(
             "div",
@@ -36559,9 +36621,24 @@ var render = function() {
           }
         },
         [
-          _vm._m(6),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("span", { staticClass: "search__model-number" }, [_vm._v("4")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex flex-column" }, [
+              _c("span", { staticClass: "search__model-text" }, [
+                _vm._v("Модификация")
+              ]),
+              _vm._v(" "),
+              _vm.selectedModification
+                ? _c("span", {
+                    staticClass: "search__model-subtext",
+                    domProps: { textContent: _vm._s(_vm.selectedModification) }
+                  })
+                : _vm._e()
+            ])
+          ]),
           _vm._v(" "),
-          _vm._m(7),
+          _vm._m(3),
           _vm._v(" "),
           _c(
             "div",
@@ -36583,7 +36660,8 @@ var render = function() {
                   on: {
                     click: function($event) {
                       return _vm.chooseModification(
-                        _vm.route["auto.model"] + "-" + modification.id
+                        _vm.route["auto.model"] + "-" + modification.id,
+                        modification
                       )
                     }
                   }
@@ -36611,12 +36689,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex align-items-center" }, [
-      _c("span", { staticClass: "search__model-number" }, [_vm._v("1")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex flex-column" }, [
-        _c("span", { staticClass: "search__model-text" }, [_vm._v("Год")])
-      ])
+    return _c("span", { staticClass: "search__model-arrow" }, [
+      _c("img", {
+        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
+      })
     ])
   },
   function() {
@@ -36633,60 +36709,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex align-items-center" }, [
-      _c("span", { staticClass: "search__model-number" }, [_vm._v("2")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex flex-column" }, [
-        _c("span", { staticClass: "search__model-text" }, [_vm._v("Кузов")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("span", { staticClass: "search__model-arrow" }, [
       _c("img", {
         attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
       })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex align-items-center" }, [
-      _c("span", { staticClass: "search__model-number" }, [_vm._v("3")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex flex-column" }, [
-        _c("span", { staticClass: "search__model-text" }, [
-          _vm._v("Тип Двигателя")
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "search__model-arrow" }, [
-      _c("img", {
-        attrs: { src: "/img/frontend/img/arrow-down.png", alt: "img" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex align-items-center" }, [
-      _c("span", { staticClass: "search__model-number" }, [_vm._v("4")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-flex flex-column" }, [
-        _c("span", { staticClass: "search__model-text" }, [
-          _vm._v("Модификация")
-        ])
-      ])
     ])
   },
   function() {

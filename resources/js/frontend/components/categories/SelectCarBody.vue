@@ -5,6 +5,7 @@
                 <span class="search__model-number">1</span>
                 <div class="d-flex flex-column">
                     <span class="search__model-text">Год</span>
+                    <span class="search__model-subtext" v-if="yearSelected" v-text="yearSelected"></span>
                 </div>
             </div>
             <span class="search__model-arrow">
@@ -19,6 +20,7 @@
                 <span class="search__model-number">2</span>
                 <div class="d-flex flex-column">
                     <span class="search__model-text">Кузов</span>
+                    <span class="search__model-subtext" v-if="selectedBodyType" v-text="selectedBodyType"></span>
                 </div>
             </div>
             <span class="search__model-arrow">
@@ -33,6 +35,7 @@
                 <span class="search__model-number">3</span>
                 <div class="d-flex flex-column">
                     <span class="search__model-text">Тип Двигателя</span>
+                    <span class="search__model-subtext" v-if="selectedEngineType" v-text="selectedEngineType"></span>
                 </div>
             </div>
             <span class="search__model-arrow">
@@ -54,6 +57,7 @@
                 <span class="search__model-number">4</span>
                 <div class="d-flex flex-column">
                     <span class="search__model-text">Модификация</span>
+                    <span class="search__model-subtext" v-if="selectedModification" v-text="selectedModification"></span>
                 </div>
             </div>
             <span class="search__model-arrow">
@@ -61,7 +65,7 @@
             </span>
             <div @click.stop :class="{'search__model-dropdown active' : isVisible('modification'), 'search__model-dropdown' : !isVisible('modification')}">
                 <span
-                    @click="chooseModification(route['auto.model']+'-'+modification.id)"
+                    @click="chooseModification(route['auto.model']+'-'+modification.id, modification)"
                     v-for="modification in getModifications">
                     {{ modification.fulldescription }} ({{ modification.enginePower }})
                 </span>
@@ -119,6 +123,8 @@
                 filteredModels: this.getFilteredModelsByYear,
                 bodyTypes: this.getBodyTypes,
                 selectedBodyType: "",
+                selectedEngineType: "",
+                selectedModification: "",
                 selects: [
                     {
                         id: 1,
@@ -187,6 +193,7 @@
             }),
 
             setCarBodyType(bodyType) {
+                this.clearSelectedEngineType();
                 this.selectedBodyType = bodyType;
                 this.pluck({value: 'id', items: this.getFilteredModelsByYear});
                 this.setEngines({
@@ -207,12 +214,19 @@
                     BodyType: this.selectedBodyType,
                     Capacity: capacity,
                 });
+                this.selectedEngineType = engineType + ' ' + capacity;
                 this.showSelect('modification');
             },
-
+            clearSelectedEngineType(){
+                this.selectedEngineType = "";
+                this.clearSelectedModification();
+            },
+            clearSelectedModification() {
+                this.selectedModification = "";
+            },
             setYear(year) {
                 this.yearSelected = year;
-                // this.hideAllSelects();
+                this.clearSelectedEngineType();
                 this.selectedBodyType = "";
                 this.setCarYear({action: this.route['set-car-year'], yearSelected: this.yearSelected});
                 this.filterModelsByYear({models: this.getModels, selectedYear: this.yearSelected});
@@ -236,8 +250,10 @@
                 };
                 this.selects = selects;
             },
-            chooseModification(route) {
+            chooseModification(route, modification) {
                 window.location.href = route;
+                this.selectedModification = modification.fulldescription + modification.enginePower;
+                this.hideAllSelects();
             },
             convertModelsBackendData() {
                 let models = this.models;
