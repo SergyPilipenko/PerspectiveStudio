@@ -135,6 +135,11 @@ class Category extends Model implements CategoryInterface
         return $this->belongsToMany(Product::class, 'product_categories');
     }
 
+    public function productsFiltered()
+    {
+        return $this->belongsToMany(ProductInterface::class, 'product_categories');
+    }
+
     public function getTecdocProducts($modifications, $limit)
     {
         $tecdoc = resolve('PartfixTecDoc');

@@ -4,6 +4,7 @@ namespace App\Models\Admin\Catalog\Product;
 
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Events\ProductUpdatedEvent;
+use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
 use App\Models\Admin\Catalog\Attributes\AttributeValue;
@@ -51,19 +52,24 @@ class Product extends Model implements ProductInterface
 
     public function getAttribute($key)
     {
-//        dd($this->attributes['type']);
-//        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key])) {
-//            if (isset($this->id)) {
-//                $this->attributes[$key] = '';
-//
+        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key]) && $key != 'pivot') {
+            if (isset($this->id)) {
+
+                $attribute = $this->productAttributeValues->where('code', $key)->first();
+
+                if($attribute) {
+                    $field = ProductAttributeValue::$attributeTypeFields[$attribute->type];
+
+                    return $attribute->$field;
+                }
 //                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
 //                    ->getAttributeByCode($key);
 //
 //                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
-//
-//                return $this->getAttributeValue($key);
-//            }
-//        }
+
+                return $this->getAttributeValue($key);
+            }
+        }
 
         return parent::getAttribute($key);
     }
@@ -73,14 +79,16 @@ class Product extends Model implements ProductInterface
         return ['id' => 'product', 'slug' => 'slug'];
     }
 
-    /**
-     * @var ProductAttributeValue instance
-     */
+    public function scopeFilter($query, ProductsFilter $filters, $filterableItems = [])
+    {
+        $filters->fillterableAttributes = $filterableItems;
+        $addFilters = $filterableItems->pluck('code')->toArray();
+        $filters->filters = array_merge($filters->filters, $addFilters);
+        return $filters->apply($query, $filterableItems);
+    }
+
     private $productAttributeValue;
 
-    /**
-     * @var ProductImage instance
-     */
     public $productImage;
 
     public function attribute_family()
@@ -96,6 +104,13 @@ class Product extends Model implements ProductInterface
     public function attributeValues()
     {
         return $this->hasMany(AttributeValue::class, 'product_id', 'id');
+    }
+
+    public function productAttributeValues()
+    {
+        return $this->attributeValues()
+//            ->select('a.code')
+            ->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id');
     }
 
     public function getDefaultPrice()
