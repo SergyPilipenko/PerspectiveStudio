@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
+use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
 
 class Category extends Model implements CategoryInterface
 {
@@ -27,10 +28,8 @@ class Category extends Model implements CategoryInterface
     public $locale;
 
     protected $image_path = 'img/upload/product-categories/';
-    /**
-     * @var ProductInterface
-     */
     private $product;
+    private $filter;
 
 
     public function __construct(array $attributes = [])
@@ -39,7 +38,7 @@ class Category extends Model implements CategoryInterface
             $this->locale = new Locale();
         }
         $this->product = resolve(ProductInterface::class);
-
+        $this->filter = resolve(CategoryFilterInterface::class);
         parent::__construct($attributes);
     }
 
@@ -167,5 +166,10 @@ class Category extends Model implements CategoryInterface
     public function scopeRootCategories($query)
     {
         return $query->where('parent_id', null);
+    }
+
+    public function getFilter()
+    {
+        return $this->filter->renderCategoryFilter($this);
     }
 }

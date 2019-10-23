@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Filters\MainFilter;
 use App\Filters\ProductsFilter;
-use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Catalog\Category as ProductCategory;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
+use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
 
 class ProductCategoryController extends Controller
 {
@@ -17,19 +14,24 @@ class ProductCategoryController extends Controller
      */
     private $filters;
     /**
-     * @var MainFilter
+     * @var CategoryFilter
      */
     private $mainFilter;
+    /**
+     * @var CategoryFilter
+     */
+    private $categoryFilter;
 
     /**
      * ProductCategoryController constructor.
      * @param ProductsFilter $filters
-     * @param MainFilter $mainFilter
+     * @param CategoryFilter $categoryFilter
      */
-    public function __construct(ProductsFilter $filters, MainFilter $mainFilter)
+    public function __construct(ProductsFilter $filters, CategoryFilter $categoryFilter)
     {
         $this->filters = $filters;
-        $this->mainFilter = $mainFilter;
+
+        $this->categoryFilter = $categoryFilter;
     }
 
     public function productCategory($slug, ProductCategory $productCategory)
@@ -58,8 +60,8 @@ class ProductCategoryController extends Controller
             ->with('productAttributeValues')
             ->filter($this->filters, $category->filterableAttributes)
             ->paginate(20);
-        $filter = $this->mainFilter->renderFilterOptions($products, $category->filterableAttributes);
-        dd($this->filters);
+
+//        dd($this->filters);
 
 //        Cache::put("{$category->category_title}.'products'.page={1}", $products, 1);
 //        dd($products->first()->manufacturer);

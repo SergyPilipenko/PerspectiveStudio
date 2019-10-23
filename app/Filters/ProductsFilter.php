@@ -15,6 +15,8 @@ class ProductsFilter extends Filters
         'brand'
     );
 
+    const MULTIPLE_VALUE_DELIMITER = ',';
+
 
     public function __call($name, $arguments)
     {
@@ -49,10 +51,11 @@ class ProductsFilter extends Filters
 
     protected function attribute($attribute, $attributeValue)
     {
-        return $this->builder->whereHas('attributeValues', function($query) use ($attribute, $attributeValue) {
+        $param_value = explode(self::MULTIPLE_VALUE_DELIMITER, $attributeValue);
+        return $this->builder->whereHas('attributeValues', function($query) use ($attribute, $param_value) {
             $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
                 ->where('a.code', $attribute->code)
-                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$attribute->type], $attributeValue);
+                ->whereIn('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$attribute->type], $param_value);
         });
     }
 
@@ -64,7 +67,6 @@ class ProductsFilter extends Filters
         }
 
         return $this->builder;
-
     }
 
     protected function brand($brand)

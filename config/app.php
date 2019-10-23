@@ -169,7 +169,7 @@ return [
         Partfix\Nav\NavServiceProvider::class,
         Partfix\CategoriesAdapter\CategoriesAdapterServiceProvider::class,
         Partfix\Paginator\PaginatorServiceProvider::class,
-
+        Partfix\CatalogCategoryFilter\CatalogCategoryFilterServiceProvider::class,
 
         /*
          * Application Service Providers...
