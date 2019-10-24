@@ -8,6 +8,8 @@ use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
 
 class CatalogCategoryFilterServiceProvider extends ServiceProvider
 {
+    protected $namespace = 'Partfix\CatalogCategoryFilter\Http\Controllers';
+
     /**
      * Register services.
      *
@@ -15,10 +17,8 @@ class CatalogCategoryFilterServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->loadRoutesFrom(__DIR__ . '/../Http/routes.php');
         $this->loadViewsFrom(__DIR__.'/views', 'partfix\catalog-category-filter');
         $this->app->singleton(CategoryFilterInterface::class, CategoryFilter::class);
-
     }
 
     /**
@@ -28,6 +28,6 @@ class CatalogCategoryFilterServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
     }
 }

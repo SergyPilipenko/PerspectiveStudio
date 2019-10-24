@@ -14,7 +14,12 @@ export default {
             'show',
             'showAllOptions'
         ],
-        requestParams: []
+        preloadLayout: false,
+        requestParams: [],
+        filterQtyAction: '/api/catalog/category/filterqty',
+        categoryId: null,
+        currentSubmitLink: '',
+        categoryLink: ''
     },
     getters: {
         getBlocks(state) {
@@ -38,6 +43,18 @@ export default {
         },
         getMaxOptionsShowCount(state) {
             return state.maxOptionsShowCount;
+        },
+        getFilterQtyAction(state){
+            return state.filterQtyAction
+        },
+        getPreloadLayout(state) {
+            return state.preloadLayout
+        },
+        getCurrentSubmitLink(state) {
+            return state.currentSubmitLink
+        },
+        getCategoryLink(state) {
+            return state.categoryLink
         }
     },
     mutations: {
@@ -49,8 +66,20 @@ export default {
             }
             state.requestParams = requestParams;
         },
+        setCurrentSubmitLink (state, payload) {
+            state.currentSubmitLink = payload
+        },
+        setCategoryLink (state, payload) {
+            state.categoryLink = payload
+        },
         setBlock(state, payload) {
             state.blocks.push(payload);
+        },
+        showPreloadLayout(state) {
+            state.preloadLayout = true
+        },
+        hidePreloadLayout(state) {
+            state.preloadLayout = false
         },
         toggleBlock(state, payload) {
             var blocks = state.blocks;
@@ -86,6 +115,15 @@ export default {
                 }
             }
         },
+        setFilterQtyAction(state, payload) {
+            state.filterQtyAction = payload
+        },
+        setCategoryId(state, payload) {
+            state.categoryId = payload
+        },
+        resetCurrentSubmitLink(state) {
+            state.currentSubmitLink = ''
+        }
     },
     actions: {
         addBlock({ commit, state }, block) {
@@ -100,29 +138,56 @@ export default {
             if(error) return;
             commit('setBlock', block);
         },
-        getFilteredProductsCount({ commit, state }) {
+        getFilteredProductsCount({ commit, state, getters, dispatch }, payload) {
 
             let form = new FormData();
             var data = [];
             for (let i in state.requestParams) {
-                for(let x in state.blocks) {
-                    if(state.blocks[x].code == i) {
-                        data.push({
-                            id: state.blocks[x].id,
-                            code: state.blocks[x].code,
-                            type: state.blocks[x].type,
-                            value: state.requestParams[i]
-                        });
-                    }
-                }
+                form.append(i, state.requestParams[i].join(','))
+                // for(let x in state.blocks) {
+                //     if(state.blocks[x].code == i) {
+                //         data.push({
+                //             id: state.blocks[x].id,
+                //             code: state.blocks[x].code,
+                //             type: state.blocks[x].type,
+                //             value: state.requestParams[i]
+                //         });
+                //     }
+                // }
             }
-            form.append('data', JSON.stringify(data));
-
-            axios.post('/set-car-year', form)
+            // form.append('data', JSON.stringify(data));
+            form.append('categoryId', state.categoryId);
+            axios.post(state.filterQtyAction, form)
                 .then(data => {
+                    dispatch('showOptionSubmitLink', {optionData: payload, result: data.data});
                 });
         },
+        hideSubmitLinks({state}) {
+            var blocks = state.blocks;
+            blocks.map(block => {
+                if(block.options && block.options.length) {
+                    block.options.map(option => {
+                        if(option.showSubmitLink && option.showSubmitLink == true) {
+                            option.showSubmitLink = false;
+                        }
+                    })
+                }
+            });
+        },
+        showOptionSubmitLink({ commit, state, dispatch, getters }, payload) {
+            var block = getters.getBlockById(payload.optionData.blockId);
+            if(block) {
+                dispatch('generateSubmitLink');
+                block.options[payload.optionData.optionIndex].link = getters.getCurrentSubmitLink;
+                block.options[payload.optionData.optionIndex].submitQty = payload.result;
+                block.options[payload.optionData.optionIndex].showSubmitLink = true;
+            }
+            commit('hidePreloadLayout');
+        },
         toggleOption({ commit, state, dispatch }, payload) {
+            commit('showPreloadLayout');
+            dispatch('hideSubmitLinks');
+            commit('resetCurrentSubmitLink');
             var blocks = state.blocks;
             for(let i = 0; i <= blocks.length; i++) {
                 if(blocks[i].id == payload.blockId) {
@@ -133,9 +198,23 @@ export default {
                     break;
                 }
             }
+            dispatch('getFilteredProductsCount', payload);
+        },
 
-            dispatch('getFilteredProductsCount');
-
+        generateSubmitLink({state, commit, getters}){
+            var params = state.requestParams,
+                link = getters.getCategoryLink,
+                x = 0;
+            for(let i in params) {
+                if(!x) {
+                    link += '?'
+                } else {
+                    link+= '&'
+                }
+                link += i + '=' + params[i].join(',');
+                x++;
+            }
+            commit('setCurrentSubmitLink', link);
         }
     }
 }

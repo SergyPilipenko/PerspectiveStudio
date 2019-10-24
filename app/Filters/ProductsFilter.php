@@ -14,6 +14,7 @@ class ProductsFilter extends Filters
         'model',
         'brand'
     );
+    public $fillterableAttributes;
 
     const MULTIPLE_VALUE_DELIMITER = ',';
 
@@ -27,7 +28,6 @@ class ProductsFilter extends Filters
     }
 
 
-    public $fillterableAttributes;
 
 //    public function __construct()
 //    {

@@ -14,6 +14,11 @@
                     <span>{{ option.value }}</span>
                 </div>
                 <span class="quantity">{{ option.count }}</span>
+                <a @click.stop :href="option.link" class="price-filter__submit js-filter" v-if="option.showSubmitLink">
+                    <span class="price-filter__submit-link">
+                        Показать                    </span>
+                    (<span id="priceFilterCount" v-text="option.submitQty"></span>)
+                </a>
             </div>
             <div class="subcategory__sidebar-show"
                  v-if="!block.showAllOptions && block.options.length > getMaxOptionsShowCount"
@@ -45,6 +50,10 @@
                     blockCode: this.filter_block.attribute.code,
                     value: options[i].value
                 });
+                options[i].showSubmitLink = false;
+                options[i].submitQty = 0;
+                options[i].link = '';
+                // option[i].disabled = false;
             }
             this.setRequestParameters();
             var block = {
