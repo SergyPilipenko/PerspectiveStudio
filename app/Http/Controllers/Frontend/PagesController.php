@@ -18,6 +18,7 @@ use App\Models\ModelsUri;
 use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;

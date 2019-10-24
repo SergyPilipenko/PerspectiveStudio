@@ -6600,6 +6600,52 @@ a:hover {
   border-bottom: none;
 }
 
+.subcategory__sidebar .filter-blocks-container {
+  position: relative;
+}
+
+.subcategory__sidebar .filter-blocks-container__preload-layout {
+  position: absolute;
+  height: 100%;
+  width: calc(100% + 30px);
+  background-color: #fff;
+  z-index: 6;
+  opacity: 0.7;
+  top: 0;
+  left: -15px;
+}
+
+.subcategory__sidebar-line {
+  position: relative;
+}
+
+.subcategory__sidebar-line .price-filter__submit {
+  position: absolute;
+  left: 50%;
+  z-index: 5;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: normal;
+  white-space: nowrap;
+  top: 48%;
+  font-family: inherit;
+  transform: translateY(-50%);
+  margin: -0.1rem 0 0 1.5rem;
+  padding: 0.7rem 1.1rem 0.9rem;
+  border-radius: 0.7rem;
+  background: #c20e13;
+}
+
+.subcategory__sidebar-line .price-filter__submit:before {
+  content: "";
+  border: 12px solid transparent;
+  border-right: 7px solid #c20e13;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -18px;
+}
+
 [v-cloak] .v-cloak--block {
   display: block;
 }

@@ -1,0 +1,11 @@
+{
+    "name": "partfix/catalog-category-filter",
+    "description": "Фильтр для категорий каталога",
+    "authors": [
+        {
+            "name": "Viktor Hordieiev",
+            "email": "gordeev@flabers.com.ua"
+        }
+    ],
+    "require": {}
+}

@@ -4,23 +4,28 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
 require('./bootstrap');
-window.lang = document.documentElement.lang;
-window.Vue = require('vue');
 import Vuex from 'vuex';
-Vue.config.devtools = true;
-
-Vue.use(Vuex);
-
-/**
- * Vuex
- */
 import selectCar from './frontend/store/modules/select-car';
 import garage from './frontend/store/modules/garage';
 import productShow from './frontend/store/modules/productShow';
 import Cart from './frontend/store/modules/cart';
 import Checkout from './frontend/store/modules/checkout';
 import Search from './frontend/store/modules/search';
+import CatalogFilter from "../../packages/partfix/catalog-category-filter/src/assets/js/store/modules/catalog-filter-store";
+import VueRouter from 'vue-router'
+
+window.lang = document.documentElement.lang;
+window.Vue = require('vue');
+Vue.config.devtools = true;
+Vue.use(Vuex);
+Vue.use(VueRouter);
+
+/**
+ * Vuex
+ */
+
 
 Vue.component('search-button', require('./frontend/components/Search/SearchButton').default);
 Vue.component('search-tabs', require('./frontend/components/frontpage/SearchTabs').default);
@@ -36,6 +41,8 @@ Vue.component('checkout', require('./frontend/components/checkout/Checkout').def
 Vue.component('checkout-cart', require('./frontend/components/checkout/CheckoutCart').default);
 Vue.component('checkout-user-info-form', require('./frontend/components/checkout/CheckoutUserInfoForm').default);
 Vue.component('checkout-order-comment', require('./frontend/components/checkout/CheckoutOrderComment').default);
+Vue.component('catalog-filter', require('../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter').default);
+// Vue.component('catalog-filter', require(''));
 
 const store = new Vuex.Store({
     modules: {
@@ -45,9 +52,15 @@ const store = new Vuex.Store({
         Checkout,
         productShow,
         Search,
+        CatalogFilter
     }
 });
 
+const router = new VueRouter({
+    mode: 'history',
+    routes: []
+});
+export default router;
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -57,7 +70,8 @@ const store = new Vuex.Store({
 window.onload = function () {
     const app = new Vue({
         el: '#app',
-        store
+        store,
+        router
     });
     require('./themejs/script');
 };
