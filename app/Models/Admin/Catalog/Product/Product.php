@@ -81,9 +81,8 @@ class Product extends Model implements ProductInterface
 
     public function scopeFilter($query, ProductsFilter $filters, $filterableItems = [])
     {
-        $filters->fillterableAttributes = $filterableItems;
-        $addFilters = $filterableItems->pluck('code')->toArray();
-        $filters->filters = array_merge($filters->filters, $addFilters);
+
+
         return $filters->apply($query, $filterableItems);
     }
 

@@ -59,8 +59,7 @@ class ProductCategoryController extends Controller
         $products = $category->products()
             ->with('productAttributeValues')
             ->filter($this->filters, $category->filterableAttributes)
-            ->paginate(20);
-
+            ->paginate(5);
 //        dd($this->filters);
 
 //        Cache::put("{$category->category_title}.'products'.page={1}", $products, 1);
