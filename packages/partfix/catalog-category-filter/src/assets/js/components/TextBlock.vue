@@ -53,7 +53,6 @@
                 options[i].showSubmitLink = false;
                 options[i].submitQty = 0;
                 options[i].link = '';
-                // option[i].disabled = false;
             }
             this.setRequestParameters();
             var block = {
@@ -77,7 +76,6 @@
                 getRequestParams: 'CatalogFilter/getRequestParams',
                 getMaxOptionsShowCount: 'CatalogFilter/getMaxOptionsShowCount',
                 isSelected: 'CatalogFilter/isSelected',
-
             }),
         },
         methods: {

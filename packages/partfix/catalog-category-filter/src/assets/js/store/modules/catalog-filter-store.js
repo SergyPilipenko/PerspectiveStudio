@@ -15,7 +15,7 @@ export default {
             'showAllOptions'
         ],
         preloadLayout: false,
-        requestParams: [],
+        requestParams: null,
         filterQtyAction: '/api/catalog/category/filterqty',
         categoryId: null,
         currentSubmitLink: '',
@@ -59,6 +59,7 @@ export default {
     },
     mutations: {
         setRequestParameters (state, payload) {
+            if(state.requestParams) return;
             var params = router.currentRoute.query,
                 requestParams = [];
             for(let i in params) {
@@ -96,6 +97,18 @@ export default {
             }
             if(state.requestParams[payload.blockCode].indexOf(payload.value.toLowerCase()) == -1) {
                 state.requestParams[payload.blockCode].push(payload.value);
+            };
+        },
+        addOrUpdateFirstParam(state, payload) {
+            if(state.requestParams[payload.blockCode] == undefined) {
+                state.requestParams[payload.blockCode] = [];
+            }
+            if(state.requestParams[payload.blockCode].indexOf(payload.value.toLowerCase()) == -1) {
+                if(!state.requestParams[payload.blockCode].length) {
+                    state.requestParams[payload.blockCode].push(payload.value);
+                } else {
+                    state.requestParams[payload.blockCode][0] = payload.value;
+                }
             };
         },
         removeRequestParam(state, payload){
@@ -215,6 +228,19 @@ export default {
                 x++;
             }
             commit('setCurrentSubmitLink', link);
+        },
+        priceSubmit({state, dispatch, commit}, payload) {
+            commit('showPreloadLayout');
+            commit('addOrUpdateFirstParam', {
+                blockCode: payload.code + '_from',
+                value: payload.inputMin.toString()
+            });
+            commit('addOrUpdateFirstParam', {
+                blockCode: payload.code + '_to',
+                value: payload.inputMax.toString()
+            });
+            dispatch('generateSubmitLink');
+            window.location.href = state.currentSubmitLink
         }
     }
 }

@@ -6,10 +6,12 @@
 
 <script>
     import TextBlock from "./TextBlock";
+    import DecimalBlock from "./DecimalBlock";
     import PreloadLayout from "./PreloadLayout"
-    import {mapMutations, mapGetters} from 'vuex'
+    import {mapMutations} from 'vuex'
+
     export default {
-        components: { TextBlock, PreloadLayout },
+        components: { TextBlock, PreloadLayout, DecimalBlock },
         props: ['filter_qty_action', 'category_id', 'category_link'],
 
         created() {

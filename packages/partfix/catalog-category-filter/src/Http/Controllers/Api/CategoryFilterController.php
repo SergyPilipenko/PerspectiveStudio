@@ -23,6 +23,7 @@ class CategoryFilterController extends Controller
         $this->validate($request, array(
             'categoryId' => 'required|numeric'
         ));
+
         $category = $this->category->findOrFail($request->categoryId);
 
         return $this->categoryFilter->getCategoryTotalProductsQty($category);

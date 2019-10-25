@@ -45,6 +45,6 @@ abstract class Filters
      */
     public function getFilters() : array
     {
-        return $this->request->only($this->filters);
+        return $this->request->only(array_unique($this->filters));
     }
 }

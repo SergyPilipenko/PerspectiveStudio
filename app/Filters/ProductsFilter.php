@@ -2,6 +2,7 @@
 
 
 namespace App\Filters;
+use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Product\ProductAttributeValue;
 use Illuminate\Http\Request;
 
@@ -14,28 +15,24 @@ class ProductsFilter extends Filters
         'model',
         'brand'
     );
-    public $fillterableAttributes;
+    public $fillterableAttributes, $shouldBeFormattedTypes = ['decimal'];
 
     const MULTIPLE_VALUE_DELIMITER = ',';
+    const FORMATTED_TYPE_METHOD_PREFIX = 'getFormatted';
+    const _FROM = '_from';
+    const _TO = '_to';
 
 
     public function __call($name, $arguments)
     {
         $attribute = $this->fillterableAttributes->where('code', $name)->first();
+
         if($attribute) {
             $this->attribute($attribute, array_shift($arguments));
+        } else {
+            $this->tryToParseAttribute($name, $arguments);
         }
     }
-
-
-
-//    public function __construct()
-//    {
-//        if(!$this->filterableAttributes) {
-//            $this->filterableAttributes = $this->builder->filterableAttributes->get();
-//        }
-//    }
-
 
     protected function article($article)
     {
@@ -52,6 +49,7 @@ class ProductsFilter extends Filters
     protected function attribute($attribute, $attributeValue)
     {
         $param_value = explode(self::MULTIPLE_VALUE_DELIMITER, $attributeValue);
+
         return $this->builder->whereHas('attributeValues', function($query) use ($attribute, $param_value) {
             $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
                 ->where('a.code', $attribute->code)
@@ -59,9 +57,27 @@ class ProductsFilter extends Filters
         });
     }
 
-    public function apply($builder)
+    protected function addCustomAttributesToFilter($filterableItems = [])
     {
+        $filters = [];
+        foreach ($filterableItems as $filterableItem) {
+            if($this->shouldBeFormattedType($filterableItem)) {
+                $method = $this->getFormatMethodName($filterableItem->type);
+                $this->filters = array_merge($this->filters, $this->$method($filterableItem));
+            } else {
+                $this->filters = array_merge($this->filters, [$filterableItem->code]);
+            }
+        }
+
+    }
+
+    public function apply($builder, $filterableItems = [])
+    {
+        $this->fillterableAttributes = $filterableItems;
+        $this->addCustomAttributesToFilter($filterableItems);
+
         $this->builder = $builder;
+
         foreach ($this->getFilters() as $filter => $value) {
             $this->$filter($value);
         }
@@ -69,10 +85,59 @@ class ProductsFilter extends Filters
         return $this->builder;
     }
 
-    protected function brand($brand)
+    protected function shouldBeFormattedType($filterableItem)
     {
-//        return $this->builder->whereHas('attribute_value', function ($query) use ($brand){
-//            $query->where('');
-//        });
+        return in_array($filterableItem->type, $this->shouldBeFormattedTypes) ? true : false;
+    }
+
+    protected function getFormatMethodName(string $type) : string
+    {
+        return self::FORMATTED_TYPE_METHOD_PREFIX.ucfirst($type);
+    }
+
+    protected function getFormattedDecimal(Attribute $filterableItem = null)
+    {
+        return [
+            $filterableItem->code . self::_FROM,
+            $filterableItem->code . self::_TO
+        ];
+    }
+    protected function tryToParseAttribute($name, $arguments)
+    {
+        if(preg_match("/".self::_TO."/", $name, $matches)) {
+            $method = array_shift($matches);
+            $code = preg_replace("/".self::_TO."/", '', $name);
+            $this->$method($code, $arguments);
+        }
+        if(preg_match("/".self::_FROM."/", $name, $matches)) {
+            $method = array_shift($matches);
+            $code = preg_replace("/".self::_FROM."/", '', $name);
+            $this->$method($code, $arguments);
+        }
+    }
+
+    protected function _from($code, $arguments)
+    {
+        $type = $this->fillterableAttributes->where('code', $code)->first()->type;
+        if(!$type) return $this->builder;
+        $value = array_shift($arguments);
+
+        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
+            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+                ->where('a.code', $code)
+                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'>=', $value);
+        });
+    }
+
+    protected function _to($code, $arguments)
+    {
+        $type = $this->fillterableAttributes->where('code', $code)->first()->type;
+        if(!$type) return $this->builder;
+        $value = array_shift($arguments);
+        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
+            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+                ->where('a.code', $code)
+                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'<=', $value);
+        });
     }
 }
