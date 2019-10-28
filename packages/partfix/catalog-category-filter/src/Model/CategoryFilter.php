@@ -26,14 +26,44 @@ class CategoryFilter implements CategoryFilterInterface
 
     public function renderCategoryFilter(Category $category) : self
     {
+        if($category->type == 'tecdoc') {
+            return $this->renderTecdocFilter($category);
+        }
         $productIds = $this->getFilteredProductIds($category);
 
         foreach ($category->filterableAttributes as $filterableAttribute) {
+
             $options = $this->getCategoryFilterOptions($productIds, $filterableAttribute->id, $this->getAttributeValueField($filterableAttribute));
+
             $this->items[] = resolve(CategoryFilterBlock::class)->getBlock($options, $filterableAttribute);
         }
 
         return  $this;
+    }
+
+    public function renderTecdocFilter($category)
+    {
+        $attribute = Attribute::where('code', 'manufacturer')->first();
+        $sql = "
+        SELECT pv.text_value as value, count(*) as count
+        FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
+        JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
+        JOIN products as p on art.article_number_id = p.id
+        JOIN product_attribute_values as pv on p.id = pv.product_id
+        JOIN attributes as a on pv.attribute_id = a.id
+        where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
+        JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
+        JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
+        where cc._lft >= {$category->_lft} and cc._rgt <={$category->_rgt})
+         and a.code = 'manufacturer'
+          ";
+        if(request()->manufacturer) {
+            $sql .= " and pv.text_value = '".request()->manufacturer."'";
+        }
+        $sql .= " group by pv.text_value";
+        $options = DB::connection('mysql')->select($sql);
+        $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+        return $this;
     }
 
     public function getCategoryFilterOptions(Collection $productIds, int $attributeId, string $attributeValueField)
