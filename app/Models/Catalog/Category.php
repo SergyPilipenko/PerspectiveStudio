@@ -8,14 +8,17 @@ use App\Models\Admin\Catalog\Attributes\CategoryFilterableAttribute;
 use App\Models\Admin\Catalog\Attributes\FilterableAttribute;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Admin\Catalog\Product\ProductInterface;
+use App\Models\Admin\Catalog\ProductCategory;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Search\Indexers\CategoriesIndexer;
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
+use Illuminate\Support\Facades\Cache;
 
 class Category extends Model implements CategoryInterface
 {
@@ -129,14 +132,58 @@ class Category extends Model implements CategoryInterface
         return ['id' => 'category', 'slug' => 'slug'];
     }
 
-    public function products()
+    public function products($modifications = null)
     {
-        return $this->belongsToMany(Product::class, 'product_categories');
+        switch ($this->type) {
+            case 'tecdoc':
+                $result = Cache::get('category.'.$this->_lft.'.'.$this->_rgt);
+
+                if(!$result) {
+                    $result = DB::connection($this->connection)->select("
+                    SELECT p.id
+                    FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
+                    JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
+                    JOIN products as p on art.article_number_id = p.id
+                    where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
+                    JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
+                    JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
+                    where cc._lft >= {$this->_lft} and cc._rgt <= {$this->_rgt})
+                    ");
+
+                    Cache::put('category.'.$this->_lft.'.'.$this->_rgt, json_encode(array_column(json_decode(json_encode($result)), 'id')), now()->addMinutes(5));
+                    $result = json_decode(Cache::get('category.'.$this->_lft.'.'.$this->_rgt), true);
+                } else {
+                    $result = json_decode($result, true);
+                }
+
+
+                return Product::whereIn('id', $result);
+//                $categories = $query
+//                    ->join('category_distinct_passanger_car_trees as ct', 'catalog_categories.id', 'category_id')
+//                    ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
+//                    ->select('dc.*')
+//                    ->where('catalog_categories._lft', '>=', $this->_lft)
+//                    ->where('catalog_categories._rgt', '<=', $this->_rgt)->get();
+//
+//                return DB::table('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent')
+//                    ->join('tecdoc2018_db.article_tree as art','parent.passanger_car_trees_id', 'art.nodeid')
+//                    ->join('products as p', 'art.article_number_id', 'p.id')
+//                    ->whereBetween('node._lft', );
+                break;
+            default:
+                return $this->belongsToMany(Product::class, 'product_categories');
+        }
+
     }
 
     public function productsFiltered()
     {
         return $this->belongsToMany(ProductInterface::class, 'product_categories');
+    }
+
+    public function getTdp($modifications)
+    {
+        dd($this->builder());
     }
 
     public function getTecdocProducts($modifications, $limit)
