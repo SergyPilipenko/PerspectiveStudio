@@ -101,10 +101,14 @@ class UpdateTecdocProductsAttributes extends Seeder
                     $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = $product->name;
                 }
                 $productAttributes[] = $attr;
+                $attr = [];
             }
             $this->last_id = $product->id;
         }
         $this->productAttributeValue->insert($productAttributes);
+        $productAttributes = [];
+        $products = [];
+        $sql = "";
 //        $this->iteration += count($products);
 //        echo $this->iteration.'/'.$this->total."\n";
         $this->run($this->last_id);
