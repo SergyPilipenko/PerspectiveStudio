@@ -2,6 +2,7 @@
 
 namespace App\Models\Catalog;
 
+use App\Entities\ArticleNumber;
 use App\Helpers\Locale;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\CategoryFilterableAttribute;
@@ -12,6 +13,7 @@ use App\Models\Admin\Catalog\ProductCategory;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Search\Indexers\CategoriesIndexer;
 use App\Traits\HasTranslations;
+use Doctrine\ORM\EntityManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -33,7 +35,7 @@ class Category extends Model implements CategoryInterface
     protected $image_path = 'img/upload/product-categories/';
     private $product;
     private $filter;
-
+    private $em;
 
     public function __construct(array $attributes = [])
     {
@@ -42,6 +44,7 @@ class Category extends Model implements CategoryInterface
         }
         $this->product = resolve(ProductInterface::class);
         $this->filter = resolve(CategoryFilterInterface::class);
+        $this->em = resolve(EntityManager::class);
         parent::__construct($attributes);
     }
 
@@ -136,39 +139,38 @@ class Category extends Model implements CategoryInterface
     {
         switch ($this->type) {
             case 'tecdoc':
-                $result = Cache::get('category.'.$this->_lft.'.'.$this->_rgt);
+//                $result = Cache::get('category.'.$this->_lft.'.'.$this->_rgt);
+//
+//                if(!$result) {
+//                DB::connection()->enableQueryLog();
 
-                if(!$result) {
-                    $result = DB::connection($this->connection)->select("
+                $result = DB::connection($this->connection)->select("
                     SELECT p.id
                     FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
-                    JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
+                    JOIN partfix.product_article_tree art on parent.passanger_car_trees_id = art.nodeid
                     JOIN products as p on art.article_number_id = p.id
                     where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
                     JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
                     JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
                     where cc._lft >= {$this->_lft} and cc._rgt <= {$this->_rgt})
                     ");
+                $result = array_column(json_decode(json_encode($result), true), 'id');
 
-                    Cache::put('category.'.$this->_lft.'.'.$this->_rgt, json_encode(array_column(json_decode(json_encode($result)), 'id')), now()->addMinutes(5));
-                    $result = json_decode(Cache::get('category.'.$this->_lft.'.'.$this->_rgt), true);
-                } else {
-                    $result = json_decode($result, true);
-                }
-
-
+//                $a = 3;
+//                $products = Product::whereIn('id', $result)->get();
+//                $a = 3;
+////                return Product::whereIn('id', $result)->get();
+//                $qb = $this->em->createQueryBuilder();
+//                $qb->select('p')
+//                    ->from(\App\Entities\Product::class, 'p')
+//                    ->add('where', $qb->expr()->in('p.id', $result));
+////                $qb->innerJoin(ArticleNumber::class, 'a');
+//                $a = 3;
+//                $products = $qb->getQuery()
+//                    ->getArrayResult();
+//                $a = 3;
+//                dd(count($products));
                 return Product::whereIn('id', $result);
-//                $categories = $query
-//                    ->join('category_distinct_passanger_car_trees as ct', 'catalog_categories.id', 'category_id')
-//                    ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
-//                    ->select('dc.*')
-//                    ->where('catalog_categories._lft', '>=', $this->_lft)
-//                    ->where('catalog_categories._rgt', '<=', $this->_rgt)->get();
-//
-//                return DB::table('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent')
-//                    ->join('tecdoc2018_db.article_tree as art','parent.passanger_car_trees_id', 'art.nodeid')
-//                    ->join('products as p', 'art.article_number_id', 'p.id')
-//                    ->whereBetween('node._lft', );
                 break;
             default:
                 return $this->belongsToMany(Product::class, 'product_categories');

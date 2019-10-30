@@ -43,11 +43,10 @@ class Product extends Model implements ProductInterface
 
     public function __construct()
     {
-        parent::__construct();
-
         $this->productAttributeValue = new ProductAttributeValue;
         $this->productImage = app()->make(ProductImage::class);
         $this->priceFilter = app(PriceFilterInterface::class);
+        parent::__construct();
     }
 
     public function getAttribute($key)
