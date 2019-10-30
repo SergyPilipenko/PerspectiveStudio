@@ -91,8 +91,8 @@ class UpdateTecdocProductsAttributes extends Seeder
 //                    $this->productAttributeValue->insert($t);
 //                }
 //        });
-        $this->deleteOldAttributes();
         if(!$this->total) {
+            $this->deleteOldAttributes();
             $this->total = DB::connection('mysql')->selectOne("SELECT count(*) as total FROM products")->total;
         }
 
