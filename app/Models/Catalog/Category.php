@@ -159,16 +159,16 @@ class Category extends Model implements CategoryInterface
 //                $a = 3;
 //                $products = Product::whereIn('id', $result)->get();
 //                $a = 3;
-////                return Product::whereIn('id', $result)->get();
-//                $qb = $this->em->createQueryBuilder();
-//                $qb->select('p')
-//                    ->from(\App\Entities\Product::class, 'p')
-//                    ->add('where', $qb->expr()->in('p.id', $result));
-////                $qb->innerJoin(ArticleNumber::class, 'a');
-//                $a = 3;
-//                $products = $qb->getQuery()
-//                    ->getArrayResult();
-//                $a = 3;
+//                return Product::whereIn('id', $result)->get();
+                $qb = $this->em->createQueryBuilder();
+                $qb->select('p')
+                    ->from(\App\Entities\Product::class, 'p')
+                    ->add('where', $qb->expr()->in('p.id', $result));
+//                $qb->innerJoin(ArticleNumber::class, 'a');
+                $a = 3;
+                $products = $qb->getQuery()
+                    ->getArrayResult();
+                $a = 3;
 //                dd(count($products));
                 return Product::whereIn('id', $result);
                 break;
