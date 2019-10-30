@@ -18,6 +18,9 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $total = 0;
     private $iteration = 0;
     private $partCount = 200;
+    private $products;
+    private $attr;
+    private $productAttributes;
 
     public function __construct(AttributeFamily $attributeFamily, ProductAttributeValue $productAttributeValue, ProductImage $productImage)
     {
@@ -61,9 +64,9 @@ class UpdateTecdocProductsAttributes extends Seeder
         $sql .= " LIMIT {$this->partCount}";
 
 
-        $products = DB::connection('mysql')->select($sql);
+        $this->products = DB::connection('mysql')->select($sql);
 
-        if(!count($products)) {
+        if(!count($this->products)) {
             echo "done";
             return;
         };
@@ -73,15 +76,15 @@ class UpdateTecdocProductsAttributes extends Seeder
         }
 
         $productAttributes = [];
-        foreach ($products as $key => $product) {
+        foreach ($this->products as $key => $product) {
             foreach ($this->customAattributes as $attrkey => $customAattribute)
             {
-                $attr = [];
+                $this->attr = [];
                 foreach ($this->productAttributeValue->getFillableFields() as $fillableField) {
-                    $attr[$fillableField] = null;
+                    $this->attr[$fillableField] = null;
                 }
-                $attr['product_id'] = $product->id;
-                $attr['attribute_id'] = $customAattribute->id;
+                $this->attr['product_id'] = $product->id;
+                $this->attr['attribute_id'] = $customAattribute->id;
                 if($customAattribute->code == 'slug') {
                     $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = Transliterate::slugify($product->name) . "-{$product->id}" ;
                 }
@@ -89,23 +92,26 @@ class UpdateTecdocProductsAttributes extends Seeder
                     $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
                 }
                 if($customAattribute->code == 'isNew') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
                 }
                 if($customAattribute->code == 'price') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 0;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 0;
                 }
                 if($customAattribute->code == 'manufacturer') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = $product->manufacturer;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = $product->manufacturer;
                 }
                 if($customAattribute->code == 'short_description' || $customAattribute->code == 'name' || $customAattribute->code == 'description') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = $product->name;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = $product->name;
                 }
-                $productAttributes[] = $attr;
+                $this->productAttributes[] = $this->attr;
             }
             $this->last_id = $product->id;
         }
         $this->productAttributeValue->insert($productAttributes);
-//        $this->iteration += count($products);
+        $productAttributes = [];
+        $this->products = [];
+        $sql = "";
+//        $this->iteration += count($this->products);
 //        echo $this->iteration.'/'.$this->total."\n";
         $this->run($this->last_id);
     }
