@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
-use Illuminate\Support\Facades\Cache;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class Category extends Model implements CategoryInterface
 {
@@ -156,20 +156,22 @@ class Category extends Model implements CategoryInterface
                     ");
                 $result = array_column(json_decode(json_encode($result), true), 'id');
 
-//                $a = 3;
-//                $products = Product::whereIn('id', $result)->get();
-//                $a = 3;
-//                return Product::whereIn('id', $result)->get();
                 $qb = $this->em->createQueryBuilder();
                 $qb->select('p')
                     ->from(\App\Entities\Product::class, 'p')
                     ->add('where', $qb->expr()->in('p.id', $result));
-//                $qb->innerJoin(ArticleNumber::class, 'a');
-                $a = 3;
+                $pageSize = 20;
+                $paginator = new Paginator($qb);
+                $totalItems = count($paginator);
+                $pagesCount = ceil($totalItems / $pageSize);
+                $paginated = $paginator
+                    ->getQuery()
+                    ->setFirstResult($pageSize * (2-1)) // set the offset
+                    ->setMaxResults($pageSize)->getArrayResult();
+                dd($paginated);
                 $products = $qb->getQuery()
                     ->getArrayResult();
-                $a = 3;
-//                dd(count($products));
+
                 return Product::whereIn('id', $result);
                 break;
             default:
