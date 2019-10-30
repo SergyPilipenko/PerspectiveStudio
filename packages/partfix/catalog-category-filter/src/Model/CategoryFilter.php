@@ -24,10 +24,11 @@ class CategoryFilter implements CategoryFilterInterface
     }
 
 
-    public function renderCategoryFilter(Category $category) : self
+    public function renderCategoryFilter(Category $category, $modification = null) : self
     {
+//        dd($modification);
         if($category->type == 'tecdoc') {
-            return $this->renderTecdocFilter($category);
+            return $this->renderTecdocFilter($category, $modification);
         }
         $productIds = $this->getFilteredProductIds($category);
 
@@ -41,10 +42,11 @@ class CategoryFilter implements CategoryFilterInterface
         return  $this;
     }
 
-    public function renderTecdocFilter($category)
+    public function renderTecdocFilter($category, $modification = null)
     {
         $attribute = Attribute::where('code', 'manufacturer')->first();
-        $sql = "
+        if(!$modification) {
+            $sql = "
         SELECT pv.text_value as value, count(*) as count
         FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
         JOIN partfix.product_article_tree art on parent.passanger_car_trees_id = art.nodeid
@@ -57,6 +59,21 @@ class CategoryFilter implements CategoryFilterInterface
         where cc._lft >= {$category->_lft} and cc._rgt <={$category->_rgt})
          and a.code = 'manufacturer'
           ";
+        } else {
+            $sql = "
+            SELECT pv.text_value as value, count(*) as count
+            FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
+            JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
+            JOIN tecdoc2018_db.passanger_car_pds pds on art.productId = pds.productId and art.supplierid = pds.supplierid
+            JOIN products as p on art.article_number_id = p.id
+            JOIN product_attribute_values as pv on p.id = pv.product_id
+            JOIN attributes as a on pv.attribute_id = a.id
+            where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
+            JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
+            JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
+            where cc._lft >= {$category->_lft} and cc._rgt <={$category->_rgt})
+             and a.code = 'manufacturer' and pds.passangercarid = {$modification->modification->id}";
+        }
         if(request()->manufacturer) {
             $sql .= " and pv.text_value = '".request()->manufacturer."'";
         }

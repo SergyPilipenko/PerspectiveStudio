@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
 use Partfix\Paginator\App\Paginator;
-use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class ProductCategoryController extends Controller
 {
@@ -17,10 +16,6 @@ class ProductCategoryController extends Controller
      * @var ProductsFilter
      */
     private $filters;
-    /**
-     * @var CategoryFilter
-     */
-    private $mainFilter;
     /**
      * @var CategoryFilter
      */

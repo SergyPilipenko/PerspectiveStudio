@@ -13,14 +13,12 @@ use App\Models\Admin\Catalog\ProductCategory;
 use App\Models\Categories\CategoryDistinctPassangerCarTree;
 use App\Search\Indexers\CategoriesIndexer;
 use App\Traits\HasTranslations;
-use Doctrine\ORM\EntityManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class Category extends Model implements CategoryInterface
 {
@@ -44,7 +42,6 @@ class Category extends Model implements CategoryInterface
         }
         $this->product = resolve(ProductInterface::class);
         $this->filter = resolve(CategoryFilterInterface::class);
-        $this->em = resolve(EntityManager::class);
         parent::__construct($attributes);
     }
 
@@ -139,40 +136,35 @@ class Category extends Model implements CategoryInterface
     {
         switch ($this->type) {
             case 'tecdoc':
-//                $result = Cache::get('category.'.$this->_lft.'.'.$this->_rgt);
-//
-//                if(!$result) {
-//                DB::connection()->enableQueryLog();
-
-                $result = DB::connection($this->connection)->select("
+                if(!$modifications) {
+                    $sql = "
                     SELECT p.id
                     FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
-                    JOIN partfix.product_article_tree art on parent.passanger_car_trees_id = art.nodeid
+                    JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
                     JOIN products as p on art.article_number_id = p.id
                     where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
                     JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
                     JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
                     where cc._lft >= {$this->_lft} and cc._rgt <= {$this->_rgt})
-                    ");
-                $result = array_column(json_decode(json_encode($result), true), 'id');
-
-                $qb = $this->em->createQueryBuilder();
-                $qb->select('p')
-                    ->from(\App\Entities\Product::class, 'p')
-                    ->add('where', $qb->expr()->in('p.id', $result));
-                $pageSize = 20;
-                $paginator = new Paginator($qb);
-                $totalItems = count($paginator);
-                $pagesCount = ceil($totalItems / $pageSize);
-                $paginated = $paginator
-                    ->getQuery()
-                    ->setFirstResult($pageSize * (2-1)) // set the offset
-                    ->setMaxResults($pageSize)->getArrayResult();
-                dd($paginated);
-                $products = $qb->getQuery()
-                    ->getArrayResult();
+                    ";
+                } else {
+                    $sql = "SELECT p.id
+                            FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
+                            JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
+                            JOIN products as p on art.article_number_id = p.id
+                            JOIN tecdoc2018_db.passanger_car_pds pds on art.productId = pds.productId and art.supplierid = pds.supplierid
+                            where node._lft between parent._lft and parent._rgt and parent.id in (SELECT dc.id FROM partfix.catalog_categories cc
+                            JOIN category_distinct_passanger_car_trees as ct ON cc.id = ct.category_id
+                            JOIN distinct_passanger_car_trees as dc on ct.distinct_pct_id = dc.id
+                            where cc._lft >= {$this->_lft} and cc._rgt <= {$this->_rgt})
+                            and pds.passangercarid = {$modifications}";
+                }
+                $query = DB::connection($this->connection)->select($sql);
+//                dd(count($query));
+                $result = array_column(json_decode(json_encode($query), true), 'id');
 
                 return Product::whereIn('id', $result);
+
                 break;
             default:
                 return $this->belongsToMany(Product::class, 'product_categories');
@@ -219,8 +211,8 @@ class Category extends Model implements CategoryInterface
         return $query->where('parent_id', null);
     }
 
-    public function getFilter()
+    public function getFilter($modification = null)
     {
-        return $this->filter->renderCategoryFilter($this);
+        return $this->filter->renderCategoryFilter($this, $modification);
     }
 }

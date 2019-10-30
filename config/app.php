@@ -171,7 +171,7 @@ return [
         Partfix\Paginator\PaginatorServiceProvider::class,
         Partfix\CatalogCategoryFilter\CatalogCategoryFilterServiceProvider::class,
         Partfix\CatalogCategoryFilter\RouteServiceProvider::class,
-        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+//        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*
          * Application Service Providers...
          */
