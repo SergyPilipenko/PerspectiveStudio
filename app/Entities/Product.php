@@ -16,4 +16,8 @@ class Product
      * @ORM\Column(type="bigint")
      */
     private $id;
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $article;
 }

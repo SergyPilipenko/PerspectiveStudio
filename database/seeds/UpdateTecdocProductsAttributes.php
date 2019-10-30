@@ -17,7 +17,7 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $customAattributes;
     private $total = 0;
     private $iteration = 0;
-    private $partCount = 500;
+    private $partCount = 200;
 
     public function __construct(AttributeFamily $attributeFamily, ProductAttributeValue $productAttributeValue, ProductImage $productImage)
     {
@@ -91,6 +91,7 @@ class UpdateTecdocProductsAttributes extends Seeder
 //                    $this->productAttributeValue->insert($t);
 //                }
 //        });
+        $this->deleteOldAttributes();
         if(!$this->total) {
             $this->total = DB::connection('mysql')->selectOne("SELECT count(*) as total FROM products")->total;
         }
