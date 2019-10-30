@@ -151,6 +151,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label for="filterable-attributes">Доступные для фильтра аттрибуты</label>
+                                                                    <label for="nestedFilterableAttributes">Применить к вложенным категориям</label>
+                                                                    <input type="checkbox" id="nestedFilterableAttributes" class="form-control">
                                                                     <select multiple name="filterableAttributes[]" class="form-control" id="filterable-attributes">
                                                                         @foreach ($filterableAttributes as $attribute)
                                                                             <option {{ $category->filterableAttributes->contains('id', $attribute->id) ? 'selected' : ''  }} value="{{ $attribute->id }}">{{ $attribute->title }}</option>

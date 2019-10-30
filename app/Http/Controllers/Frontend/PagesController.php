@@ -8,6 +8,7 @@ use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
 use App\Classes\RoutesParser\CarRoutesParser;
 use App\Classes\RoutesParser\RoutesParserInterface;
+use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
@@ -20,19 +21,32 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;
 use Illuminate\Support\Facades\Session;
 
 class PagesController extends Controller
 {
+    /**
+     * @var ProductsFilter
+     */
+    private $filters;
+    /**
+     * @var CategoryFilter
+     */
+    private $categoryFilter;
 
     /**
-     * PagesController constructor.
+     * ProductCategoryController constructor.
+     * @param ProductsFilter $filters
+     * @param CategoryFilter $categoryFilter
      */
-    public function __construct()
+    public function __construct(ProductsFilter $filters, CategoryFilter $categoryFilter)
     {
         $this->middleware('frontend');
+        $this->filters = $filters;
+        $this->categoryFilter = $categoryFilter;
     }
 
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
@@ -112,12 +126,16 @@ class PagesController extends Controller
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
     {
+
         $category = resolve(CategoryInterface::class)
             ->where('slug->' . app()->getLocale(), $category)
             ->with('children.children')
             ->firstOrFail();
 
-        $products = $category->getProducts([$modification], 2);
+        $products = $category->products($modification)
+            ->with('productAttributeValues')
+            ->filter($this->filters, $category->filterableAttributes)
+            ->paginate(20);
 
         $car = $car->getCar($modification);
 
