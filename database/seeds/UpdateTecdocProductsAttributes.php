@@ -75,7 +75,7 @@ class UpdateTecdocProductsAttributes extends Seeder
             $this->customAattributes = $this->attributeFamily->custom_attributes()->get();
         }
 
-        $productAttributes = [];
+        $this->productAttributes = [];
         foreach ($this->products as $key => $product) {
             foreach ($this->customAattributes as $attrkey => $customAattribute)
             {
