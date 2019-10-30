@@ -107,7 +107,7 @@ class UpdateTecdocProductsAttributes extends Seeder
             }
             $this->last_id = $product->id;
         }
-        $this->productAttributeValue->insert($productAttributes);
+        $this->productAttributeValue->insert($this->productAttributes);
         $productAttributes = [];
         $this->products = [];
         $sql = "";
