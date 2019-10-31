@@ -1,0 +1,11 @@
+{
+    "name": "partfix/query-builder",
+    "description": "Sql query builder",
+    "authors": [
+        {
+            "name": "Viktor Hordieiev",
+            "email": "gordeev@flabers.com.ua"
+        }
+    ],
+    "require": {}
+}

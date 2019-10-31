@@ -50,11 +50,14 @@ class ProductsFilter extends Filters
     {
         $param_value = explode(self::MULTIPLE_VALUE_DELIMITER, $attributeValue);
 
-        return $this->builder->whereHas('attributeValues', function($query) use ($attribute, $param_value) {
-            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
-                ->where('a.code', $attribute->code)
-                ->whereIn('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$attribute->type], $param_value);
-        });
+        $this->builder
+            ->join('product_attribute_values as pv', 'p.id', 'pv.product_id')
+            ->join('attributes as a', 'pv.attribute_id', 'a.id')
+            ->where('a.code', $attribute->code)
+            ->whereIn('pv.'.ProductAttributeValue::$attributeTypeFields[$attribute->type], $param_value);
+
+        return $this->builder;
+//        dd($this->builder->getQuery());
     }
 
     protected function addCustomAttributesToFilter($filterableItems = [])
@@ -73,8 +76,10 @@ class ProductsFilter extends Filters
 
     public function apply($builder, $filterableItems = [])
     {
+
         $this->fillterableAttributes = $filterableItems;
         $this->addCustomAttributesToFilter($filterableItems);
+//        dd($this);
 
         $this->builder = $builder;
 

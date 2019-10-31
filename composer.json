@@ -48,7 +48,8 @@
             "Partfix\\CategoriesAdapter\\": "packages/partfix/categories-adapter/src",
             "Partfix\\Category\\": "packages/partfix/category/src",
             "Partfix\\Paginator\\": "packages/partfix/paginator/src",
-            "Partfix\\CatalogCategoryFilter\\": "packages/partfix/catalog-category-filter/src"
+            "Partfix\\CatalogCategoryFilter\\": "packages/partfix/catalog-category-filter/src",
+            "Partfix\\QueryBuilder\\": "packages/partfix/query-builder/src"
         },
         "classmap": [
             "database/seeds",
