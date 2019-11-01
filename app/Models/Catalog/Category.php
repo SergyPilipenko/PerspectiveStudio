@@ -244,7 +244,7 @@ class Category extends Model implements CategoryInterface
     {
         return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
             ["p.id"])
-            ->join("product_article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
+            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
             ->join("products as p", "art.article_number_id", "p.id")
             ->whereBetween("node._lft", "parent._lft", "parent._rgt")
             ->whereIn("parent.id", function ($query) {
