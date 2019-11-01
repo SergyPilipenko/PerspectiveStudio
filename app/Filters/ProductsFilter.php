@@ -134,11 +134,20 @@ class ProductsFilter extends Filters
         if(!$type) return $this->builder;
         $value = array_shift($arguments);
 
-        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
-            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+        $this->builder->whereExists(function($query) use ($code, $value, $type) {
+            return $query
+                ->select('product_attribute_values as pv', ['pv.'.ProductAttributeValue::$attributeTypeFields[$type]])
+                ->join('attributes as a', 'pv.attribute_id', 'a.id')
+                ->where('p.id', '{pv.product_id}')
                 ->where('a.code', $code)
-                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'>=', $value);
+                ->where('pv.'.ProductAttributeValue::$attributeTypeFields[$type], $value, '>=');
         });
+
+//        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
+//            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+//                ->where('a.code', $code)
+//                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'>=', $value);
+//        });
     }
 
     protected function _to($code, $arguments)
@@ -146,10 +155,19 @@ class ProductsFilter extends Filters
         $type = $this->fillterableAttributes->where('code', $code)->first()->type;
         if(!$type) return $this->builder;
         $value = array_shift($arguments);
-        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
-            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+
+        $this->builder->whereExists(function($query) use ($code, $value, $type) {
+            return $query
+                ->select('product_attribute_values as pv', ['pv.'.ProductAttributeValue::$attributeTypeFields[$type]])
+                ->join('attributes as a', 'pv.attribute_id', 'a.id')
+                ->where('p.id', '{pv.product_id}')
                 ->where('a.code', $code)
-                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'<=', $value);
+                ->where('pv.'.ProductAttributeValue::$attributeTypeFields[$type], $value, '<=');
         });
+//        return $this->builder->whereHas('attributeValues', function($query) use ($code, $value, $type) {
+//            $query->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id')
+//                ->where('a.code', $code)
+//                ->where('product_attribute_values.'.ProductAttributeValue::$attributeTypeFields[$type],'<=', $value);
+//        });
     }
 }
