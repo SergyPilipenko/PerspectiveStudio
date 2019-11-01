@@ -53,7 +53,7 @@ class CategoryFilter implements CategoryFilterInterface
             $sql = "
         SELECT pv.text_value as value, count(*) as count
         FROM distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent
-        JOIN partfix.product_article_tree art on parent.passanger_car_trees_id = art.nodeid
+        JOIN tecdoc2018_db.article_tree art on parent.passanger_car_trees_id = art.nodeid
         JOIN products as p on art.article_number_id = p.id
         JOIN product_attribute_values as pv on p.id = pv.product_id
         JOIN attributes as a on pv.attribute_id = a.id
