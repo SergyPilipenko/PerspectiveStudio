@@ -33,7 +33,7 @@ class Paginator implements PaginatorInterface
     public function paginate($items, $perPage, $currentPage = null) : LengthAwarePaginator
     {
         return new LengthAwarePaginator(
-            array_slice($items, 0, $perPage),
+            array_slice($items, $currentPage, $perPage),
             count($items),
             $perPage,
             $currentPage,

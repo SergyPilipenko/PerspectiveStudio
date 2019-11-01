@@ -5,8 +5,9 @@ namespace App\Repositories\Product;
 
 
 use App\Models\Admin\Catalog\Product\ProductInterface;
+use Illuminate\Support\Facades\Cache;
 
-class ProductRepository
+class ProductRepository implements ProductRepositoryInterface
 {
     /**
      * @var ProductInterface
@@ -23,5 +24,10 @@ class ProductRepository
         foreach ($orderItems as $item) {
             $this->product->where('id', $item['product_id'])->decrement('quantity', $item['qty_ordered']);
         }
+    }
+
+    public function getProductsWithData($ids)
+    {
+        return  $this->product->whereIn('id', $ids)->with('productAttributeValues')->get();
     }
 }
