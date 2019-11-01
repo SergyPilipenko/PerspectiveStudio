@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\File;
 use Kalnoy\Nestedset\NodeTrait;
 use App\Http\Requests\RequestInterface;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
+use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 
 class Category extends Model implements CategoryInterface
 {
@@ -29,11 +30,11 @@ class Category extends Model implements CategoryInterface
     public $categoryTypes = ['default', 'tecdoc'];
     public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords'];
     public $locale;
-
     protected $image_path = 'img/upload/product-categories/';
     private $product;
     private $filter;
     private $em;
+    private $builder;
 
     public function __construct(array $attributes = [])
     {
@@ -42,6 +43,7 @@ class Category extends Model implements CategoryInterface
         }
         $this->product = resolve(ProductInterface::class);
         $this->filter = resolve(CategoryFilterInterface::class);
+        $this->builder = resolve(SQLQueryBuilder::class);
         parent::__construct($attributes);
     }
 
@@ -159,6 +161,7 @@ class Category extends Model implements CategoryInterface
                             where cc._lft >= {$this->_lft} and cc._rgt <= {$this->_rgt})
                             and pds.passangercarid = {$modifications}";
                 }
+
                 $query = DB::connection($this->connection)->select($sql);
 //                dd(count($query));
                 $result = array_column(json_decode(json_encode($query), true), 'id');
@@ -214,5 +217,37 @@ class Category extends Model implements CategoryInterface
     public function getFilter($modification = null)
     {
         return $this->filter->renderCategoryFilter($this, $modification);
+    }
+
+    public function newProducts()
+    {
+        switch ($this->type) {
+            case 'tecdoc':
+                return $this->tecdocCategoryProducts();
+                break;
+            default:
+                return $this->belongsToMany(Product::class, 'product_categories');
+        }
+    }
+
+    private function tecdocCategoryProducts()
+    {
+        return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
+            ["p.id"])
+            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
+            ->join("products as p", "art.article_number_id", "p.id")
+            ->whereBetween("node._lft", "parent._lft", "parent._rgt")
+            ->whereIn("parent.id", function ($query) {
+                return $query->select("partfix.catalog_categories as cc", ["dc.id"])
+                    ->join("category_distinct_passanger_car_trees as ct", "cc.id", "ct.category_id")
+                    ->join("distinct_passanger_car_trees as dc", "ct.distinct_pct_id", "dc.id")
+                    ->where("cc._lft", $this->_lft, '>=')
+                    ->where("cc._rgt", $this->_rgt, '<=');
+            });
+    }
+
+    public function newFilter()
+    {
+        dd(3);
     }
 }

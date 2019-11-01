@@ -4,6 +4,7 @@ namespace App\Models\Admin\Catalog\Product;
 
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Events\ProductUpdatedEvent;
+use App\Filters\NewProductsFilter;
 use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
@@ -14,12 +15,18 @@ use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
 
     public $priceFilter;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    private $newProductsFilter;
+    private $productsFilter;
 
     protected static function boot()
     {
@@ -46,6 +53,8 @@ class Product extends Model implements ProductInterface
         $this->productAttributeValue = new ProductAttributeValue;
         $this->productImage = app()->make(ProductImage::class);
         $this->priceFilter = app(PriceFilterInterface::class);
+        $this->newProductsFilter = app(NewProductsFilter::class);
+        $this->productsFilter = app(ProductsFilter::class);
         parent::__construct();
     }
 
@@ -302,5 +311,10 @@ class Product extends Model implements ProductInterface
             dd($e);
             DB::connection()->getPdo()->rollBack();
         }
+    }
+
+    public function newFilter(MysqlQueryBuilder $builder, $filterableItems)
+    {
+        return $this->productsFilter->apply($builder, $filterableItems);
     }
 }

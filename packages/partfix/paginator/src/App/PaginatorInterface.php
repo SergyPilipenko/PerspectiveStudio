@@ -2,10 +2,10 @@
 
 
 namespace Partfix\Paginator\App;
-use Illuminate\Pagination\Paginator as IlluminatePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 interface PaginatorInterface
 {
-    public function paginate($items, $perPage, $currentPage = null, array $options = []) : IlluminatePaginator;
+    public function paginate($items, $perPage, $currentPage = null) : LengthAwarePaginator;
 }
