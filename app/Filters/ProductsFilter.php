@@ -58,7 +58,7 @@ class ProductsFilter extends Filters
 
         $this->builder->whereExists(function($query) use ($attribute, $param_value) {
             return $query
-                ->select('product_attribute_values as pv', ['*'])
+                ->select('product_attribute_values as pv', ['pv.'.ProductAttributeValue::$attributeTypeFields[$attribute->type]])
                 ->join('attributes as a', 'pv.attribute_id', 'a.id')
                 ->where('p.id', '{pv.product_id}')
                 ->where('a.code', $attribute->code)

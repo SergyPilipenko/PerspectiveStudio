@@ -17,7 +17,7 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $customAattributes;
     private $total = 0;
     private $iteration = 0;
-    private $partCount = 200;
+    private $partCount = 1000;
     private $products;
     private $attr;
     private $productAttributes;
@@ -86,10 +86,10 @@ class UpdateTecdocProductsAttributes extends Seeder
                 $this->attr['product_id'] = $product->id;
                 $this->attr['attribute_id'] = $customAattribute->id;
                 if($customAattribute->code == 'slug') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = Transliterate::slugify($product->name) . "-{$product->id}" ;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = Transliterate::slugify($product->name) . "-{$product->id}" ;
                 }
                 if($customAattribute->code == 'status') {
-                    $attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
+                    $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
                 }
                 if($customAattribute->code == 'isNew') {
                     $this->attr[ProductAttributeValue::$attributeTypeFields[$customAattribute->type]] = 1;
