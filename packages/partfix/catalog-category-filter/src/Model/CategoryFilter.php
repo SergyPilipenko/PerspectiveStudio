@@ -5,7 +5,9 @@ namespace Partfix\CatalogCategoryFilter\Model;
 use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Catalog\Category;
+use App\Repositories\CatalogCategory\CategoryRepository;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
 use App\Models\Admin\Catalog\Product\ProductAttributeValue;
@@ -16,11 +18,13 @@ class CategoryFilter implements CategoryFilterInterface
     public $items = [];
     private $block;
     private $productsFilter;
+    private $categoryRepository;
 
-    public function __construct(CategoryFilterBlock $block, ProductsFilter $productsFilter)
+    public function __construct(CategoryFilterBlock $block, ProductsFilter $productsFilter, CategoryRepository $categoryRepository)
     {
         $this->block = $block;
         $this->productsFilter = $productsFilter;
+        $this->categoryRepository = $categoryRepository;
     }
 
 
@@ -78,12 +82,19 @@ class CategoryFilter implements CategoryFilterInterface
             $sql .= " and pv.text_value = '".request()->manufacturer."'";
         }
         $sql .= " group by pv.text_value";
-        $options = DB::connection('mysql')->select($sql);
+        $cache = Cache::get(md5($sql));
+        if(!$cache) {
+            $options = DB::connection('mysql')->select($sql);
+            Cache::put(md5($sql), $options, now()->addMinutes(1));
+        } else {
+            $options = $cache;
+        }
         $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+
         return $this;
     }
 
-    public function getCategoryFilterOptions(Collection $productIds, int $attributeId, string $attributeValueField)
+    public function getCategoryFilterOptions($productIds, int $attributeId, string $attributeValueField)
     {
         return DB::table('category_filterable_attributes as ca')
             ->select('pv.'.$attributeValueField.' as value', DB::raw('count(*) as count'))
@@ -101,9 +112,7 @@ class CategoryFilter implements CategoryFilterInterface
 
     public function getFilteredProductIds($category)
     {
-        return $category->products()
-            ->with('productAttributeValues')
-            ->filter($this->productsFilter, $category->filterableAttributes)->get()->pluck('id');
+        return $this->categoryRepository->getCategoryProductsIds($category);
     }
 
     public function getAttributeValueField(Attribute $attribute) : string
@@ -146,9 +155,10 @@ class CategoryFilter implements CategoryFilterInterface
 
     public function getCategoryTotalProductsQty(Category $category)
     {
-        return $category->products()
-            ->with('productAttributeValues')
-            ->filter($this->productsFilter, $category->filterableAttributes)->count();
+//        return $category->products()
+//            ->with('productAttributeValues')
+//            ->filter($this->productsFilter, $category->filterableAttributes)->count();
+        return $this->categoryRepository->getCategoryProductsQty($category);
 //        return DB::table('product_categories')->where('category_id', $categoryId)->count();
     }
 }
