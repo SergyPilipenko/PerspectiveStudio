@@ -17,7 +17,7 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $customAattributes;
     private $total = 0;
     private $iteration = 0;
-    private $partCount = 1000;
+    private $partCount = 500;
     private $products;
     private $attr;
     private $productAttributes;

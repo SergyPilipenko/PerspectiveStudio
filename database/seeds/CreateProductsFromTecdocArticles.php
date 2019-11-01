@@ -40,8 +40,9 @@ class CreateProductsFromTecdocArticles extends Seeder
 
         $sql = "SELECT id, supplierid, datasupplierarticlenumber FROM article_numbers ";
         if($id_from) {
-            $sql = $sql . "WHERE id > $id_from ";
-        }
+            $sql = $sql . "WHERE id > $id_from ";        
+	}
+	
         $limit = "ORDER BY id asc limit {$this->partCount}";
         $sql = $sql .  $limit;
         $articles = DB::connection('mysql_tecdoc')->select($sql);
