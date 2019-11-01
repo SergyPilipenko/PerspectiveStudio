@@ -87,14 +87,14 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         if (!in_array($this->query->type, ['select', 'update'])) {
             throw new \Exception("WHERE can only be added to SELECT OR UPDATE");
         }
-        $this->query->where[] = "$field $operator '$value'";
+
+        // условие вида "WHERE post.id = comments.id"
+        // стоит указывать как $builder->where('post.id', '{comments.id}'), что бы явно указать что это не просто строка
+        $value = preg_match('/{.+}/',$value) ? preg_replace('/[{}]/', '', $value) : "'$value'";
+
+        $this->query->where[] = "$field $operator $value";
 
         return $this;
-    }
-
-    public function exist()
-    {
-        
     }
 
     /**
@@ -116,6 +116,18 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             throw new \Exception("WHERE IN can only be added to SELECT OR UPDATE");
         }
         $this->query->where[] = "$field IN ('".implode("','", $values)."')";
+
+        return $this;
+    }
+
+    /**
+     * Добавление условия WHERE EXISTS
+     * @param Closure $values
+     * @return $this
+     */
+    public function whereExists(Closure $values)
+    {
+        $this->query->where[] = " EXISTS (".$values(new self($this->connection))->getQuery().")";
 
         return $this;
     }

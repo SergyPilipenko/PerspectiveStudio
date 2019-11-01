@@ -185,7 +185,7 @@
             @include('frontend.partials._logo')
             <div class="col-10 d-flex align-items-center">
                 <search-button></search-button>
-                <garage :new_garage="{{ json_encode(app('App\Classes\Garage')->getGarage()) }}"></garage>
+{{--                <garage :new_garage="{{ json_encode(app('App\Classes\Garage')->getGarage()) }}"></garage>--}}
                 <div class="header__punkt header__featured">
                     <img src="{{ asset('img/frontend/img/svg/heart.svg') }}" alt="heart" class="icon">
                     <span class="header__punkt-counter">96</span>
@@ -214,7 +214,7 @@
                         </div>
                     </div>
                 </div>
-                @include('frontend.partials._cart')
+{{--                @include('frontend.partials._cart')--}}
             </div>
         </div>
         <div class="row align-items-center">

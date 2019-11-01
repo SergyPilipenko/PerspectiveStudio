@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <div class="d-flex">
                         @if(isset($products) && $products->count())
-                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter(), 'category' => $category])
+{{--                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter(), 'category' => $category])--}}
                             <div class="subcategory__items">
                                 <div class="subcategory__header">
                                     <span>Найдено {{ $products->count() }} товаров</span>

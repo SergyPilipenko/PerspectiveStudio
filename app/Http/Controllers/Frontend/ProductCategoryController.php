@@ -80,36 +80,14 @@ class ProductCategoryController extends Controller
 
     public function show($category)
     {
-
-//        $products = $category->products()
-//            ->with('productAttributeValues')
-//            ->filter($this->filters, $category->filterableAttributes)
-//            ->paginate(20);
-
-
-
         $res = $category->newProducts();
-
-        $product = $this->product->newFilter($res, $category->filterableAttributes);
-        dd($product->getQuery());
-        $res = $product->getArrayResult();
-        $products = $this->paginator->paginate($res, 20);
-
-//        dd(1);
-//
-//        $query = $this->builder
-//            ->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent", ["p.id"])
-//            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
-//            ->join("products as p", "art.article_number_id", "p.id")
-//            ->whereBetween("node._lft", "parent._lft", "parent._rgt")
-//            ->whereIn("parent.id", function ($test) {
-//                return $test->select("partfix.catalog_categories as cc", ["dc.id"])
-//                    ->join("category_distinct_passanger_car_trees as ct", "cc.id", "ct.category_id")
-//                    ->join("distinct_passanger_car_trees as dc", "ct.distinct_pct_id", "dc.id")
-//                    ->where("cc._lft", 51, '>=')
-//                    ->where("cc._rgt", 54, '<=');
-//            });
-
+        $query = $this->product->newFilter($res, $category->filterableAttributes);
+        $result = $query->getArrayResult();
+        $products = $this->paginator->paginate($result, 20);
+        $ids = $products->getCollection()->pluck('id');
+        $productsWithData = Product::whereIn('id', $ids)->with('productAttributeValues')->get();
+        $products->setCollection($productsWithData);
+//        dd($products);
         return view('frontend.product-categories.categories.show', compact('category', 'products'));
     }
 }
