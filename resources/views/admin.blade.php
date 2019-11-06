@@ -6,16 +6,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>RoyalUI Admin</title>
     @include('admin.layouts.styles')
+    <script>var CKEDITOR_BASEPATH = '/js/libs/ckeditor/';</script>
+    <script src="{{ asset('js/libs/ckeditor/ckeditor.js') }}"></script>
     <script type="application/javascript" src="{{ mix('js/admin.js') }}"></script>
 </head>
 <body>
 <div class="container-scroller">
     @include('admin.layouts.navbar')
+
     <div class="container-fluid page-body-wrapper">
         @include('admin.layouts.sidebar')
         <div class="main-panel">
             <div class="content-wrapper">
-
                 <div id="app">
                     <div v-cloak class="main-app-container">
                         <div class="v-cloak--inline"> <!-- Parts that will be visible before compiled your HTML -->
@@ -36,6 +38,11 @@
 
 @include('admin.layouts.scripts')
 @yield('scripts')
+{{--<script>--}}
+{{--    document.addEventListener('DOMContentLoaded', () => {--}}
+{{--        CKEDITOR.replace( 'editor1' );--}}
+{{--    });--}}
+{{--</script>--}}
 </body>
 
 </html>

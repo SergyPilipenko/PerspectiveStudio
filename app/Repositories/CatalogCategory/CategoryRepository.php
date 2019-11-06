@@ -49,7 +49,7 @@ class CategoryRepository
         } else {
             $result = $cache;
         }
-//        dd($cache);
+
         $products = $this->paginator->paginate($result, 20, request()->page);
         $ids = $products->getCollection()->pluck('id');
 

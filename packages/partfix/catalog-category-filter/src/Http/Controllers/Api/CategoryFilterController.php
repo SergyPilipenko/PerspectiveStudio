@@ -26,6 +26,7 @@ class CategoryFilterController extends Controller
 
         $category = $this->category->findOrFail($request->categoryId);
 
+
         return $this->categoryFilter->getCategoryTotalProductsQty($category);
     }
 }

@@ -234,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Transliterate' => ElForastero\Transliterate\Facade::class,
         'ValidationHelper' => App\Helpers\Validation::class,
+        'ContentBlock' => App\Repositories\Content\ContentBlock::class
     ],
 
 ];

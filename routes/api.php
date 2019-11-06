@@ -24,4 +24,3 @@ Route::prefix('tecdoc')->group(function () {
     Route::post('get-filtered-modifications', 'Api\TecdocController@getFilteredModifications')->name('api.tecdoc.get-filtered-modifications');
     Route::post('get-brands-by-models-created-year', 'Api\TecdocController@getBrandsByModelsCreatedYear')->name('api.get-brands-by-models-created-year');
 });
-
