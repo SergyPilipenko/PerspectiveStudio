@@ -1,5 +1,6 @@
 <?php
 Route::prefix('admin')->group(function() {
+    Route::post('ckeditor-upload-image', 'Admin\AdminController@ckeditorUploadImage');
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
     Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.submit');
@@ -59,6 +60,18 @@ Route::prefix('admin')->group(function() {
             Route::delete('{id}/destroy', 'Admin\Catalog\CategoriesController@destroy')->name('destroy');
             Route::get('{id}/create', 'Admin\Catalog\CategoriesController@create')->name('create-subcategory');
             Route::post('{id}/store', 'Admin\Catalog\CategoriesController@store')->name('store-subcategory');
+        });
+    });
+
+    Route::group(['prefix' => 'content', 'as' => 'admin.content.'], function() {
+        Route::group(['prefix' => 'blocks', 'as' => 'blocks.'], function() {
+            Route::get('/', 'Admin\Content\BlockController@index')->name('index');
+            Route::get('/create', 'Admin\Content\BlockController@create')->name('create');
+            Route::post('/store', 'Admin\Content\BlockController@store')->name('store');
+            Route::get('/{id}/edit', 'Admin\Content\BlockController@edit')->name('edit');
+            Route::put('/{id}/update', 'Admin\Content\BlockController@update')->name('update');
+            Route::delete('/{id}/destroy', 'Admin\Content\BlockController@destroy')->name('destroy');
+
         });
     });
 

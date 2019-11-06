@@ -7,11 +7,12 @@
 <script>
     import TextBlock from "./TextBlock";
     import DecimalBlock from "./DecimalBlock";
-    import PreloadLayout from "./PreloadLayout"
-    import {mapMutations} from 'vuex'
+    import PreloadLayout from "./PreloadLayout";
+    import AppliedFilters from "./AppliedFilters";
+    import { mapMutations, mapGetters, mapActions } from 'vuex';
 
     export default {
-        components: { TextBlock, PreloadLayout, DecimalBlock },
+        components: { TextBlock, PreloadLayout, DecimalBlock, AppliedFilters },
         props: ['filter_qty_action', 'category_id', 'category_link'],
 
         created() {
@@ -20,12 +21,23 @@
             this.setCategoryId(this.category_id);
             this.setCategoryLink(this.category_link);
         },
+        mounted() {
+            this.setAppliedFilters();
+        },
+        computed: {
+            ...mapGetters({
+                getRequestParams: 'CatalogFilter/getRequestParams'
+            })
+        },
         methods: {
             ...mapMutations({
                 setRequestParameters: 'CatalogFilter/setRequestParameters',
                 setFilterQtyAction: 'CatalogFilter/setFilterQtyAction',
                 setCategoryId: 'CatalogFilter/setCategoryId',
                 setCategoryLink: 'CatalogFilter/setCategoryLink',
+            }),
+            ...mapActions({
+                setAppliedFilters: 'CatalogFilter/setAppliedFilters',
             })
         }
     }

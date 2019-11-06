@@ -19,7 +19,8 @@ export default {
         filterQtyAction: '/api/catalog/category/filterqty',
         categoryId: null,
         currentSubmitLink: '',
-        categoryLink: ''
+        categoryLink: '',
+        appliedFilters: []
     },
     getters: {
         getBlocks(state) {
@@ -27,8 +28,15 @@ export default {
         },
         getBlockById: state => id => {
             if(state.blocks.length) {
-                return state.blocks.find(block => block.id === id);
+                return state.blocks.find(block => {
+                    return block.id === id;
+                });
             }
+        },
+        getBlockByCode: state => code => {
+            return state.blocks.find(block => {
+                return block.code === code;
+            });
         },
         isSelected: state => payload => {
             if(state.requestParams[payload.blockCode] != undefined && state.requestParams[payload.blockCode].indexOf(payload.value.toLowerCase()) != -1) {
@@ -55,6 +63,29 @@ export default {
         },
         getCategoryLink(state) {
             return state.categoryLink
+        },
+        getAppliedFilters(state) {
+            return state.appliedFilters;
+        },
+        getAppliedFilterLink: (state, getters) => payload => {
+            var params = state.requestParams,
+                link = getters.getCategoryLink,
+                x = 0;
+            for (let i in params) {
+                var paramValues = params[i];
+                var filtered = paramValues.filter(value => value != payload);
+                if(!filtered.length) continue;
+                if(!x) {
+                    link += '?'
+                } else {
+                    link+= '&'
+                }
+
+                link += i + '=' + filtered.join(',');
+
+                x++;
+            }
+            return link;
         }
     },
     mutations: {
@@ -69,6 +100,9 @@ export default {
         },
         setCurrentSubmitLink (state, payload) {
             state.currentSubmitLink = payload
+        },
+        addAppliedFilter(state, payload) {
+            state.appliedFilters.push(payload);
         },
         setCategoryLink (state, payload) {
             state.categoryLink = payload
@@ -91,7 +125,7 @@ export default {
                 }
             }
         },
-        addRequestParam(state, payload){
+        addRequestParam(state, payload) {
             if(state.requestParams[payload.blockCode] == undefined) {
                 state.requestParams[payload.blockCode] = [];
             }
@@ -102,7 +136,7 @@ export default {
         addOrUpdateFirstParam(state, payload) {
             if(state.requestParams[payload.blockCode] == undefined) {
                 state.requestParams[payload.blockCode] = [];
-            }
+            };
             if(state.requestParams[payload.blockCode].indexOf(payload.value.toLowerCase()) == -1) {
                 if(!state.requestParams[payload.blockCode].length) {
                     state.requestParams[payload.blockCode].push(payload.value);
@@ -136,7 +170,8 @@ export default {
         },
         resetCurrentSubmitLink(state) {
             state.currentSubmitLink = ''
-        }
+        },
+
     },
     actions: {
         addBlock({ commit, state }, block) {
@@ -151,24 +186,45 @@ export default {
             if(error) return;
             commit('setBlock', block);
         },
+
+        setAppliedFilters({ commit, state, getters, dispatch }) {
+            var request = state.requestParams;
+            for (let i in request) {
+                var code = i;
+                var regExp = new RegExp(/(_from)|(_to)/)
+                if(regExp.test(code)) {
+                    code = code.replace(regExp, '');
+                }
+
+                var block = getters.getBlockByCode(code);
+
+                if(block) {
+                    var requestValues = request[i];
+
+                    for (let x in requestValues) {
+                        var link = getters.getAppliedFilterLink(requestValues[x]);
+
+                        var filter = {
+                            type: block.type,
+                            code: block.code,
+                            title: block.title,
+                            value: requestValues[x],
+                            link: link
+                        };
+
+                        commit('addAppliedFilter', filter);
+                    }
+                }
+            }
+        },
         getFilteredProductsCount({ commit, state, getters, dispatch }, payload) {
 
             let form = new FormData();
             var data = [];
             for (let i in state.requestParams) {
                 form.append(i, state.requestParams[i].join(','))
-                // for(let x in state.blocks) {
-                //     if(state.blocks[x].code == i) {
-                //         data.push({
-                //             id: state.blocks[x].id,
-                //             code: state.blocks[x].code,
-                //             type: state.blocks[x].type,
-                //             value: state.requestParams[i]
-                //         });
-                //     }
-                // }
             }
-            // form.append('data', JSON.stringify(data));
+
             form.append('categoryId', state.categoryId);
             axios.post(state.filterQtyAction, form)
                 .then(data => {
@@ -214,19 +270,27 @@ export default {
             dispatch('getFilteredProductsCount', payload);
         },
 
-        generateSubmitLink({state, commit, getters}){
+
+
+        generateSubmitLink({state, commit, getters}, except = null){
             var params = state.requestParams,
                 link = getters.getCategoryLink,
                 x = 0;
+
             for(let i in params) {
+                var paramValues = params[i];
+
                 if(!x) {
                     link += '?'
                 } else {
                     link+= '&'
                 }
-                link += i + '=' + params[i].join(',');
+
+                link += i + '=' + paramValues.join(',');
+
                 x++;
             }
+
             commit('setCurrentSubmitLink', link);
         },
         priceSubmit({state, dispatch, commit}, payload) {

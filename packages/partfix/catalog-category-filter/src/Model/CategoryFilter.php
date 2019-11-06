@@ -30,7 +30,6 @@ class CategoryFilter implements CategoryFilterInterface
 
     public function renderCategoryFilter(Category $category, $modification = null) : self
     {
-//        dd($modification);
         if($category->type == 'tecdoc') {
             return $this->renderTecdocFilter($category, $modification);
         }

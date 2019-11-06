@@ -18,7 +18,13 @@
     </div>
 </template>
 <script>
+    import PartfixCkeditor from "./PartfixCkeditor";
+
     export default {
+        components: {
+            'PartfixCkeditor': PartfixCkeditor
+        },
+
         props: {
             default: {
                 default: true,
@@ -28,7 +34,7 @@
 
         data() {
             return {
-                bodyVisibility: this.default
+                bodyVisibility: this.default,
             }
         },
         computed: {

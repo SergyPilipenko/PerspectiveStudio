@@ -399,6 +399,7 @@
             </div>
         </div>
     </section>
+
     <section class="subcategory__info">
         <div class="container">
             <div class="row">
