@@ -14,7 +14,7 @@ class ContentBlock implements ContentBlockInterface
         $this->block = $block;
     }
 
-    public function save(Request $request, $block = null)
+    public function save(Request $request, Block $block = null) : void
     {
         if($block) {
             $this->update($request, $block);
@@ -23,35 +23,37 @@ class ContentBlock implements ContentBlockInterface
         }
     }
 
-    public function getModel()
+    public function getModel() : Block
     {
         return $this->block;
     }
 
-    private function prepareData($request)
+    public function prepareData(Request $request)
     {
         $data = $request->only($this->block->getFillable());
         $data['content'] = $request->ckeditor;
-        if(isset($data['enabled'])) $data['enabled'] = true;
+        if(isset($data['enabled'])) {
+            $data['enabled'] = true;
+        } $data['enabled'] = false;
 
         return $data;
     }
 
-    public function render($identifier)
+    public function render(string $identifier) : string
     {
         $block = $this->block->where('identifier', $identifier)->first();
 
-        return $block->content;
+        return $block->content ?? '';
     }
 
-    private function create($request)
+    private function create(Request $request) : void
     {
         $data = $this->prepareData($request);
 
         $this->block->create($data);
     }
 
-    private function update($request, $block)
+    private function update(Request $request, Block $block) : void
     {
         $data = $this->prepareData($request);
 
