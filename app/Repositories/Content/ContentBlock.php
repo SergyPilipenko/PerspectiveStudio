@@ -32,9 +32,12 @@ class ContentBlock implements ContentBlockInterface
     {
         $data = $request->only($this->block->getFillable());
         $data['content'] = $request->ckeditor;
+
         if(isset($data['enabled'])) {
             $data['enabled'] = true;
-        } $data['enabled'] = false;
+        } else {
+            $data['enabled'] = false;
+        }
 
         return $data;
     }
