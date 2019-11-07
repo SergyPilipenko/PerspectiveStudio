@@ -3,7 +3,9 @@
 namespace App\Models\Tecdoc;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Events\StatementPrepared;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 class PassangerCar extends Model
 {

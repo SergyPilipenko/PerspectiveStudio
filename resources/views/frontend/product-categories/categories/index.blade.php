@@ -7,7 +7,7 @@
                     {!! Breadcrumbs::render('frontend.product-categories.show', $category) !!}
 
                     <div class="white-bg">
-                        <h2 class="category__title">Каталог запчастей</h2>
+                        <h2 class="category__title">{{ $category->category_title }}</h2>
                         @if($category->children->count())
                             @if($category->type == 'tecdoc')
                                 @foreach($category->children as $child)

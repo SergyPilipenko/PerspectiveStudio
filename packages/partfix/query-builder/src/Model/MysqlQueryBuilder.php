@@ -216,10 +216,18 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             $event->statement->setFetchMode(\PDO::FETCH_ASSOC);
         });
         try {
-            return $this->connection->select($this->getQuery());
+            $exec =$this->connection->select($this->getQuery());
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(\PDO::FETCH_OBJ);
+            });
+            return $exec;
         } catch (PDOException $exception) {
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(\PDO::FETCH_OBJ);
+            });
             throw new PDOException($exception);
         }
+
     }
 }
 
