@@ -139,7 +139,7 @@ class PagesController extends Controller
 
         $car = $car->getCar($modification);
 
-        return view('frontend.car.category', compact('car', 'category', 'products'));
+        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification'));
     }
 
 

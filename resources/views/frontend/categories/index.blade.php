@@ -4,11 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <ul class="breadcrumbs">
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Легковые</a></li>
-                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>
-                    </ul>
+                    {!! Breadcrumbs::render('frontend.model', $brand, $model) !!}
                     <div>
                         <h2 class="category__title">Выберите модификацию для Volkswagen Transporter</h2>
                     </div>
