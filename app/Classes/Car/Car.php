@@ -20,6 +20,7 @@ class Car implements CarInterface
         $car->model = $passangerCar->model;
         $car->modification = $passangerCar;
         $car->year = $passangerCar->year;
+//        echo $passangerCar->getPath();
         $car->path = $passangerCar->getPath();
         $car->getAttributes($passangerCar);
 
