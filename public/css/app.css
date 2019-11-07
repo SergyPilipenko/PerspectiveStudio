@@ -6557,6 +6557,15 @@ a:hover {
   font-size: 20px;
 }
 
+.show-more-text {
+  overflow: hidden;
+  max-height: 110px;
+}
+
+.manufacturers__show-more {
+  margin-top: 25px;
+}
+
 .category #model {
   background-color: #c20f14;
   margin-top: 30px;
