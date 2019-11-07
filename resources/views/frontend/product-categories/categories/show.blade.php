@@ -4,12 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <ul class="breadcrumbs">
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Легковые</a></li>
-                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>
-                        <li><a href="#">Тормозные колодки</a></li>
-                    </ul>
+                    {!! Breadcrumbs::render('frontend.product-categories.show', $category) !!}
                 </div>
             </div>
         </div>
@@ -156,7 +151,7 @@
             </div>
         </div>
     </section>
-    {!! app('ContentBlock')->render('qwe') !!}
+    {!! app('ContentBlock')->render('content') !!}
 {{--    <section class="subcategory__info">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}

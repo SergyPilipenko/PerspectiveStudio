@@ -29,7 +29,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link collapsed" data-toggle="collapse" href="#content" aria-expanded="false" aria-controls="catalogs">
-                <i class="ti-package menu-icon"></i>
+                <i class="ti-layout menu-icon"></i>
                 <span class="menu-title">Контент</span>
                 <i class="menu-arrow"></i>
             </a>

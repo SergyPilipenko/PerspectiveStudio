@@ -41,6 +41,7 @@ Vue.component('checkout', require('./frontend/components/checkout/Checkout').def
 Vue.component('checkout-cart', require('./frontend/components/checkout/CheckoutCart').default);
 Vue.component('checkout-user-info-form', require('./frontend/components/checkout/CheckoutUserInfoForm').default);
 Vue.component('checkout-order-comment', require('./frontend/components/checkout/CheckoutOrderComment').default);
+Vue.component('smt', require('./frontend/components/Smt').default);
 Vue.component('catalog-filter', require('../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter').default);
 // Vue.component('catalog-filter', require(''));
 

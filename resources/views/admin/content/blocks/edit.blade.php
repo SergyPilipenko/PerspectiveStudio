@@ -1,14 +1,13 @@
 @extends('admin')
 @section('content')
     <div class="card">
-
         <form action="{{ route('admin.content.blocks.update', $block->id) }}" method="POST">
             @csrf
             {{ method_field('put') }}
             <div class="card-body">
                 <div class="row card-control-header">
                     <div class="col-md-10">
-                        <h3>Новый блок</h3>
+                        <h3>Изменить блок</h3>
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-success float-right">Сохранить</button>

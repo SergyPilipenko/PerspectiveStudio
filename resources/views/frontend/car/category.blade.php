@@ -4,12 +4,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <ul class="breadcrumbs">
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Легковые</a></li>
-                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>
-                        <li><a href="#">Тормозные колодки</a></li>
-                    </ul>
+                    {!! Breadcrumbs::render('frontend.car.category', $category, $car, $brand, $model, $modification) !!}
+
+                    {{--                    <ul class="breadcrumbs">--}}
+{{--                        <li><a href="#">Главная</a></li>--}}
+{{--                        <li><a href="#">Легковые</a></li>--}}
+{{--                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>--}}
+{{--                        <li><a href="#">Тормозные колодки</a></li>--}}
+{{--                    </ul>--}}
                 </div>
             </div>
         </div>
@@ -32,7 +34,7 @@
                 <div class="col-12">
                     <div class="d-flex">
                         @if($products->count())
-{{--                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter($car), 'category' => $category, 'car' => $car])--}}
+                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter($car), 'category' => $category, 'car' => $car])
                             {{--                            <div class="subcategory__sidebar">--}}
 {{--                                <div class="subcategory__sidebar-block">--}}
 {{--                                    <p><span class="plus">+</span><span class="minus">−</span>Тип запчасти</p>--}}

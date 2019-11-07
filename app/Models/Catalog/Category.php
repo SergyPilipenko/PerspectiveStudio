@@ -128,6 +128,11 @@ class Category extends Model implements CategoryInterface
         $this->image = $this->image_path.$file_name;
     }
 
+    public function parent()
+    {
+        return $this->hasOne(self::class, 'id', 'parent_id');
+    }
+
 
     public function getRouteKeyName()
     {
