@@ -156,7 +156,7 @@
             </div>
         </div>
     </section>
-    {!! app('ContentBlock')->render('qwe') !!}
+    {!! app('ContentBlock')->render('content') !!}
 {{--    <section class="subcategory__info">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}
