@@ -44,7 +44,10 @@ class ContentBlock implements ContentBlockInterface
 
     public function render(string $identifier) : string
     {
-        $block = $this->block->where('identifier', $identifier)->first();
+        $block = $this->block->where([
+            'identifier' => $identifier,
+            'enabled' => true
+        ])->first();
 
         return $block->content ?? '';
     }

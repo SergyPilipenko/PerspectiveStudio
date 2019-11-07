@@ -62,7 +62,8 @@ window.onload = function () {
     });
     CKEDITOR.replace( 'ckeditor', {
         extraPlugins: 'uploadimage',
-        uploadUrl: '/admin/ckeditor-upload-image'
+        uploadUrl: '/admin/ckeditor-upload-image',
+        allowedContent: true
     });
 
     if($(".auto_type_head_checkbox")) {
