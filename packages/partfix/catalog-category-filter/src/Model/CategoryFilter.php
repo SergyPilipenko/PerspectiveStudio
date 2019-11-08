@@ -145,33 +145,8 @@ class CategoryFilter implements CategoryFilterInterface
             ->first();
     }
 
-    public function getFilterQty($categoryId, $data)
-    {
-//        $data = json_decode($data, true);
-//        $qty = 0;
-//
-//        if(count($data)) {
-//            foreach ($data as $attribute) {
-//                $qty += $this->getCategoryProductsQtyByAttribute(
-//                    $categoryId,
-//                    $attribute['id'],
-//                    ProductAttributeValue::$attributeTypeFields[$attribute['type']],
-//                    $attribute['value']
-//                )->count;
-//            }
-//        } else {
-//            $qty = $this->getCategoryTotalProductsQty($categoryId);
-//        };
-
-//        return $qty;
-    }
-
     public function getCategoryTotalProductsQty(Category $category)
     {
-//        return $category->products()
-//            ->with('productAttributeValues')
-//            ->filter($this->productsFilter, $category->filterableAttributes)->count();
         return $this->categoryRepository->getCategoryProductsQty($category);
-//        return DB::table('product_categories')->where('category_id', $categoryId)->count();
     }
 }

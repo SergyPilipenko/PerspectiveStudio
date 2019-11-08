@@ -38,8 +38,7 @@ class ProductCategoryController extends Controller
             ->where('slug->' . app()->getLocale(), $slug)->with(['children.children', 'parent.parent'])->firstOrFail();
 
         switch ($category->parent_id) {
-            case null:
-                return $this->index($category);
+            case null:return $this->index($category);
                 break;
             default:
                 return $this->show($category);
@@ -54,7 +53,8 @@ class ProductCategoryController extends Controller
     public function show($category)
     {
         $products = $this->categoryRepository->getCategoryProducts($category);
+        $categoryLink = request()->getPathInfo();
 
-        return view('frontend.product-categories.categories.show', compact('category', 'products'));
+        return view('frontend.product-categories.categories.show', compact('category', 'products', 'categoryLink'));
     }
 }
