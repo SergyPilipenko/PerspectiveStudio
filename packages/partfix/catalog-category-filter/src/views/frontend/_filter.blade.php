@@ -2,7 +2,6 @@
     <catalog-filter inline-template
                     :filter_qty_action="'{{ route('catalog.category.filter.filterqty') }}'"
                     category_id="{{ $category->id }}"
-                    modification="{{ $modification }}"
                     :category_link="'{{ $categoryLink }}'">
         <div class="filter-blocks-container">
             <applied-filters></applied-filters>
