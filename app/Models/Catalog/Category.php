@@ -238,7 +238,7 @@ class Category extends Model implements CategoryInterface
 
     private function defaultCategoryProducts()
     {
-        return $this->builder->select('catalog_categories as node, catalog_categories as parent', ['p.id'])
+        return $this->builder->select('catalog_categories as node, catalog_categories as parent', ['distinct p.id'])
             ->join('product_categories as pc', 'parent.id', 'pc.category_id')
             ->join('products as p', 'pc.product_id', 'p.id')
             ->whereBetween("node._lft", "parent._lft", "parent._rgt")
@@ -248,7 +248,7 @@ class Category extends Model implements CategoryInterface
     private function tecdocCategoryProducts()
     {
         return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
-            ["p.id"])
+            ["distinct p.id"])
             ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
             ->join("products as p", "art.article_number_id", "p.id")
             ->whereBetween("node._lft", "parent._lft", "parent._rgt")
