@@ -44,11 +44,11 @@ class CategoryRepository
             $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
         }
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
-//        dd($query->getQuery());
+
         $cache = Cache::get(md5($query->getQuery()));
         if(!$cache) {
             $result = $query->getArrayResult();
-            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
+
         } else {
             $result = $cache;
         }
@@ -63,14 +63,17 @@ class CategoryRepository
         return $products;
     }
 
-    public function getCategoryProductsQty(CategoryInterface $category)
+    public function getCategoryProductsQty(CategoryInterface $category, $modification = null)
     {
         $builder = $category->newProducts();
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
+        if($modification) {
+            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
+        }
         $cache = Cache::get(md5($query->getQuery()));
         if(!$cache) {
             $result = $query->getArrayResult();
-            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
+//            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
         } else {
             $result = $cache;
         }
@@ -85,7 +88,7 @@ class CategoryRepository
         $cache = Cache::get(md5($query->getQuery()));
         if(!$cache) {
             $result = $query->getArrayResult();
-            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
+//            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
         } else {
             $result = $cache;
         }
