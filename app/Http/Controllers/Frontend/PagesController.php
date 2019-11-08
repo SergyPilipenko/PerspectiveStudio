@@ -17,6 +17,7 @@ use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\PassangerCar;
+use App\Repositories\CatalogCategory\CategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -36,17 +37,27 @@ class PagesController extends Controller
      * @var CategoryFilter
      */
     private $categoryFilter;
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
 
     /**
      * ProductCategoryController constructor.
      * @param ProductsFilter $filters
      * @param CategoryFilter $categoryFilter
+     * @param CategoryRepository $categoryRepository
      */
-    public function __construct(ProductsFilter $filters, CategoryFilter $categoryFilter)
+    public function __construct(
+        ProductsFilter $filters,
+        CategoryFilter $categoryFilter,
+        CategoryRepository $categoryRepository
+    )
     {
         $this->middleware('frontend');
         $this->filters = $filters;
         $this->categoryFilter = $categoryFilter;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
@@ -87,7 +98,6 @@ class PagesController extends Controller
                 'displayvalue' => '2 l',
             ],
         ])->get();
-//        dd($models);
 
         $models = ModelsUri::where([
             'slug' => $model,
@@ -126,16 +136,12 @@ class PagesController extends Controller
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
     {
-
         $category = resolve(CategoryInterface::class)
             ->where('slug->' . app()->getLocale(), $category)
             ->with('children.children')
             ->firstOrFail();
 
-        $products = $category->products($modification)
-            ->with('productAttributeValues')
-            ->filter($this->filters, $category->filterableAttributes)
-            ->paginate(20);
+        $products = $this->categoryRepository->getCategoryProducts($category, $modification);
 
         $car = $car->getCar($modification);
 

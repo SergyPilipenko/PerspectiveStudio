@@ -1,0 +1,11 @@
+{
+    "name": "partfix/meta-tags",
+    "description": "Общий класс для категорий текдоковских и обычных",
+    "authors": [
+        {
+            "name": "Viktor Hordieiev",
+            "email": "gordeev@flabers.com.ua"
+        }
+    ],
+    "require": {}
+}

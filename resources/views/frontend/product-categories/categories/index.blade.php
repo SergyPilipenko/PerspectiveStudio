@@ -1,3 +1,4 @@
+@section('meta_title', app('MetaTags')->getTitle(['title' => 'test']))
 @extends('frontend')
 @section('content')
     <section class="category">
