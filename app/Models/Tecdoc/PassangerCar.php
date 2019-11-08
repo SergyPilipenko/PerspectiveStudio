@@ -59,11 +59,11 @@ class PassangerCar extends Model
     {
 
         foreach ($attributes as $key => $attribute) {
-                $query->whereHas('attributes', function ($query) use ($key, $attribute) {
-                    foreach ($attribute as $key => $rule) {
-                        $query->where($key, $rule);
-                    }
-                });
+            $query->whereHas('attributes', function ($query) use ($key, $attribute) {
+                foreach ($attribute as $key => $rule) {
+                    $query->where($key, $rule);
+                }
+            });
         }
         return $query;
     }

@@ -172,6 +172,8 @@ return [
         Partfix\CatalogCategoryFilter\CatalogCategoryFilterServiceProvider::class,
         Partfix\CatalogCategoryFilter\RouteServiceProvider::class,
         Partfix\QueryBuilder\QueryBuilderServiceProvider::class,
+        Partfix\MetaTags\MetaTagsServiceProvider::class,
+//        Partfix\MetaTags\Meta::class,
 //        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*
          * Application Service Providers...
@@ -234,7 +236,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Transliterate' => ElForastero\Transliterate\Facade::class,
         'ValidationHelper' => App\Helpers\Validation::class,
-        'ContentBlock' => App\Repositories\Content\ContentBlock::class
+        'ContentBlock' => App\Repositories\Content\ContentBlock::class,
+        'MetaTags' => Partfix\MetaTags\Model\MetaTags::class
     ],
 
 ];

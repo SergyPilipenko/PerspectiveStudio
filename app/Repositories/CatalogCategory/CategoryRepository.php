@@ -37,11 +37,14 @@ class CategoryRepository
         $this->productRepository = $productRepository;
     }
 
-    public function getCategoryProducts(CategoryInterface $category)
+    public function getCategoryProducts(CategoryInterface $category, $modification = null)
     {
         $builder = $category->newProducts();
+        if($modification) {
+            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
+        }
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
-
+//        dd($query->getQuery());
         $cache = Cache::get(md5($query->getQuery()));
         if(!$cache) {
             $result = $query->getArrayResult();
