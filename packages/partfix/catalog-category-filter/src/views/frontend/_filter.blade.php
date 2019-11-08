@@ -1,5 +1,9 @@
 <div class="subcategory__sidebar">
-    <catalog-filter inline-template :filter_qty_action="'{{ route('catalog.category.filter.filterqty') }}'" category_id="{{ $category->id }}" :category_link="'{{ route('frontend.product-categories.show', $category->slug) }}'">
+    <catalog-filter inline-template
+                    :filter_qty_action="'{{ route('catalog.category.filter.filterqty') }}'"
+                    category_id="{{ $category->id }}"
+                    modification="{{ $modification }}"
+                    :category_link="'{{ $categoryLink }}'">
         <div class="filter-blocks-container">
             <applied-filters></applied-filters>
             @foreach ($filter->items as $filterBlock)

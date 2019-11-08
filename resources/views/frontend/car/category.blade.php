@@ -34,7 +34,7 @@
                 <div class="col-12">
                     <div class="d-flex">
                         @if($products->count())
-                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter($car), 'category' => $category, 'car' => $car])
+                            @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter($car), 'category' => $category, 'car' => $car, 'categoryLink' => $categoryLink])
                             {{--                            <div class="subcategory__sidebar">--}}
 {{--                                <div class="subcategory__sidebar-block">--}}
 {{--                                    <p><span class="plus">+</span><span class="minus">−</span>Тип запчасти</p>--}}
