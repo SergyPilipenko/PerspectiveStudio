@@ -72,6 +72,29 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
+    /**
+     * Work around
+     * @param string $table
+     * @param array $fields
+     * @return SQLQueryBuilder
+     */
+    public function multiJoin(string $table, array $fields): SQLQueryBuilder
+    {
+        $join = " INNER JOIN ON ";
+        $i = 0;
+        foreach ($fields as $key => $field) {
+            if($i > 0) {
+                $join .= ' AND ';
+            }
+            $join .= "{$key} = {$field}";
+            $i++;
+        }
+        $this->query->base .= $join;
+
+        return $this;
+    }
+
+
 
 
     /**
@@ -184,17 +207,31 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     public function getQuery(): string
     {
         $query = $this->query;
+
+        if(!$query) return "";
+
         $sql = $query->base;
+
         if (!empty($query->where)) {
             $sql .= " WHERE " . implode(' AND ', $query->where);
         }
+
         if (isset($query->limit)) {
             $sql .= $query->limit;
         }
 
-//        $sql .= " ;";
+        if (isset($query->groupBy)) {
+            $sql .= $query->groupBy;
+        }
 
         return $sql;
+    }
+
+    public function groupBy(string $field)
+    {
+        $this->query->groupBy = " GROUP BY {$field}";
+
+        return $this;
     }
 
     /**

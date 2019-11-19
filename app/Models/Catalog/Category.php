@@ -34,7 +34,7 @@ class Category extends Model implements CategoryInterface
     private $product;
     private $filter;
     private $em;
-    private $builder;
+    public $builder;
 
     public function __construct(array $attributes = [])
     {
@@ -236,6 +236,26 @@ class Category extends Model implements CategoryInterface
         }
     }
 
+    public function getCategoryProductsByModification()
+    {
+        return $this->builder->select('article_links as al ', ['an.id'])
+            ->join('passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
+            ->multiJoin('article_numbers as an', [
+                'prd.id' => 'al.productid',
+                'al.supplierid' => 'an.supplierid'
+            ])
+            ->join('passanger_car_prd as prd', 'prd.id', 'al.productid')
+            ->where('al.productid', 'pds.productid')
+            ->where('al.linkageid', 'pds.passangercarid')
+            ->where('al.linkageid', 26912)
+            ->whereIn("pds.nodeid", function ($query) {
+                return $query->select("distinct_passanger_car_trees", ["passanger_car_trees_id"])
+                    ->where('_lft', 1, '>=')
+                    ->where('_rgt', 10, '<=');
+            })
+            ->where('al.linkagetypeid', 2);
+    }
+
     private function defaultCategoryProducts()
     {
         return $this->builder->select('catalog_categories as node, catalog_categories as parent', ['distinct p.id'])
@@ -247,18 +267,45 @@ class Category extends Model implements CategoryInterface
 
     private function tecdocCategoryProducts()
     {
-        return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
-            ["distinct p.id"])
-            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
-            ->join("products as p", "art.article_number_id", "p.id")
-            ->whereBetween("node._lft", "parent._lft", "parent._rgt")
-            ->whereIn("parent.id", function ($query) {
-                return $query->select("partfix.catalog_categories as cc", ["dc.id"])
-                    ->join("category_distinct_passanger_car_trees as ct", "cc.id", "ct.category_id")
-                    ->join("distinct_passanger_car_trees as dc", "ct.distinct_pct_id", "dc.id")
-                    ->where("cc._lft", $this->_lft, '>=')
-                    ->where("cc._rgt", $this->_rgt, '<=');
+        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
+            ->join('products as p', 'art.article_number_id', 'p.id')
+            ->whereIn('art.nodeid', function($query) {
+                return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['parent.passanger_car_trees_id'])
+                    ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
+                    ->whereIn('parent.id', function($query) {
+                        return $query->select('catalog_categories as cc', ['dc.id'])
+                            ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
+                            ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
+                            ->where('cc._lft', $this->_lft, '>=')
+                            ->where('cc._rgt', $this->_rgt, '<=');
+                    });
             });
+//        dd($this->builder->getQuery());
+//        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
+//            ->join('products as p', 'art.article_number_id', 'p.id')
+//            ->whereIn('art.nodeid', function($query) {
+//                return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['parent.passanger_car_trees_id'])
+//                    ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
+//                    ->whereIn('parent.id', function($query) {
+//                        $query->select('catalog_categories as cc', ['dc.id'])
+//                            ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
+//                            ->join('distinct_passanger_car_trees as dc', 'cc.id', 'ct.distinct_pct_id', 'dc.id')
+//                            ->where('cc._lft', '51', '>=')
+//                            ->where('cc._rgt', '54', '<=');
+//                    });
+//            });
+//        return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
+//            ["distinct p.id"])
+//            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
+//            ->join("products as p", "art.article_number_id", "p.id")
+//            ->whereBetween("node._lft", "parent._lft", "parent._rgt")
+//            ->whereIn("parent.id", function ($query) {
+//                return $query->select("partfix.catalog_categories as cc", ["dc.id"])
+//                    ->join("category_distinct_passanger_car_trees as ct", "cc.id", "ct.category_id")
+//                    ->join("distinct_passanger_car_trees as dc", "ct.distinct_pct_id", "dc.id")
+//                    ->where("cc._lft", $this->_lft, '>=')
+//                    ->where("cc._rgt", $this->_rgt, '<=');
+//            });
     }
 
     public function newFilter()
