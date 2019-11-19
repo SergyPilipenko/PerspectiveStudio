@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    @include('frontend.partials._breadcrumbs')
+                    {!! Breadcrumbs::render('frontend.product.show', $product) !!}
                     <div class="card__main">
                         @include('frontend.product.gallery', ['images' => $product->images])
                         <div class="card__main-right">
