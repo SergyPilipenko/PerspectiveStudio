@@ -20,6 +20,11 @@ Breadcrumbs::for('frontend.model', function ($trail, $brand, $model) {
     $trail->push(ucfirst($brand)." $model", route('frontend.model', [$brand, $model]));
 });
 
+Breadcrumbs::for('frontend.product.show', function ($trail, $product) {
+    $trail->parent('frontend.index');
+    $trail->push($product->custom_attributes['name'], route('frontend.product.show', $product->slug));
+});
+
 Breadcrumbs::for('frontend.modification', function ($trail, $car, $brand, $model, $modification) {
     $trail->parent('frontend.index');
     $trail->push("{$car->brand->description} {$car->model->description} {$car->year}", route('frontend.modification', [$brand, $model, $modification]));
