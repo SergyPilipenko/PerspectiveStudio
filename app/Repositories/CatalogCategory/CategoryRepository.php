@@ -40,20 +40,23 @@ class CategoryRepository
     public function getCategoryProducts(CategoryInterface $category, $modification = null)
     {
         $builder = $category->newProducts();
-        if($modification) {
-            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
-        }
+
+//        if($modification) {
+//            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
+//        }
+
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
 
-        $cache = Cache::get(md5($query->getQuery()));
+//        $cache = Cache::get(md5($query->getQuery()));
+        $cache = null;
         if(!$cache) {
             $result = $query->getArrayResult();
-
         } else {
             $result = $cache;
         }
 
         $products = $this->paginator->paginate($result, 20, request()->page);
+
         $ids = $products->getCollection()->pluck('id');
 
         $productsWithData = $this->productRepository->getProductsWithData($ids);
@@ -61,6 +64,26 @@ class CategoryRepository
         $products->setCollection($productsWithData);
 
         return $products;
+    }
+
+    public function getCategoryProductsByModification($category, $modification)
+    {
+        return $category->builder->select('article_links as al ', ['an.id'])
+            ->join('passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
+            ->multiJoin('article_numbers as an', [
+                'prd.id' => 'al.productid',
+                'al.supplierid' => 'an.supplierid'
+            ])
+            ->join('passanger_car_prd as prd', 'prd.id', 'al.productid')
+            ->where('al.productid', 'pds.productid')
+            ->where('al.linkageid', 'pds.passangercarid')
+            ->where('al.linkageid', 26912)
+            ->whereIn("pds.nodeid", function ($query) {
+                return $query->select("distinct_passanger_car_trees", ["passanger_car_trees_id"])
+                    ->where('_lft', 1, '>=')
+                    ->where('_rgt', 10, '<=');
+            })
+            ->where('al.linkagetypeid', 2);
     }
 
     public function getCategoryProductsQty(CategoryInterface $category, $modification = null)
@@ -77,7 +100,7 @@ class CategoryRepository
         } else {
             $result = $cache;
         }
-//        $res = $query->getQuery();
+
         return count($result);
     }
 
@@ -92,6 +115,7 @@ class CategoryRepository
         } else {
             $result = $cache;
         }
+
         return array_column($result, 'id');
     }
 }
