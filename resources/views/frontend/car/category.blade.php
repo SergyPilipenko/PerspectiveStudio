@@ -349,7 +349,7 @@
 								<span class="subcategory__total">
 									Показано 6 товаров из 455
 								</span>
-                                {{ $products->links('frontend.UiComponents.pagination.partfix') }}
+                                {{ $products->appends(request()->all())->links('frontend.UiComponents.pagination.partfix') }}
                             </div>
                             <div class="subcategory__more">
                                 <button>
