@@ -44,6 +44,7 @@ class Category extends Model implements CategoryInterface
         $this->product = resolve(ProductInterface::class);
         $this->filter = resolve(CategoryFilterInterface::class);
         $this->builder = resolve(SQLQueryBuilder::class);
+
         parent::__construct($attributes);
     }
 
@@ -265,7 +266,7 @@ class Category extends Model implements CategoryInterface
             ->where('parent.id', $this->id);
     }
 
-    private function tecdocCategoryProducts()
+    public function tecdocCategoryProducts()
     {
         return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
             ->join('products as p', 'art.article_number_id', 'p.id')
@@ -280,32 +281,31 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
             });
-//        dd($this->builder->getQuery());
-//        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
-//            ->join('products as p', 'art.article_number_id', 'p.id')
-//            ->whereIn('art.nodeid', function($query) {
-//                return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['parent.passanger_car_trees_id'])
-//                    ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
-//                    ->whereIn('parent.id', function($query) {
-//                        $query->select('catalog_categories as cc', ['dc.id'])
-//                            ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
-//                            ->join('distinct_passanger_car_trees as dc', 'cc.id', 'ct.distinct_pct_id', 'dc.id')
-//                            ->where('cc._lft', '51', '>=')
-//                            ->where('cc._rgt', '54', '<=');
-//                    });
-//            });
-//        return $this->builder->select("distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent",
-//            ["distinct p.id"])
-//            ->join("tecdoc2018_db.article_tree as art", "parent.passanger_car_trees_id", "art.nodeid")
-//            ->join("products as p", "art.article_number_id", "p.id")
-//            ->whereBetween("node._lft", "parent._lft", "parent._rgt")
-//            ->whereIn("parent.id", function ($query) {
-//                return $query->select("partfix.catalog_categories as cc", ["dc.id"])
-//                    ->join("category_distinct_passanger_car_trees as ct", "cc.id", "ct.category_id")
-//                    ->join("distinct_passanger_car_trees as dc", "ct.distinct_pct_id", "dc.id")
-//                    ->where("cc._lft", $this->_lft, '>=')
-//                    ->where("cc._rgt", $this->_rgt, '<=');
-//            });
+    }
+
+    public function tecdocCategoryProductsByModification($modification, array $fields = array('p.id'))
+    {
+        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_links as al', $fields)
+            ->join(env('DB_TECDOC_DATABASE').'.passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
+            ->multiJoin(env('DB_TECDOC_DATABASE').'.article_numbers as an', ['al.datasupplierarticlenumber' => 'an.datasupplierarticlenumber', 'al.supplierid' => 'an.supplierid'])
+            ->join(env('DB_TECDOC_DATABASE').'.passanger_car_prd as prd', 'prd.id', 'al.productid')
+            ->join(env('DB_DATABASE').'.products as p', 'an.id', 'p.id')
+            ->where('al.productid', '{pds.productid}')
+            ->where('al.linkageid', '{pds.passangercarid}')
+            ->where('al.linkageid', (int) $modification)
+            ->whereIn('pds.nodeid', function($query) {
+                return $query->select(env('DB_DATABASE').'.distinct_passanger_car_trees as node, '.env('DB_DATABASE').'.distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
+                    ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
+                    ->whereIn('parent.id', function($query) {
+                        return $query->select(env('DB_DATABASE').'.catalog_categories as cc', ['dc.id'])
+                            ->join(env('DB_DATABASE').'.category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
+                            ->join(env('DB_DATABASE').'.distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
+                            ->where('cc._lft', $this->_lft, '>=')
+                            ->where('cc._rgt', $this->_rgt, '<=');
+                    });
+            })
+            ->where('al.linkagetypeid', 2);
+
     }
 
     public function newFilter()

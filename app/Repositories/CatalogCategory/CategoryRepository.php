@@ -55,6 +55,8 @@ class CategoryRepository
             $result = $cache;
         }
 
+
+
         $products = $this->paginator->paginate($result, 20, request()->page);
 
         $ids = $products->getCollection()->pluck('id');
@@ -68,22 +70,15 @@ class CategoryRepository
 
     public function getCategoryProductsByModification($category, $modification)
     {
-        return $category->builder->select('article_links as al ', ['an.id'])
-            ->join('passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
-            ->multiJoin('article_numbers as an', [
-                'prd.id' => 'al.productid',
-                'al.supplierid' => 'an.supplierid'
-            ])
-            ->join('passanger_car_prd as prd', 'prd.id', 'al.productid')
-            ->where('al.productid', 'pds.productid')
-            ->where('al.linkageid', 'pds.passangercarid')
-            ->where('al.linkageid', 26912)
-            ->whereIn("pds.nodeid", function ($query) {
-                return $query->select("distinct_passanger_car_trees", ["passanger_car_trees_id"])
-                    ->where('_lft', 1, '>=')
-                    ->where('_rgt', 10, '<=');
-            })
-            ->where('al.linkagetypeid', 2);
+        $builder = $category->tecdocCategoryProductsByModification($modification);
+        $query = $this->product->newFilter($builder, $category->filterableAttributes);
+        $result = $query->getArrayResult();
+        $products = $this->paginator->paginate($result, 20, request()->page);
+        $ids = $products->getCollection()->pluck('id');
+        $productsWithData = $this->productRepository->getProductsWithData($ids);
+        $products->setCollection($productsWithData);
+
+        return $products;
     }
 
     public function getCategoryProductsQty(CategoryInterface $category, $modification = null)
