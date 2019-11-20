@@ -2,7 +2,11 @@
     <catalog-filter inline-template
                     :filter_qty_action="'{{ route('catalog.category.filter.filterqty') }}'"
                     category_id="{{ $category->id }}"
-                    :category_link="'{{ $categoryLink }}'">
+                    :category_link="'{{ $categoryLink }}'"
+                    @if(isset($car->modification->id))
+                    :modification="{{ $car->modification->id }}"
+                    @endif
+    >
         <div class="filter-blocks-container">
             <applied-filters></applied-filters>
             @foreach ($filter->items as $filterBlock)
@@ -13,7 +17,6 @@
             <preload-layout></preload-layout>
         </div>
     </catalog-filter>
-
     <button class="subcategory__sidebar-clear">
         Отменить всё
     </button>
