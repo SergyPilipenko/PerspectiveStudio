@@ -179,8 +179,8 @@ class CategoryFilter implements CategoryFilterInterface
             ->first();
     }
 
-    public function getCategoryTotalProductsQty(Category $category)
+    public function getCategoryTotalProductsQty(Category $category, $modification)
     {
-        return $this->categoryRepository->getCategoryProductsQty($category);
+        return $this->categoryRepository->getCategoryProductsQty($category, $modification);
     }
 }

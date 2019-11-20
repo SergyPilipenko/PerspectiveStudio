@@ -83,18 +83,11 @@ class CategoryRepository
 
     public function getCategoryProductsQty(CategoryInterface $category, $modification = null)
     {
-        $builder = $category->newProducts();
+        $builder = $modification ? $category->tecdocCategoryProductsByModification($modification) : $category->newProducts();
+
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
-        if($modification) {
-            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
-        }
-        $cache = Cache::get(md5($query->getQuery()));
-        if(!$cache) {
-            $result = $query->getArrayResult();
-//            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
-        } else {
-            $result = $cache;
-        }
+
+        $result = $query->getArrayResult();
 
         return count($result);
     }
