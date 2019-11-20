@@ -40,7 +40,7 @@ class CategoryFilter implements CategoryFilterInterface
 
         foreach ($category->filterableAttributes as $filterableAttribute) {
 
-            $options = $this->getCategoryFilterOptions($productIds, $filterableAttribute->id, $this->getAttributeValueField($filterableAttribute));
+            $options = $this->getCategoryFilterOptions($productIds, $filterableAttribute->id, $this->getAttributeValueField($filterableAttribute), $category->id);
 
             $this->items[] = resolve(CategoryFilterBlock::class)->getBlock($options, $filterableAttribute);
         }
@@ -140,7 +140,7 @@ class CategoryFilter implements CategoryFilterInterface
         return $this;
     }
 
-    public function getCategoryFilterOptions($productIds, int $attributeId, string $attributeValueField)
+    public function getCategoryFilterOptions($productIds, int $attributeId, string $attributeValueField, $categoryId)
     {
 
         return DB::table('category_filterable_attributes as ca')
@@ -149,7 +149,7 @@ class CategoryFilter implements CategoryFilterInterface
             ->join('product_attribute_values as pv', function ($join) {
                 $join->on('pv.product_id', 'pc.product_id')->on('ca.attribute_id', 'pv.attribute_id');
             })
-            ->where('ca.catalog_category_id', 6)
+            ->where('ca.catalog_category_id', $categoryId)
             ->where('ca.attribute_id', $attributeId)
             ->where('pv.'.$attributeValueField, '!=', null)
             ->whereIn('pc.product_id', $productIds)
