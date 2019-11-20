@@ -131,7 +131,7 @@ class CategoryFilter implements CategoryFilterInterface
     {
         $attribute = Attribute::where('code', 'manufacturer')->first();
 
-        $query = $category->tecdocCategoryProductsByModification($modification, array($attribute->code, 'count(*) as count'))->groupBy($attribute->code);
+        $query = $category->tecdocCategoryProductsByModification($modification, array("$attribute->code as value", 'count(*) as count'))->groupBy($attribute->code);
 
         $options = $query->getResult();
 
