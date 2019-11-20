@@ -5,8 +5,7 @@
                     :category_link="'{{ $categoryLink }}'"
                     @if(isset($car->modification->id))
                     :modification="{{ $car->modification->id }}"
-                    @endif
-    >
+                    @endif>
         <div class="filter-blocks-container">
             <applied-filters></applied-filters>
             @foreach ($filter->items as $filterBlock)
