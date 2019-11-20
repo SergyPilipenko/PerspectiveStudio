@@ -34,7 +34,7 @@ class CategoryFilter implements CategoryFilterInterface
     public function renderCategoryFilter(Category $category, $modification = null) : self
     {
         if($category->type == 'tecdoc') {
-            return $this->renderTecdocFilter($category, $modification);
+            return isset($modification->modification->id) ? $this->renderTecdocFilterByModification($category, $modification->modification->id) : $this->renderTecdocFilter($category);
         }
         $productIds = $this->getFilteredProductIds($category);
 
@@ -48,7 +48,7 @@ class CategoryFilter implements CategoryFilterInterface
         return  $this;
     }
 
-    public function renderTecdocFilter($category, $modification = null)
+    public function renderTecdocFilter($category)
     {
         $attribute = Attribute::where('code', 'manufacturer')->first();
 
@@ -127,8 +127,22 @@ class CategoryFilter implements CategoryFilterInterface
         return $this;
     }
 
+    public function renderTecdocFilterByModification($category, $modification)
+    {
+        $attribute = Attribute::where('code', 'manufacturer')->first();
+
+        $query = $category->tecdocCategoryProductsByModification($modification, array($attribute->code, 'count(*) as count'))->groupBy($attribute->code);
+
+        $options = $query->getResult();
+
+        $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+
+        return $this;
+    }
+
     public function getCategoryFilterOptions($productIds, int $attributeId, string $attributeValueField)
     {
+
         return DB::table('category_filterable_attributes as ca')
             ->select('pv.'.$attributeValueField.' as value', DB::raw('count(*) as count'))
             ->join('product_categories as pc', 'ca.catalog_category_id', 'pc.category_id')

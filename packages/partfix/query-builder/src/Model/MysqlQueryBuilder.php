@@ -80,7 +80,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
      */
     public function multiJoin(string $table, array $fields): SQLQueryBuilder
     {
-        $join = " INNER JOIN ON ";
+        $join = " INNER JOIN {$table} ON ";
         $i = 0;
         foreach ($fields as $key => $field) {
             if($i > 0) {

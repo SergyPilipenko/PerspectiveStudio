@@ -141,9 +141,7 @@ class PagesController extends Controller
             ->with('children.children')
             ->firstOrFail();
 
-//        $products = $this->categoryRepository->getCategoryProductsByModification($category, $modification)->getQuery();
-        $products = $this->categoryRepository->getCategoryProducts($category, $modification);
-//        dd($products);
+        $products = $this->categoryRepository->getCategoryProductsByModification($category, $modification);
 
         $car = $car->getCar($modification);
 
