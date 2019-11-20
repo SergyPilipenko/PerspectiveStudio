@@ -52,7 +52,6 @@ class CategoryFilter implements CategoryFilterInterface
     {
         $attribute = Attribute::where('code', 'manufacturer')->first();
 
-
         $query = $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.'.$attribute->code.' as value', 'count(*) as count'])
             ->join('products as p', 'art.article_number_id', 'p.id')
             ->whereIn('art.nodeid', function($query) use ($category) {
