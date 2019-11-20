@@ -1903,12 +1903,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     DecimalBlock: _DecimalBlock__WEBPACK_IMPORTED_MODULE_1__["default"],
     AppliedFilters: _AppliedFilters__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  props: ['filter_qty_action', 'category_id', 'category_link'],
+  props: ['filter_qty_action', 'category_id', 'category_link', 'modification'],
   created: function created() {
     this.setRequestParameters();
     this.setFilterQtyAction(this.filter_qty_action);
     this.setCategoryId(this.category_id);
     this.setCategoryLink(this.category_link);
+
+    if (this.modification) {
+      this.setModification(this.modification);
+    }
   },
   mounted: function mounted() {
     this.setAppliedFilters();
@@ -1920,7 +1924,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setRequestParameters: 'CatalogFilter/setRequestParameters',
     setFilterQtyAction: 'CatalogFilter/setFilterQtyAction',
     setCategoryId: 'CatalogFilter/setCategoryId',
-    setCategoryLink: 'CatalogFilter/setCategoryLink'
+    setCategoryLink: 'CatalogFilter/setCategoryLink',
+    setModification: 'CatalogFilter/setModification'
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapActions"])({
     setAppliedFilters: 'CatalogFilter/setAppliedFilters'
   }))
@@ -55118,7 +55123,8 @@ __webpack_require__.r(__webpack_exports__);
     categoryId: null,
     currentSubmitLink: '',
     categoryLink: '',
-    appliedFilters: []
+    appliedFilters: [],
+    modification: null
   },
   getters: {
     getBlocks: function getBlocks(state) {
@@ -55198,6 +55204,9 @@ __webpack_require__.r(__webpack_exports__);
 
         return link;
       };
+    },
+    getModification: function getModification(state) {
+      return state.modification;
     }
   },
   mutations: {
@@ -55220,6 +55229,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     setCategoryLink: function setCategoryLink(state, payload) {
       state.categoryLink = payload;
+    },
+    setModification: function setModification(state, payload) {
+      state.modification = payload;
     },
     setBlock: function setBlock(state, payload) {
       state.blocks.push(payload);
@@ -55361,6 +55373,11 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       form.append('categoryId', state.categoryId);
+
+      if (state.modification) {
+        form.append('modification', state.modification);
+      }
+
       axios.post(state.filterQtyAction, form).then(function (data) {
         dispatch('showOptionSubmitLink', {
           optionData: payload,

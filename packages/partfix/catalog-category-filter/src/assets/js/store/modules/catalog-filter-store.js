@@ -20,7 +20,8 @@ export default {
         categoryId: null,
         currentSubmitLink: '',
         categoryLink: '',
-        appliedFilters: []
+        appliedFilters: [],
+        modification: null
     },
     getters: {
         getBlocks(state) {
@@ -86,6 +87,9 @@ export default {
                 x++;
             }
             return link;
+        },
+        getModification(state) {
+            return state.modification
         }
     },
     mutations: {
@@ -106,6 +110,9 @@ export default {
         },
         setCategoryLink (state, payload) {
             state.categoryLink = payload
+        },
+        setModification (state, payload) {
+            state.modification = payload
         },
         setBlock(state, payload) {
             state.blocks.push(payload);
@@ -226,6 +233,9 @@ export default {
             }
 
             form.append('categoryId', state.categoryId);
+            if(state.modification) {
+                form.append('modification', state.modification);
+            }
             axios.post(state.filterQtyAction, form)
                 .then(data => {
                     dispatch('showOptionSubmitLink', {optionData: payload, result: data.data});
