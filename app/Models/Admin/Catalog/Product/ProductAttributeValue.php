@@ -43,6 +43,20 @@ class ProductAttributeValue extends Model
         'image' => 'text_value',
     ];
 
+    public static $schema = array(
+        'text' => 'string',
+        'textarea' => 'text',
+        'price' => 'decimal',
+        'decimal' => 'decimal',
+        'boolean' => 'boolean',
+        'select' => 'text',
+        'multiselect' => 'text',
+        'datetime' => 'date',
+        'date' => 'date',
+        'image' => 'string',
+        'file' => 'string',
+    );
+
     /**
      * @var Attribute
      */
