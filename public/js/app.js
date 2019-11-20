@@ -55449,6 +55449,7 @@ __webpack_require__.r(__webpack_exports__);
           x = 0;
 
       for (var i in params) {
+        if (i == 'page') continue;
         var paramValues = params[i];
 
         if (!x) {

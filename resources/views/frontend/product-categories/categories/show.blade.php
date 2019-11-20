@@ -38,8 +38,12 @@
                                             <option value="по цене">по цене</option>
                                             <option value="по рейтингу">по рейтингу</option>
                                         </select>
-                                        <button><img src="/img/frontend/img/card-view.png" alt="card-view" class="card-view"></button>
-                                        <button><img src="/img/frontend/img/list-view.png" alt="list-view"></button>
+                                        <button>
+                                            <img src="/img/frontend/img/card-view.png" alt="card-view" class="card-view">
+                                        </button>
+                                        <button>
+                                            <img src="/img/frontend/img/list-view.png" alt="list-view">
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="subcategory__main">
@@ -99,7 +103,7 @@
 								<span class="subcategory__total">
 									Показано 6 товаров из 455
 								</span>
-                                    {{ $products->links('frontend.UiComponents.pagination.partfix') }}
+                                    {{ $products->appends(request()->all())->links('frontend.UiComponents.pagination.partfix') }}
                                 </div>
                                 <div class="subcategory__more">
                                     <button>
