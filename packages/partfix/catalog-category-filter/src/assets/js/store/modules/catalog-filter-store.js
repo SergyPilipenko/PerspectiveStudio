@@ -288,6 +288,7 @@ export default {
                 x = 0;
 
             for(let i in params) {
+                if(i == 'page') continue;
                 var paramValues = params[i];
 
                 if(!x) {
