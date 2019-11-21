@@ -12,13 +12,9 @@ use Illuminate\Support\Facades\Event;
 class MysqlQueryBuilder implements SQLQueryBuilder
 {
     protected $query;
-    /**
-     * @var Connection
-     */
     private $connection;
 
     /**
-     * MysqlQueryBuilder constructor.
      * @param Connection $connection
      */
     public function __construct(Connection $connection)
@@ -35,19 +31,15 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Создает новый инстанс класса
-     * @return $this
+     * @inheritDoc
      */
-    public function create(): self
+    public function create(): SQLQueryBuilder
     {
         return new self($this->connection);
     }
 
     /**
-     * Построение базового запроса SELECT.
-     * @param string $table
-     * @param array $fields
-     * @return SQLQueryBuilder
+     * @inheritDoc
      */
     public function select(string $table, array $fields): SQLQueryBuilder
     {
@@ -59,11 +51,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление условия INNER JOIN
-     * @param string $table
-     * @param $first
-     * @param $second
-     * @return SQLQueryBuilder
+     * @inheritDoc
      */
     public function join(string $table, string $first, string $second): SQLQueryBuilder
     {
@@ -73,10 +61,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Work around
-     * @param string $table
-     * @param array $fields
-     * @return SQLQueryBuilder
+     * @inheritDoc
      */
     public function multiJoin(string $table, array $fields): SQLQueryBuilder
     {
@@ -94,16 +79,8 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $this;
     }
 
-
-
-
     /**
-     * Добавление условия WHERE
-     * @param string $field
-     * @param string $value
-     * @param string $operator
-     * @return SQLQueryBuilder
-     * @throws \Exception
+     * @inheritDoc
      */
     public function where(string $field, string $value, string $operator = '='): SQLQueryBuilder
     {
@@ -121,11 +98,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление условия WHERE IN
-     * @param string $field
-     * @param $values
-     * @return $this
-     * @throws \Exception
+     * @inheritDoc
      */
     public function whereIn(string $field, $values)
     {
@@ -144,9 +117,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление условия WHERE EXISTS
-     * @param Closure $values
-     * @return $this
+     * @inheritDoc
      */
     public function whereExists(Closure $values)
     {
@@ -156,11 +127,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление условия BETWEEN
-     * @param string $field
-     * @param string $first
-     * @param string $second
-     * @return SQLQueryBuilder
+     * @inheritDoc
      */
     public function whereBetween(string $field, string $first, string $second): SQLQueryBuilder
     {
@@ -170,10 +137,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление ограничения LIMIT.
-     * @param int $limit
-     * @return SQLQueryBuilder
-     * @throws \Exception
+     * @inheritDoc
      */
     public function limit(int $limit): SQLQueryBuilder
     {
@@ -186,10 +150,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Добавление ограничения OFFSET.
-     * @param int $offset
-     * @return $this
-     * @throws \Exception
+     * @inheritDoc
      */
     public function offset(int $offset)
     {
@@ -202,7 +163,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Получение окончательной строки запроса.
+     * @inheritDoc
      */
     public function getQuery(): string
     {
@@ -227,6 +188,9 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         return $sql;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function groupBy(string $field)
     {
         $this->query->groupBy = " GROUP BY {$field}";
@@ -235,8 +199,7 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     }
 
     /**
-     * Возвращает результат строки запроса.
-     * @return array
+     * @inheritDoc
      */
     public function getResult()
     {
@@ -247,6 +210,9 @@ class MysqlQueryBuilder implements SQLQueryBuilder
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getArrayResult()
     {
         Event::listen(StatementPrepared::class, function ($event) {
@@ -264,7 +230,6 @@ class MysqlQueryBuilder implements SQLQueryBuilder
             });
             throw new PDOException($exception);
         }
-
     }
 }
 
