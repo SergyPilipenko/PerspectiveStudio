@@ -269,6 +269,7 @@ class Product extends Model implements ProductInterface
             } else {
                 $request['depends_quantity'] = false;
             }
+
             $product->update($request);
 
             $attributes = $product->attribute_family->custom_attributes()->get();
