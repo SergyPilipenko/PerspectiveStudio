@@ -38,22 +38,22 @@ class Attribute extends Model
     {
         parent::boot();
         self::creating(function($attribute) {
-            if($attribute->is_filterable && !Schema::hasColumn('products', $attribute->code)) {
+            if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
                 $type = ProductAttributeValue::$schema[$attribute->type];
-                Schema::table('products', function (Blueprint $table) use ($type, $attribute) {
+                Schema::table('products_flat', function (Blueprint $table) use ($type, $attribute) {
                     $table->$type($attribute->code)->nullable();
                 });
             }
         });
         self::updating(function($attribute) {
-            if($attribute->is_filterable && !Schema::hasColumn('products', $attribute->code)) {
+            if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
                 $type = ProductAttributeValue::$schema[$attribute->type];
-                Schema::table('products', function (Blueprint $table) use ($type, $attribute) {
+                Schema::table('products_flat', function (Blueprint $table) use ($type, $attribute) {
                     $table->$type($attribute->code)->nullable();
                 });
             }
-            if(!$attribute->is_filterable && Schema::hasColumn('products', $attribute->code)) {
-                Schema::table('products', function (Blueprint $table) use ($attribute) {
+            if(!$attribute->is_filterable && Schema::hasColumn('products_flat', $attribute->code)) {
+                Schema::table('products_flat', function (Blueprint $table) use ($attribute) {
                     $table->dropColumn($attribute->code);
                 });
             }
