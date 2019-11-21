@@ -24,7 +24,7 @@ class ProductsController extends Controller
     {
 
         $products = Product::select('id', 'article', 'type', 'parent_id', 'attribute_family_id', 'created_at', 'updated_at', 'quantity', 'depends_quantity', 'manufacturer')
-            ->orderBy('created_at', 'desc')->paginate(10);
+            ->orderBy('id', 'desc')->paginate(10);
 //        dd($products);
 
         return view('admin.catalog.products.index', compact('products'));
