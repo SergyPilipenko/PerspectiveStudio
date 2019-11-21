@@ -20,7 +20,7 @@ use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
-
+    protected $table = 'products_flat';
     public $priceFilter;
     /**
      * @var \Illuminate\Contracts\Foundation\Application

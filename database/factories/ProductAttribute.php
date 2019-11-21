@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(\App\Models\Admin\Catalog\Attributes\Attribute::class, function (Faker $faker) {
     return [
-        'code' => strtolower($faker->unique()->lastName),
+        'code' => strtolower($faker->unique()->firstName),
         'title' => $faker->firstName,
         'type' => 'textarea',
         'position' => 10,
