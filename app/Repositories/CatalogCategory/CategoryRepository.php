@@ -99,7 +99,6 @@ class CategoryRepository
         $cache = Cache::get(md5($query->getQuery()));
         if(!$cache) {
             $result = $query->getArrayResult();
-//            Cache::put(md5($query->getQuery()), $result, now()->addMinutes(1));
         } else {
             $result = $cache;
         }
