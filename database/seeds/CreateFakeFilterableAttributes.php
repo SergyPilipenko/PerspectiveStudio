@@ -26,7 +26,9 @@ class CreateFakeFilterableAttributes extends Seeder
      */
     public function run()
     {
-        $attributes = factory(\App\Models\Admin\Catalog\Attributes\Attribute::class, 200)->create();
+        //$attributes = factory(\App\Models\Admin\Catalog\Attributes\Attribute::class, 200)->create();
+	//DB::connection('mysql')->insert('INSERT INTO products_flat SELECT * FROM products');
+	$attributes = \App\Models\Admin\Catalog\Attributes\Attribute::where('id', '>', 13)->get();
         DB::table('products_flat')->orderBy('id')->select('id')->chunk(16666, function($products) use ($attributes)
         {
             $data = [];
