@@ -68,6 +68,7 @@ class AttributeFamiliesController extends Controller
         }
         $custom_attributes = collect($new_collection);
 
+
         return view('admin.catalog.attribute-families.edit', compact('attributeFamily', 'custom_attributes', 'groups'));
     }
 
