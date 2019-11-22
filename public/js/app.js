@@ -55575,6 +55575,8 @@ window.onload = function () {
   });
 
   __webpack_require__(/*! ./themejs/script */ "./resources/js/themejs/script.js");
+
+  __webpack_require__(/*! ./themejs/script-extensions */ "./resources/js/themejs/script-extensions.js");
 };
 
 /***/ }),
@@ -57514,6 +57516,50 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/themejs/script-extensions.js":
+/*!***************************************************!*\
+  !*** ./resources/js/themejs/script-extensions.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  }
+
+  if ($(".show-more-text").length) {
+    var showMoreElements = $(".show-more-text");
+    showMoreElements.each(function (el) {
+      var item = showMoreElements[el];
+
+      if (item.offsetHeight < item.scrollHeight) {
+        var btn = document.createElement("button");
+        btn.classList.add("manufacturers__show-more");
+        btn.innerText = "Показать больше";
+        var btnHide = document.createElement("button");
+        btnHide.classList.add("manufacturers__show-more");
+        btnHide.style.display = "none";
+        btnHide.innerText = "Скрыть";
+        insertAfter(btn, item);
+        insertAfter(btnHide, item);
+        btn.addEventListener('click', function () {
+          item.style.maxHeight = "none";
+          btn.style.display = "none";
+          btnHide.style.display = "block";
+        });
+        btnHide.addEventListener('click', function () {
+          item.style.maxHeight = "110px";
+          btn.style.display = "block";
+          btnHide.style.display = "none";
+        });
+      }
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/themejs/script.js":
 /*!****************************************!*\
   !*** ./resources/js/themejs/script.js ***!
@@ -57577,6 +57623,19 @@ $(function () {
   // 	$('.header__mobile-menu, .popup-bg2').fadeIn();
   // 	$('html').addClass('lock');
   // });
+  $('.card__info-tab').click(function () {
+    $(this).parent().toggleClass('active-mobile');
+  });
+  $('.card__tabs li a').click(function (e) {
+    e.preventDefault();
+    var id = $(this).parent().attr('data-for');
+    console.log(id);
+    $('.card__info-block.active').toggleClass('active');
+    $(id).toggleClass('active');
+  });
+  $('.subcategory__sidebar-filter, .subcategory__sidebar .close').click(function () {
+    $('.subcategory__sidebar').toggleClass('mobile-hide-children');
+  });
   $('.manufacturers__slider').flickity({
     cellAlign: 'left',
     wrapAround: true,
@@ -57594,40 +57653,89 @@ $(function () {
     $('.last-goods__list li').removeClass('active');
     $(this).addClass('active');
   });
+  $('.wheels__categories li').click(function () {
+    $('.wheels .last-goods__slider').addClass('d-none');
+    $($(this).attr('data-for')).removeClass('d-none');
+    $($(this).attr('data-for')).flickity('resize');
+    $('.wheels__categories li').removeClass('active');
+    $(this).addClass('active');
+  });
+  $('.wheels__categories2 li').click(function () {
+    $('.wheels .wheels__models').addClass('d-none');
+    $($(this).attr('data-for')).removeClass('d-none');
+    $('.wheels__categories2 li').removeClass('active');
+    $(this).addClass('active');
+  });
   $('.search__filter span').click(function () {
     $('.search__body').addClass('d-none');
     $($(this).attr('data-type')).removeClass('d-none');
     $('.search__filter span').removeClass('active');
     $(this).addClass('active');
-  }); // $('.search__model-dropdown span').click(function(){
-  // 	var data = $(this).text();
-  // 	$(this).parent().parent().addClass('active');
-  // 	$(this).parent().parent().find('.search__model-subtext').text(data);
-  // })
-  // $('.companies__block-form-contacts-dropdown span').click(function(){
-  // 	var data = $(this).text();
-  // 	$(this).parent().parent().parent().find('>span').text(data);
-  // })
-  //
-  // $(document).mouseup(function (e){ // событие клика по веб-документу
-  // 	var div = $(".header__popup-catalog"); // тут указываем ID элемента
-  // 	if (!div.is(e.target) // если клик был не по нашему блоку
-  // 		&& div.has(e.target).length === 0 && div.hasClass('d-block')) { // и не по его дочерним элементам
-  // 		div.removeClass('d-block');
-  // 		$('.popup-black').removeClass('d-block');
-  // 	}
-  // });
-  // $('.header__catalog').click(function(){
-  // 	$('.header__popup-catalog').addClass('d-block');
-  // 	$('.popup-black').addClass('d-block');
-  // });
-  //
-  //
-  // $('.header__popup-search .close').click(function(){
-  // 	$('.popup-black2').removeClass('d-block');
-  // 	$('.header__popup-search').removeClass('d-block');
-  // })
-  // $('.slider__wrap').flickity({
+  });
+  $('.search__model-dropdown span').click(function () {
+    var data = $(this).text();
+    $(this).parent().parent().addClass('active');
+    $(this).parent().parent().find('.search__model-subtext').text(data);
+  });
+  $('.companies__block-form-contacts-dropdown span').click(function () {
+    var data = $(this).text();
+    $(this).parent().parent().parent().find('>span').text(data);
+  });
+  $(document).mouseup(function (e) {
+    // событие клика по веб-документу
+    var div = $(".header__popup-catalog"); // тут указываем ID элемента
+
+    if (!div.is(e.target) // если клик был не по нашему блоку
+    && div.has(e.target).length === 0 && div.hasClass('d-block')) {
+      // и не по его дочерним элементам
+      div.removeClass('d-block');
+      $('.popup-black').removeClass('d-block');
+    }
+  });
+
+  if ($(window).width() >= 1024) {
+    $('.header__catalog').click(function () {
+      $('.header__popup-catalog').addClass('d-block');
+      $('.popup-black').addClass('d-block');
+    });
+  }
+
+  $('.header__search input').focus(function () {
+    $('.popup-black2').addClass('d-block');
+    $('.header__popup-search').addClass('d-block');
+  });
+  $('.header__search-magnify').click(function () {
+    $('.popup-black2').addClass('d-block');
+    $('.header__popup-search').addClass('d-block');
+  });
+  $('.header__popup-search .close, .popup-black2').click(function () {
+    $('.popup-black2').removeClass('d-block');
+    $('.header__popup-search').removeClass('d-block');
+  });
+
+  if ($(window).width() < 1024) {
+    $('.header__cart-dropdown .close, .pre-header__profile-dropdown .close, .header__featured-dropdown .close, .header__car-dropdown .close, .header__menu-mobile-dropdown .close').click(function () {
+      // alert('2');
+      $(this).parent().toggleClass('d-block');
+    });
+    $('.header__punkt').click(function (e) {
+      var div = $('.header__cart-dropdown, .header__featured-dropdown, .header__car-dropdown, .header__menu-mobile-dropdown');
+
+      if (!div.is(e.target) && div.has(e.target).length === 0) {
+        $(this).find(div).toggleClass('d-block');
+      }
+    });
+    $('.header__catalog').click(function () {
+      $('.header__punkt.header__menu-mobile').click();
+    });
+    $('.header__user').click(function (e) {
+      $('.pre-header__profile-dropdown').toggleClass('d-block');
+    });
+  }
+
+  $('.pre-footer__title').click(function () {
+    $(this).next().toggleClass('d-block');
+  }); // $('.slider__wrap').flickity({
   // 	cellAlign: 'left',
   // 	wrapAround: true
   // });
@@ -57760,44 +57868,6 @@ $(function () {
   // $('.hamburger').click(function(){
   // 	$('.dropdown--menu').toggleClass('d-block');
   // });
-
-  function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-  }
-
-  if ($(".show-more-text").length) {
-    var showMoreElements = $(".show-more-text");
-    showMoreElements.each(function (el) {
-      var item = showMoreElements[el];
-
-      if (item.offsetHeight < item.scrollHeight) {
-        var btn = document.createElement("button");
-        btn.classList.add("manufacturers__show-more");
-        btn.innerText = "Показать больше";
-        var btnHide = document.createElement("button");
-        btnHide.classList.add("manufacturers__show-more");
-        btnHide.style.display = "none";
-        btnHide.innerText = "Скрыть";
-        insertAfter(btn, item);
-        insertAfter(btnHide, item);
-        btn.addEventListener('click', function () {
-          item.style.maxHeight = "none";
-          btn.style.display = "none";
-          btnHide.style.display = "block";
-        });
-        btnHide.addEventListener('click', function () {
-          item.style.maxHeight = "110px";
-          btn.style.display = "block";
-          btnHide.style.display = "none";
-        });
-      }
-    }); // console.log(showMoreElements.length);
-    // if(el.height() < el[0].scrollHeigh) {
-    //     el.append("<button class='manufacturers__show-more'>Показать больше</button>")
-    // }
-    // console.log(el.height());
-    // console.log(el[0].scrollHeigh);
-  }
 });
 
 /***/ }),

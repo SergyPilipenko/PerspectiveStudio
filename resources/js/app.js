@@ -75,4 +75,5 @@ window.onload = function () {
         router
     });
     require('./themejs/script');
+    require('./themejs/script-extensions');
 };
