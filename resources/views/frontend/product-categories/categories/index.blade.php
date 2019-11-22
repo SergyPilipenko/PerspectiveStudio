@@ -1,4 +1,6 @@
-@section('meta_title', app('MetaTags')->getTitle(['title' => 'test']))
+@section('meta_title', __('meta-tags::meta.frontend-product-categories-show.title'))
+@section('meta_description', __('meta-tags::meta.frontend-product-categories-show.description'))
+@section('meta_keywords', __('meta-tags::meta.frontend-product-categories-show.keywords'))
 @extends('frontend')
 @section('content')
     <section class="category">

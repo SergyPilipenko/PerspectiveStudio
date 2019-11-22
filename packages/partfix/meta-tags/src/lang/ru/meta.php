@@ -7,12 +7,17 @@ return array(
         'keywords' => 'Купить'
     ],
     'frontend-product-show' => [
-        'title' => 'title frontend-product-show',
+        'title' => 'Купить :part :manufacturer',
+        'description' => 'description frontend-product-show',
+        'keywords' => 'keywords frontend-product-show'
+    ],
+    'frontend-product-categories-show' => [
+        'title' => 'Купить :part :manufacturer',
         'description' => 'description frontend-product-show',
         'keywords' => 'keywords frontend-product-show'
     ],
     'frontend-checkout-index' => [
-        'title' => 'title frontend-checkout-index',
+        'title' => 'Оформление заказа',
         'description' => 'description frontend-checkout-index',
         'keywords' => 'keywords frontend-checkout-index'
     ],
