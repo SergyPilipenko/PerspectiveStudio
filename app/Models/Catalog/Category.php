@@ -289,7 +289,7 @@ class Category extends Model implements CategoryInterface
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
             ->multiJoin(env('DB_TECDOC_DATABASE').'.article_numbers as an', ['al.datasupplierarticlenumber' => 'an.datasupplierarticlenumber', 'al.supplierid' => 'an.supplierid'])
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_prd as prd', 'prd.id', 'al.productid')
-            ->join(env('DB_DATABASE').'.products as p', 'an.id', 'p.id')
+            ->join(env('DB_DATABASE').'.products_flat as p', 'an.id', 'p.id')
             ->where('al.productid', '{pds.productid}')
             ->where('al.linkageid', '{pds.passangercarid}')
             ->where('al.linkageid', (int) $modification)

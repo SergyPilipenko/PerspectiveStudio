@@ -51,7 +51,7 @@ class CategoryFilter implements CategoryFilterInterface
     public function renderTecdocFilter($category)
     {
         $attributes = $category->filterableAttributes;
-        
+
         foreach ($attributes as $attribute) {
             $query = $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.'.$attribute->code.' as value', 'count(*) as count'])
                 ->join('products_flat as p', 'art.article_number_id', 'p.id')
@@ -68,7 +68,8 @@ class CategoryFilter implements CategoryFilterInterface
                 })->where('p.'.$attribute->code, '{null}', 'is not')->groupBy($attribute->code);
 
             $options = $query->getResult();
-            $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+            $this->items[] = resolve(CategoryFilterBlock::class)
+                ->getBlock(collect($options), $attribute);
         }
 
 
@@ -134,20 +135,20 @@ class CategoryFilter implements CategoryFilterInterface
 
     public function renderTecdocFilterByModification($category, $modification)
     {
-        $attribute = Attribute::where('code', 'manufacturer')->first();
+        $attributes = $category->filterableAttributes;
+        foreach ($attributes as $attribute) {
+            $query = $category->tecdocCategoryProductsByModification($modification, array("$attribute->code as value", 'count(*) as count'))->groupBy($attribute->code);
 
-        $query = $category->tecdocCategoryProductsByModification($modification, array("$attribute->code as value", 'count(*) as count'))->groupBy($attribute->code);
+            $options = $query->getResult();
 
-        $options = $query->getResult();
-
-        $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+            $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
+        }
 
         return $this;
     }
 
     public function getCategoryFilterOptions($productIds, int $attributeId, string $attributeValueField, $categoryId)
     {
-
         return DB::table('category_filterable_attributes as ca')
             ->select('pv.'.$attributeValueField.' as value', DB::raw('count(*) as count'))
             ->join('product_categories as pc', 'ca.catalog_category_id', 'pc.category_id')
