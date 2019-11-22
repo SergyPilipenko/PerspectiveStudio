@@ -1,3 +1,6 @@
+@section('meta_title', __('meta-tags::meta.frontend-index.title', ['title' => 'запчасти']))
+@section('meta_description', __('meta-tags::meta.frontend-index.description', ['description' => 'еще что-то']))
+@section('meta_keywords', __('meta-tags::meta.frontend-index.keywords', ['keywords' => 'хз']))
 @extends('frontend')
 @section('content')
     <section class="search" style="min-height: 458px">

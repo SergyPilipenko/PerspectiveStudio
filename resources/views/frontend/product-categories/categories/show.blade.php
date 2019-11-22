@@ -1,3 +1,6 @@
+@section('meta_title', __('meta-tags::meta.frontend-product-show.title'))
+@section('meta_description', __('meta-tags::meta.frontend-product-show.description'))
+@section('meta_keywords', __('meta-tags::meta.frontend-product-show.keywords'))
 @extends('frontend')
 @section('content')
     <section class="card">
