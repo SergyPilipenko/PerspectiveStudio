@@ -8,13 +8,7 @@
             <div class="row">
                 <div class="col-12">
                     {!! Breadcrumbs::render('frontend.modification', $car, $brand, $model, $modification) !!}
-                    {{--                    <ul class="breadcrumbs">--}}
-{{--                        <li><a href="#">Главная</a></li>--}}
-{{--                        <li><a href="#">Легковые</a></li>--}}
-{{--                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>--}}
-{{--                    </ul>--}}
                     <div class="white-bg">
-
                         <h2 class="category__title">Каталог запчастей на <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->year }}</span></h2>
                             @if($category->children->count())
                                 @foreach($category->children as $categoryBlock)
