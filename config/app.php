@@ -167,7 +167,6 @@ return [
          */
         Barryvdh\Debugbar\ServiceProvider::class,
         Partfix\Nav\NavServiceProvider::class,
-        Partfix\CategoriesAdapter\CategoriesAdapterServiceProvider::class,
         Partfix\Paginator\PaginatorServiceProvider::class,
         Partfix\CatalogCategoryFilter\CatalogCategoryFilterServiceProvider::class,
         Partfix\CatalogCategoryFilter\RouteServiceProvider::class,
