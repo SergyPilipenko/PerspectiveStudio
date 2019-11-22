@@ -1,3 +1,6 @@
+@section('meta_title', __('meta-tags::meta.frontend-checkout-index.title'))
+@section('meta_description', __('meta-tags::meta.frontend-checkout-index.description'))
+@section('meta_keywords', __('meta-tags::meta.frontend-checkout-index.keywords'))
 @extends('frontend')
 @section('content')
     <div class="v-cloak--hidden">

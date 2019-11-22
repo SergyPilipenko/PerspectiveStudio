@@ -1,8 +1,4 @@
 <?php
-Route::group(['prefix' => 'test'], function() {
-    Route::get('', 'TestController@index');
-    Route::get('elastic', 'TestController@elastic');
-});
 
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 

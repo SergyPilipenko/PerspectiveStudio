@@ -1,3 +1,6 @@
+@section('meta_title', __('meta-tags::meta.frontend-modification.title'))
+@section('meta_description', __('meta-tags::meta.frontend-modification.description'))
+@section('meta_keywords', __('meta-tags::meta.frontend-modification.keywords'))
 @extends('frontend')
 @section('content')
     <section class="category">

@@ -1,5 +1,8 @@
 <?php
 
 return array(
-    'frontend.product-categories.show' => 'Купить :title'
+    'frontend-index' => '234',
+    'frontend-product-categories-show' => [
+        'title' => ':title'
+    ]
 );

@@ -36,8 +36,10 @@ class MetaTags implements MetaTagsInterface
         if(!$this->isGetter($name)) return;
 
         $search = $this->getSearchName($name);
-
-        return __($this->routeName . '.' . $search, array_shift($arguments));
+        array_shift($arguments);
+        if($arguments) {
+            return __('meta-tags::meta.' . $this->routeName . '.' . $search, array_shift($arguments));
+        } return __('meta-tags::meta.' . $this->routeName . '.' . $search);
     }
 
     private function isGetter(string $name)
@@ -47,6 +49,7 @@ class MetaTags implements MetaTagsInterface
 
     private function getSearchName(string $name)
     {
+
         return lcfirst(preg_replace($this->getterPattern, '', $name));
     }
 }
