@@ -1,23 +1,15 @@
+@section('meta_title', __('meta-tags::meta.frontend-product-show.title', ['part' => mb_strtolower($product->custom_attributes['name']), 'manufacturer' => $product->custom_attributes['manufacturer']]))
+@section('meta_description', __('meta-tags::meta.frontend-product-show.description'))
+@section('meta_keywords', __('meta-tags::meta.frontend-product-show.keywords'))
 @extends('frontend')
 @section('content')
-{{--    {{ dd($product) }}--}}
     <section class="card">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    @include('frontend.partials._breadcrumbs')
+                    {!! Breadcrumbs::render('frontend.product.show', $product) !!}
                     <div class="card__main">
-                        <div class="card__main-left">
-                            <div class="card__main-list">
-                                <div><img src="/img/frontend/img/card-img.png" alt="card-img"></div>
-                                <div><img src="/img/frontend/img/card-img.png" alt="card-img"></div>
-                                <div><img src="/img/frontend/img/card-img.png" alt="card-img"></div>
-                                <div class="youtube"><img src="/img/frontend/img/youtube.png" alt="youtube"><span>видео</span></div>
-                            </div>
-                            <div class="card__main-img">
-                                <img src="/img/frontend/img/card-img.png" alt="card-img">
-                            </div>
-                        </div>
+                        @include('frontend.product.gallery', ['images' => $product->images])
                         <div class="card__main-right">
                             <h2>{{ $product->custom_attributes['name'] }} {{ $product->custom_attributes['manufacturer'] }} {{ $product->article }}</h2>
                             <span class="card__main-brand">
@@ -54,7 +46,7 @@
                             </div>
                             <div class="d-flex align-items-start mb25">
                                 <div class="d-flex flex-column">
-                                    <span class="card__main-newprice">{{ $product->custom_attributes['price'] }} <sup>грн</sup></span>
+                                    <span class="card__main-newprice">{{ $product->price }} <sup>грн</sup></span>
                                     <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>
                                 </div>
                                 <div class="d-flex align-items-start card__main-suitable">
@@ -72,15 +64,15 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
-                                <div class="card__main-quantity">
-                                    <span>4 шт.</span>
-                                    <img src="/img/frontend/img/arrow-down.png" alt="arrow">
-                                    <div class="card__main-quantity-dropdown">
-                                        <span>1 шт.</span>
-                                        <span>2 шт.</span>
-                                        <span>3 шт.</span>
-                                    </div>
-                                </div>
+{{--                                <div class="card__main-quantity">--}}
+{{--                                    <span>4 шт.</span>--}}
+{{--                                    <img src="/img/frontend/img/arrow-down.png" alt="arrow">--}}
+{{--                                    <div class="card__main-quantity-dropdown">--}}
+{{--                                        <span>1 шт.</span>--}}
+{{--                                        <span>2 шт.</span>--}}
+{{--                                        <span>3 шт.</span>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <add-to-cart
                                     product="{{ $product }}"
                                     action="{{ route('frontend.cart.add', $product->id) }}"

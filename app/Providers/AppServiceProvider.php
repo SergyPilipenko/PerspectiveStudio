@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Classes\Car\Car;
+use App\Classes\Car\CarInterface;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Locale\Locale;
 use App\Models\Locale\LocaleInterface;
+use App\Repositories\Content\ContentBlock;
+use App\Repositories\Content\ContentBlockInterface;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -21,20 +25,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        App::singleton('App\Repositories\Product\ProductRepositoryInterface', 'App\Repositories\Product\ProductRepository');
-        App::singleton('App\Repositories\Cart\CartRepositoryInterface', 'App\Repositories\Cart\CartRepository');
-        App::singleton('App\Repositories\Cart\CartItemRepositoryInterface', 'App\Repositories\Cart\CartItemRepository');
-        App::singleton('App\Repositories\Order\OrderItemRepositoryInterface', 'App\Repositories\Order\OrderItemRepository');
-        App::singleton('App\Models\Order\OrderItemInterface', 'App\Models\Order\OrderItem');
-        App::singleton('App\Models\Cart\CartInterface', 'App\Models\Cart\Cart');
-        App::singleton('App\Models\Cart\CartItemInterface', 'App\Models\Cart\CartItem');
-        App::singleton('App\Models\Admin\Catalog\Product\ProductInterface', 'App\Models\Admin\Catalog\Product\Product');
-        App::singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\CartRequest');
-        App::singleton('App\Repositories\Order\OrderRepositoryInterface', 'App\Repositories\Order\OrderRepository');
-        App::singleton('App\Models\Order\OrderInterface', 'App\Models\Order\Order');
-        App::singleton(CategoryInterface::class, Category::class);
-        App::singleton(PriceFilterInterface::class, PriceFilter::class);
-        App::singleton(LocaleInterface::class, Locale::class);
+        $this->app->singleton('App\Repositories\Product\ProductRepositoryInterface', 'App\Repositories\Product\ProductRepository');
+        $this->app->singleton('App\Repositories\Cart\CartRepositoryInterface', 'App\Repositories\Cart\CartRepository');
+        $this->app->singleton('App\Repositories\Cart\CartItemRepositoryInterface', 'App\Repositories\Cart\CartItemRepository');
+        $this->app->singleton('App\Repositories\Order\OrderItemRepositoryInterface', 'App\Repositories\Order\OrderItemRepository');
+        $this->app->singleton('App\Models\Order\OrderItemInterface', 'App\Models\Order\OrderItem');
+        $this->app->singleton('App\Models\Cart\CartInterface', 'App\Models\Cart\Cart');
+        $this->app->singleton('App\Models\Cart\CartItemInterface', 'App\Models\Cart\CartItem');
+        $this->app->singleton('App\Models\Admin\Catalog\Product\ProductInterface', 'App\Models\Admin\Catalog\Product\Product');
+        $this->app->singleton('App\Http\Requests\RequestInterface', 'App\Http\Requests\CartRequest');
+        $this->app->singleton('App\Repositories\Order\OrderRepositoryInterface', 'App\Repositories\Order\OrderRepository');
+        $this->app->singleton('App\Models\Order\OrderInterface', 'App\Models\Order\Order');
+        $this->app->singleton(CategoryInterface::class, Category::class);
+        $this->app->singleton(PriceFilterInterface::class, PriceFilter::class);
+        $this->app->singleton(LocaleInterface::class, Locale::class);
+        $this->app->singleton(CarInterface::class, Car::class);
+        $this->app->singleton(ContentBlockInterface::class, ContentBlock::class);
     }
 
     /**
@@ -45,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        \Debugbar::disable();
+//        \Debugbar::disable();
 
 
         $this->app->singleton('PartfixTecDoc', function () {

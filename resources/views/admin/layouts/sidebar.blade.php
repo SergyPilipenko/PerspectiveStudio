@@ -28,6 +28,18 @@
             </div>
         </li>
         <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" href="#content" aria-expanded="false" aria-controls="catalogs">
+                <i class="ti-layout menu-icon"></i>
+                <span class="menu-title">Контент</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="content" style="">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.content.blocks.index') }}">Блоки</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#import-system" aria-expanded="false" aria-controls="import-system">
                 <i class="ti-palette menu-icon"></i>
                 <span class="menu-title">Система импорта</span>

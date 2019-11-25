@@ -61,6 +61,7 @@ class AttributesController extends Controller
             'title' => 'required',
         ));
 
+
         $attribute->title = $request->title;
         $attribute->is_required = $request->is_required;
         $attribute->is_filterable = $request->is_filterable;

@@ -10,12 +10,13 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.ml.enabled=false
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - ./elasticdata/esdata01:/usr/share/elasticsearch/data
+      - ./docker/elasticdata/esdata01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -30,12 +31,13 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.ml.enabled=false
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - ./elasticdata/esdata02:/usr/share/elasticsearch/data
+      - ./docker/elasticdata/esdata02:/usr/share/elasticsearch/data
     networks:
       - esnet
 

@@ -5,10 +5,26 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="category_title">Название: [{{ locale }}]</label>
-                        <input type="text" :class="{'form-control' : true,' error': errors['category_title'] != undefined}" :name="locale+'[category_title]'" v-model="title">
-                        <div v-if="errors['category_title']">
+                        <input type="text" v-if="locale" :class="{'form-control' : true,' error': errors && errors['category_title'] != undefined}" :name="locale+'[category_title]'" v-model="title">
+                        <input type="text" v-else :class="{'form-control' : true,' error': errors && errors['category_title'] != undefined}" name="category_title" v-model="title">
+                        <div v-if="errors && errors['category_title']">
                             <div class="text-danger" v-for="error in errors['category_title']" v-text="error"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="category-type" v-if="types && types.length">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="category_title">Тип: [{{ locale }}]</label>
+                        <select name="type" id="type" class="form-control"
+                                v-model="categoryTitle">
+                            <option :value="type"
+                                    v-for="type in types"
+                                    v-text="type"></option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -18,8 +34,10 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="category_title">URL: [{{ locale }}]</label>
-                        <input type="text" :class="{'form-control' : true,' error': errors['slug'] != undefined}" :name="locale+'[slug]'" :value="slugify">
-                        <div v-if="errors['slug']">
+                        <input v-if="locale" type="text" :class="{'form-control' : true,' error': errors && errors['slug'] != undefined}" :name="locale+'[slug]'" :value="slugify">
+                        <input v-else="locale" type="text" :class="{'form-control' : true,' error': errors && errors['slug'] != undefined}" name="slug" :value="slugify">
+
+                        <div v-if="errors && errors['slug']">
                             <div class="text-danger" v-for="error in errors['slug']" v-text="error"></div>
                         </div>
                     </div>
@@ -31,18 +49,19 @@
 <script>
 
     export default {
-        props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale'],
+        props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale', 'types'],
 
         data() {
             return {
                 title: '',
                 slug: this.current_slug,
                 spt: '',
+                categoryTitle: 'default'
             }
         },
         created() {
             this.current_title ? this.title = this.current_title : this.title = '';
-            this.oldData['category_title'] ? this.title = this.oldData['category_title'] : this.title = ''
+            this.oldData && this.oldData['category_title'] ? this.title = this.oldData['category_title'] : this.title = ''
         },
         methods: {
             find(str) {
@@ -62,10 +81,14 @@
         },
         computed: {
             oldData() {
-                return JSON.parse(this.old)
+                if(this.old) {
+                    return JSON.parse(this.old)
+                }
             },
             errors() {
-                return (JSON.parse(this.errors_list))
+                if(this.errors_list) {
+                    return (JSON.parse(this.errors_list))
+                }
             },
             slugify() {
                 var splitTitle =  this.title;

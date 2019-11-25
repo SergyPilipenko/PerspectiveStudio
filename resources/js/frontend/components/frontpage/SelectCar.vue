@@ -42,7 +42,7 @@
                     v-text="model.name" @click="setModel(model)"></span>
             </div>
         </div>
-        <button type="submit">Выбрать</button>
+        <button type="button" @click="goToCarCatalog">Выбрать</button>
     </form>
 <!--    <div>-->
 <!--        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">-->
@@ -85,6 +85,7 @@
                 rangeYears: [],
                 bodyTypeSelected: "",
                 selectedEngine: "",
+                redirecting: false,
                 selects: [
                     {
                         id: 1,
@@ -113,6 +114,23 @@
                 first++;
             }
             this.rangeYears = years.reverse();
+            if(this.getCurrentAuto) {
+                this.addSelectedYead(this.getCurrentAuto.year);
+                this.addSelectedBrand({
+                    description: this.getCurrentAuto.brand.description,
+                    id: this.getCurrentAuto.brand.id
+                });
+                this.setBrands({
+                    action: this.route['get-brands-by-models-created-year'],
+                    selected_year: this.selectedYear
+                });
+                this.addSelectedModel({
+                    id: this.getCurrentAuto.model.id,
+                    constructioninterval: this.getCurrentAuto.model.constructioninterval,
+                    name: this.getCurrentAuto.model.description
+                });
+                this.getModelsFromApi(this.brandSelected.id);
+            }
         },
         computed: {
             route() {
@@ -131,6 +149,7 @@
                 selectedYear: 'selectCar/getSelectedYear',
                 brandSelected: 'selectCar/getSelectedBrand',
                 modelSelected: 'selectCar/getSelectedModel',
+                getCurrentAuto: 'garage/getCurrentAuto',
             }),
 
 
@@ -165,7 +184,6 @@
                 this.filterModificationsBySelectedYear();
                 this.hideAllSelects();
                 this.showSelect('brand');
-
             },
             setBrand(brand) {
                 this.addSelectedBrand(brand);
@@ -318,16 +336,19 @@
 
                 if(!brand) return;
 
+                this.getModelsFromApi(brand);
+                this.resetModelsSelect();
+                this.clearModifications();
+            },
+            getModelsFromApi(brand) {
                 var self = this;
                 let form = new FormData();
                 form.append('brand_id', brand);
 
                 axios.post('/api/tecdoc/get-models', form)
                     .then(data => {
-                    self.addModels(self.filterModelsBySelectedYear(data.data));
-                    self.resetModelsSelect();
-                    self.clearModifications();
-                });
+                        self.addModels(self.filterModelsBySelectedYear(data.data));
+                    });
             },
 
             getSameModelIds(modelName) {
@@ -396,8 +417,9 @@
                 var modelSelectedIds = this.getModelSelectedIds();
 
                 this.getSelectedModelURI();
+                this.redirecting = true;
                 window.location.href = this.getSelectedModelURI();
-
+                console.log(333);
                 var self = this;
                 let form = new FormData();
                 form.append('model_Ids', modelSelectedIds);
@@ -411,6 +433,23 @@
             },
             choseModification() {
                 window.location.href = this.modificationSelected+"/categories/";
+            },
+            goToCarCatalog() {
+                if(!this.selectedYear) {
+                    this.showSelect('year');
+                    return;
+                }
+                if(!this.brandSelected) {
+                    this.showSelect('brand');
+                    return;
+                }
+                if(!this.modelSelected) {
+                    this.showSelect('models');
+                    return;
+                }
+                if(!this.redirecting){
+                    window.location.href = this.getCurrentAuto.path
+                }
             }
         }
     }

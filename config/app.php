@@ -166,7 +166,15 @@ return [
          * Package Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
-
+        Partfix\Nav\NavServiceProvider::class,
+        Partfix\Paginator\PaginatorServiceProvider::class,
+        Partfix\CatalogCategoryFilter\CatalogCategoryFilterServiceProvider::class,
+        Partfix\CatalogCategoryFilter\RouteServiceProvider::class,
+        Partfix\QueryBuilder\QueryBuilderServiceProvider::class,
+        Partfix\MetaTags\MetaTagsServiceProvider::class,
+        Partfix\SiteMap\SiteMapServiceProvider::class,
+//        Partfix\MetaTags\Meta::class,
+//        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -228,6 +236,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Transliterate' => ElForastero\Transliterate\Facade::class,
         'ValidationHelper' => App\Helpers\Validation::class,
+        'ContentBlock' => App\Repositories\Content\ContentBlock::class,
+        'MetaTags' => Partfix\MetaTags\Model\MetaTags::class
     ],
 
 ];

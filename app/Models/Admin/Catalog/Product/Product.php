@@ -4,20 +4,30 @@ namespace App\Models\Admin\Catalog\Product;
 
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Events\ProductUpdatedEvent;
+use App\Filters\NewProductsFilter;
+use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Attributes\AttributeFamily;
+use App\Models\Admin\Catalog\Attributes\AttributeValue;
 use App\Models\Admin\Catalog\Product\ProductImage;
 use App\Models\Catalog\Category;
 use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
-
+//    protected $table = 'products';
+    protected $table = 'products_flat';
     public $priceFilter;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    private $newProductsFilter;
+    private $productsFilter;
 
     protected static function boot()
     {
@@ -34,35 +44,41 @@ class Product extends Model implements ProductInterface
         static::deleted(function($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->remove($product);
             if($product->images->count()) {
-                File::deleteDirectory($product->productImage->path . $product->id);
+                File::deleteDirectory($product->productImage->savePath . $product->id);
             }
         });
     }
 
     public function __construct()
     {
-        parent::__construct();
-
         $this->productAttributeValue = new ProductAttributeValue;
         $this->productImage = app()->make(ProductImage::class);
         $this->priceFilter = app(PriceFilterInterface::class);
+        $this->newProductsFilter = app(NewProductsFilter::class);
+        $this->productsFilter = app(ProductsFilter::class);
+        parent::__construct();
     }
 
     public function getAttribute($key)
     {
-//        dd($this->attributes['type']);
-//        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key])) {
-//            if (isset($this->id)) {
-//                $this->attributes[$key] = '';
-//
+        if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key]) && $key != 'pivot') {
+            if (isset($this->id)) {
+
+                $attribute = $this->productAttributeValues->where('code', $key)->first();
+
+                if($attribute) {
+                    $field = ProductAttributeValue::$attributeTypeFields[$attribute->type];
+
+                    return $attribute->$field;
+                }
 //                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
 //                    ->getAttributeByCode($key);
 //
 //                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
-//
-//                return $this->getAttributeValue($key);
-//            }
-//        }
+
+                return $this->getAttributeValue($key);
+            }
+        }
 
         return parent::getAttribute($key);
     }
@@ -72,19 +88,16 @@ class Product extends Model implements ProductInterface
         return ['id' => 'product', 'slug' => 'slug'];
     }
 
-    /**
-     * @var ProductAttributeValue instance
-     */
+    public function scopeFilter($query, ProductsFilter $filters, $filterableItems = [])
+    {
+
+
+        return $filters->apply($query, $filterableItems);
+    }
+
     private $productAttributeValue;
 
-    /**
-     * @var ProductImage instance
-     */
     public $productImage;
-
-
-
-
 
     public function attribute_family()
     {
@@ -94,6 +107,18 @@ class Product extends Model implements ProductInterface
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_categories');
+    }
+
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class, 'product_id', 'id');
+    }
+
+    public function productAttributeValues()
+    {
+        return $this->attributeValues()
+//            ->select('a.code')
+            ->join('attributes as a', 'product_attribute_values.attribute_id', 'a.id');
     }
 
     public function getDefaultPrice()
@@ -106,7 +131,7 @@ class Product extends Model implements ProductInterface
         return $this->priceFilter->getProductPrice($this);
     }
 
-    public function canBeDisplayed()
+    public function productCanBeDisplayed()
     {
         if($this->getPrice() > 0) {
             return true;
@@ -120,29 +145,13 @@ class Product extends Model implements ProductInterface
         return $this->hasMany(Price::class, 'article_id', 'id');
     }
 
-    public function getProducts(array $ids)
+    public function getProducts(array $ids, $paginate = false)
     {
-        if(!count($ids)) return $ids;
+        $products = $this->with('images')->whereIn('id', $ids)->paginate($paginate);
 
-        $products = $this->with('images')->whereIn('id', $ids)->get();
+        if(!$products->count()) return $products;
 
-        foreach ($products as $product)
-        {
-            $attributes = $product->getProductAttributes();
-            foreach ($attributes as $key => $attribute)
-            {
-                if(!$product->getAttribute($key))
-                {
-                    if($key == 'price') {
-                        $product->$key = $product->getPrice();
-                        continue;
-                    }
-                    $product->$key = $attribute;
-                } else {
-                    $product->custom_attributes = $attribute;
-                }
-            }
-        }
+        $products = resolve('App\Models\Admin\Catalog\Attributes\Attribute')->setProductsAttributes($products);
 
         return $products;
     }
@@ -175,6 +184,7 @@ class Product extends Model implements ProductInterface
         JOIN attributes a ON pav.attribute_id = a.id
         WHERE p.id = {$this->id}";
         $attributes = DB::connection('mysql')->select($sql);
+
         $formatted = [];
         foreach ($attributes as $attribute) {
             if(!in_array($attribute->code, ProductAttributeValue::$ignoreAttributes)) {
@@ -185,6 +195,8 @@ class Product extends Model implements ProductInterface
 
         return $formatted;
     }
+
+
 
 //    public function attribute_values()
 //    {
@@ -257,6 +269,7 @@ class Product extends Model implements ProductInterface
             } else {
                 $request['depends_quantity'] = false;
             }
+
             $product->update($request);
 
             $attributes = $product->attribute_family->custom_attributes()->get();
@@ -300,5 +313,10 @@ class Product extends Model implements ProductInterface
             dd($e);
             DB::connection()->getPdo()->rollBack();
         }
+    }
+
+    public function newFilter(MysqlQueryBuilder $builder, $filterableItems)
+    {
+        return $this->productsFilter->apply($builder, $filterableItems);
     }
 }

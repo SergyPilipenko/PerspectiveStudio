@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import 'variables';
-@import "frontend/normalize.css";
+@import "frontend/theme/normalize.css";
 
 //@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "frontend/bootstrap-grid.css";
-@import "frontend/hamburgers.min.css";
-@import "frontend/main";
+@import "frontend/theme/bootstrap-grid.css";
+@import "frontend/theme/hamburgers.min.css";
+@import "frontend/theme/main";
+@import "frontend/theme/main-extensions";
+@import "frontend/theme/category";
+@import "frontend/catalog-category-filter/style";
 
 [v-cloak] .v-cloak--block {
     display: block;

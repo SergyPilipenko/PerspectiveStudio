@@ -26,7 +26,6 @@ class ProductController extends Controller
     public function detail($slug, CartInterface $cart, ProductInterface $product)
     {
         $cart = $cart->getCart();
-
 //        $productId = $this->product->getProductByIdSlug($slug);
 //        if(!$productId) {
 //            abort(404);

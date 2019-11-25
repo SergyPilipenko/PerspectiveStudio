@@ -13,6 +13,9 @@ class CreateProductsFromTecdocArticles extends Seeder
     private $products;
     private $pr;
     private $tecdoc_attribute_family_id;
+    private $total = 0;
+    private $iteration = 0;
+    private $partCount = 2000;
 
     /**
      * CreateProductsFromTecdocArticles constructor.
@@ -30,11 +33,17 @@ class CreateProductsFromTecdocArticles extends Seeder
      */
     public function run($id_from = false)
     {
+        if(!$id_from) {
+            $this->product->where('attribute_family_id', $this->tecdoc_attribute_family_id)->delete();
+            $this->total = DB::connection('mysql_tecdoc')->selectOne("select count(*) as total FROM article_numbers")->total;
+        }
+
         $sql = "SELECT id, supplierid, datasupplierarticlenumber FROM article_numbers ";
         if($id_from) {
-            $sql = $sql . "WHERE id > $id_from ";
-        }
-        $limit = "ORDER BY id asc limit 2000";
+            $sql = $sql . "WHERE id > $id_from ";        
+	}
+	
+        $limit = "ORDER BY id asc limit {$this->partCount}";
         $sql = $sql .  $limit;
         $articles = DB::connection('mysql_tecdoc')->select($sql);
         if(count($articles)) {
@@ -47,9 +56,30 @@ class CreateProductsFromTecdocArticles extends Seeder
                 $this->pr[$key]['attribute_family_id'] = $this->tecdoc_attribute_family_id;
             }
             $this->product->insert($this->pr);
-            dd('stopped');
+            $this->iteration += count($articles);
+            echo "{$this->iteration}/{$this->total}\n";
+//            return;
             $this->run($this->last_id);
         }
-        dd($this->last_id);
+
+//        dd($this->last_id);
     }
 }
+
+//Нагружает комп
+//DB::table(env('DB_TECDOC_DATABASE').".article_numbers")
+//    ->orderBy('id')
+//    ->chunk(2000, function ($items) {
+//        $products = [];
+//        foreach ($items as $item)
+//        {
+//            $product = [];
+//            $product['article'] = $item->datasupplierarticlenumber;
+//            $product['id'] = $item->id;
+//            $product['type'] = 'tecdoc';
+//            $product['attribute_family_id'] = $this->tecdoc_attribute_family_id;
+//            $products[] = $product;
+//        }
+//        $this->product->insert($products);
+//
+//    });

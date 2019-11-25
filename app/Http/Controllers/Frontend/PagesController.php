@@ -2,51 +2,73 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Classes\Car\Car;
+use App\Classes\Car\CarInterface;
 use App\Classes\Garage;
 use App\Classes\PartfixTecDoc;
 use App\Classes\RoutesParser\CarRoutesParser;
 use App\Classes\RoutesParser\RoutesParserInterface;
+use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
+use App\Models\Catalog\CategoryInterface;
 use App\Models\Categories\Category;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\PassangerCar;
+use App\Repositories\CatalogCategory\CategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;
+use Illuminate\Support\Facades\Session;
 
 class PagesController extends Controller
 {
+    /**
+     * @var ProductsFilter
+     */
+    private $filters;
+    /**
+     * @var CategoryFilter
+     */
+    private $categoryFilter;
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
 
     /**
-     * PagesController constructor.
+     * ProductCategoryController constructor.
+     * @param ProductsFilter $filters
+     * @param CategoryFilter $categoryFilter
+     * @param CategoryRepository $categoryRepository
      */
-    public function __construct()
+    public function __construct(
+        ProductsFilter $filters,
+        CategoryFilter $categoryFilter,
+        CategoryRepository $categoryRepository
+    )
     {
         $this->middleware('frontend');
+        $this->filters = $filters;
+        $this->categoryFilter = $categoryFilter;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
     {
         $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
 
-        $garage = \Session::get('garage')
-            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
-            : null;
-
-        $current_auto = \Session::get('current-auto') ? : null;
-
-        $categories = $category->active()->orderBy('parent_id', 'asc')->get();
-
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
 
-        return view('frontend.index', compact('brands', 'garage', 'current_auto', 'routes', 'categories'));
+        return view('frontend.index', compact('brands', 'routes'));
     }
 
     public function brand(Request $request)
@@ -76,13 +98,12 @@ class PagesController extends Controller
                 'displayvalue' => '2 l',
             ],
         ])->get();
-//        dd($models);
 
         $models = ModelsUri::where([
             'slug' => $model,
             'manufacturer_id' => $manufacturer->manufacturer_id
         ])->with('model')->get();
-//        dd($models->where('id', 60087));
+
         $routes = [
             'set-car-year' => route('set-car-year'),
             'get-models-body-types' => route('api.tecdoc.get-models-body-types'),
@@ -94,55 +115,55 @@ class PagesController extends Controller
         return view('frontend.categories.index', compact('categories', 'brand', 'model', 'models', 'routes'));
     }
 
-    public function modification($brand, $model, $modification, Garage $garage, RoutesParserInterface $rotesParser)
+    public function modification($brand, $model, $modification, Garage $garage, CarInterface $car)
     {
-
-        if(!$modification) $modification = $model;
         $garage->setActiveCar($modification);
-        $garage = \Session::get('garage')
-            ? PassangerCar::whereIn('id', collect(\Session::get('garage'))->pluck('modification_id'))->with('attributes')->get()
-            : null;
-        $current_auto = \Session::get('current-auto');
-//        dd($modification);
-        $categories = Category::where('parent_id', null)->get();
 
-        return view('frontend.car.index', compact('garage', 'current_auto', 'categories', 'modification', 'brand', 'model'));
+        $car = $car->getCar($modification);
+
+//        $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
+        $category = resolve(CategoryInterface::class)
+            ->where('slug->' . app()->getLocale(), 'legkovye')
+            ->with('children.children')
+            ->firstOrFail();
+
+        if($category->children->count()) {
+            $children = $category->children;
+        }
+
+        return view('frontend.car.index', compact('category','children', 'car', 'brand', 'model', 'modification'));
     }
 
-    public function category($brand, $model, $modification, $category, Garage $garageInstance, RoutesParserInterface $routesParser, PartfixTecDoc $tecDoc)
+    public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
     {
-        $garage_list = $garageInstance->getGarageList();
+        $category = resolve(CategoryInterface::class)
+            ->where('slug->' . app()->getLocale(), $category)
+            ->with('children.children')
+            ->firstOrFail();
 
-        $garage = $garage_list->count()
-            ? PassangerCar::whereIn('id', $garage_list->pluck('modification_id'))->with('attributes')->get()
-            : null;
+        $products = $this->categoryRepository->getCategoryProductsByModification($category, $modification);
 
-        $category = Category::whereSlug($category)->with('children')->firstOrFail();
+        $car = $car->getCar($modification);
 
-        $current_auto = $garageInstance->getActiveCar();
+        $categoryLink = request()->getPathInfo();
 
-        $categories = $category->children;
-
-        $parts = Product::whereIn('id', collect($category->getParts($modification))->pluck('product_id'))->get();
-
-        return view('frontend.car.index',
-            compact('category', 'garage', 'current_auto', 'categories',
-                'brand', 'model', 'modification', 'route_name', 'route_parameters', 'parts')
-        );
+        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification', 'categoryLink'));
     }
 
 
-    public function product()
+    public function clearGarage(Garage $garage)
     {
+        $garage->clear();
 
+        return redirect()->route('frontend.index');
     }
 
     public function changeCurrentCar($id)
     {
-        $garage = collect(\Session::get('garage'));
+        $garage = collect(Session::get('garage'));
 
         $current_modification = $garage->where('modification_id', $id)->first();
-        \Session::put('current-auto', [
+        Session::put('current-auto', [
             'modification_id' => $current_modification['modification_id'],
             'modification_year' => $current_modification['modification_year']
         ]);

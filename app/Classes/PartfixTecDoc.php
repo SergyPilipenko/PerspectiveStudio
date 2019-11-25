@@ -3,14 +3,18 @@
 
 namespace App\Classes;
 use App\Classes\Tecdoc;
+use App\Models\Catalog\Category;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
+
 use Illuminate\Support\Facades\DB;
-use Cache;
 
 class PartfixTecDoc extends Tecdoc
 {
     public $linkageTypeId = [];
 
     public $section_parts = [];
+    private $res;
 
     /**
      * PartfixTecDoc constructor.
@@ -274,6 +278,7 @@ class PartfixTecDoc extends Tecdoc
     public function getNestedSections($modification_id, $section_id = null)
     {
         $sections = $this->getSections($modification_id, $section_id);
+        dd($sections);
         if(count($sections)) {
             foreach ($sections as $section) {
                 $section->children = $this->getNestedSections($modification_id, $section->id);
@@ -295,9 +300,82 @@ class PartfixTecDoc extends Tecdoc
     }
 
 
-    public function getAllSectionParts()
+    public function getAllSectionPartsIds($category)
     {
-        $sections = $this->getNestedSections();
+        $cacheItems = Cache::get('tecdoc.category-products.'.$category->id);
+        if($cacheItems) return $cacheItems;
+
+        $sql = "SELECT pr.id
+                from partfix.distinct_passanger_car_trees d
+                JOIN tecdoc2018_db.article_tree art ON d.`passanger_car_trees_id` = art.nodeid
+                JOIN partfix.products pr ON art.article_number_id = pr.id,
+                (SELECT MIN(dt._lft) as category_from, MAX(dt._rgt) as category_to
+                FROM partfix.`catalog_categories` cc
+                JOIN partfix.`category_distinct_passanger_car_trees` cd ON cc.id = cd.category_id
+                JOIN partfix.`distinct_passanger_car_trees` dt ON cd.distinct_pct_id = dt.id
+                WHERE cc._lft >= $category->_lft AND cc._rgt <= $category->_rgt) w
+                WHERE d._lft >= w.category_from AND d._rgt <= w.category_to";
+
+        $result = DB::connection($this->connection)->select($sql);
+        $result = $this->toArray($result);
+        $ids = array_column($result, 'id');
+
+        Cache::put('tecdoc.category-products.'.$category->id, $ids, now()->addMinutes(3));
+
+        return $ids;
+    }
+
+
+    /**
+     * Выборка всех запчастей категории, включая подкатегории по модификации
+     *
+     * @param Category $category
+     * @param array $modifications
+     * @return array
+     */
+    public function getModificationSectionPartsIds(
+        Category $category,
+        array $modifications
+    )
+    {
+//        $cacheKey = 'car.products.'.md5(implode(',',$modifications).$category->id);
+//        $cacheItems = Cache::get($cacheKey);
+//
+//        if($cacheItems) {
+//            return $cacheItems;
+//        }
+
+        $sql = "SELECT DISTINCT an.id product_id FROM article_links al 
+                JOIN passanger_car_pds pds on al.supplierid = pds.supplierid 
+                LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid 
+                JOIN suppliers s on s.id = al.supplierid 
+                JOIN passanger_car_prd prd on prd.id = al.productid 
+                WHERE al.productid = pds.productid AND al.linkageid = pds.passangercarid AND al.linkageid in (".implode(',',$modifications).") 
+                AND pds.nodeid IN (SELECT d.passanger_car_trees_id from ".env('DB_DATABASE').".distinct_passanger_car_trees d,
+                (SELECT MIN(d._lft) as min_left, MAX(d._rgt) as max_right  FROM ".env('DB_DATABASE').".`catalog_categories` c
+                JOIN ".env('DB_DATABASE').".category_distinct_passanger_car_trees cd on c.id = cd.category_id
+                JOIN ".env('DB_DATABASE').".distinct_passanger_car_trees d on cd.distinct_pct_id = d.id
+                WHERE c._lft >= {$category->_lft} AND c._rgt <= {$category->_rgt}) w
+                WHERE d._lft >= w.min_left AND d._rgt <= w.max_right) 
+                AND al.linkagetypeid = 2";
+
+        $result = DB::connection($this->connection)->select($sql);
+
+        $ids = $this->productIdsResultToArray($result);
+
+        return $ids;
+    }
+
+    public function productIdsResultToArray($result)
+    {
+        $ids = [];
+        if(count($result)) {
+            foreach ($result as $item) {
+                $ids[] = $item->product_id;
+            }
+        }
+
+        return $ids;
     }
 
 
@@ -472,5 +550,10 @@ class PartfixTecDoc extends Tecdoc
         return DB::connection($this->connection)->select("
             SELECT displaytitle, displayvalue, description FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
         ");
+    }
+
+    public function toArray($result)
+    {
+        return json_decode(json_encode($result, true));
     }
 }

@@ -13,9 +13,9 @@ class ProductAttributeValue extends Model
     protected $fillable = [
         'product_id',
         'attribute_id',
-        'channel_id',
-        'locale',
-        'channel',
+//        'channel_id',
+//        'locale',
+//        'channel',
         'text_value',
         'boolean_value',
         'integer_value',
@@ -43,6 +43,20 @@ class ProductAttributeValue extends Model
         'image' => 'text_value',
     ];
 
+    public static $schema = array(
+        'text' => 'string',
+        'textarea' => 'text',
+        'price' => 'decimal',
+        'decimal' => 'decimal',
+        'boolean' => 'boolean',
+        'select' => 'text',
+        'multiselect' => 'text',
+        'datetime' => 'date',
+        'date' => 'date',
+        'image' => 'string',
+        'file' => 'string',
+    );
+
     /**
      * @var Attribute
      */
@@ -62,5 +76,10 @@ class ProductAttributeValue extends Model
         $data[self::$attributeTypeFields[$attribute->type]] = $data['value'];
 
         return $this->create($data);
+    }
+
+    public function getFillableFields()
+    {
+        return $this->fillable;
     }
 }

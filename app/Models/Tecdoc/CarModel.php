@@ -15,6 +15,11 @@ class CarModel extends Model
         $this->table = env('DB_TECDOC_DATABASE').".{$this->table}";
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Manufacturer::class, 'manufacturerid', 'id');
+    }
+
     public function modifications()
     {
         return $this->hasMany(PassangerCar::class, 'modelid', 'id');

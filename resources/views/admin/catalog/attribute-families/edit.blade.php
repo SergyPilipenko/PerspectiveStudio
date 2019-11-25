@@ -41,7 +41,7 @@
                         </div>
                     </accordian>
                     <attribute-groups
-                        :custom_attributes="'{{ $custom_attributes }}'"
+                        :custom_attributes="'{{ json_encode($custom_attributes) }}'"
                         :default_groups="'{{ $groups }}'"
                         :action="'{{ route('admin.catalog.attribute-families.attribute-groups.store') }}'">
                     </attribute-groups>

@@ -22,7 +22,10 @@ class ProductsController extends Controller
 
     public function index()
     {
-        $products = Product::paginate(10);
+
+        $products = Product::select('id', 'article', 'type', 'parent_id', 'attribute_family_id', 'created_at', 'updated_at', 'quantity', 'depends_quantity', 'manufacturer')
+            ->orderBy('id', 'desc')->paginate(10);
+//        dd($products);
 
         return view('admin.catalog.products.index', compact('products'));
     }

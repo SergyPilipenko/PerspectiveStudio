@@ -30,10 +30,8 @@ class ProductsIndexer
 
     public function index(ProductInterface $product) : void
     {
-        if(!$product->canBeDisplayed()) return;
-
+        if(!$product->productCanBeDisplayed()) return;
         $attributes = $product->getProductAttributes();
-
         if(isset($product->depends_quantity))
         {
             $product->depends_quantity = (int) $product->depends_quantity;

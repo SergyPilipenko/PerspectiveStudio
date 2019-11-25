@@ -1,9 +1,13 @@
 import Vuex from "vuex";
 
 require('../bootstrap');
+// var CKEDITOR_BASEPATH = '/js/libs/ckeditor/';
+// require('../libs/ckeditor/ckeditor.js');
 
 window.Vue = require('vue');
+
 import BootstrapVue from 'bootstrap-vue'
+
 
 Vue.use(BootstrapVue);
 
@@ -35,12 +39,14 @@ Vue.component('auto-types-table', require('./components/auto/AutoTypesTable').de
 Vue.component('attribute-groups', require('./components/catalog/attributes/AttributeGroups').default);
 Vue.component('product-images-upload', require('./components/catalog/product/ProductImagesUpload').default);
 Vue.component('category-image-upload', require('./components/catalog/product/categories/CategoryImageUploadForm').default);
+Vue.component('partfix-ckeditor', require('../components/PartfixCkeditor.vue').default);
 
 Vue.component('product-categories', require('./components/catalog/product/ProductCategories').default);
 Vue.component('accordian', require('../components/Accordian').default);
 
 import CategoriesCheckboxes from './components/vuex/categories-checkboxes';
 import autoTypes from "../frontend/store/modules/auto-types";
+
 
 const store = new Vuex.Store({
     modules: {
@@ -53,8 +59,13 @@ window.onload = function () {
     const app = new Vue({
         el: '#app',
         store
-
     });
+    CKEDITOR.replace( 'ckeditor', {
+        extraPlugins: 'uploadimage',
+        uploadUrl: '/admin/ckeditor-upload-image',
+        allowedContent: true
+    });
+
     if($(".auto_type_head_checkbox")) {
         $(".auto_type_head_checkbox").on('change', function (e) {
             var headerCheckBoxAttr = $(this).attr("attr");
@@ -73,4 +84,3 @@ window.onload = function () {
         });
     }
 };
-

@@ -1,0 +1,32 @@
+.category
+    #model
+        background-color: #c20f14
+        margin-top: 30px
+        .search
+            &__model
+                &-cover
+                    background-color: #fff
+                    &:first-child
+                        width: 10%
+                    &:nth-child(2),
+                    &:nth-child(3)
+                        width: 23%
+                    &:last-child
+                        border-top-right-radius: 20px
+                        border-bottom-right-radius: 20px
+                        width: 37%
+                &-dropdown
+                    width: calc(100% + 2px)
+                    top: 40px
+                    height: auto
+                    max-height: 240px
+                    .capacity
+                        span
+                            display: block
+                        &:first-child
+                            span
+                                border-top: none
+                        &:last-child
+                            span
+                                border-bottom: none
+

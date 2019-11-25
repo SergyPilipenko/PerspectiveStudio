@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\DB;
+
 Route::get('/', 'Frontend\PagesController@index')->name('frontend.index');
 
 Auth::routes();
@@ -18,5 +20,3 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 //require_once ('admin.php');
 //require_once ('frontend.php');
-
-

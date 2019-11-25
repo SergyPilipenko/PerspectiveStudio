@@ -44,7 +44,8 @@
                 this.$emit('removeImage', id)
             },
             imgPath(img) {
-                return img.product_id ? '/' + img.path : img.path
+                var reg = new RegExp('blob:http');
+                return !reg.test(img.path) ? '/' + img.path : img.path
             }
 
         }
