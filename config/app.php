@@ -172,6 +172,7 @@ return [
         Partfix\CatalogCategoryFilter\RouteServiceProvider::class,
         Partfix\QueryBuilder\QueryBuilderServiceProvider::class,
         Partfix\MetaTags\MetaTagsServiceProvider::class,
+        Partfix\SiteMap\SiteMapServiceProvider::class,
 //        Partfix\MetaTags\Meta::class,
 //        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*
