@@ -35,7 +35,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="d-flex">
+                    <div class="d-flex flex-column flex-lg-row">
                         @if($products->count())
                             @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter($car), 'category' => $category, 'car' => $car, 'categoryLink' => $categoryLink])
                             {{--                            <div class="subcategory__sidebar">--}}

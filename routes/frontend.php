@@ -1,4 +1,5 @@
 <?php
+Route::get('/', 'Frontend\PagesController@index')->name('frontend.index');
 
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 

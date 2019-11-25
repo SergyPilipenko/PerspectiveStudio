@@ -7857,6 +7857,20 @@ a:hover {
   margin-top: 25px;
 }
 
+@media screen and (min-width: 1439.98px) {
+  header.header {
+    min-height: 168px;
+  }
+}
+
+.subcategory__pagination {
+  flex-wrap: wrap;
+}
+
+.subcategory__pagination li {
+  min-height: 50px;
+}
+
 .category #model {
   background-color: #c20f14;
   margin-top: 30px;
