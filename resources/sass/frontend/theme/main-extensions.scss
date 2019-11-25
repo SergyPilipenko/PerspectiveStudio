@@ -12,6 +12,9 @@
     display: block;
 }
 
+
+
+
 .header__cart-dropdown {
     display: block;
 }
@@ -77,6 +80,20 @@
     overflow: hidden;
     max-height: 110px;
 }
+
 .manufacturers__show-more {
     margin-top: 25px;
+}
+
+@media screen and (min-width: 1439.98px) {
+    header.header {
+        min-height: 168px;
+    }
+}
+
+.subcategory__pagination {
+    flex-wrap: wrap;
+    li {
+        min-height: 50px;
+    }
 }

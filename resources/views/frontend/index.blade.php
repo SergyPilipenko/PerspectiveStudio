@@ -317,7 +317,7 @@
                     <h2 class="default-title">
                         Автозапчасти для любой марки автомобиля
                     </h2>
-                    <div class="d-flex">
+                    <div class="d-flex flex-column flex-lg-row">
                         <div class="companies__catalog">
                             <div class="d-flex flex-column">
                                 <div class="companies__catalog-block">
@@ -513,42 +513,42 @@
                                 <h3><span>Нужна консультация?</span></h3>
                                 <p>Оставьте нам ваш VIN-код или фото с винкодом, наш консультант поможет выбрать подходящие запчасти.</p>
                                 <form class="companies__block-form">
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center align-items-sm-start align-items-md-center flex-column flex-md-row">
                                         <div class="d-flex align-items-center companies__block-form-line mt0">
-                                            <img src="/img/frontend/img/svg/id.svg" alt="telephone" class="icon companies__block-icon">
+                                            <img src="{{ asset('img/frontend/img/svg/id.svg') }}" alt="telephone" class="icon companies__block-icon">
                                             <input type="text" placeholder="VIN код">
                                         </div>
                                         <span class="companies__block-form-or">или</span>
                                         <button class="pl35">
-                                            <span><img src="/img/frontend/img/svg/upload-to-arrow.svg" alt="upload-to-arrow"></span>
+                                            <span><img src="{{ asset('img/frontend/img/svg/upload-to-arrow.svg') }}" alt="upload-to-arrow"></span>
                                             фото техпаспорта
                                         </button>
                                     </div>
                                     <div class="d-flex align-items-center companies__block-form-line">
-                                        <img src="/img/frontend/img/svg/mobile-phone.svg" alt="telephone" class="icon companies__block-icon">
+                                        <img src="{{ asset('img/frontend/img/svg/mobile-phone.svg') }}" alt="telephone" class="icon companies__block-icon">
                                         <input type="tel" placeholder="Номер телефона">
                                     </div>
                                     <div class="d-flex align-items-center companies__block-form-line">
-                                        <img src="/img/frontend/img/svg/telephone3.svg" alt="telephone" class="icon companies__block-icon">
+                                        <img src="{{ asset('img/frontend/img/svg/telephone3.svg') }}" alt="telephone" class="icon companies__block-icon">
                                         <div class="companies__block-form-contacts">
                                             <!-- <input type="text" placeholder="Удобный способ связи"> -->
                                             <span>Удобный способ связи</span>
-                                            <img src="/img/frontend/img/triangle.png" alt="triangle" class="arrow">
+                                            <img src="{{ asset('img/frontend/img/triangle.png') }}" alt="triangle" class="arrow">
                                             <div class="companies__block-form-contacts-dropdown">
                                                 <div>
-                                                    <img src="/img/frontend/img/svg/telephone3.svg" alt="telephone">
+                                                    <img src="{{ asset('img/frontend/img/svg/telephone3.svg') }}" alt="telephone">
                                                     <span>Телефон</span>
                                                 </div>
                                                 <div>
-                                                    <img src="/img/frontend/img/svg/viber.svg" alt="viber">
+                                                    <img src="{{ asset('img/frontend/img/svg/viber.svg') }}" alt="viber">
                                                     <span>Viber</span>
                                                 </div>
                                                 <div>
-                                                    <img src="/img/frontend/img/svg/whatsapp.svg" alt="whatsapp">
+                                                    <img src="{{ asset('img/frontend/img/svg/whatsapp.svg') }}" alt="whatsapp">
                                                     <span>WhatsApp</span>
                                                 </div>
                                                 <div>
-                                                    <img src="/img/frontend/img/svg/telegram_logo.svg" alt="telegram">
+                                                    <img src="{{ asset('img/frontend/img/svg/telegram_logo.svg') }}" alt="telegram">
                                                     <span>Telegram</span>
                                                 </div>
                                             </div>
@@ -559,23 +559,23 @@
                                     </button>
                                 </form>
                             </div>
-                            <div class="companies__block">
+                            <div class="companies__block pb80">
                                 <h3><span>Зарегистрируйтесь</span> на Partfix и вы сможете:</h3>
                                 <ul>
                                     <li>
-                                        <img src="/img/frontend/img/svg/car.svg" alt="car">
+                                        <img src="{{ asset('img/frontend/img/svg/car.svg') }}" alt="car">
                                         <span>Сохранить ваши автомобили в «гараж» и находить их быстрее</span>
                                     </li>
                                     <li>
-                                        <img src="/img/frontend/img/svg/money.svg" alt="money">
+                                        <img src="{{ asset('img/frontend/img/svg/money.svg') }}" alt="money">
                                         <span>Накапливать бонусы за покупки</span>
                                     </li>
                                     <li>
-                                        <img src="/img/frontend/img/svg/refresh.svg" alt="refresh">
+                                        <img src="{{ asset('img/frontend/img/svg/refresh.svg') }}" alt="refresh">
                                         <span>Повторять заказы из вашей истории</span>
                                     </li>
                                     <li>
-                                        <img src="/img/frontend/img/svg/notification.svg" alt="notification">
+                                        <img src="{{ asset('img/frontend/img/svg/notification.svg') }}" alt="notification">
                                         <span>Получать уведомления об акциях и спецпредложениях</span>
                                     </li>
                                 </ul>
@@ -590,6 +590,287 @@
             </div>
         </div>
     </section>
+
+{{--    <section class="companies">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-12">--}}
+{{--                    <h2 class="default-title">--}}
+{{--                        Автозапчасти для любой марки автомобиля--}}
+{{--                    </h2>--}}
+{{--                    <div class="d-flex">--}}
+{{--                        <div class="companies__catalog">--}}
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										A--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Acura</a></li>--}}
+{{--                                        <li><a href="#">Alfa romeo</a></li>--}}
+{{--                                        <li><a href="#">Audi</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										B--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Bentley</a></li>--}}
+{{--                                        <li><a href="#">BMW</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										C--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Cadillac</a></li>--}}
+{{--                                        <li><a href="#">Chevrolet</a></li>--}}
+{{--                                        <li><a href="#">Chrysler</a></li>--}}
+{{--                                        <li><a href="#">Citroën</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										D--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Daewoo</a></li>--}}
+{{--                                        <li><a href="#">Dodge</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										F--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Fiat</a></li>--}}
+{{--                                        <li><a href="#">Ford</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										G--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Gaz</a></li>--}}
+{{--                                        <li><a href="#">Geely</a></li>--}}
+{{--                                        <li><a href="#">Great wall</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										H--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Honda</a></li>--}}
+{{--                                        <li><a href="#">Hummer</a></li>--}}
+{{--                                        <li><a href="#">Hyundai</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										I--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Infiniti</a></li>--}}
+{{--                                        <li><a href="#">Isuzu</a></li>--}}
+{{--                                        <li><a href="#">Iveco</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										J--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Jaguar</a></li>--}}
+{{--                                        <li><a href="#">Jeep</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block active">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										K--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Kia</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										L--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Lada</a></li>--}}
+{{--                                        <li><a href="#">Land rover</a></li>--}}
+{{--                                        <li><a href="#">Lexus</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										M--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Mazda</a></li>--}}
+{{--                                        <li><a href="#">Mercedes-benz</a></li>--}}
+{{--                                        <li><a href="#">Mini</a></li>--}}
+{{--                                        <li><a href="#">Mitsubishi</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										N--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Nissan</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										O--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Opel</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										P--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Peugeot</a></li>--}}
+{{--                                        <li><a href="#">Porsche</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										R--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Renault</a></li>--}}
+{{--                                        <li><a href="#">Rover</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										S--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Saab</a></li>--}}
+{{--                                        <li><a href="#">Seat</a></li>--}}
+{{--                                        <li><a href="#">Skoda</a></li>--}}
+{{--                                        <li><a href="#">Smart</a></li>--}}
+{{--                                        <li><a href="#">Ssangyong</a></li>--}}
+{{--                                        <li><a href="#">Subaru</a></li>--}}
+{{--                                        <li><a href="#">Suzuki</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										T--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Toyota</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										V--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Volvo</a></li>--}}
+{{--                                        <li><a href="#">Vw</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <a href="#" class="companies__catalog-show"><span>Показать все</span></a>--}}
+{{--                        </div>--}}
+{{--                        <div class="d-flex flex-column">--}}
+{{--                            <div class="companies__block">--}}
+{{--                                <h3><span>Нужна консультация?</span></h3>--}}
+{{--                                <p>Оставьте нам ваш VIN-код или фото с винкодом, наш консультант поможет выбрать подходящие запчасти.</p>--}}
+{{--                                <form class="companies__block-form">--}}
+{{--                                    <div class="d-flex align-items-center">--}}
+{{--                                        <div class="d-flex align-items-center companies__block-form-line mt0">--}}
+{{--                                            <img src="/img/frontend/img/svg/id.svg" alt="telephone" class="icon companies__block-icon">--}}
+{{--                                            <input type="text" placeholder="VIN код">--}}
+{{--                                        </div>--}}
+{{--                                        <span class="companies__block-form-or">или</span>--}}
+{{--                                        <button class="pl35">--}}
+{{--                                            <span><img src="/img/frontend/img/svg/upload-to-arrow.svg" alt="upload-to-arrow"></span>--}}
+{{--                                            фото техпаспорта--}}
+{{--                                        </button>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="d-flex align-items-center companies__block-form-line">--}}
+{{--                                        <img src="/img/frontend/img/svg/mobile-phone.svg" alt="telephone" class="icon companies__block-icon">--}}
+{{--                                        <input type="tel" placeholder="Номер телефона">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="d-flex align-items-center companies__block-form-line">--}}
+{{--                                        <img src="/img/frontend/img/svg/telephone3.svg" alt="telephone" class="icon companies__block-icon">--}}
+{{--                                        <div class="companies__block-form-contacts">--}}
+{{--                                            <!-- <input type="text" placeholder="Удобный способ связи"> -->--}}
+{{--                                            <span>Удобный способ связи</span>--}}
+{{--                                            <img src="/img/frontend/img/triangle.png" alt="triangle" class="arrow">--}}
+{{--                                            <div class="companies__block-form-contacts-dropdown">--}}
+{{--                                                <div>--}}
+{{--                                                    <img src="/img/frontend/img/svg/telephone3.svg" alt="telephone">--}}
+{{--                                                    <span>Телефон</span>--}}
+{{--                                                </div>--}}
+{{--                                                <div>--}}
+{{--                                                    <img src="/img/frontend/img/svg/viber.svg" alt="viber">--}}
+{{--                                                    <span>Viber</span>--}}
+{{--                                                </div>--}}
+{{--                                                <div>--}}
+{{--                                                    <img src="/img/frontend/img/svg/whatsapp.svg" alt="whatsapp">--}}
+{{--                                                    <span>WhatsApp</span>--}}
+{{--                                                </div>--}}
+{{--                                                <div>--}}
+{{--                                                    <img src="/img/frontend/img/svg/telegram_logo.svg" alt="telegram">--}}
+{{--                                                    <span>Telegram</span>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <button type="submit" class="companies__block-form-submit">--}}
+{{--                                        Отправить запрос--}}
+{{--                                    </button>--}}
+{{--                                </form>--}}
+{{--                            </div>--}}
+{{--                            <div class="companies__block">--}}
+{{--                                <h3><span>Зарегистрируйтесь</span> на Partfix и вы сможете:</h3>--}}
+{{--                                <ul>--}}
+{{--                                    <li>--}}
+{{--                                        <img src="/img/frontend/img/svg/car.svg" alt="car">--}}
+{{--                                        <span>Сохранить ваши автомобили в «гараж» и находить их быстрее</span>--}}
+{{--                                    </li>--}}
+{{--                                    <li>--}}
+{{--                                        <img src="/img/frontend/img/svg/money.svg" alt="money">--}}
+{{--                                        <span>Накапливать бонусы за покупки</span>--}}
+{{--                                    </li>--}}
+{{--                                    <li>--}}
+{{--                                        <img src="/img/frontend/img/svg/refresh.svg" alt="refresh">--}}
+{{--                                        <span>Повторять заказы из вашей истории</span>--}}
+{{--                                    </li>--}}
+{{--                                    <li>--}}
+{{--                                        <img src="/img/frontend/img/svg/notification.svg" alt="notification">--}}
+{{--                                        <span>Получать уведомления об акциях и спецпредложениях</span>--}}
+{{--                                    </li>--}}
+{{--                                </ul>--}}
+{{--                                <form class="d-flex align-items-center companies__block-contact">--}}
+{{--                                    <input type="tel" placeholder="+38 (0__) ___-___-___" required>--}}
+{{--                                    <button type="submit">Зарегистрироваться</button>--}}
+{{--                                </form>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
     <section class="manufacturers">
         <div class="container">
             <div class="row">

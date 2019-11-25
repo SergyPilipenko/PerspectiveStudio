@@ -11,10 +11,6 @@
 |
 */
 
-use Illuminate\Support\Facades\DB;
-
-Route::get('/', 'Frontend\PagesController@index')->name('frontend.index');
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -28,6 +28,7 @@ Vue.use(VueRouter);
 
 
 Vue.component('search-button', require('./frontend/components/Search/SearchButton').default);
+Vue.component('mobile-search-button', require('./frontend/components/Search/MobileSearchButton').default);
 Vue.component('search-tabs', require('./frontend/components/frontpage/SearchTabs').default);
 Vue.component('select-car', require('./frontend/components/frontpage/SelectCar').default);
 Vue.component('select-car-body', require('./frontend/components/categories/SelectCarBody').default);
@@ -75,4 +76,5 @@ window.onload = function () {
         router
     });
     require('./themejs/script');
+    require('./themejs/script-extensions');
 };

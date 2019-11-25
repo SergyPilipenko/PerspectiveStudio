@@ -1,5 +1,5 @@
 <template>
-    <form :action="action" method="POST" @submit.prevent="deleteProduct">
+    <form :action="action" method="POST" @submit.prevent="deleteProduct" class="header__cart-dropdown-item-delete">
         <input type="hidden" name="_method" value="delete">
         <button class="header__cart-dropdown-item-delete"><img src="img/frontend/img/trash.png" alt="trash"></button>
 <!--        <button class="btn btn-sm btn-danger">remove</button>-->
@@ -23,9 +23,8 @@
                         alert(error.response.data.message);
                     })
                     .then(data => {
-                        this.$emit('productDeleted', data.data)
-                        // self.addBodyTypes(data.data);
-                    })
+                        this.$emit('productDeleted', data.data);
+                    });
             }
         }
     }
