@@ -17,7 +17,10 @@ public/tecdoc_images
 public/img/
 sxd/
 public/img/
+public/images/
 public/tecdoc_images
 composer.phar
 docker/elasticdata
-public/
+public/mix-manifest.json
+public/RoyalUI
+#public/
