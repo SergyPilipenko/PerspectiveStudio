@@ -28,8 +28,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="d-flex">
+                    <div class="d-flex flex-column flex-lg-row">
                         @if(isset($products) && $products->count())
+                            <div class="button-wrapper">
+                                <button class="subcategory__sidebar-filter d-sm-none">
+                                    <img src="{{ asset('img/frontend/img/filter.png') }}" alt="filter">
+                                    <span>фильтры</span>
+                                </button>
+                            </div>
                             @include('partfix\catalog-category-filter::frontend._filter', ['filter' => $category->getFilter(), 'category' => $category])
                             <div class="subcategory__items">
                                 <div class="subcategory__header">
@@ -63,6 +69,17 @@
                                                 <span class="subcategory__type">{{ $product->name }}</span>
                                                 <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
                                                 <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+                                                <div class="subcategory__buy d-sm-none">
+                                                    <add-to-cart
+                                                        product="{{ $product }}"
+                                                        action="{{ route('frontend.cart.add', $product->id) }}">
+                                                        <div slot="button">
+                                                            <button>Купить</button>
+                                                        </div>
+                                                    </add-to-cart>
+                                                    <img src="{{ asset('img/frontend/img/svg/delivery-truck-green.svg') }}" alt="delivery-truck">
+                                                    <span>В наличии</span>
+                                                </div>
                                                 <div class="subcategory__cell subcategory__cell--overlay">
                                                     <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                         <div class="subcategory__img">
