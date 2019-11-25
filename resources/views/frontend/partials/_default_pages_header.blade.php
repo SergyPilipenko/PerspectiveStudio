@@ -54,7 +54,7 @@
                             <span class="pre-header__language-title">Русский</span>
                             <img src="img/arrow-down.png" alt="img">
                             <div class="pre-header__language-dropdown">
-                                <span class="close"><img src="img/cross.png" alt="img"></span>
+                                <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Язык сайта</h3>
                                 <a href="#">Русский</a>
                                 <a href="#">Украинский</a>
@@ -66,7 +66,7 @@
                             <span class="pre-header__profile-title">Мой профиль</span>
                             <img src="img/arrow-down.png" alt="img">
                             <form class="pre-header__profile-dropdown">
-                                <span class="close"><img src="img/cross.png" alt="img"></span>
+                                <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Профиль покупателя</h3>
                                 <p>Не зарегистрированы на Partfix? <a href="#">Зарегистрироваться</a></p>
                                 <h3>Войти</h3>
@@ -80,8 +80,8 @@
                                 <div class="d-flex align-items-center pre-header__profile-login">
                                     <button type="submit">Войти</button>
                                     <span>или войти через</span>
-                                    <a href="#" class="pre-header__profile-social facebook"><img src="img/facebook.png" alt="facebook" class="facebook"></a>
-                                    <a href="#" class="pre-header__profile-social google"><img src="img/google.png" alt="google" class="google"></a>
+                                    <a href="#" class="pre-header__profile-social facebook"><img src="{{ asset('img/frontend/img/facebook.png') }}" alt="facebook" class="facebook"></a>
+                                    <a href="#" class="pre-header__profile-social google"><img src="{{ asset('img/frontend/img/google.png') }}" alt="google" class="google"></a>
                                 </div>
                             </form>
                         </div>
@@ -181,7 +181,7 @@
 {{--        </div>--}}
 {{--    </div>--}}
 {{--</section>--}}
-<header class="header" style="min-height: 168px">
+<header class="header">
     <div class="container">
         <div class="row mb40 v-cloak--hidden">
             <div class="header__popup-catalog">
@@ -337,6 +337,9 @@
                     </div>
                 </div>
                 <garage :new_garage="{{ json_encode(app('App\Classes\Garage')->getGarage()) }}"></garage>
+                <div class="header__punkt header__user">
+                    <img src="{{ asset('img/frontend/img/svg/user.svg') }}" alt="user" class="icon">
+                </div>
                 <div class="header__punkt header__featured">
                     <img src="{{ asset('img/frontend/img/svg/heart.svg') }}" alt="heart" class="icon">
                     <span class="header__punkt-counter">96</span>
@@ -376,15 +379,11 @@
                 </button>
             </div>
             <div class="col-6 d-lg-none d-flex justify-content-center">
-                <a class="header__logo" href="#">
+                <a class="header__logo" href="{{ route('frontend.index') }}">
                     {!! app('ContentBlock')->render('partfix-logo') !!}
                 </a>
             </div>
-            <div class="col-3 d-lg-none d-flex justify-content-end">
-                <button class="header__search-magnify">
-                    <img src="/img/frontend/img/svg/search.svg" alt="search">
-                </button>
-            </div>
+            <mobile-search-button></mobile-search-button>
             <div class="col-10">
                 <ul class="header__menu">
                     @include('partfix\nav::frontend._nav')

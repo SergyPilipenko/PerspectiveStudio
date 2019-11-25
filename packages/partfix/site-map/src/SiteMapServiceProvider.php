@@ -14,7 +14,6 @@ class SiteMapServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 
     /**
