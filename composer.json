@@ -51,7 +51,8 @@
             "Partfix\\Paginator\\": "packages/partfix/paginator/src",
             "Partfix\\CatalogCategoryFilter\\": "packages/partfix/catalog-category-filter/src",
             "Partfix\\QueryBuilder\\": "packages/partfix/query-builder/src",
-            "Partfix\\MetaTags\\": "packages/partfix/meta-tags/src"
+            "Partfix\\MetaTags\\": "packages/partfix/meta-tags/src",
+            "Partfix\\SiteMap\\": "packages/partfix/site-map/src"
         },
         "classmap": [
             "database/seeds",
