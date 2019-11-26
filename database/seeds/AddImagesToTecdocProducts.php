@@ -29,7 +29,7 @@ class AddImagesToTecdocProducts extends Seeder
 
     public function run()
     {
-        $this->productImage->where('type', 'tecdoc')->delete();
+        if(!$this->offset) $this->productImage->where('type', 'tecdoc')->delete();
         $sql = "
         SELECT tai.PictureName, pp.id as product_id, tai.supplierid FROM ".env('DB_DATABASE').".products pp
         JOIN ".env('DB_TECDOC_DATABASE').".article_numbers tan ON pp.id = tan.id
@@ -58,13 +58,14 @@ class AddImagesToTecdocProducts extends Seeder
                 }
             }
             $this->offset += self::LIMIT;
+            $this->productImage->insert($productImages);
             $this->run();
         }
 
-        echo count($productImages) . " images found\n";
-        if(count($productImages)) {
-            $this->productImage->insert($productImages);
-        }
+//        echo count($productImages) . " images found\n";
+//        if(count($productImages)) {
+//
+//        }
 
 //        if($tecdocProducts->count()) {
 //            foreach ($tecdocProducts as $product) {
