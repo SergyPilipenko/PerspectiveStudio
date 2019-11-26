@@ -38,28 +38,29 @@
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>
                             </div>
-                            <div class="card__main-oldprice">
-                                <span>12 458</span>
-                                <sup>
-                                    грн
-                                </sup>
-                            </div>
+{{--                            <div class="card__main-oldprice">--}}
+{{--                                <span>12 458</span>--}}
+{{--                                <sup>--}}
+{{--                                    грн--}}
+{{--                                </sup>--}}
+{{--                            </div>--}}
                             <div class="d-flex align-items-start mb25">
                                 <div class="d-flex flex-column">
                                     <span class="card__main-newprice">{{ $product->price }} <sup>грн</sup></span>
-                                    <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>
+{{--                                    <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>--}}
                                 </div>
                                 @if(isset($belongsModification) && $belongsModification)
+
                                     <div class="d-flex align-items-start card__main-suitable">
                                         <img src="/img/frontend/img/svg/car.svg" alt="car" class="card__main-suitable-car">
                                         <div class="d-flex flex-column">
                                             <span class="card__main-suitable-checked">
                                                 <img src="/img/frontend/img/svg/checked.svg" alt="checked" class="icon">
                                             </span>
-
+                                            <?php $activeCar = $garage->getActiveCar(); ?>
                                             <span class="card__main-suitable-caption">Подходит для вашего авто</span>
                                             <div class="d-flex align-items-center">
-                                                <span class="card__main-suitable-model">Volkswagen Transporter 2013 VHDj 3/0CDI</span>
+                                                <span class="card__main-suitable-model">{{ $activeCar->brand->description }} {{ $activeCar->model->description }} {{ $activeCar->year }}</span>
                                                 <button class="card__main-suitable-change">Изменить</button>
                                             </div>
                                         </div>
