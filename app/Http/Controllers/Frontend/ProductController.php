@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Classes\Garage;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Models\Cart\CartInterface;
@@ -23,25 +24,19 @@ class ProductController extends Controller
         $this->middleware('frontend');
     }
 
-    public function detail($slug, CartInterface $cart, ProductInterface $product)
+    public function detail($slug, CartInterface $cart, ProductInterface $product, Garage $garage)
     {
         $cart = $cart->getCart();
-//        $productId = $this->product->getProductByIdSlug($slug);
-//        if(!$productId) {
-//            abort(404);
-//        }
-
-//        $product = $this->product->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($productId);
-//        $product->price = $product->getPrice();
-//
-//
-//        $attributes = $product->getProductAttributes();
-//        $product->custom_attributes = $product->getProductAttributes();
+        /** @var Product $product */
         $product = $product->getProduct($slug);
-//        dd($product);
+        $garage = $garage->getGarage();
+        if(!$garage->empty()) {
+            $car = $garage->getSessionActiveCar();
+            $belongsModification = $product->belongsModification($car['modification_id']);
+        }
+//        dd($garage->empty());
 
-
-        return view('frontend.product.show', compact('product', 'cart'));
+        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage'));
     }
 
     public function search(Request $request, ProductsSearcher $productsSearcher, CategoriesSearcher $categoriesSearcher)

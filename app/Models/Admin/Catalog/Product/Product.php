@@ -15,6 +15,7 @@ use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 
 class Product extends Model implements ProductInterface
@@ -23,11 +24,9 @@ class Product extends Model implements ProductInterface
 //    protected $table = 'products';
     protected $table = 'products_flat';
     public $priceFilter;
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
     private $newProductsFilter;
     private $productsFilter;
+    private $simpleQueryBuilder;
 
     protected static function boot()
     {
@@ -56,6 +55,7 @@ class Product extends Model implements ProductInterface
         $this->priceFilter = app(PriceFilterInterface::class);
         $this->newProductsFilter = app(NewProductsFilter::class);
         $this->productsFilter = app(ProductsFilter::class);
+        $this->simpleQueryBuilder = app(SQLQueryBuilder::class);
         parent::__construct();
     }
 
@@ -196,18 +196,6 @@ class Product extends Model implements ProductInterface
         return $formatted;
     }
 
-
-
-//    public function attribute_values()
-//    {
-//        return $this->hasMany(ProductAttributeValue::class);
-//    }
-//
-//    public function attribute_value()
-//    {
-//        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
-//    }
-
     public function images()
     {
         return $this->hasMany(ProductImage::class);
@@ -318,5 +306,19 @@ class Product extends Model implements ProductInterface
     public function newFilter(MysqlQueryBuilder $builder, $filterableItems)
     {
         return $this->productsFilter->apply($builder, $filterableItems);
+    }
+
+    public function belongsModification(int $modification) : ?bool
+    {
+        $query = $this->simpleQueryBuilder->select(env('DB_TECDOC_DATABASE') . '.article_numbers AS an', ['*'])
+            ->multiJoin(env('DB_TECDOC_DATABASE') . '.article_links AS al', [
+                'an.supplierid' => 'al.supplierid',
+                'an.datasupplierarticlenumber' => 'al.datasupplierarticlenumber'
+            ])->multiJoin(env('DB_TECDOC_DATABASE') . '.passanger_car_pds AS pds', [
+                'al.productid' => 'pds.productid',
+                'an.supplierid' => 'pds.supplierid'
+            ])->where('an.id', $this->id)->where('pds.passangercarid', $modification)->limit(1)->getResult();
+
+        return count($query) ? true : false;
     }
 }

@@ -41,7 +41,7 @@ class Garage
     {
         $list = $this->getGarageList();
 
-        if(count($list)) {
+        if(count($list) && !$this->cars) {
             $this->cars = collect($this->car->getCars($list));
             $this->activeCar = $this->getActiveCar();
         }
@@ -87,6 +87,7 @@ class Garage
 
     public function getActiveCar()
     {
+
         if($this->cars && $this->cars->count())
         {
             $active = $this->getSessionActiveCar();
@@ -110,7 +111,6 @@ class Garage
     {
         $garage = Session::get(self::GARAGE);
         $current_auto = $this->getSessionActiveCar();
-
 
         foreach ($garage as $key => $car) {
             if($car[self::MODIFICATION_ID] == $id) {
