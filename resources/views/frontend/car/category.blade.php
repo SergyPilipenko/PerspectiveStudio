@@ -191,7 +191,7 @@
                                         <div class="subcategory__cell">
                                             <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                 <div class="subcategory__img">
-                                                    <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                    <img src="{{ $product->image }}" alt="photo">
                                                 </div>
                                             </a>
                                             <span class="subcategory__code">Код: {{ $product->article }} </span>
@@ -227,7 +227,7 @@
                                         <div class="subcategory__cell subcategory__cell--na">
                                             <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                 <div class="subcategory__img">
-                                                    <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                    <img src="{{ $product->image }}" alt="photo">
                                                 </div>
                                             </a>
                                             <span class="subcategory__code">Код: {{ $product->article }} </span>
