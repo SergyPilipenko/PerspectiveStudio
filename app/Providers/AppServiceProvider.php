@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Classes\Car\Car;
 use App\Classes\Car\CarInterface;
+use App\Classes\Garage;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Locale\Locale;
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LocaleInterface::class, Locale::class);
         $this->app->singleton(CarInterface::class, Car::class);
         $this->app->singleton(ContentBlockInterface::class, ContentBlock::class);
+        $this->app->singleton(Garage::class);
     }
 
     /**
@@ -51,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        \Debugbar::disable();
+//        \Debugbar::disable();
 
 
         $this->app->singleton('PartfixTecDoc', function () {
