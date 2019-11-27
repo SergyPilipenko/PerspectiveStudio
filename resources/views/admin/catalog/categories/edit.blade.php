@@ -92,7 +92,7 @@
                                                         <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <label for="description">Описание:</label>
-                                                                <partfix-ckeditor :name="'{{ $category->locale->locatedInputName('description') }}'" :content="'{{ $category->description }}'"></partfix-ckeditor>
+                                                                <partfix-ckeditor :name="'{{ $category->locale->locatedInputName('description') }}'" :content="{{ json_encode($category->description) }}"></partfix-ckeditor>
                                                             </div>
                                                         </div>
                                                     </div>
