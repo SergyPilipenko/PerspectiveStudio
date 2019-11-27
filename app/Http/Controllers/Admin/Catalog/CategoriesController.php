@@ -11,9 +11,7 @@ use App\Models\Tecdoc\DistinctPassangerCarTree;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Session;
-use App\Helpers\Locale;
+use Illuminate\Support\Facades\Session;
 
 class CategoriesController extends Controller
 {
@@ -142,8 +140,8 @@ class CategoriesController extends Controller
      */
     public function update(RequestInterface $request, $id)
     {
+        /** @var Category $category */
         $category = $this->category->findOrFail($id);
-
         $category->updateCategory($request);
 
         Session::flash('flash', 'Новые данные сохранены успешно');
