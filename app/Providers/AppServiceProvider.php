@@ -53,7 +53,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-//        \Debugbar::disable();
+        if(!env('APP_DEBUG')) {
+            \Debugbar::disable();
+        }
+
 
 
         $this->app->singleton('PartfixTecDoc', function () {
