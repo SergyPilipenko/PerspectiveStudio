@@ -5,6 +5,13 @@
 
     RewriteEngine On
 
+    #АВТОРИЗАЦИЯ
+
+    AuthType Basic
+    AuthName "Admin zone"
+    AuthUserFile /var/www/partfix.net/www/.htpasswd
+    Require valid-user
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
