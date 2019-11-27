@@ -28,7 +28,7 @@ class Category extends Model implements CategoryInterface
 
     protected $table = 'catalog_categories';
     public $categoryTypes = ['default', 'tecdoc'];
-    public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords'];
+    public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords', 'description'];
     public $locale;
     protected $image_path = 'img/upload/product-categories/';
     private $product;

@@ -26,3 +26,4 @@ docker/elasticdata
 #public/
 .htaccess
 .htpasswd
+public/.htaccess
