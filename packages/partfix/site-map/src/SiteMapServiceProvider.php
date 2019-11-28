@@ -3,6 +3,7 @@
 namespace Partfix\SiteMap;
 
 use Illuminate\Support\ServiceProvider;
+use Partfix\SiteMap\model\SiteMaper;
 
 
 class SiteMapServiceProvider extends ServiceProvider
@@ -14,6 +15,8 @@ class SiteMapServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(SiteMaper::class);
+
     }
 
     /**
