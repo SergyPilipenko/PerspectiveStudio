@@ -4,9 +4,7 @@
 namespace App\Classes;
 
 use App\Classes\Car\CarInterface;
-use App\Models\Tecdoc\PassangerCar;
 use Illuminate\Support\Facades\Session;
-use Exception;
 
 class Garage
 {
@@ -87,11 +85,11 @@ class Garage
 
     public function getActiveCar()
     {
-
         if($this->cars && $this->cars->count())
         {
             $active = $this->getSessionActiveCar();
-            foreach ($this->cars as $car) {
+            foreach ($this->cars as $car)
+            {
                 if($car->modification_id == $active['modification_id'])
                 {
                     return $car;

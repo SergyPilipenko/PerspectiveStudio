@@ -11,11 +11,11 @@ use App\Models\Locale\Locale;
 use App\Models\Locale\LocaleInterface;
 use App\Repositories\Content\ContentBlock;
 use App\Repositories\Content\ContentBlockInterface;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Classes\PriceFilter\PriceFilter;
+
 
 class AppServiceProvider extends ServiceProvider
 {
