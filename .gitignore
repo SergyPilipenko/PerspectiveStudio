@@ -24,3 +24,6 @@ docker/elasticdata
 #public/mix-manifest.json
 #public/RoyalUI
 #public/
+.htaccess
+.htpasswd
+public/.htaccess

@@ -87,6 +87,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="description">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="description">Описание:</label>
+                                                                <partfix-ckeditor :name="'{{ $category->locale->locatedInputName('description') }}'" :content="{{ json_encode($category->description) }}"></partfix-ckeditor>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </accordian>
                                         <accordian>
@@ -96,7 +106,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <category-image-upload :category_image="'{{ $category->image }}'"></category-image-upload>
+                                                                <category-image-upload  :category_image="'{{ $category->image }}'"></category-image-upload>
                                                             </div>
                                                         </div>
                                                     </div>

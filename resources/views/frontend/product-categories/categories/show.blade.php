@@ -1,6 +1,6 @@
-@section('meta_title', __('meta-tags::meta.frontend-product-show.title'))
-@section('meta_description', __('meta-tags::meta.frontend-product-show.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-product-show.keywords'))
+@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.title', $meta_tags))
+@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.description', $meta_tags))
+@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.keywords', $meta_tags))
 @extends('frontend')
 @section('content')
     <section class="card">
@@ -175,7 +175,16 @@
             </div>
         </div>
     </section>
-    {!! app('ContentBlock')->render('content') !!}
+    <section class="subcategory__info">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {!! $category->description !!}
+                </div>
+            </div>
+        </div>
+    </section>
+{{--    {!! app('ContentBlock')->render('content') !!}--}}
 {{--    <section class="subcategory__info">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}

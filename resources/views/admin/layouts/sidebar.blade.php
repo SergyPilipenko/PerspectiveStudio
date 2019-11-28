@@ -59,10 +59,11 @@
             </a>
             <div class="collapse" id="tecdoc" style="">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.catalog.index') }}">Загрузки</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.tecdoc.categories.create') }}">Категории</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.products.index') }}">Товары</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.auto.index') }}">Автомобили</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.catalog.index') }}">Загрузки</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.tecdoc.categories.create') }}">Категории</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.products.index') }}">Товары</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.auto.index') }}">Автомобили</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.tecdoc.manufacturers-countries.index') }}">Страны производителей</a></li>
                 </ul>
             </div>
         </li>

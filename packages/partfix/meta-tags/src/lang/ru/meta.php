@@ -7,12 +7,12 @@ return array(
         'keywords' => 'Купить'
     ],
     'frontend-product-show' => [
-        'title' => 'Купить :part :manufacturer',
+        'title' => ':part :manufacturer :article',
         'description' => 'description frontend-product-show',
         'keywords' => 'keywords frontend-product-show'
     ],
     'frontend-product-categories-show' => [
-        'title' => 'Купить :part :manufacturer',
+        'title' => ':category_title :page :filterable_options',
         'description' => 'description frontend-product-show',
         'keywords' => 'keywords frontend-product-show'
     ],
@@ -22,12 +22,12 @@ return array(
         'keywords' => 'keywords frontend-checkout-index'
     ],
     'frontend-car-category' => [
-        'title' => 'title frontend-car-category',
+        'title' => ':category_title для :brand :model :year :modification',
         'description' => 'description frontend-car-category',
         'keywords' => 'keywords frontend-car-category'
     ],
     'frontend-modification' => [
-        'title' => 'title frontend-modification',
+        'title' => ':brand :model :year :modification',
         'description' => 'description frontend-modification',
         'keywords' => 'title frontend-modification'
     ],

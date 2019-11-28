@@ -1,6 +1,6 @@
-@section('meta_title', __('meta-tags::meta.frontend-product-show.title', ['part' => mb_strtolower($product->custom_attributes['name']), 'manufacturer' => $product->custom_attributes['manufacturer']]))
-@section('meta_description', __('meta-tags::meta.frontend-product-show.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-product-show.keywords'))
+@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.title', $meta_tags))
+@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.description', $meta_tags))
+@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.keywords', $meta_tags))
 @extends('frontend')
 @section('content')
     <section class="card">
@@ -38,26 +38,28 @@
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>
                             </div>
-{{--                            <div class="card__main-oldprice">--}}
-{{--                                <span>12 458</span>--}}
-{{--                                <sup>--}}
-{{--                                    грн--}}
-{{--                                </sup>--}}
-{{--                            </div>--}}
+                            @if(env('APP_DEBUG'))
+                                <div class="card__main-oldprice">
+                                    <span>12 458</span>
+                                    <sup>
+                                        грн
+                                    </sup>
+                                </div>
+                            @endif
                             <div class="d-flex align-items-start mb25">
                                 <div class="d-flex flex-column">
                                     <span class="card__main-newprice">{{ $product->price }} <sup>грн</sup></span>
-{{--                                    <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>--}}
+                                    @if(env('APP_DEBUG'))
+                                        <p class="card__main-cashback">Кешбэк <span>12.8 грн</span></p>
+                                    @endif
                                 </div>
                                 @if(isset($belongsModification) && $belongsModification)
-
                                     <div class="d-flex align-items-start card__main-suitable">
                                         <img src="/img/frontend/img/svg/car.svg" alt="car" class="card__main-suitable-car">
                                         <div class="d-flex flex-column">
                                             <span class="card__main-suitable-checked">
                                                 <img src="/img/frontend/img/svg/checked.svg" alt="checked" class="icon">
                                             </span>
-                                            <?php $activeCar = $garage->getActiveCar(); ?>
                                             <span class="card__main-suitable-caption">Подходит для вашего авто</span>
                                             <div class="d-flex align-items-center">
                                                 <span class="card__main-suitable-model">{{ $activeCar->brand->description }} {{ $activeCar->model->description }} {{ $activeCar->year }}</span>

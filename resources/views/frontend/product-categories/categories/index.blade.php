@@ -1,6 +1,6 @@
-@section('meta_title', __('meta-tags::meta.frontend-product-categories-show.title'))
-@section('meta_description', __('meta-tags::meta.frontend-product-categories-show.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-product-categories-show.keywords'))
+@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.title', $meta_tags))
+@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.description', $meta_tags))
+@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.keywords', $meta_tags))
 @extends('frontend')
 @section('content')
     <section class="category">
@@ -466,13 +466,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    {!! app('ContentBlock')->render('preventative-maintenance') !!}
-{{--                    <p class="manufacturers__description">--}}
-{{--                        Проведите профилактическое обслуживание и сделайте своевременный ремонт, увеличьте мощность и улучшите управляемость и торможение для улучшения общей производительности, и придайте вашему автомобилю, грузовику или внедорожнику уникальный внешний вид, при котором головки будут поворачиваться, куда бы вы ни катились. Вы можете сделать все это с помощью запчастей и аксессуаров CARiD. В отличие от некоторых он-лайн продавцов вторичного рынка, у которых есть запасные части, но они не могут помочь вам одеться или продать внешние аксессуары, но у вас нет колес и шин, которые вам нужны, чтобы завершить внешний вид, мы - универсальное направление для всех ваших автомобильных предметов первой необходимости. Неважно, что вы хотите сделать со своим транспортным средством или где вы получаете свои удары - на улице, на трассе или на бездорожье - вы найдете качественные, фирменные запчасти и аксессуары на наших цифровых полках, чтобы превратить ваши автомобильные мечты в реальность.--}}
-{{--                    </p>--}}
-{{--                    <button class="manufacturers__show-more">--}}
-{{--                        Показать больше--}}
-{{--                    </button>--}}
+                    {!! $category->description !!}
                 </div>
             </div>
         </div>

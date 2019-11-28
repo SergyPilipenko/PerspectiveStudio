@@ -3,15 +3,17 @@
 namespace App\Console\Commands\SiteMap;
 
 use Illuminate\Console\Command;
+use Partfix\SiteMap\model\SiteMaper;
 
 class SiteMap extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'site-mapper:generate';
 
     /**
      * The console command description.
@@ -19,14 +21,19 @@ class SiteMap extends Command
      * @var string
      */
     protected $description = 'Command description';
+    /**
+     * @var SiteMaper
+     */
+    private $siteMaper;
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param SiteMaper $siteMaper
      */
-    public function __construct()
+    public function __construct(SiteMaper $siteMaper)
     {
+        $this->siteMaper = $siteMaper;
         parent::__construct();
     }
 
@@ -37,6 +44,6 @@ class SiteMap extends Command
      */
     public function handle()
     {
-        //
+        dd(count(app(SiteMaper::class)->getCategorySlug()));
     }
 }

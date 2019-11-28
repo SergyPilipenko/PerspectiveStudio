@@ -1,6 +1,10 @@
-@section('meta_title', __('meta-tags::meta.frontend-modification.title'))
-@section('meta_description', __('meta-tags::meta.frontend-modification.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-modification.keywords'))
+@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.title', [
+'brand' => $car->brand->description,
+'model' => $car->model->description,
+'modification' => $car->modification->description, 'year' => $car->year
+]))
+@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.description'))
+@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.keywords'))
 @extends('frontend')
 @section('content')
     <section class="category">
