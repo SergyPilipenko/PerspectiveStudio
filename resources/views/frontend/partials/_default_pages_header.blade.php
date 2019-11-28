@@ -52,7 +52,7 @@
                     <div class="pre-header__language">
                         <div class="d-flex align-items-center">
                             <span class="pre-header__language-title">Русский</span>
-                            <img src="img/arrow-down.png" alt="img">
+                            <img src="{{ asset('img/frontend/img/arrow-down.png') }}" alt="img">
                             <div class="pre-header__language-dropdown">
                                 <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Язык сайта</h3>
@@ -64,7 +64,7 @@
                     <div class="pre-header__profile">
                         <div class="d-flex align-items-center">
                             <span class="pre-header__profile-title">Мой профиль</span>
-                            <img src="img/arrow-down.png" alt="img">
+                            <img src="{{ asset('img/frontend/img/arrow-down.png') }}" alt="img">
                             <form class="pre-header__profile-dropdown">
                                 <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Профиль покупателя</h3>

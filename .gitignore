@@ -22,5 +22,8 @@ public/tecdoc_images
 composer.phar
 docker/elasticdata
 #public/mix-manifest.json
-public/RoyalUI
+#public/RoyalUI
 #public/
+.htaccess
+.htpasswd
+public/.htaccess

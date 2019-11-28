@@ -8566,15 +8566,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['content'],
+  props: ['content', 'name'],
   created: function created() {
+    if (this.name) {
+      this.inputName = this.name;
+    }
+
     if (this.content) {
       this.editorData = this.content;
     }
   },
   data: function data() {
     return {
-      editorData: ''
+      editorData: '',
+      inputName: 'ckeditor'
     };
   }
 });
@@ -73693,7 +73698,7 @@ var render = function() {
           expression: "editorData"
         }
       ],
-      attrs: { name: "ckeditor", id: "ckeditor", rows: "10", cols: "80" },
+      attrs: { name: _vm.inputName, id: "ckeditor", rows: "10", cols: "80" },
       domProps: { value: _vm.editorData, textContent: _vm._s(_vm.editorData) },
       on: {
         input: function($event) {

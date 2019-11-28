@@ -1,6 +1,6 @@
 <template>
     <div>
-        <textarea name="ckeditor" id="ckeditor" rows="10" cols="80" v-model="editorData" v-text="editorData"></textarea>
+        <textarea :name="inputName" id="ckeditor" rows="10" cols="80" v-model="editorData" v-text="editorData"></textarea>
 <!--        <ckeditor :editor="editor"  v-model="editorData" :config="editorConfig"></ckeditor>-->
 <!--        <textarea name="editor1" id="editor1" rows="10" cols="80">-->
 <!--            This is my textarea to be replaced with CKEditor.-->
@@ -11,15 +11,19 @@
 
 <script>
     export default {
-        props: ['content'],
+        props: ['content', 'name'],
         created() {
+            if(this.name) {
+                this.inputName = this.name;
+            }
             if(this.content) {
                 this.editorData = this.content
             }
         },
         data() {
             return {
-                editorData: ''
+                editorData: '',
+                inputName: 'ckeditor'
             }
         }
     }

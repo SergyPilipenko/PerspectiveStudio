@@ -175,7 +175,16 @@
             </div>
         </div>
     </section>
-    {!! app('ContentBlock')->render('content') !!}
+    <section class="subcategory__info">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {!! $category->description !!}
+                </div>
+            </div>
+        </div>
+    </section>
+{{--    {!! app('ContentBlock')->render('content') !!}--}}
 {{--    <section class="subcategory__info">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}

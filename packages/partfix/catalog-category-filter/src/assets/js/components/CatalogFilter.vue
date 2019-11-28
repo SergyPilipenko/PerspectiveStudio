@@ -21,7 +21,6 @@
             this.setCategoryId(this.category_id);
             this.setCategoryLink(this.category_link);
             if(this.modification) {
-
                 this.setModification(this.modification);
             }
         },

@@ -1855,12 +1855,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     getRequestParams: 'CatalogFilter/getRequestParams',
     getAppliedFilters: 'CatalogFilter/getAppliedFilters'
-  }))
+  })),
+  methods: {
+    deleteFilterOption: function deleteFilterOption(href) {
+      window.location.href = href;
+    }
+  }
 });
 
 /***/ }),
@@ -2996,7 +3015,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -36101,13 +36119,35 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c(
-      "ul",
+      "div",
+      {
+        staticClass:
+          "d-flex flex-column align-items-start subcategory__sidebar-options"
+      },
       _vm._l(_vm.getAppliedFilters, function(filter) {
-        return _c("li", [
-          _c("a", { attrs: { href: filter.link } }, [
-            _vm._v(_vm._s(filter.title) + ": " + _vm._s(filter.value))
-          ])
-        ])
+        return _c(
+          "div",
+          {
+            staticClass: "subcategory__sidebar-picked",
+            on: {
+              click: function($event) {
+                return _vm.deleteFilterOption(filter.link)
+              }
+            }
+          },
+          [
+            _c("span", [
+              _vm._v(_vm._s(filter.title) + ": " + _vm._s(filter.value))
+            ]),
+            _vm._v(" "),
+            _c("img", {
+              attrs: {
+                src: "/img/frontend/img/cross-red.png",
+                alt: "cross-red"
+              }
+            })
+          ]
+        )
       }),
       0
     )
@@ -37242,8 +37282,6 @@ var render = function() {
       _c("input", {
         attrs: { type: "hidden", name: "_method", value: "delete" }
       }),
-      _vm._v(" "),
-      _c("span", [_vm._v("test")]),
       _vm._v(" "),
       _vm._m(0)
     ]
