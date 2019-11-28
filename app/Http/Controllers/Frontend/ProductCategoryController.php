@@ -10,26 +10,28 @@ use App\Repositories\CatalogCategory\CategoryRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
+use Partfix\MetaTags\Model\MetaTags;
 use Partfix\Paginator\App\Paginator;
 use Partfix\Paginator\App\PaginatorInterface;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * @var CategoryRepository
-     */
     private $categoryRepository;
+    private $metaTags;
 
     /**
      * ProductCategoryController constructor.
-     * @param CategoryRepository $categoryRepository
+     * @param  CategoryRepository  $categoryRepository
+     * @param  MetaTags  $metaTags
      */
     public function __construct(
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        MetaTags $metaTags
     )
     {
         $this->categoryRepository = $categoryRepository;
+        $this->metaTags = $metaTags;
     }
 
     public function productCategory($slug, ProductCategory $productCategory)
@@ -47,7 +49,12 @@ class ProductCategoryController extends Controller
 
     public function index($category)
     {
-        return view('frontend.product-categories.categories.index', compact('category'));
+        $meta_tags = [
+            'category_title' => $category->category_title,
+            'page' => isset(request()->page) && request()->page > 1 ? request()->page : ''
+        ];
+
+        return view('frontend.product-categories.categories.index', compact('category', 'meta_tags'));
     }
 
     public function show($category)
@@ -55,6 +62,13 @@ class ProductCategoryController extends Controller
         $products = $this->categoryRepository->getCategoryProducts($category);
         $categoryLink = request()->getPathInfo();
 
-        return view('frontend.product-categories.categories.show', compact('category', 'products', 'categoryLink'));
+        $meta_tags = [
+            'category_title' => $category->category_title,
+            'page' => isset(request()->page) && request()->page > 1 ? request()->page : ''
+        ];
+
+        $meta_tags['filterable_options'] = $this->metaTags->getTitleFilterableOptions($category) ?? '';
+
+        return view('frontend.product-categories.categories.show', compact('category', 'products', 'categoryLink', 'meta_tags'));
     }
 }

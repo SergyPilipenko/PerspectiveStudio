@@ -13,7 +13,6 @@ Route::prefix('admin')->group(function() {
         Route::get('/{id}/edit', 'Admin\Import\ImportController@edit')->name('edit');
     });
 
-
     Route::prefix('upload-history')->group(function() {
 
         Route::get('/', 'Admin\Import\UploadHistory@index')->name('admin.upload-history.index');
@@ -94,6 +93,9 @@ Route::prefix('admin')->group(function() {
         Route::prefix('auto')->group(function() {
             Route::get('/', 'Admin\Auto\AutoController@index')->name('admin.auto.index');
             Route::post('/store', 'Admin\Auto\AutoController@store')->name('admin.auto.store');
+        });
+        Route::group(['prefix' => 'manufacturers-countries', 'as' => 'admin.tecdoc.manufacturers-countries.'], function(){
+            Route::get('/', 'Admin\Locale\LocaleController@index')->name('index');
         });
         Route::prefix('catalog')->group(function() {
             Route::get('/', 'Admin\Catalog\CatalogController@index')->name('admin.catalog.index');

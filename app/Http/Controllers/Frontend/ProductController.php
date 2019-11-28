@@ -29,14 +29,20 @@ class ProductController extends Controller
         $cart = $cart->getCart();
         /** @var Product $product */
         $product = $product->getProduct($slug);
+
         $garage = $garage->getGarage();
+        $meta_tags = [
+            'part' => $product->custom_attributes['name'],
+            'manufacturer' => $product->custom_attributes['manufacturer'],
+            'article' => $product->article
+        ];
+
         if(!$garage->empty()) {
             $car = $garage->getSessionActiveCar();
             $belongsModification = $product->belongsModification($car['modification_id']);
         }
-//        dd($garage->empty());
 
-        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage'));
+        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags'));
     }
 
     public function search(Request $request, ProductsSearcher $productsSearcher, CategoriesSearcher $categoriesSearcher)

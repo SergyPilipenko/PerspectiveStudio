@@ -2258,5 +2258,9 @@ input:checked + .slider:before {
   align-items: center;
 }
 
+.sidebar {
+  width: 260px;
+}
+
 
 /*# sourceMappingURL=admin.css.map*/
