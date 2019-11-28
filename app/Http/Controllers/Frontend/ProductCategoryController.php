@@ -51,7 +51,8 @@ class ProductCategoryController extends Controller
     {
         $meta_tags = [
             'category_title' => $category->category_title,
-            'page' => isset(request()->page) && request()->page > 1 ? request()->page : ''
+            'page' => isset(request()->page) && request()->page > 1 ? request()->page : '',
+            'filterable_options' => $this->metaTags->getTitleFilterableOptions($category) ?? ''
         ];
 
         return view('frontend.product-categories.categories.index', compact('category', 'meta_tags'));
@@ -64,10 +65,10 @@ class ProductCategoryController extends Controller
 
         $meta_tags = [
             'category_title' => $category->category_title,
-            'page' => isset(request()->page) && request()->page > 1 ? request()->page : ''
+            'page' => isset(request()->page) && request()->page > 1 ? request()->page : '',
+            'filterable_options' => $this->metaTags->getTitleFilterableOptions($category) ?? ''
         ];
 
-        $meta_tags['filterable_options'] = $this->metaTags->getTitleFilterableOptions($category) ?? '';
 
         return view('frontend.product-categories.categories.show', compact('category', 'products', 'categoryLink', 'meta_tags'));
     }
