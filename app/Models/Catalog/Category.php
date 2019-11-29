@@ -281,7 +281,7 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._lft', $this->_lft, '>=')
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
-            })->where('pr.price', 0, '>');
+            })->where('pr.price', '{0}', '>');
     }
 
     public function tecdocCategoryProductsByModification($modification, array $fields = array('p.id'))
