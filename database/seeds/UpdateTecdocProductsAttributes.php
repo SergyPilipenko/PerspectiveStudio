@@ -22,13 +22,16 @@ class UpdateTecdocProductsAttributes extends Seeder
     private $attr;
     private $productAttributes;
 
-    public function __construct(AttributeFamily $attributeFamily, ProductAttributeValue $productAttributeValue, ProductImage $productImage)
+    public function __construct(
+        AttributeFamily $attributeFamily,
+        ProductAttributeValue $productAttributeValue,
+        ProductImage $productImage
+    )
     {
         $this->attributeFamily = $attributeFamily->where('code', 'tecdoc')->firstOrFail();
         $this->productAttributeValue = $productAttributeValue;
         $this->productImage = $productImage;
         $this->tecdoc_attribute_family_id = AttributeFamily::where('code', 'tecdoc')->first()->id;
-
     }
 
     public function deleteOldAttributes()
