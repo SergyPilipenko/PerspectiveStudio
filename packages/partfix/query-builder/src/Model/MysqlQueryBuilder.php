@@ -63,6 +63,17 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     /**
      * @inheritDoc
      */
+    public function leftJoin(string $table, string $first, string $second): SQLQueryBuilder
+    {
+        $this->query->base .= " LEFT JOIN {$table} ON {$first} = {$second}";
+
+        return $this;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function multiJoin(string $table, array $fields): SQLQueryBuilder
     {
         $join = " INNER JOIN {$table} ON ";

@@ -7,8 +7,7 @@ use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Catalog\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Event;
-use Session;
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ProductForm;
 
 class ProductsController extends Controller
@@ -23,9 +22,18 @@ class ProductsController extends Controller
     public function index()
     {
 
-        $products = Product::select('id', 'article', 'type', 'parent_id', 'attribute_family_id', 'created_at', 'updated_at', 'quantity', 'depends_quantity', 'manufacturer')
-            ->orderBy('id', 'desc')->paginate(10);
-//        dd($products);
+        $products = Product::select(
+            'id',
+            'article',
+            'type',
+            'parent_id',
+            'attribute_family_id',
+            'created_at',
+            'updated_at',
+            'quantity',
+            'depends_quantity',
+            'manufacturer'
+        ) ->orderBy('id', 'desc')->paginate(10);
 
         return view('admin.catalog.products.index', compact('products'));
     }
@@ -67,7 +75,7 @@ class ProductsController extends Controller
 
     public function update(ProductForm $request, $id)
     {
-        $product = $this->product->productUpdate($request->all(), $id);
+        $this->product->productUpdate($request->all(), $id);
 
         Session::flash('flash', 'Новые данные были сохранены успешно');
 

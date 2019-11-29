@@ -7,6 +7,7 @@ use App\Models\Admin\Import\InvalidPrice;
 use App\Models\Admin\Import\SuppliersMapping;
 use App\Models\Tecdoc\ArticleNumber;
 use App\Models\Tecdoc\Supplier;
+use App\Repositories\Product\ProductRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,6 +24,15 @@ class Price extends Model
     protected $upload;
     protected $save_data;
     protected $supplier;
+    /** @var ProductRepositoryInterface */
+    private $productRepository;
+
+
+    public function __construct(array $attributes = [])
+    {
+        $this->productRepository = resolve(ProductRepositoryInterface::class);
+        parent::__construct($attributes);
+    }
 
     public function articleNumber()
     {
@@ -81,7 +91,6 @@ class Price extends Model
             $x = 0;
 
             foreach ($prices as $key => $price) {
-                DB::enableQueryLog();
 
                 $this->articles = [];
                 $brand = $price['supplier'];
@@ -168,16 +177,7 @@ class Price extends Model
         }
         if(isset($this->save_data)) {
             $query->createOrUpdatePrice($this->save_data);
-        }
-        return;
-    }
-
-    public static function tryToSavePriceWithNewMapping(InvalidPrice $invalidPrices)
-    {
-        foreach ($invalidPrices as $price) {
-
-
-
+            $this->productRepository->createTecdocProducts($this->save_data);
         }
     }
 }

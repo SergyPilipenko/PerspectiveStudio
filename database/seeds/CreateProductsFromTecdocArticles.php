@@ -41,7 +41,7 @@ class CreateProductsFromTecdocArticles extends Seeder
         $sql = "SELECT id, supplierid, datasupplierarticlenumber FROM article_numbers ";
         if($id_from) {
             $sql = $sql . "WHERE id > $id_from ";        
-	}
+	    }
 	
         $limit = "ORDER BY id asc limit {$this->partCount}";
         $sql = $sql .  $limit;
@@ -58,11 +58,8 @@ class CreateProductsFromTecdocArticles extends Seeder
             $this->product->insert($this->pr);
             $this->iteration += count($articles);
             echo "{$this->iteration}/{$this->total}\n";
-//            return;
             $this->run($this->last_id);
         }
-
-//        dd($this->last_id);
     }
 }
 

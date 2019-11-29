@@ -5,7 +5,7 @@ namespace App\Models\Admin\Import;
 use Illuminate\Database\Eloquent\Model;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class ImportByFile extends Model
 {

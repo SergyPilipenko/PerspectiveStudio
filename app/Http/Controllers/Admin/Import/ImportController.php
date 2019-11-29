@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers\Admin\Import;
 
-//use App\Article;
 use App\Helpers\Routes;
 use App\Imports\PriceFilter;
-use App\Models\Admin\Import\ImportByUrl;
 use App\Models\Admin\Import\ImportColumn;
 use App\Models\Admin\Import\ImportSetting;
-use App\Models\Admin\Import\InvalidPrice;
-use App\Models\Admin\Import\SuppliersMapping;
 use App\Models\Prices\Price;
-use App\Models\Prices\UploadHistory;
-use App\Models\Tecdoc\ArticleNumber;
-use App\Models\Tecdoc\Supplier;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Session;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 
 class ImportController extends Controller
 {
+//    protected $options = [
+//        'name' => 'Название',
+//        'brand' => 'Производитель',
+//        'article' => 'Код',
+//        'description' => 'Описание',
+//        'used' => 'Б/У',
+//        'price' => 'Цена',
+//        'quantity' => 'Кол-во',
+//        'original' => 'Ориг. производители',
+//        'picture' => 'Фото'
+//    ];
 
 
     /**
@@ -57,7 +59,7 @@ class ImportController extends Controller
 
     {
         $import_setting = ImportSetting::findOrFail($id);
-
+//        dd($import_setting);
         return view('admin.import.edit', [
             'import_setting' => $import_setting,
             'options' => $this->options,
@@ -112,6 +114,7 @@ class ImportController extends Controller
     {
         //Грузим строки из файла
         $rows = $request->type::import($request);
+
         //Парсим схему и колонки
         $import_setting = ImportSetting::parse($import_setting_id);
 

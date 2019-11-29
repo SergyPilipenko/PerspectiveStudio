@@ -21,8 +21,7 @@ use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
-//    protected $table = 'products';
-    protected $table = 'products_flat';
+    protected $table = 'products';
     public $priceFilter;
     private $newProductsFilter;
     private $productsFilter;
@@ -35,10 +34,6 @@ class Product extends Model implements ProductInterface
         static::created(function ($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->index($product);
         });
-
-//        static::updated(function ($product) {
-//            app()->make('App\Search\Indexers\ProductsIndexer')->reindex($product);
-//        });
 
         static::deleted(function($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->remove($product);
@@ -203,12 +198,15 @@ class Product extends Model implements ProductInterface
 
     public function getProductByIdSlug($slug)
     {
-        return DB::connection('mysql')->selectOne("
+        $product =  DB::connection('mysql')->selectOne("
            SELECT p.id FROM attributes a
             LEFT JOIN product_attribute_values pv on a.id = pv.attribute_id
             LEFT JOIN products p ON pv.product_id = p.id
             WHERE a.code = 'slug' AND pv.text_value = '".$slug."'
-        ")->id;
+        ");
+        if(!$product) abort(404);
+
+        return $product->id;
     }
 
     public function getAttrValues(array $attributes_codes)
