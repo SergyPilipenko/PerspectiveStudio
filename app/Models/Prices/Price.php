@@ -149,7 +149,7 @@ class Price extends Model
                     if($filtered->count())
                     {
                         $this->upload['valid'][] = $filtered->first();
-                        $this->save_data[$key]['price'] = $price['price'];
+                        $this->save_data[$key]['price'] = (float) $price['price'];
                         $this->save_data[$key]['article_id'] = $filtered->first()->id;
                         $this->save_data[$key]['import_setting_id'] = $import_setting->id;
                         $this->save_data[$key]['available'] = (int) $price['available'];
