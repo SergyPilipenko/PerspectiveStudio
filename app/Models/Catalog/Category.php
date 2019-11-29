@@ -270,6 +270,7 @@ class Category extends Model implements CategoryInterface
     {
         return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
             ->join('products_flat as p', 'art.article_number_id', 'p.id')
+            ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
             ->whereIn('art.nodeid', function($query) {
                 return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
                     ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
@@ -280,7 +281,7 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._lft', $this->_lft, '>=')
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
-            });
+            })->where('pr.price', 0, '>');
     }
 
     public function tecdocCategoryProductsByModification($modification, array $fields = array('p.id'))
