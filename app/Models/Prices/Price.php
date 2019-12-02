@@ -169,7 +169,6 @@ class Price extends Model
                     continue;
                 }
                 $x++;
-
             }
 
         if(isset($this->upload['invalid'])) {
