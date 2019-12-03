@@ -55,6 +55,7 @@ class CategoryFilter implements CategoryFilterInterface
         foreach ($attributes as $attribute) {
             $query = $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.'.$attribute->code.' as value', 'count(*) as count'])
                 ->join('products_flat as p', 'art.article_number_id', 'p.id')
+                ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
                 ->whereIn('art.nodeid', function($query) use ($category) {
                     return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
                         ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
@@ -65,7 +66,10 @@ class CategoryFilter implements CategoryFilterInterface
                                 ->where('cc._lft', $category->_lft, '>=')
                                 ->where('cc._rgt', $category->_rgt, '<=');
                         });
-                })->where('p.'.$attribute->code, '{null}', 'is not')->groupBy($attribute->code);
+                })
+                ->where('p.'.$attribute->code, '{null}', 'is not')
+                ->where('pr.price', '{0}', '>')
+                ->groupBy($attribute->code);
 
             $options = $query->getResult();
             $this->items[] = resolve(CategoryFilterBlock::class)

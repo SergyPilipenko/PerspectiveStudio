@@ -175,6 +175,7 @@ class Price extends Model
                 InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
         }
         if(isset($this->save_data)) {
+            dd($this->save_data);
             $query->createOrUpdatePrice($this->save_data);
             $this->productRepository->createTecdocProducts($this->save_data);
         }

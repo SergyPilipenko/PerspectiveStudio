@@ -51,7 +51,6 @@ class ProductCategoryController extends Controller
         $categoryLink = request()->getPathInfo();
         $meta_tags = $this->getCategoryMetaTags($category);
 
-
         return view('frontend.product-categories.categories.show', compact('category', 'products', 'categoryLink', 'meta_tags'));
     }
 
