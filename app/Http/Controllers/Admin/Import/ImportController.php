@@ -13,32 +13,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Illuminate\Support\Facades\Log;
+use App\Models\Admin\Import\ImportByFile;
 
 class ImportController extends Controller
 {
-//    protected $options = [
-//        'name' => 'Название',
-//        'brand' => 'Производитель',
-//        'article' => 'Код',
-//        'description' => 'Описание',
-//        'used' => 'Б/У',
-//        'price' => 'Цена',
-//        'quantity' => 'Кол-во',
-//        'original' => 'Ориг. производители',
-//        'picture' => 'Фото'
-//    ];
 
     private $builder;
     private $price;
-    /**
-     * ImportController constructor.
-     * @param SQLQueryBuilder $builder
-     */
-    public function __construct(SQLQueryBuilder $builder, Price $price)
+
+    public function __construct(SQLQueryBuilder $builder, Price $price, ImportByFile $importByFile)
     {
         $this->middleware('auth:admin');
         $this->builder = $builder;
         $this->price = $price;
+        $this->importByFile = $importByFile;
     }
 
     public function index(Routes $routes)
@@ -64,7 +52,7 @@ class ImportController extends Controller
 
     {
         $import_setting = ImportSetting::findOrFail($id);
-//        dd($import_setting);
+
         return view('admin.import.edit', [
             'import_setting' => $import_setting,
             'options' => $this->options,
@@ -82,9 +70,10 @@ class ImportController extends Controller
      */
     public function parse(Request $request, PriceFilter $filterSubset)
     {
-
-        $rows = $request->type::import($request);
-        $articles = [];
+        $test = $this->importByFile;
+        $test->test($request);
+        dd('end');
+        $rows = ImportByFile::import($request);
 
         $filtered = $filterSubset->getPreview($rows, 10);
 
@@ -110,7 +99,9 @@ class ImportController extends Controller
         $importSettings->importable_id = $import_type->id;
         $importSettings->importable_type = get_class($import_type);
         $importSettings->save();
+
         Session::flash('flash', 'Новая схема была сохранена успешно');
+
         return json_encode($importSettings->save());
 
     }
