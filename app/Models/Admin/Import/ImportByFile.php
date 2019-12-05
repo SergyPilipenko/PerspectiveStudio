@@ -12,7 +12,6 @@ class ImportByFile extends Model
 {
     public function __construct($attributes = [])
     {
-//        $this->chunkReadFilter = resolve(ChunkReadFilter::class);
         parent::__construct();
     }
 
@@ -81,50 +80,27 @@ class ImportByFile extends Model
     public function test($request)
     {
         $file = $request->file('file');
-//        dd($file->getClientOriginalName());
-//        dd(mime_content_type('upload/prices/1575468107S Plus.csv'));
         $extension = $file->getClientOriginalExtension();
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv');
-
-        /**  Define how many rows we want to read for each "chunk"  **/
-        /**  Create a new Reader of the type defined in $inputFileType  **/
 //        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Csv');
-
-        /**  Define how many rows we want to read for each "chunk"  **/
 //        $chunkSize = 50;
-        /**  Create a new Instance of our Read Filter  **/
 //        $chunkFilter = new ChunkReadFilter();
 //        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-
-        /**  Define how many rows we want to read for each "chunk"  **/
-        $chunkSize = 65530;
-        /**  Create a new Instance of our Read Filter  **/
+        $chunkSize = 10;
         $chunkFilter = new ChunkReadFilter();
-
-        /**  Tell the Reader that we want to use the Read Filter  **/
-        /**    and that we want to store it in contiguous rows/columns  **/
-
         $reader->setReadFilter($chunkFilter)
             ->setContiguous(true);
-
-        /**  Instantiate a new Spreadsheet object manually  **/
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-
-        /**  Set a sheet index  **/
         $sheet = 0;
-        /**  Loop to read our worksheet in "chunk size" blocks  **/
-        /**  $startRow is set to 2 initially because we always read the headings in row #1  **/
         for ($startRow = 2; $startRow <= 1000000; $startRow += $chunkSize) {
-            /**  Tell the Read Filter which rows we want to read this loop  **/
             $chunkFilter->setRows($startRow,$chunkSize);
-
-            /**  Increment the worksheet index pointer for the Reader  **/
             $reader->setSheetIndex($sheet);
-            /**  Load only the rows that match our filter into a new worksheet  **/
-            $reader->loadIntoExisting('upload/prices/1575460609autonom_ua-84851.csv',$spreadsheet);
-            /**  Set the worksheet title for the sheet that we've justloaded)  **/
-            /**    and increment the sheet index as well  **/
-            var_dump($spreadsheet->getActiveSheet()->setTitle('Country Data #'.(++$sheet))->toArray(null, true, true, true));
+            $reader->loadIntoExisting('upload/prices/1575473609souz-copy.csv',$spreadsheet);
+            echo '<pre>';
+            $items = $spreadsheet->getActiveSheet()->setTitle('Country Data #'.(++$sheet))->toArray(null, true, true, true);
+            dd($items);
+            echo '</pre>';
+
 //            dump($spreadsheet);
         }
 //        $sheet = 0;
@@ -175,7 +151,6 @@ class ImportByFile extends Model
     {
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-
         if(!in_array($extension, self::$formats)) {
             $error_msg = 'Неправильный формат файла';
             Session::flash('error', $error_msg);
@@ -225,7 +200,6 @@ class ImportByFile extends Model
         $sheets = [];
 
         $sheetCount = $spreadsheet->getSheetCount();
-
         for ($i = 0; $i < $sheetCount; $i++) {
             $sheet = $spreadsheet->getActiveSheet($i);
             $sheetData = $sheet->toArray(null, true, true, true);

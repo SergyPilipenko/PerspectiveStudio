@@ -3,6 +3,7 @@
 namespace Partfix\Parser;
 
 use Illuminate\Support\ServiceProvider;
+use Partfix\Parser\Model\CsvIterator;
 
 class ParserServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,6 @@ class ParserServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 
     /**
