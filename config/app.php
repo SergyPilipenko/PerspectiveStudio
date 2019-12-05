@@ -173,6 +173,7 @@ return [
         Partfix\QueryBuilder\QueryBuilderServiceProvider::class,
         Partfix\MetaTags\MetaTagsServiceProvider::class,
         Partfix\SiteMap\SiteMapServiceProvider::class,
+        Partfix\Parser\ParserServiceProvider::class,
 //        Partfix\MetaTags\Meta::class,
 //        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*

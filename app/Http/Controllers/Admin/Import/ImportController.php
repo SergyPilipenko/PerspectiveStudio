@@ -11,29 +11,24 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-
+use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
+use Illuminate\Support\Facades\Log;
+use App\Models\Admin\Import\ImportByFile;
+use Partfix\Parser\Model\CsvIterator;
 
 class ImportController extends Controller
 {
-//    protected $options = [
-//        'name' => 'Название',
-//        'brand' => 'Производитель',
-//        'article' => 'Код',
-//        'description' => 'Описание',
-//        'used' => 'Б/У',
-//        'price' => 'Цена',
-//        'quantity' => 'Кол-во',
-//        'original' => 'Ориг. производители',
-//        'picture' => 'Фото'
-//    ];
 
+    private $builder;
+    private $price;
+//    private $iterator;
 
-    /**
-     * ImportController constructor.
-     */
-    public function __construct()
+    public function __construct(SQLQueryBuilder $builder, Price $price, ImportByFile $importByFile)
     {
         $this->middleware('auth:admin');
+        $this->builder = $builder;
+        $this->price = $price;
+        $this->importByFile = $importByFile;
     }
 
     public function index(Routes $routes)
@@ -59,7 +54,7 @@ class ImportController extends Controller
 
     {
         $import_setting = ImportSetting::findOrFail($id);
-//        dd($import_setting);
+
         return view('admin.import.edit', [
             'import_setting' => $import_setting,
             'options' => $this->options,
@@ -77,15 +72,40 @@ class ImportController extends Controller
      */
     public function parse(Request $request, PriceFilter $filterSubset)
     {
+//        $data = $parser->parse($request->file, de);
+        $alphabet = range('A', 'Z');
+        $this->iterator = app()->make(CsvIterator::class, ['file' => 'upload/prices/data-example-1.csv', 'delimiter' => ',']);
 
-        $rows = $request->type::import($request);
-        $articles = [];
+        $csv = $this->iterator;
+        $rows = [];
+        $fieldsCount = 0;
+        foreach ($csv as $key => $row) {
+            if($key > 10) break;
+            foreach ($row as $itemKey => $item) {
+                if(!$fieldsCount || count($row) > $fieldsCount) $fieldsCount = count($row);
+                $row[$alphabet[$itemKey]] = $row[$itemKey];
+                unset($row[$itemKey]);
+            }
+            $rows[] = $row;
+        }
 
-        $filtered = $filterSubset->getPreview($rows, 10);
+        $filterSubset->rows = $rows;
+        $filterSubset->max_length = $fieldsCount;
 
+        $filtered = $filterSubset;
+
+        //OLD
+//        $rows = ImportByFile::import($request);
+//        $articles = [];
+//
+//        $filtered = $filterSubset->getPreview($rows, 10);
+//        dd($filtered);
+//
         if(request()->wantsJson()) return $filtered->toJson();
 
         return $filtered;
+
+
 
     }
 
@@ -105,7 +125,9 @@ class ImportController extends Controller
         $importSettings->importable_id = $import_type->id;
         $importSettings->importable_type = get_class($import_type);
         $importSettings->save();
+
         Session::flash('flash', 'Новая схема была сохранена успешно');
+
         return json_encode($importSettings->save());
 
     }
@@ -114,12 +136,13 @@ class ImportController extends Controller
     {
         //Грузим строки из файла
         $rows = $request->type::import($request);
-
         //Парсим схему и колонки
         $import_setting = ImportSetting::parse($import_setting_id);
 
         $prepare = Price::prepareRowsToSave($rows, $import_setting);
 
+        $this->getArticlesInTecdoc($prepare,$import_setting_id);
+        dd('end');
         try {
             DB::connection()->getPdo()->beginTransaction();
             Price::savePrices($prepare, $import_setting);
@@ -132,5 +155,87 @@ class ImportController extends Controller
         return redirect()->back();
     }
 
+    //НЕ БЫЛО ВРЕМЕНИ НАПИСАТЬ НОРМАЛЬНО >:(
 
+    public function getArticlesInTecdoc($prices, $import_setting_id)
+    {
+        $fields = $this->queryFields($prices);
+
+        $sql = "SELECT an.`id` as `article_id`, an.`datasupplierarticlenumber` as `article`,  s.description as `supplier`  FROM " . env('DB_TECDOC_DATABASE') .".`article_numbers` an
+                JOIN  " . env('DB_TECDOC_DATABASE') .".suppliers s on an.`supplierid` = s.id
+                WHERE (an.`datasupplierarticlenumber`, s.description) in  (";
+        foreach ($fields as $key => $field) {
+            if($key > 0) {
+                $sql .= ', ';
+            }
+            $sql .= "('" . $field['article'] . "', '" . $field['supplier'] . "')";
+        }
+        $sql .= ')';
+
+        $result = DB::connection('mysql')->select($sql);
+        $result = json_decode(json_encode($result), true);
+        $diff = $this->diff($fields, $result);
+        $valid = [];
+        $data = $this->updateData($prices, $result, $import_setting_id);
+        $this->price->createOrUpdatePrice($data);
+    }
+
+    private function queryFields($prices)
+    {
+        $data = [];
+
+        foreach ($prices as $key => $price) {
+            $item = [];
+            $item['article'] = $price['article'];
+            $item['supplier'] = $price['supplier'];
+            $data[] = $item;
+        }
+
+        return $data;
+    }
+
+    private function diff($array1, $array2)
+    {
+        $diff = [];
+        foreach ($array1 as $item) {
+            if(!in_array($item, $array2)) $diff[] = $item;
+        }
+
+        return $diff;
+    }
+
+    private function articleId($result, $price)
+    {
+        dd(3);
+        foreach ($result as $item) {
+            dd(2);
+        }
+    }
+
+    private function updateData($prices, $result, $import_setting_id)
+    {
+        $data = [];
+        $invalid = [];
+        foreach ($prices as $price) {
+            foreach ($result as $item) {
+                if($price['article'] == $item['article'] && $price['supplier'] == $item['supplier']) {
+                    $dataItem = [];
+                    $dataItem['price'] = (float) $price['price'];
+                    $dataItem['article_id'] = $item['article_id'];
+                    $dataItem['import_setting_id'] = (int) $import_setting_id;
+                    $dataItem['available'] = $price['available'];
+                    $dataItem['created_at'] = now();
+                    $dataItem['updated_at'] = now();
+                    $dataItem['status'] = true;
+                    $data[] = $dataItem;
+                } else {
+                    $invalid[] = $price;
+                }
+            }
+        }
+
+        Log::info(json_encode($invalid));
+
+        return $data;
+    }
 }

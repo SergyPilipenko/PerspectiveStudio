@@ -54,12 +54,12 @@ class Category extends Model implements CategoryInterface
         if(env('APP_DEBUG')) {
             static::created(function ($category) {
                 $categoriesIndexer = app(CategoriesIndexer::class);
-                $categoriesIndexer->index($category);
+                //$categoriesIndexer->index($category);
             });
 
             static::updated(function ($category) {
                 $categoriesIndexer = app(CategoriesIndexer::class);
-                $categoriesIndexer->reindex($category);
+                //$categoriesIndexer->reindex($category);
             });
         }
     }

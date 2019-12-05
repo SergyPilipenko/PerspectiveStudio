@@ -58,7 +58,7 @@ class Product extends Model implements ProductInterface
     {
         if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key]) && $key != 'pivot') {
             if (isset($this->id)) {
-
+                if($key == 'price') return $this->getPrice();
                 $attribute = $this->productAttributeValues->where('code', $key)->first();
 
                 if($attribute) {
@@ -174,7 +174,7 @@ class Product extends Model implements ProductInterface
     public function getProductAttributes()
     {
         $sql = "
-        SELECT pav.*, a.* FROM `products` p 
+        SELECT pav.*, a.* FROM `products` p
         JOIN product_attribute_values pav ON p.id = pav.product_id
         JOIN attributes a ON pav.attribute_id = a.id
         WHERE p.id = {$this->id}";
