@@ -14,12 +14,14 @@ use Illuminate\Support\Facades\Session;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Illuminate\Support\Facades\Log;
 use App\Models\Admin\Import\ImportByFile;
+use Partfix\Parser\Model\CsvIterator;
 
 class ImportController extends Controller
 {
 
     private $builder;
     private $price;
+//    private $iterator;
 
     public function __construct(SQLQueryBuilder $builder, Price $price, ImportByFile $importByFile)
     {
@@ -70,16 +72,40 @@ class ImportController extends Controller
      */
     public function parse(Request $request, PriceFilter $filterSubset)
     {
-        $test = $this->importByFile;
-        $test->test($request);
-        dd('end');
-        $rows = ImportByFile::import($request);
+//        $data = $parser->parse($request->file, de);
+        $alphabet = range('A', 'Z');
+        $this->iterator = app()->make(CsvIterator::class, ['file' => 'upload/prices/data-example-1.csv', 'delimiter' => ',']);
 
-        $filtered = $filterSubset->getPreview($rows, 10);
+        $csv = $this->iterator;
+        $rows = [];
+        $fieldsCount = 0;
+        foreach ($csv as $key => $row) {
+            if($key > 10) break;
+            foreach ($row as $itemKey => $item) {
+                if(!$fieldsCount || count($row) > $fieldsCount) $fieldsCount = count($row);
+                $row[$alphabet[$itemKey]] = $row[$itemKey];
+                unset($row[$itemKey]);
+            }
+            $rows[] = $row;
+        }
 
+        $filterSubset->rows = $rows;
+        $filterSubset->max_length = $fieldsCount;
+
+        $filtered = $filterSubset;
+
+        //OLD
+//        $rows = ImportByFile::import($request);
+//        $articles = [];
+//
+//        $filtered = $filterSubset->getPreview($rows, 10);
+//        dd($filtered);
+//
         if(request()->wantsJson()) return $filtered->toJson();
 
         return $filtered;
+
+
 
     }
 

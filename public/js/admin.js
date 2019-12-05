@@ -7755,6 +7755,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['routes', 'type'],
   created: function created() {
@@ -7763,7 +7771,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       file: '',
-      action: ''
+      action: '',
+      delimiter: ','
     };
   },
   methods: {
@@ -7772,6 +7781,7 @@ __webpack_require__.r(__webpack_exports__);
       var formData = new FormData();
       formData.append('type', this.type);
       formData.append('file', this.file);
+      formData.append('delimiter', this.delimiter);
       axios.post(this.action, formData).then(function (data) {
         self.$emit('fileUploaded', data.data);
       });
@@ -73166,30 +73176,68 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-md-2" }, [
-      _c("div", { staticClass: "input-group" }, [
-        _c("label", { attrs: { for: "importFileUpload" } }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-12" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "delimiter" } }, [
+              _vm._v("Разделитель:")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.delimiter,
+                  expression: "delimiter"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", name: "delimiter" },
+              domProps: { value: _vm.delimiter },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.delimiter = $event.target.value
+                }
+              }
+            })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8" }, [
+          _c("label", { attrs: { for: "importFileUpload" } }, [
+            _c("input", {
+              ref: "file",
+              staticClass: "form-control file-upload-info",
+              attrs: { type: "file", name: "file", id: "importFileUpload" },
+              on: { change: _vm.handleFileUpload }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "input-group-append" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
           _c("input", {
-            ref: "file",
-            staticClass: "form-control file-upload-info",
-            attrs: { type: "file", name: "file", id: "importFileUpload" },
-            on: { change: _vm.handleFileUpload }
-          }),
-          _vm._v(" "),
-          _c("span", { staticClass: "input-group-append" })
+            staticClass: "btn btn-success",
+            attrs: {
+              type: "submit",
+              id: "importUploadSubmit",
+              value: "Загрузить"
+            },
+            on: {
+              click: function($event) {
+                return _vm.submitForm(_vm.type)
+              }
+            }
+          })
         ])
       ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-md-2" }, [
-      _c("input", {
-        staticClass: "btn btn-success",
-        attrs: { type: "submit", id: "importUploadSubmit", value: "Загрузить" },
-        on: {
-          click: function($event) {
-            return _vm.submitForm(_vm.type)
-          }
-        }
-      })
     ])
   ])
 }
