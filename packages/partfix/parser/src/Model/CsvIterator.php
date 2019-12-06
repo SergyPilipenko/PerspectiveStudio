@@ -39,18 +39,19 @@ class CsvIterator implements \Iterator
      *
      * @param string $file CSV-файл.
      * @param string $delimiter Разделитель.
-     *
+     * @return self
      * @throws \Exception
      */
-    public function __construct($file, $delimiter = ',')
+    public function parse($file, string $delimiter)
     {
         try {
             $this->filePointer = fopen($file, 'rb');
-
             $this->delimiter = $delimiter;
         } catch (\Exception $e) {
             throw new \Exception('The file "' . $file . '" cannot be read.');
         }
+
+        return $this;
     }
 
     /**

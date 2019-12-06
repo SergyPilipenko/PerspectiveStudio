@@ -32,12 +32,12 @@ class MetaTags implements MetaTagsInterface
      */
     private $request;
 
-    public function __construct(Route $route, Request $request)
-    {
-        $this->route = $route;
-        $this->routeName = preg_replace('/\./', self::LANG_KEY_DELIMITER, $this->route->getName());
-        $this->request = $request;
-    }
+//    public function __construct(Route $route, Request $request)
+//    {
+//        $this->route = $route;
+//        $this->routeName = preg_replace('/\./', self::LANG_KEY_DELIMITER, $this->route->getName());
+//        $this->request = $request;
+//    }
 
     public function __call($name, array $arguments = null)
     {
