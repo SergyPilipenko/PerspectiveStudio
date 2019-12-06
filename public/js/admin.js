@@ -7276,6 +7276,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['import_setting', 'file_import_price_action', 'update_action', 'destroy_action'],
   data: function data() {
@@ -7782,7 +7797,19 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('type', this.type);
       formData.append('file', this.file);
       formData.append('delimiter', this.delimiter);
-      axios.post(this.action, formData).then(function (data) {
+      axios.post(this.action, formData)["catch"](function (error) {
+        var message = "";
+
+        if (error.response.data.message) {
+          message = error.response.data.message;
+        } else if (error.response.data.exception) {
+          message = error.response.data.exception;
+        } else {
+          message = "Похоже что-то пошло не так";
+        }
+
+        flash(message, 'error', error.response.data.errors);
+      }).then(function (data) {
         self.$emit('fileUploaded', data.data);
       });
     },
@@ -72501,44 +72528,74 @@ var render = function() {
               [
                 _vm.type == "App\\Models\\Admin\\Import\\ImportByFile"
                   ? _c("b-tab", { attrs: { title: "Файл", active: "" } }, [
-                      _c(
-                        "form",
-                        {
-                          attrs: {
-                            action: _vm.filePriceImportAction,
-                            method: "POST",
-                            enctype: "multipart/form-data"
-                          }
-                        },
-                        [
-                          _c("input", {
-                            attrs: { type: "hidden", name: "_token" },
-                            domProps: { value: _vm.token }
-                          }),
-                          _vm._v(" "),
-                          _c("input", {
-                            attrs: { type: "hidden", name: "type" },
-                            domProps: { value: _vm.type }
-                          }),
-                          _vm._v(" "),
-                          _c("label", { attrs: { for: "price_file_upload" } }, [
-                            _vm._v("Выберите файл")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "form",
+                          {
                             attrs: {
-                              type: "file",
-                              id: "price_file_upload",
-                              name: "file"
+                              action: _vm.filePriceImportAction,
+                              method: "POST",
+                              enctype: "multipart/form-data"
                             }
-                          }),
-                          _vm._v(" "),
-                          _c("input", {
-                            staticClass: "btn btn-success",
-                            attrs: { type: "submit" }
-                          })
-                        ]
-                      )
+                          },
+                          [
+                            _c("input", {
+                              attrs: { type: "hidden", name: "_token" },
+                              domProps: { value: _vm.token }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              attrs: { type: "hidden", name: "type" },
+                              domProps: { value: _vm.type }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-12" }, [
+                              _c("div", { staticClass: "form-group" }, [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "price_file_upload" } },
+                                  [_vm._v("Выберите файл")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  attrs: {
+                                    type: "file",
+                                    id: "price_file_upload",
+                                    name: "file"
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-12" }, [
+                                _c("label", { attrs: { for: "delimiter" } }, [
+                                  _vm._v("Разделитель:")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "text",
+                                    value: ",",
+                                    name: "delimiter",
+                                    id: "delimiter"
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-12" }, [
+                                _c("input", {
+                                  staticClass: "btn btn-success",
+                                  attrs: { type: "submit" }
+                                })
+                              ])
+                            ])
+                          ]
+                        )
+                      ])
                     ])
                   : _vm._e(),
                 _vm._v(" "),

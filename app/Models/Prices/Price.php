@@ -77,11 +77,13 @@ class Price extends Model
     {
         $prices = [];
         foreach ($rows as $key => $row) {
+            if(isset($prices[$key])) dd($row);
             $prices[$key]['article'] = $row[$import_setting->columns['article']];
             $prices[$key]['supplier'] = $row[$import_setting->columns['supplier']];
             $prices[$key]['price'] = $row[$import_setting->columns['price']];
-            $prices[$key]['available'] = $row[$import_setting->columns['available']];
+            $prices[$key]['available'] = (float) $row[$import_setting->columns['available']];
         }
+
         return $prices;
     }
 

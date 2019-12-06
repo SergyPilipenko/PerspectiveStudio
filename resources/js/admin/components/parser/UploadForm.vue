@@ -52,7 +52,19 @@
                 formData.append('file', this.file);
                 formData.append('delimiter', this.delimiter);
 
-                axios.post(this.action, formData).then(function (data) {
+                axios.post(this.action, formData)
+                    .catch(error => {
+                        var message = "";
+                        if(error.response.data.message) {
+                            message = error.response.data.message
+                        } else if(error.response.data.exception) {
+                            message = error.response.data.exception
+                        } else {
+                            message = "Похоже что-то пошло не так";
+                        }
+                        flash(message, 'error', error.response.data.errors)
+                    })
+                    .then(function (data) {
                     self.$emit('fileUploaded', data.data);
                 });
             },
