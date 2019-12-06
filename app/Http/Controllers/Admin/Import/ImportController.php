@@ -85,7 +85,7 @@ class ImportController extends Controller
         $file = ImportByFile::saveFile($request->file);
         $csv = $this->parser->csv($file, $request->delimiter)
             ->alphabetical()
-            ->limit(10)
+            ->limit(20)
             ->get();
 
         $filterSubset->rows = $csv->getItems();
@@ -124,18 +124,20 @@ class ImportController extends Controller
 
     public function import_price(Request $request, $import_setting_id)
     {
-        //Грузим строки из файла
-        $rows = $request->type::import($request);
-        //Парсим схему и колонки
-        $import_setting = ImportSetting::parse($import_setting_id);
-
-        $prepare = Price::prepareRowsToSave($rows, $import_setting);
-
-        $this->getArticlesInTecdoc($prepare,$import_setting_id);
-        dd('end');
+        $prepare = null;
+        $import_setting = null;
+        /** @var ParserInterface $csv */
+        $file = ImportByFile::saveFile($request->file);
+        $csv = $this->parser->csv($file, $request->delimiter)
+            ->alphabetical()
+            ->chunk(1000, function ($rows) use ($import_setting_id, &$prepare, &$import_setting) {
+                $import_setting = ImportSetting::parse($import_setting_id);
+                $prepare = Price::prepareRowsToSave($rows, $import_setting);
+                $this->getArticlesInTecdoc($prepare,$import_setting_id);
+            });
         try {
             DB::connection()->getPdo()->beginTransaction();
-            Price::savePrices($prepare, $import_setting);
+//            Price::savePrices($prepare, $import_setting);
             DB::connection()->getPdo()->commit();
         } catch (\PDOException $e) {
 
@@ -150,7 +152,7 @@ class ImportController extends Controller
     public function getArticlesInTecdoc($prices, $import_setting_id)
     {
         $fields = $this->queryFields($prices);
-
+        if(empty($fields)) return;
         $sql = "SELECT an.`id` as `article_id`, an.`datasupplierarticlenumber` as `article`,  s.description as `supplier`  FROM " . env('DB_TECDOC_DATABASE') .".`article_numbers` an
                 JOIN  " . env('DB_TECDOC_DATABASE') .".suppliers s on an.`supplierid` = s.id
                 WHERE (an.`datasupplierarticlenumber`, s.description) in  (";

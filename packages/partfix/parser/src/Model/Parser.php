@@ -14,6 +14,8 @@ class Parser implements \Iterator, ParserInterface
     private $items = [];
     private $maxRowLength = 0;
     private $position = 0;
+    const ENCODE_TO = 'UTF-8';
+    const ENCODE_FROM = 'Windows-1251';
 
     public function __construct(CsvIterator $csvIterator)
     {
@@ -57,9 +59,13 @@ class Parser implements \Iterator, ParserInterface
         return $this;
     }
 
+    /**
+     * @return ParserInterface
+     */
     public function get() : ParserInterface
     {
         foreach ($this->csvIterator as $key => $row) {
+            $row = mb_convert_encoding($row, 'UTF-8', 'Windows-1251');
             if($this->limit && $key > $this->limit) break;
             $this->updateMaxRowLength($row);
             if(!$this->maxRowLength || $this->maxRowLength < count($row)) $this->maxRowLength = count($row);
@@ -72,21 +78,33 @@ class Parser implements \Iterator, ParserInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getItems() : array
     {
         return $this->items;
     }
 
+    /**
+     * @return int
+     */
     public function getMaxRowLength() : int
     {
         return $this->maxRowLength;
     }
 
+    /**
+     * @param int $length
+     * @param callable $callback
+     * @return $this
+     */
     public function chunk(int $length, callable $callback)
     {
         $chunkItems = [];
         foreach ($this->csvIterator as $key => $row) {
             if($row) {
+                $row = $this->convertEncoding($row);
                 if($this->alphabet) $row = $this->arrayKeysAlphabetical($row);
                 $chunkItems[] = $row;
             }
@@ -153,5 +171,10 @@ class Parser implements \Iterator, ParserInterface
         }
 
         return $row;
+    }
+
+    private function convertEncoding($row)
+    {
+        return mb_convert_encoding($row, self::ENCODE_TO, self::ENCODE_FROM);
     }
 }

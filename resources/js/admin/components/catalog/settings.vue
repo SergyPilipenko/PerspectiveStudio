@@ -13,14 +13,29 @@
                 <div class="grid-margin">
                     <b-tabs content-class="mt-3">
                         <b-tab title="Файл" active v-if="type == 'App\\Models\\Admin\\Import\\ImportByFile'">
-                            <form :action="filePriceImportAction"  method="POST" enctype='multipart/form-data'>
-                                <input type="hidden" name="_token" :value="token">
-                                <input type="hidden" name="type" :value="type">
-
-                                <label for="price_file_upload">Выберите файл</label>
-                                <input type="file" id="price_file_upload" name="file">
-                                <input type="submit" class="btn btn-success">
-                            </form>
+                            <div class="row">
+                                <form :action="filePriceImportAction"  method="POST" enctype='multipart/form-data'>
+                                    <input type="hidden" name="_token" :value="token">
+                                    <input type="hidden" name="type" :value="type">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="price_file_upload">Выберите файл</label>
+                                            <input type="file" id="price_file_upload" name="file">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="delimiter">Разделитель:</label>
+                                            <input class="form-control" type="text" value="," name="delimiter" id="delimiter">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="submit" class="btn btn-success">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </b-tab>
                         <b-tab title="Ссылка на файл" v-if="type == 'App\\Models\\Admin\\Import\\ImportByUrl'">
                             <div>
