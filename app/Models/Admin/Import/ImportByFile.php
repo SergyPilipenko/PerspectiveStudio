@@ -31,7 +31,7 @@ class ImportByFile extends Model
      * @param $file
      * @return string
      */
-    protected static function saveFile($file): string
+    public static function saveFile($file): string
     {
         $file_name = time() . $file->getClientOriginalName();
 

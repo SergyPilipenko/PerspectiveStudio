@@ -1,6 +1,6 @@
 @extends('admin')
 @section('content')
-{{--    <form action="http://partfix.local/admin/import/parse" method="POST" enctype="multipart/form-data">--}}
+{{--    <form action="{{ route('admin.import.parse') }}" method="POST" enctype="multipart/form-data">--}}
 {{--        @csrf--}}
 {{--        <input type="file" name="file" id="importFileUpload" class="form-control file-upload-info">--}}
 {{--        <input type="submit" value="go">--}}
