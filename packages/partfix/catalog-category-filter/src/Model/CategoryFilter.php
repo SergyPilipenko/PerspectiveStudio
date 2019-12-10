@@ -53,23 +53,42 @@ class CategoryFilter implements CategoryFilterInterface
         $attributes = $category->filterableAttributes;
 
         foreach ($attributes as $attribute) {
-            $query = $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.'.$attribute->code.' as value', 'count(*) as count'])
-                ->join('products_flat as p', 'art.article_number_id', 'p.id')
-                ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
-                ->whereIn('art.nodeid', function($query) use ($category) {
-                    return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
-                        ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
-                        ->whereIn('parent.id', function($query) use ($category) {
-                            return $query->select('catalog_categories as cc', ['dc.id'])
-                                ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
-                                ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
-                                ->where('cc._lft', $category->_lft, '>=')
-                                ->where('cc._rgt', $category->_rgt, '<=');
-                        });
-                })
-                ->where('p.'.$attribute->code, '{null}', 'is not')
-                ->where('pr.price', '{0}', '>')
-                ->groupBy($attribute->code);
+            $query = $this->builder->select(function($query) use ($attribute, $category) {
+                return $query->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['distinct p.id','p.'.$attribute->code])
+                    ->join('products_flat as p', 'art.article_number_id', 'p.id')
+                    ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
+                    ->whereIn('art.nodeid', function($query) use ($category) {
+                        return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
+                            ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
+                            ->whereIn('parent.id', function($query) use ($category) {
+                                return $query->select('catalog_categories as cc', ['dc.id'])
+                                    ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
+                                    ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
+                                    ->where('cc._lft', $category->_lft, '>=')
+                                    ->where('cc._rgt', $category->_rgt, '<=');
+                            });
+                    })
+                    ->where('p.'.$attribute->code, '{null}', 'is not')
+                    ->where('pr.price', '{0}', '>');
+            }, [$attribute->code.' as value', 'count(*) as count'])->groupBy($attribute->code);
+//            dd($query->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['distinct p.id','p.'.$attribute->code.' as value'])
+//                ->join('products_flat as p', 'art.article_number_id', 'p.id')
+//                ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
+//                ->whereIn('art.nodeid', function($query) use ($category) {
+//                    return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
+//                        ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
+//                        ->whereIn('parent.id', function($query) use ($category) {
+//                            return $query->select('catalog_categories as cc', ['dc.id'])
+//                                ->join('category_distinct_passanger_car_trees as ct', 'cc.id', 'ct.category_id')
+//                                ->join('distinct_passanger_car_trees as dc', 'ct.distinct_pct_id', 'dc.id')
+//                                ->where('cc._lft', $category->_lft, '>=')
+//                                ->where('cc._rgt', $category->_rgt, '<=');
+//                        });
+//                })
+//                ->where('p.'.$attribute->code, '{null}', 'is not')
+//                ->where('pr.price', '{0}', '>'));
+//            $query = $this->builder
+//                ->groupBy($attribute->code);
 
             $options = $query->getResult();
             $this->items[] = resolve(CategoryFilterBlock::class)
@@ -83,10 +102,11 @@ class CategoryFilter implements CategoryFilterInterface
     {
         $attributes = $category->filterableAttributes;
         foreach ($attributes as $attribute) {
-            $query = $category->tecdocCategoryProductsByModification($modification, array("$attribute->code as value", 'count(*) as count'))->groupBy($attribute->code);
+            $query = $this->builder->select(function($query) use ($category, $modification, $attribute){
+                return $category->tecdocCategoryProductsByModification($modification, array("DISTINCT an.id", "$attribute->code"));
+            }, [$attribute->code . ' as value', 'count(*) as count'])->groupBy($attribute->code);
 
             $options = $query->getResult();
-
             $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
         }
 

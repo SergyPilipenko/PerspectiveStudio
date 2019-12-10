@@ -268,7 +268,7 @@ class Category extends Model implements CategoryInterface
 
     public function tecdocCategoryProducts()
     {
-        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
+        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['DISTINCT p.id'])
             ->join('products_flat as p', 'art.article_number_id', 'p.id')
             ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
             ->whereIn('art.nodeid', function($query) {
@@ -284,13 +284,14 @@ class Category extends Model implements CategoryInterface
             })->where('pr.price', '{0}', '>');
     }
 
-    public function tecdocCategoryProductsByModification($modification, array $fields = array('p.id'))
+    public function tecdocCategoryProductsByModification($modification, array $fields = array('DISTINCT p.id'))
     {
         return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_links as al', $fields)
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
             ->multiJoin(env('DB_TECDOC_DATABASE').'.article_numbers as an', ['al.datasupplierarticlenumber' => 'an.datasupplierarticlenumber', 'al.supplierid' => 'an.supplierid'])
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_prd as prd', 'prd.id', 'al.productid')
             ->join(env('DB_DATABASE').'.products_flat as p', 'an.id', 'p.id')
+            ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
             ->where('al.productid', '{pds.productid}')
             ->where('al.linkageid', '{pds.passangercarid}')
             ->where('al.linkageid', (int) $modification)
@@ -305,7 +306,8 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
             })
-            ->where('al.linkagetypeid', 2);
+            ->where('al.linkagetypeid', 2)
+            ->where('pr.price', '{0}', '>');
 
     }
 

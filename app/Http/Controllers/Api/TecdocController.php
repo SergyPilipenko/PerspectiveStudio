@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Classes\PartfixTecDoc;
 use App\Models\AutoType;
 use App\Models\Tecdoc\PassangerCar;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class TecdocController extends Controller
 {
@@ -80,6 +80,7 @@ class TecdocController extends Controller
             'body_type' => 'required',
             'selected_year' => 'required',
         ]);
+        DB::connection()->enableQueryLog();
 
 
         $models = PassangerCar::with('attributes')->whereIn('modelid', explode(',',$request->model_Ids))->filter([
@@ -88,9 +89,9 @@ class TecdocController extends Controller
                 'displayvalue' => $request->body_type
             ]
         ])->get();
-//        return $request->selected_year;
-        $filtered_models = PassangerCar::filterByYear($request->selected_year, $models);
 
+        $filtered_models = PassangerCar::filterByYear($request->selected_year, $models);
+        $queries = DB::getQueryLog();
 
         return $tecDoc->getModificationsEngines(
             implode(collect($filtered_models)->pluck('id')->toArray(), ','),
