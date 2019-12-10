@@ -41,9 +41,15 @@ class MysqlQueryBuilder implements SQLQueryBuilder
     /**
      * @inheritDoc
      */
-    public function select(string $table, array $fields): SQLQueryBuilder
+    public function select($table, array $fields)
     {
         $this->reset();
+        if ($table instanceof Closure) {
+            $this->query->base = "SELECT " . implode(", ", $fields) . " FROM (" . $table(new self($this->connection))->getQuery() . ") as w";
+            $this->query->type = 'select';
+
+            return $this;
+        }
         $this->query->base = "SELECT " . implode(", ", $fields) . " FROM " . $table;
         $this->query->type = 'select';
 
