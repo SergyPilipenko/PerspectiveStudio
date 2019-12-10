@@ -20,7 +20,7 @@ interface SQLQueryBuilder
      * @param array $fields
      * @return SQLQueryBuilder
      */
-    public function select(string $table, array $fields): SQLQueryBuilder;
+    public function select($table, array $fields);
 
     /**
      * Добавление условия INNER JOIN

@@ -53,17 +53,17 @@ class PartfixTecDoc extends Tecdoc
     public function getBrandsByModelsCreatedYear($year, $auto_type) : array
     {
         return DB::connection('mysql')->select("
-            SELECT DISTINCT mf.id, mf.description 
-            FROM 
-                (SELECT id, model_id, manufacturer_id, created, 
+            SELECT DISTINCT mf.id, mf.description
+            FROM
+                (SELECT id, model_id, manufacturer_id, created,
                     (CASE WHEN models_counstruction_interval.stopped = '' THEN YEAR(CURRENT_DATE) ELSE models_counstruction_interval.stopped END) stopped
-                FROM models_counstruction_interval) w 
+                FROM models_counstruction_interval) w
             JOIN auto_types_passenger_cars_manufacturers a on w.manufacturer_id = a.manufacturer_id
             JOIN ".env('DB_TECDOC_DATABASE').".manufacturers mf on a.manufacturer_id = mf.id
             LEFT JOIN ".env('DB_TECDOC_DATABASE').".models m ON mf.id = m.manufacturerid
-            WHERE w.stopped >= '".$year."' 
-                AND w.created <= '".$year."' 
-                AND w.created != '' 
+            WHERE w.stopped >= '".$year."'
+                AND w.created <= '".$year."'
+                AND w.created != ''
                 AND mf.ispassengercar = 'true'
                 AND m.canbedisplayed = 'true'
                 AND m.ispassengercar = 'true'
@@ -146,6 +146,13 @@ class PartfixTecDoc extends Tecdoc
     public function getModificationsEngines($modifications, $body_type)
     {
         $engineType = [];
+        $this->sqlQuery = " SELECT w.passanger_car_id, pca.displayvalue as EngineType, cp.displayvalue as capacity, w.displayvalue as BodyType, pca.displayvalue, w.description from (SELECT a.id, a.attributetype, p.description, a.displayvalue,  p.id as passanger_car_id
+                FROM passanger_cars p
+                LEFT JOIN passanger_car_attributes a ON p.id = a.passangercarid
+                WHERE p.id IN ($modifications) AND a.attributetype = 'BodyType' AND a.displayvalue = '".$body_type."') w
+                LEFT JOIN passanger_car_attributes pca ON pca.passangercarid = w.passanger_car_id
+                LEFT JOIN passanger_car_attributes cp ON cp.passangercarid = w.passanger_car_id
+                WHERE pca.attributetype = 'EngineType' and cp.attributetype = 'Capacity'";
 
         $attributes = DB::connection($this->connection)->select("
             SELECT w.passanger_car_id, pca.displayvalue as EngineType, cp.displayvalue as capacity, w.displayvalue as BodyType, pca.displayvalue, w.description from (SELECT a.id, a.attributetype, p.description, a.displayvalue,  p.id as passanger_car_id
@@ -180,7 +187,7 @@ class PartfixTecDoc extends Tecdoc
             case 'passenger':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
-					FROM passanger_cars pc 
+					FROM passanger_cars pc
 					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
 					WHERE canbedisplayed = 'True'
 					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True'");
@@ -188,7 +195,7 @@ class PartfixTecDoc extends Tecdoc
             case 'commercial':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
-					FROM commercial_vehicles cv 
+					FROM commercial_vehicles cv
 					LEFT JOIN commercial_vehicle_attributes a on cv.id = a.commercialvehicleid
 					WHERE canbedisplayed = 'True'
 					AND modelid = " . (int)$model_id . " AND iscommercialvehicle = 'True'");
@@ -196,7 +203,7 @@ class PartfixTecDoc extends Tecdoc
             case 'motorbike':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
-					FROM motorbikes m 
+					FROM motorbikes m
 					LEFT JOIN motorbike_attributes a on m.id = a.motorbikeid
 					WHERE canbedisplayed = 'True'
 					AND modelid = " . (int)$model_id . " AND ismotorbike = 'True'");
@@ -204,7 +211,7 @@ class PartfixTecDoc extends Tecdoc
             case 'engine':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, salesDescription, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
-					FROM engines e 
+					FROM engines e
 					LEFT JOIN engine_attributes a on e.id= a.engineid
 					WHERE canbedisplayed = 'True'
 					AND manufacturerId = " . (int)$model_id . " AND isengine = 'True'");
@@ -212,7 +219,7 @@ class PartfixTecDoc extends Tecdoc
             case 'axle':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue
-					FROM axles ax 
+					FROM axles ax
 					LEFT JOIN axle_attributes a on ax.id= a.axleid
 					WHERE canbedisplayed = 'True'
 					AND modelid = " . (int)$model_id . " AND isaxle = 'True'");
@@ -240,7 +247,7 @@ class PartfixTecDoc extends Tecdoc
             case 'passenger':
                 return DB::connection($this->connection)->select("
 					SELECT id, fulldescription name, a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue, pc.constructioninterval
-					FROM passanger_cars pc 
+					FROM passanger_cars pc
 					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
 					WHERE canbedisplayed = 'True'
 					AND modelid IN " . $models_ids . " AND ispassengercar = 'True'");
@@ -345,18 +352,18 @@ class PartfixTecDoc extends Tecdoc
 //            return $cacheItems;
 //        }
 
-        $sql = "SELECT DISTINCT an.id product_id FROM article_links al 
-                JOIN passanger_car_pds pds on al.supplierid = pds.supplierid 
-                LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid 
-                JOIN suppliers s on s.id = al.supplierid 
-                JOIN passanger_car_prd prd on prd.id = al.productid 
-                WHERE al.productid = pds.productid AND al.linkageid = pds.passangercarid AND al.linkageid in (".implode(',',$modifications).") 
+        $sql = "SELECT DISTINCT an.id product_id FROM article_links al
+                JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
+                LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid
+                JOIN suppliers s on s.id = al.supplierid
+                JOIN passanger_car_prd prd on prd.id = al.productid
+                WHERE al.productid = pds.productid AND al.linkageid = pds.passangercarid AND al.linkageid in (".implode(',',$modifications).")
                 AND pds.nodeid IN (SELECT d.passanger_car_trees_id from ".env('DB_DATABASE').".distinct_passanger_car_trees d,
                 (SELECT MIN(d._lft) as min_left, MAX(d._rgt) as max_right  FROM ".env('DB_DATABASE').".`catalog_categories` c
                 JOIN ".env('DB_DATABASE').".category_distinct_passanger_car_trees cd on c.id = cd.category_id
                 JOIN ".env('DB_DATABASE').".distinct_passanger_car_trees d on cd.distinct_pct_id = d.id
                 WHERE c._lft >= {$category->_lft} AND c._rgt <= {$category->_rgt}) w
-                WHERE d._lft >= w.min_left AND d._rgt <= w.max_right) 
+                WHERE d._lft >= w.min_left AND d._rgt <= w.max_right)
                 AND al.linkagetypeid = 2";
 
         $result = DB::connection($this->connection)->select($sql);
@@ -392,7 +399,7 @@ class PartfixTecDoc extends Tecdoc
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)->select("SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name, an.id product_id
-                    FROM article_links al 
+                    FROM article_links al
                     JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
                     LEFT JOIN article_numbers an on al.datasupplierarticlenumber = an.datasupplierarticlenumber and al.supplierid = an.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -406,7 +413,7 @@ class PartfixTecDoc extends Tecdoc
                 break;
             case 'commercial':
                 return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
-                    FROM article_links al 
+                    FROM article_links al
                     JOIN commercial_vehicle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
                     JOIN commercial_vehicle_prd prd on prd.id = al.productid
@@ -419,7 +426,7 @@ class PartfixTecDoc extends Tecdoc
                 break;
             case 'motorbike':
                 return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
-                    FROM article_links al 
+                    FROM article_links al
                     JOIN motorbike_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
                     JOIN motorbike_prd prd on prd.id = al.productid
@@ -432,7 +439,7 @@ class PartfixTecDoc extends Tecdoc
                 break;
             case 'engine':
                 return DB::connection($this->connection)->select(" SELECT pds.engineid, al.datasupplierarticlenumber part_number, prd.description product_name, s.description supplier_name
-                    FROM article_links al 
+                    FROM article_links al
                     JOIN engine_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
                     JOIN engine_prd prd on prd.id = al.productid
@@ -445,7 +452,7 @@ class PartfixTecDoc extends Tecdoc
                 break;
             case 'axle':
                 return DB::connection($this->connection)->select(" SELECT pds.axleid, al.datasupplierarticlenumber part_number, prd.description product_name, s.description supplier_name
-                    FROM article_links al 
+                    FROM article_links al
                     JOIN axle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
                     JOIN axle_prd prd on prd.id = al.productid
@@ -481,31 +488,31 @@ class PartfixTecDoc extends Tecdoc
                 case 'PassengerCar':
                     $this->linkageTypeId[] = $row['linkageTypeId'];
 
-                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM passanger_cars p 
+                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM passanger_cars p
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'CommercialVehicle':
                     $this->linkageTypeId[] = $row['linkageTypeId'];
-                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM commercial_vehicles p 
+                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM commercial_vehicles p
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'Motorbike':
-                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM motorbikes p 
+                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM motorbikes p
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'Engine':
-                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, m.description make, '' model, p.constructioninterval, p.description FROM `engines` p 
+                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, m.description make, '' model, p.constructioninterval, p.description FROM `engines` p
                         JOIN manufacturers m ON m.id=p.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
                     break;
                 case 'Axle':
-                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM axles p 
+                    $result[$row['linkageId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM axles p
                         JOIN models m ON m.id=p.modelid
                         JOIN manufacturers mm ON mm.id=m.manufacturerid
                         WHERE p.id=" . $row['linkageId']);
@@ -531,7 +538,7 @@ class PartfixTecDoc extends Tecdoc
     {
         return DB::connection($this->connection)->select("
             SELECT DISTINCT s.description, c.PartsDataSupplierArticleNumber FROM article_oe a
-            JOIN manufacturers m ON m.id=a.manufacturerId 
+            JOIN manufacturers m ON m.id=a.manufacturerId
             JOIN article_cross c ON c.OENbr=a.OENbr
             JOIN suppliers s ON s.id=c.SupplierId
             WHERE a.datasupplierarticlenumber='" . $number . "' AND a.supplierid='" . $brand_id . "'
