@@ -42,10 +42,11 @@ class CategoriesController extends Controller
     {
         $categories = Category::get()->toTree();
 
-        $store = $id ? route('admin.catalog.categories.store-subcategory', $this->category->findOrFail($id)->id) : route('admin.catalog.categories.store');
+        $parentCategory = $id ? $this->category->findOrFail($id) : null;
+        $store = $parentCategory ? route('admin.catalog.categories.store-subcategory', $parentCategory->id) : route('admin.catalog.categories.store');
         $categoryTypes = json_encode($this->category->categoryTypes, true);
 
-        return view('admin.catalog.categories.create', compact('store', 'categories', 'categoryTypes'));
+        return view('admin.catalog.categories.create', compact('store', 'categories', 'categoryTypes', 'parentCategory'));
     }
 
     /**

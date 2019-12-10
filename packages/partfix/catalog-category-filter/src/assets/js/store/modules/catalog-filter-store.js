@@ -132,6 +132,24 @@ export default {
                 }
             }
         },
+        showDescription(state, payload) {
+            var blocks = state.blocks;
+            for(let i = 0; i <= blocks.length; i++) {
+                if(blocks[i].id == payload) {
+                    blocks[i].showDescription = !blocks[i].showDescription;
+                    break;
+                }
+            }
+        },
+        hideDescription(state, payload) {
+            var blocks = state.blocks;
+            for(let i = 0; i <= blocks.length; i++) {
+                if(blocks[i].id == payload) {
+                    blocks[i].showDescription = false;
+                    break;
+                }
+            }
+        },
         addRequestParam(state, payload) {
             if(state.requestParams[payload.blockCode] == undefined) {
                 state.requestParams[payload.blockCode] = [];

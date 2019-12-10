@@ -41,10 +41,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="code">Сортировка:</label>
+                                        <input type="number" id="position"
+                                               name="position"
+                                               value="{{ old('position') ?? $attribute->position }}"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </accordian>
                     <accordian>
-                        <div slot="header">Название</div>
+                        <div slot="header">Основное</div>
                         <div slot="body">
                             <div class="row">
                                 <div class="col-md-4">
@@ -54,6 +65,17 @@
                                                name="title"
                                                value="{{ old('title') ?? $attribute->title }}"
                                                id="title" class="form-control {{ ValidationHelper::errorExists($errors, 'title') ? 'error' : '' }}">
+                                        @include('admin.partials.input-errors', ['input_name' => 'title'])
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="title">Описание</label>
+                                        <textarea name="description" id="description" cols="30" rows="7"
+                                                  class="form-control {{ ValidationHelper::errorExists($errors, 'title') ? 'error' : '' }}"
+                                        >{{ old('description') ?? $attribute->description }}</textarea>
                                         @include('admin.partials.input-errors', ['input_name' => 'title'])
                                     </div>
                                 </div>

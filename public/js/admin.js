@@ -6361,7 +6361,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale', 'types'],
+  props: ['old', 'current_title', 'current_slug', 'errors_list', 'locale', 'types', 'parent_category'],
   data: function data() {
     return {
       title: '',
@@ -6371,6 +6371,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    this.parent_category ? this.categoryTitle = this.parent_category.type : 'default';
     this.current_title ? this.title = this.current_title : this.title = '';
     this.oldData && this.oldData['category_title'] ? this.title = this.oldData['category_title'] : this.title = '';
   },
