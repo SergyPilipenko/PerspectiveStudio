@@ -68,6 +68,8 @@ class AttributesController extends Controller
         $attribute->is_visible_on_front = $request->is_visible_on_front;
         $attribute->swatch_type = $request->swatch_type;
         $attribute->is_visible_on_front = $request->is_visible_on_front;
+        $attribute->description = $request->description;
+        $attribute->position = $request->position;
         $attribute->update();
 
         Session::flash('flash', 'Новые данные сохранены успешно');

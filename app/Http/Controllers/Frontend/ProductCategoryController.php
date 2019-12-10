@@ -27,8 +27,9 @@ class ProductCategoryController extends Controller
 
     public function productCategory($slug, ProductCategory $productCategory)
     {
-        $category = $productCategory->with('children', 'filterableAttributes')
-            ->where('slug->' . app()->getLocale(), $slug)->with(['children.children', 'parent.parent'])->firstOrFail();
+        $category = $productCategory->with(['children', 'filterableAttributes' => function($query) {
+            $query->orderBy('position', 'ASC');
+        }])->where('slug->' . app()->getLocale(), $slug)->with(['children.children', 'parent.parent'])->firstOrFail();
 
         switch ($category->parent_id) {
             case null:return $this->index($category);

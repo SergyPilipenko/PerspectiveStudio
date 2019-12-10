@@ -26,12 +26,6 @@
                                 <div class="col-md-10">
                                     <div class="category-active">
                                         <div class="form-check">
-{{--                                            <label class="form-check-label">--}}
-{{--                                                Включить категорию--}}
-{{--                                                <input--}}
-{{--                                                    type="checkbox" checked="checked" class="form-check-input" name="category_activity">--}}
-{{--                                                <i class="input-helper"></i>--}}
-{{--                                            </label>--}}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span>
@@ -50,6 +44,7 @@
                                         :errors_list="'{{ json_encode($errors->messages()) }}'"
                                         :locale="'{{ config('app.fallback_locale') }}'"
                                         :types="{{ $categoryTypes }}"
+                                        :parent_category="{{ $parentCategory ? json_encode($parentCategory) : 0}}"
                                     ></slugify-title>
                                 </div>
                             </div>
