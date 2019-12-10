@@ -83,9 +83,7 @@ class Category extends Model implements CategoryInterface
 
     public function updateCategory(RequestInterface $request)
     {
-
         $this->setCategoryTranslations($request);
-
         $this->activity = $request->category_activity ? 1 : 0;
         $this->position = $request->position;
 
@@ -99,10 +97,29 @@ class Category extends Model implements CategoryInterface
                 $item = (int) $item;
             }
         }
+        if($request->applyToChildren) $this->setToChildrenFilterableAttributes($request->filterableAttributes);
 
         $this->tecdoc_categories()->sync($tree);
         $this->filterableAttributes()->sync($request->filterableAttributes);
         $this->update();
+    }
+
+    public function setToChildrenFilterableAttributes($filterableAttributes)
+    {
+        $categories = $this->get()->toTree();
+        $traverse = function ($categories) use (&$traverse, $filterableAttributes) {
+            foreach ($categories as $category) {
+                $category->filterableAttributes()->sync($filterableAttributes);
+                if($category->children->count()) {
+                    $traverse($category->children);
+                }
+            }
+        };
+        $traverse($categories);
+//        dd($children);
+//        foreach ($children as $child) {
+//            $child->filterableAttributes()->sync($filterableAttributes);
+//        }
     }
 
     protected function updateImage(RequestInterface $request)
