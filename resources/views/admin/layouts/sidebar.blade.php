@@ -35,6 +35,7 @@
             </a>
             <div class="collapse" id="content" style="">
                 <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin.content.rubrics.index') }}">Рубрики</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin.content.blocks.index') }}">Блоки</a></li>
                 </ul>
             </div>
