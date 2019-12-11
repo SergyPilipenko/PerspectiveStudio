@@ -66,10 +66,6 @@ class Product extends Model implements ProductInterface
 
                     return $attribute->$field;
                 }
-//                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
-//                    ->getAttributeByCode($key);
-//
-//                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
 
                 return $this->getAttributeValue($key);
             }
@@ -257,7 +253,7 @@ class Product extends Model implements ProductInterface
             }
 
             $product->update($request);
-
+            $this->updateProductsFlatTable($request, $product);
             $attributes = $product->attribute_family->custom_attributes()->get();
 
             foreach ($attributes as $attribute) {
@@ -289,6 +285,7 @@ class Product extends Model implements ProductInterface
                 $product->categories()->delete();
             }
 
+
             event(new ProductUpdatedEvent($product));
 
             DB::connection()->getPdo()->commit();
@@ -318,5 +315,17 @@ class Product extends Model implements ProductInterface
             ])->where('an.id', $this->id)->where('pds.passangercarid', $modification)->limit(1)->getResult();
 
         return count($query) ? true : false;
+    }
+
+    protected function updateProductsFlatTable($request, $product)
+    {
+        $filterableAttributes = $attributes = Attribute::where('is_filterable', true)->get();
+        $data = [];
+        foreach ($filterableAttributes as $filterableAttribute) {
+            $code = $filterableAttribute->code;
+            if(array_key_exists($code, $request)) $data[$code] = $request[$code];
+        }
+
+        if(count($data)) DB::table('products_flat')->where('id', $product->id)->update($data);
     }
 }
