@@ -51,7 +51,7 @@ class RubricController extends Controller
         $rubric = Rubric::with(['groups' => function($query) {
             $query->orderBy('position', 'ASC');
         }])->findOrFail($id);
-        $categories = Category::where('activity', true)->orderBy('id', 'ASC')->get();
+        $categories = Category::orderBy('id', 'ASC')->get();
 
         return view('admin.content.rubrics.edit', compact('rubric', 'categories'));
     }
