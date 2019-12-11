@@ -2,26 +2,32 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Admin\Catalog\Attributes\Attribute;
+use Illuminate\Support\Facades\DB;
 
 class UpdateProductsFlatAttributesFromEav extends Seeder
 {
+    private $limit = 50000;
+    private $data = [];
     /**
      * Run the database seeds.
      *
+     * @param null $offset
      * @return void
      */
-    public function run()
+    public function run($offset = null)
     {
         $attributes = Attribute::where('is_filterable', true)->get();
-        dd($attributes);
-        DB::table('products_flat')->orderBy('id')->select('id')->chunk(16666, function($products) use ($attributes)
-        {
-            $data = [];
-            foreach ($attributes as $attribute) {
-                $data[$attribute->code] = $this->faker->firstName;
-            }
-            DB::table('products_flat')->whereIn('id', $products->pluck('id'))->update($data);
-        });
 
+        foreach ($attributes as $attribute) {
+            $field = \App\Models\Admin\Catalog\Product\ProductAttributeValue::$attributeTypeFields[$attribute->type];
+//            echo $attribute->code . "\n";
+            echo $field . "\n";
+            $sql = "update products_flat pf
+                    inner join product_attribute_values pv on pf.id = pv.product_id
+                    set pf.{$attribute->code} = pv.{$field}
+                    WHERE pv.attribute_id = {$attribute->id}
+                    ";
+            DB::connection()->update($sql);
+        }
     }
 }
