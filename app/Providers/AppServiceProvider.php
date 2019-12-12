@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Classes\PriceFilter\PriceFilter;
-
+use UpdateProcuctsFlatPriceFromPrices;
 
 class AppServiceProvider extends ServiceProvider
 {

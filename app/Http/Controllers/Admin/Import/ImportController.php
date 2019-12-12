@@ -15,6 +15,7 @@ use Partfix\Parser\Contracts\ParserInterface;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Illuminate\Support\Facades\Log;
 use App\Models\Admin\Import\ImportByFile;
+use UpdateProcuctsFlatPriceFromPrices;
 
 class ImportController extends Controller
 {
@@ -133,17 +134,19 @@ class ImportController extends Controller
             ->chunk(1000, function ($rows) use ($import_setting_id, &$prepare, &$import_setting) {
                 $import_setting = ImportSetting::parse($import_setting_id);
                 $prepare = Price::prepareRowsToSave($rows, $import_setting);
-                $this->getArticlesInTecdoc($prepare,$import_setting_id);
-            });
-        try {
-            DB::connection()->getPdo()->beginTransaction();
-//            Price::savePrices($prepare, $import_setting);
-            DB::connection()->getPdo()->commit();
-        } catch (\PDOException $e) {
 
-            dd($e);
-            DB::connection()->getPdo()->rollBack();
-        }
+                try {
+                    DB::connection()->getPdo()->beginTransaction();
+
+                    $this->getArticlesInTecdoc($prepare,$import_setting_id);
+                    DB::connection()->getPdo()->commit();
+                } catch (\PDOException $e) {
+                    dd($e);
+                    DB::connection()->getPdo()->rollBack();
+                }
+            });
+        app(UpdateProcuctsFlatPriceFromPrices::class)->run();
+
         return redirect()->back();
     }
 
