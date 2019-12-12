@@ -12,7 +12,6 @@ class UpdateProcuctsFlatPriceFromPrices extends Seeder
      */
     public function run()
     {
-        return 1;
         $sql = "UPDATE `products_flat` AS `pf`,
         (
             SELECT products_flat.id, w.price FROM products_flat, (SELECT article_id, min(price) as price from prices GROUP BY article_id) as w
