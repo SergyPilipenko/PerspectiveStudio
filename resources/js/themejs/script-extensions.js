@@ -10,7 +10,7 @@ $(function () {
             if(item.offsetHeight < item.scrollHeight) {
                 var btn = document.createElement("button");
                 btn.classList.add("manufacturers__show-more");
-                btn.innerText = "Показать больше";
+                btn.innerText = "Показать еще";
                 var btnHide = document.createElement("button");
                 btnHide.classList.add("manufacturers__show-more");
                 btnHide.style.display = "none";

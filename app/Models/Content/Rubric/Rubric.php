@@ -3,6 +3,7 @@
 
 namespace App\Models\Content\Rubric;
 
+use App\Models\Catalog\Category;
 use Illuminate\Database\Eloquent\Model;
 
 class Rubric extends Model

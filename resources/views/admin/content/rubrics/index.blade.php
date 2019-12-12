@@ -10,6 +10,7 @@
                     <a href="{{ route('admin.content.rubrics.create') }}" class="btn btn-primary float-right">Добавить</a>
                 </div>
             </div>
+            @if($rubrics->count())
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -17,7 +18,6 @@
                             <th>id</th>
                             <th>Заголовок</th>
                             <th>Url</th>
-                            <th>Описание</th>
                             <th>Управление</th>
                         </tr>
                         </thead>
@@ -27,7 +27,6 @@
                                 <td>{{ $rubric->id }}</td>
                                 <td>{{ $rubric->title }}</td>
                                 <td>{{ $rubric->slug }}</td>
-                                <td>{{ $rubric->description }}</td>
                                 <td>
                                     <div class="control-container">
                                         <a href="{{ route('admin.content.rubrics.edit', $rubric->id) }}">
@@ -46,6 +45,7 @@
                         </tbody>
                     </table>
                 </div>
+            @endif
         </div>
     </div>
 @endsection

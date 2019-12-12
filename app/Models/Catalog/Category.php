@@ -116,10 +116,6 @@ class Category extends Model implements CategoryInterface
             }
         };
         $traverse($categories);
-//        dd($children);
-//        foreach ($children as $child) {
-//            $child->filterableAttributes()->sync($filterableAttributes);
-//        }
     }
 
     protected function updateImage(RequestInterface $request)

@@ -14,6 +14,7 @@ use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Categories\Category;
+use App\Models\Content\Rubric\Rubric;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\PassangerCar;
@@ -118,20 +119,19 @@ class PagesController extends Controller
     public function modification($brand, $model, $modification, Garage $garage, CarInterface $car)
     {
         $garage->setActiveCar($modification);
-
         $car = $car->getCar($modification);
 
-//        $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
-        $category = resolve(CategoryInterface::class)
-            ->where('slug->' . app()->getLocale(), 'legkovye')
-            ->with('children.children')
-            ->firstOrFail();
+        $rubric = Rubric::where('slug', 'legkovye')->with('groups.categories')->firstOrFail();
+//        $category = resolve(CategoryInterface::class)
+//            ->where('slug->' . app()->getLocale(), 'legkovye')
+//            ->with('children.children')
+//            ->firstOrFail();
 
-        if($category->children->count()) {
-            $children = $category->children;
-        }
+//        if($category->children->count()) {
+//            $children = $category->children;
+//        }
 
-        return view('frontend.car.index', compact('category','children', 'car', 'brand', 'model', 'modification'));
+        return view('frontend.car.index', compact('rubric','children', 'car', 'brand', 'model', 'modification'));
     }
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
@@ -163,6 +163,7 @@ class PagesController extends Controller
         $garage = collect(Session::get('garage'));
 
         $current_modification = $garage->where('modification_id', $id)->first();
+
         Session::put('current-auto', [
             'modification_id' => $current_modification['modification_id'],
             'modification_year' => $current_modification['modification_year']

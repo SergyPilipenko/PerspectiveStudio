@@ -4,6 +4,11 @@ Breadcrumbs::for('frontend.index', function ($trail) {
     $trail->push('Главная', route('frontend.index'));
 });
 
+Breadcrumbs::for('frontend.rubric.index', function ($trail, $rubric) {
+    $trail->parent('frontend.index');
+    $trail->push(ucfirst($rubric->title), route('frontend.rubric.index', $rubric->slug));
+});
+
 Breadcrumbs::for('frontend.product-categories.show', function ($trail, $category) {
     if($category->type != "tecdoc" && isset($category->parent)) {
         $trail->parent('frontend.product-categories.show', $category->parent);

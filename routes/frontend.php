@@ -4,7 +4,7 @@ Route::get('/', 'Frontend\PagesController@index')->name('frontend.index');
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
-//Route::get('r-{rubric}', 'Admin\Content\RubricController@index')->name('frontend.product-categories.show');
+Route::get('r-{rubric}', 'Frontend\RubricController@index')->name('frontend.rubric.index');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
 Route::post('search', 'Frontend\ProductController@search');
 

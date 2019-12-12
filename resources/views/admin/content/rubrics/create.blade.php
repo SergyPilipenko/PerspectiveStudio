@@ -18,13 +18,28 @@
                         <div slot="header">Общее</div>
                         <div slot="body">
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="form-check">
+                                            <div class="col-md-12">
+                                                <span>
+                                                    Показывать в меню
+                                                </span>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="show_in_menu">
+                                                    <span class="slider round"></span>
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group required">
                                         <label for="position">Сортировка:</label>
                                         <input type="number" id="position"
                                                name="position"
                                                value="{{ old('position') ?? '10' }}"
-                                               step="10"
                                                min="0"
                                                class="form-control">
                                     </div>

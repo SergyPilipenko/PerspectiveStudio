@@ -1,7 +1,6 @@
 @extends('admin')
 @section('content')
     <div class="card">
-
         <form action="{{ route('admin.content.rubrics.update', $rubric->id) }}" method="POST">
             {{ method_field('PUT') }}
             @csrf
@@ -19,13 +18,26 @@
                         <div slot="header">Общее</div>
                         <div slot="body">
                             <div class="row">
+                                <div class="form-check">
+                                    <div class="col-md-12">
+                                                <span>
+                                                    Показывать в меню
+                                                </span>
+                                        <label class="switch">
+                                            <input type="checkbox" {{ old('show_in_menu') || $rubric->show_in_menu ? 'checked' : '' }} name="show_in_menu">
+                                            <span class="slider round"></span>
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group required">
                                         <label for="position">Сортировка:</label>
                                         <input type="number" id="position"
                                                name="position"
                                                value="{{ old('position') ?? $rubric->position }}"
-                                               step="10"
                                                min="0"
                                                class="form-control">
                                     </div>
@@ -56,10 +68,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="descritpion">Описание:</label>
-                                        <textarea class="form-control" id="descritpion" name="description" rows="3">{{ old('description') ?? $rubric->description }}</textarea>
+                                        <partfix-ckeditor :name="'description'" :content="{{ json_encode($rubric->description) }}"></partfix-ckeditor>
                                     </div>
                                 </div>
                             </div>
@@ -84,9 +96,10 @@
                                                         @foreach($categories as $category)
                                                             <div class="form-check form-check-flat form-check-primary">
                                                                 <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input" name="categories[{{ $group->id }}][]">
+                                                                    <input type="checkbox" class="form-check-input" {{ $group->categories->contains('id', $category->id) ? 'checked' : '' }} name="categories[{{ $group->id }}][{{ $category->id }}]">
                                                                     {{ $category->category_title }}
-                                                                    <i class="input-helper"></i></label>
+                                                                    <i class="input-helper"></i>
+                                                                </label>
                                                             </div>
                                                         @endforeach
                                                     @endif

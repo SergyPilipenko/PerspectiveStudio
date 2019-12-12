@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin\Content;
 
 use App\Models\Catalog\Category;
 use App\Models\Content\Rubric\Rubric;
+use App\Models\Content\Rubric\RubricGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class RubricController extends Controller
@@ -39,6 +41,7 @@ class RubricController extends Controller
         $rubric->slug = $request->slug;
         $rubric->title = $request->title;
         $rubric->description = $request->description;
+        $rubric->show_in_menu = $request->show_in_menu ? true : false;
         $rubric->save();
 
         Session::flash('flash', 'Рубрика была создана успешно');
@@ -48,7 +51,7 @@ class RubricController extends Controller
 
     public function edit($id)
     {
-        $rubric = Rubric::with(['groups' => function($query) {
+        $rubric = Rubric::with(['groups.categories' => function($query) {
             $query->orderBy('position', 'ASC');
         }])->findOrFail($id);
         $categories = Category::orderBy('id', 'ASC')->get();
@@ -58,12 +61,28 @@ class RubricController extends Controller
 
     public function update(Request $request, $id)
     {
-        $rubric = Rubric::findOrFail($id);
+        $rubric = Rubric::with('groups')->findOrFail($id);
         $rubric->position = $request->position;
         $rubric->slug = $request->slug;
         $rubric->title = $request->title;
         $rubric->description = $request->description;
-        $rubric->save();
+        $rubric->show_in_menu = $request->show_in_menu ? true : false;
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            $rubric->save();
+            foreach ($rubric->groups as $group) {
+                $checked =
+                    isset($request->categories) &&
+                    isset($request->categories[$group->id]) &&
+                    count($request->categories[$group->id]) ? array_keys($request->categories[$group->id]) : [];
+                $group->categories()->sync($checked);
+            }
+            DB::connection()->getPdo()->commit();
+        } catch (\PDOException $e) {
+            DB::connection()->getPdo()->rollBack();
+            Session::flash('error', $e);
+            return back();
+        }
 
         Session::flash('flash', 'Рубрика была обновлена успешно');
 
