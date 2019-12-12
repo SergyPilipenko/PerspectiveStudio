@@ -71,7 +71,6 @@ class CategoryFilter implements CategoryFilterInterface
                     ->where('p.'.$attribute->code, '{null}', 'is not')
                     ->where('pr.price', '{0}', '>');
             }, [$attribute->code.' as value', 'count(*) as count'])->groupBy($attribute->code);
-
             $options = $query->getResult();
             $this->items[] = resolve(CategoryFilterBlock::class)
                 ->getBlock(collect($options), $attribute);

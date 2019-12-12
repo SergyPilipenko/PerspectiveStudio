@@ -42,7 +42,9 @@ class CategoryRepository
     {
         $builder = $category->newProducts();
         /** @var ProductsFilter $query */
+        $sql = $builder->getQuery();
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
+        $filteredSql = $builder->getQuery();
         $cache = null;
         if(!$cache) {
             $result = $query->getArrayResult();
