@@ -77,6 +77,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="alias">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="alias">Псевдоним: [{{ $category->locale->getLocale() }}]</label>
+                                                                <input type="text" class="form-control" name="{{ $category->locale->locatedInputName('alias') }}" value="{{ old('alias') ?? $category->alias }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="sort">
                                                     <div class="row">
                                                         <div class="col-md-6">

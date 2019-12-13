@@ -122,14 +122,6 @@ class PagesController extends Controller
         $car = $car->getCar($modification);
 
         $rubric = Rubric::where('slug', 'legkovye')->with('groups.categories')->firstOrFail();
-//        $category = resolve(CategoryInterface::class)
-//            ->where('slug->' . app()->getLocale(), 'legkovye')
-//            ->with('children.children')
-//            ->firstOrFail();
-
-//        if($category->children->count()) {
-//            $children = $category->children;
-//        }
 
         return view('frontend.car.index', compact('rubric','children', 'car', 'brand', 'model', 'modification'));
     }

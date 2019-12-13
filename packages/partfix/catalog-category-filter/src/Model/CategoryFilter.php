@@ -84,9 +84,9 @@ class CategoryFilter implements CategoryFilterInterface
         $attributes = $category->filterableAttributes;
         foreach ($attributes as $attribute) {
             $query = $this->builder->select(function($query) use ($category, $modification, $attribute){
-                return $category->tecdocCategoryProductsByModification($modification, array("DISTINCT an.id", "$attribute->code"));
+                return $category->tecdocCategoryProductsByModification($modification, array("DISTINCT an.id", "p.$attribute->code"));
             }, [$attribute->code . ' as value', 'count(*) as count'])->groupBy($attribute->code);
-
+            $sql = $query->getQuery();
             $options = $query->getResult();
             $this->items[] = resolve(CategoryFilterBlock::class)->getBlock(collect($options), $attribute);
         }

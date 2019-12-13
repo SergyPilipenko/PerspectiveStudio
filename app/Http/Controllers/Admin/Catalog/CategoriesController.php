@@ -127,7 +127,7 @@ class CategoriesController extends Controller
             $vars['category_distinct_tecdoc_categories'] = $category_distinct_tecdoc_categories;
             $vars['disabled_distinct_tecdoc_categories'] = $disabled_distinct_tecdoc_categories;
         }
-//        compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories', 'filterableAttributes')
+
         return view('admin.catalog.categories.edit', $vars);
     }
 
@@ -176,11 +176,12 @@ class CategoriesController extends Controller
                     $node->label = $node->description;
                     if(in_array($node->id, $disabled_distinct_tecdoc_categories->toArray())) {
                         $node->isDisabled = "true";
-                    };
+                    }
                     unset($node->description);
-                };
+                }
             }
         }
+
         return $nodes;
     }
 }
