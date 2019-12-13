@@ -93,15 +93,13 @@
                                                 <div slot="header">{{ $group->title }}</div>
                                                 <div slot="body">
                                                     @if($categories->count())
-                                                        @foreach($categories as $category)
-                                                            <div class="form-check form-check-flat form-check-primary">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input" {{ $group->categories->contains('id', $category->id) ? 'checked' : '' }} name="categories[{{ $group->id }}][{{ $category->id }}]">
-                                                                    {{ $category->category_title }}
-                                                                    <i class="input-helper"></i>
-                                                                </label>
-                                                            </div>
-                                                        @endforeach
+
+                                                        <ul>
+                                                            @foreach($categories as $category)
+                                                                @include('admin.content.rubrics.groups.categories', ['category' => $category])
+
+                                                            @endforeach
+                                                        </ul>
                                                     @endif
                                                 </div>
                                             </accordian>
