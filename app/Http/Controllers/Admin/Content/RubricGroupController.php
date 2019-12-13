@@ -10,30 +10,36 @@ use Illuminate\Support\Facades\Session;
 
 class RubricGroupController extends Controller
 {
-    public function __construct()
+    private $rubricGroup;
+    /**
+     * @var Rubric
+     */
+    private $rubric;
+
+    public function __construct(RubricGroup $rubricGroup, Rubric $rubric)
     {
         $this->middleware('auth:admin');
+        $this->rubricGroup = $rubricGroup;
+        $this->rubric = $rubric;
     }
 
     public function create($rubricId)
     {
-
         return view('admin.content.rubrics.groups.create', compact('rubricId'));
     }
 
-    public function store(Request $request, $rubricId, RubricGroup $group)
+    public function store(Request $request, $rubricId)
     {
         $this->validate($request, array(
             'title' => 'required',
             'position' => 'required|numeric|min:0'
         ));
 
-        $rubric = Rubric::findOrFail($rubricId);
-
-        $group->title = $request->title;
-        $group->rubric_id = $rubricId;
-        $group->position = $request->position;
-        $group->save();
+        $rubric =  $this->rubric->findOrFail($rubricId);
+        $this->rubricGroup->title = $request->title;
+        $this->rubricGroup->rubric_id = $rubricId;
+        $this->rubricGroup->position = $request->position;
+        $this->rubricGroup->save();
 
         Session::flash('flash', 'Группа была создана успешно');
 
@@ -42,18 +48,32 @@ class RubricGroupController extends Controller
 
     public function edit($rubricId, $groupId)
     {
-        $rubric = Rubric::findOrFail($rubricId);
-        $group = RubricGroup::findOrFail($groupId);
+        $rubric = $this->rubric->findOrFail($rubricId);
+        $group = $this->rubricGroup->findOrFail($groupId);
 
         return view('admin.content.rubrics.groups.edit', compact('rubric', 'group'));
     }
 
+    public function update(Request $request, $rubricId, $groupId)
+    {
+        $rubric = $this->rubric->findOrFail($rubricId);
+        $group = $this->rubricGroup->findOrFail($groupId);
+        $group->title = $request->title;
+        $group->rubric_id = $rubricId;
+        $group->position = $request->position;
+        $group->update();
+
+        Session::flash('flash', 'Группа была обновлена успешно');
+
+        return redirect()->route('admin.content.rubrics.edit', $rubric->id);
+    }
+
     public function destroy($rubricId, $groupId)
     {
-        $rubric = Rubric::findOrFail($rubricId);
-        $group = RubricGroup::findOrFail($groupId);
+        $rubric = $this->rubric->findOrFail($rubricId);
+        $group = $this->rubricGroup->findOrFail($groupId);
 
-        RubricGroup::destroy($group->id);
+        $this->rubricGroup->destroy($group->id);
 
         Session::flash('flash', 'Группа была удалена успешно');
 

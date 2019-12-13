@@ -36,7 +36,6 @@
                                         <input type="number" id="position"
                                                name="position"
                                                value="{{ old('position') ?? $group->position }}"
-                                               step="10"
                                                min="0"
                                                class="form-control">
                                     </div>

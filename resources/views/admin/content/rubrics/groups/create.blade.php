@@ -24,7 +24,6 @@
                                         <input type="number" id="position"
                                                name="position"
                                                value="{{ old('position') ?? '10' }}"
-                                               step="10"
                                                min="0"
                                                class="form-control">
                                     </div>

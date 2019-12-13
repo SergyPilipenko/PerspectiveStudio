@@ -13,6 +13,6 @@ class Rubric extends Model
 
     public function groups()
     {
-        return $this->hasMany(RubricGroup::class, 'rubric_id', 'id');
+        return $this->hasMany(RubricGroup::class, 'rubric_id', 'id')->orderBy('position', 'ASC');
     }
 }

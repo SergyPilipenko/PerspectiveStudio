@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Catalog\Attributes;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 class AttributesController extends Controller
@@ -43,7 +44,14 @@ class AttributesController extends Controller
         $attribute->is_visible_on_front = $request->is_visible_on_front;
         $attribute->swatch_type = $request->swatch_type;
         $attribute->is_visible_on_front = $request->is_visible_on_front;
-        $attribute->save();
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            $attribute->save();
+            DB::connection()->getPdo()->commit();
+        }catch (\PDOException $exception) {
+            DB::connection()->getPdo()->rollBack();
+            throw new \PDOException($exception->getMessage());
+        }
 
         Session::flash('flash', 'Новый атрибут добавлен успешно');
 
@@ -70,7 +78,14 @@ class AttributesController extends Controller
         $attribute->is_visible_on_front = $request->is_visible_on_front;
         $attribute->description = $request->description;
         $attribute->position = $request->position;
-        $attribute->update();
+        try {
+            DB::connection()->getPdo()->beginTransaction();
+            $attribute->update();
+            DB::connection()->getPdo()->commit();
+        }catch (\PDOException $exception) {
+            DB::connection()->getPdo()->rollBack();
+            throw new \PDOException($exception->getMessage());
+        }
 
         Session::flash('flash', 'Новые данные сохранены успешно');
 
