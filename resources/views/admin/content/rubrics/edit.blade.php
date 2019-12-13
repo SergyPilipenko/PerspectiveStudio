@@ -97,7 +97,6 @@
                                                         <ul>
                                                             @foreach($categories as $category)
                                                                 @include('admin.content.rubrics.groups.categories', ['category' => $category])
-
                                                             @endforeach
                                                         </ul>
                                                     @endif

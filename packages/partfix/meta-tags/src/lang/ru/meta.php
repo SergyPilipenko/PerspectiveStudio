@@ -27,7 +27,7 @@ return array(
         'keywords' => 'keywords frontend-car-category'
     ],
     'frontend-modification' => [
-        'title' => ':brand :model :year :modification',
+        'title' => ':rubric_title :brand :model :year :modification',
         'description' => 'description frontend-modification',
         'keywords' => 'title frontend-modification'
     ],
@@ -35,5 +35,10 @@ return array(
         'title' => 'title frontend-model',
         'description' => 'description frontend-model',
         'keywords' => 'keywords frontend-model'
+    ],
+    'frontend-rubric-index' => [
+        'title' => 'title frontend-rubric-index :rubric_title',
+        'description' => 'description frontend-rubric-index :rubric_title',
+        'keywords' => 'keywords frontend-rubric-index :rubric_title'
     ]
 );

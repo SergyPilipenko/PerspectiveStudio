@@ -18,7 +18,9 @@ class RubricController extends Controller
     public function index($slug)
     {
         $rubric = $this->rubric->where('slug', $slug)->with('groups.categories')->firstOrFail();
-
-        return view('frontend.rubrics.index', compact('rubric'));
+        $meta_tags = [
+            'rubric_title' => $rubric->title
+        ];
+        return view('frontend.rubrics.index', compact('rubric', 'meta_tags'));
     }
 }

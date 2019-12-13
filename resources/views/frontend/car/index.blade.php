@@ -1,7 +1,8 @@
 @section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.title', [
 'brand' => $car->brand->description,
 'model' => $car->model->description,
-'modification' => $car->modification->description, 'year' => $car->year
+'modification' => $car->modification->description, 'year' => $car->year,
+'rubric_title' => $rubric->title
 ]))
 @section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.description'))
 @section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.keywords'))
