@@ -55,7 +55,7 @@ const store = new Vuex.Store({
 });
 
 const router = new VueRouter({
-    mode: 'abstract',
+    mode: 'history',
     routes: [],
 });
 export default router;

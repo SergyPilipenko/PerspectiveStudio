@@ -73,13 +73,18 @@ class Price extends Model
         }
     }
 
-    public static function prepareRowsToSave(array $rows, ImportSetting $import_setting) : array
+    public static function prepareRowsToSave(array &$rows, ImportSetting &$import_setting) : array
     {
         $prices = [];
         foreach ($rows as $key => $row) {
             if(isset($prices[$key])) dd($row);
+            if(empty($row[$import_setting->columns['price']]) ||
+            empty($row[$import_setting->columns['article']])) {
+                continue;
+            }
             $prices[$key]['article'] = $row[$import_setting->columns['article']];
             $prices[$key]['supplier'] = $row[$import_setting->columns['supplier']];
+
             $prices[$key]['price'] = $row[$import_setting->columns['price']];
             $prices[$key]['available'] = (float) $row[$import_setting->columns['available']];
         }
