@@ -138,13 +138,19 @@ class ImportController extends Controller
         $prepare = null;
         $import_setting = null;
         /** @var ParserInterface $csv */
-        $file = ImportByFile::saveFile($request->file);
-        $csv = $this->parser->csv($file, $request->delimiter)
+//        $file = ImportByFile::saveFile($request->file);
+//        $csv = $this->parser->csv('upload/prices/1576506571autonom_ua-84851.csv', $request->delimiter)
+        $csv = $this->parser->csv('upload/prices/1576506571autonom_ua-84851.csv', ';')
             ->alphabetical()
-            ->chunk(1000, function ($rows) use ($import_setting_id, &$prepare, &$import_setting) {
+            ->chunk(1000, function ($rows) use (&$import_setting_id, &$prepare, &$import_setting) {
                 $import_setting = ImportSetting::parse($import_setting_id);
                 $prepare = Price::prepareRowsToSave($rows, $import_setting);
                 $this->getArticlesInTecdoc($prepare,$import_setting_id);
+
+                Log::info(memory_get_usage());
+
+                $prepare = null;
+                $import_setting = null;
             });
         app(UpdateProcuctsFlatPriceFromPrices::class)->run();
 
@@ -157,27 +163,29 @@ class ImportController extends Controller
      * @param $prices
      * @param $import_setting_id
      */
-    public function getArticlesInTecdoc(&$prices, &$import_setting_id)
+    public function  getArticlesInTecdoc(&$prices, &$import_setting_id)
     {
         $this->fields = $this->queryFields($prices);
         if(empty($this->fields)) return;
         $this->sql = "SELECT an.`id` as `article_id`, an.`datasupplierarticlenumber` as `article`,  s.description as `supplier`  FROM " . env('DB_TECDOC_DATABASE') .".`article_numbers` an
                 JOIN  " . env('DB_TECDOC_DATABASE') .".suppliers s on an.`supplierid` = s.id
                 WHERE (an.`datasupplierarticlenumber`, s.description) in  (";
+
         foreach ($this->fields as $key => $field) {
             if($key > 0) {
                 $this->sql .= ', ';
             }
-            $this->sql .= "('" . $field['article'] . "', '" . $field['supplier'] . "')";
+            $this->sql .= "('" . $field['article'] . "', '" . rtrim($field['supplier']) . "')";
         }
         $this->sql .= ')';
 
         $this->result = DB::connection('mysql')->select($this->sql);
         $this->result = json_decode(json_encode($this->result), true);
+        Log::info(count($this->result));
 //        $diff = $this->diff($this->fields, $result);
 //        $valid = [];
-        $this->data = $this->updateData($prices, $this->result, $import_setting_id);
-        $this->price->createOrUpdatePrice($this->data);
+//        $this->data = $this->updateData($prices, $this->result, $import_setting_id);
+//        $this->price->createOrUpdatePrice($this->data);
         $this->data = null;
         $this->sql = null;
         $this->result = null;

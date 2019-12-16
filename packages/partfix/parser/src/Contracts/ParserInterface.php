@@ -15,4 +15,6 @@ interface ParserInterface
     public function getItems() : array;
 
     public function getMaxRowLength() : int;
+
+    public function chunk(int $length, callable $callback);
 }

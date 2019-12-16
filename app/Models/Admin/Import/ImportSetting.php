@@ -39,7 +39,7 @@ class ImportSetting extends Model
         return $this->importErrors->count();
     }
 
-    public function scopeParse($query, $id) : ImportSetting
+    public function scopeParse(&$query, &$id)
     {
 
         $import_setting = $query->find($id);
@@ -50,12 +50,16 @@ class ImportSetting extends Model
             foreach ($columns as $column) {
                 $import_setting->columns[$column->code] = $import_setting->getColumnChar($scheme, $column);
             }
+            $scheme = null;
         }
+
+        $columns = null;
+        $import_setting  = null;
 
         return $import_setting;
     }
 
-    protected function getColumnChar(array $scheme, ImportColumn $column) : string
+    protected function getColumnChar(array &$scheme, ImportColumn &$column) : string
     {
 
         if($scheme && $column) {
