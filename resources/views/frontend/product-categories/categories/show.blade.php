@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h1>{{ $category->category_title }}</h1>
+                        <h1>{{ $category->alias ? $category->alias : $category->category_title }}</h1>
                         <button>Изменить</button>
                     </div>
                 </div>

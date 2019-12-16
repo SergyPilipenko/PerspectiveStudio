@@ -22,7 +22,17 @@ class ImportController extends Controller
 
     private $builder;
     private $price;
-    private $iterator;
+    /**
+     * все эти свойства использованы как временное решение (были проблемы с памятью), требуется рефактор кода где они используются
+     * @var
+     */
+    private $data;
+    private $fields;
+    private $sql;
+    private $result;
+    private $updateData;
+    private $invalid;
+    private $dataItem;
     /**
      * @var ParserInterface
      */
@@ -134,45 +144,44 @@ class ImportController extends Controller
             ->chunk(1000, function ($rows) use ($import_setting_id, &$prepare, &$import_setting) {
                 $import_setting = ImportSetting::parse($import_setting_id);
                 $prepare = Price::prepareRowsToSave($rows, $import_setting);
-
-                try {
-                    DB::connection()->getPdo()->beginTransaction();
-
-                    $this->getArticlesInTecdoc($prepare,$import_setting_id);
-                    DB::connection()->getPdo()->commit();
-                } catch (\PDOException $e) {
-                    dd($e);
-                    DB::connection()->getPdo()->rollBack();
-                }
+                $this->getArticlesInTecdoc($prepare,$import_setting_id);
             });
         app(UpdateProcuctsFlatPriceFromPrices::class)->run();
 
         return redirect()->back();
     }
 
-    //НЕ БЫЛО ВРЕМЕНИ НАПИСАТЬ НОРМАЛЬНО >:(
-
-    public function getArticlesInTecdoc($prices, $import_setting_id)
+    /**
+     * НЕ БЫЛО ВРЕМЕНИ НАПИСАТЬ НОРМАЛЬНО >:(
+     *
+     * @param $prices
+     * @param $import_setting_id
+     */
+    public function getArticlesInTecdoc(&$prices, &$import_setting_id)
     {
-        $fields = $this->queryFields($prices);
-        if(empty($fields)) return;
-        $sql = "SELECT an.`id` as `article_id`, an.`datasupplierarticlenumber` as `article`,  s.description as `supplier`  FROM " . env('DB_TECDOC_DATABASE') .".`article_numbers` an
+        $this->fields = $this->queryFields($prices);
+        if(empty($this->fields)) return;
+        $this->sql = "SELECT an.`id` as `article_id`, an.`datasupplierarticlenumber` as `article`,  s.description as `supplier`  FROM " . env('DB_TECDOC_DATABASE') .".`article_numbers` an
                 JOIN  " . env('DB_TECDOC_DATABASE') .".suppliers s on an.`supplierid` = s.id
                 WHERE (an.`datasupplierarticlenumber`, s.description) in  (";
-        foreach ($fields as $key => $field) {
+        foreach ($this->fields as $key => $field) {
             if($key > 0) {
-                $sql .= ', ';
+                $this->sql .= ', ';
             }
-            $sql .= "('" . $field['article'] . "', '" . $field['supplier'] . "')";
+            $this->sql .= "('" . $field['article'] . "', '" . $field['supplier'] . "')";
         }
-        $sql .= ')';
+        $this->sql .= ')';
 
-        $result = DB::connection('mysql')->select($sql);
-        $result = json_decode(json_encode($result), true);
-        $diff = $this->diff($fields, $result);
-        $valid = [];
-        $data = $this->updateData($prices, $result, $import_setting_id);
-        $this->price->createOrUpdatePrice($data);
+        $this->result = DB::connection('mysql')->select($this->sql);
+        $this->result = json_decode(json_encode($this->result), true);
+//        $diff = $this->diff($this->fields, $result);
+//        $valid = [];
+        $this->data = $this->updateData($prices, $this->result, $import_setting_id);
+        $this->price->createOrUpdatePrice($this->data);
+        $this->data = null;
+        $this->sql = null;
+        $this->result = null;
+        $this->fields = null;
     }
 
     private function queryFields($prices)
@@ -207,30 +216,31 @@ class ImportController extends Controller
         }
     }
 
-    private function updateData($prices, $result, $import_setting_id)
+    private function updateData(&$prices, &$result, &$import_setting_id)
     {
-        $data = [];
-        $invalid = [];
-        foreach ($prices as $price) {
-            foreach ($result as $item) {
+        $this->updateData = [];
+        $this->invalid = [];
+        foreach ($prices as &$price) {
+            foreach ($result as &$item) {
                 if($price['article'] == $item['article'] && $price['supplier'] == $item['supplier']) {
-                    $dataItem = [];
-                    $dataItem['price'] = (float) $price['price'];
-                    $dataItem['article_id'] = $item['article_id'];
-                    $dataItem['import_setting_id'] = (int) $import_setting_id;
-                    $dataItem['available'] = $price['available'];
-                    $dataItem['created_at'] = now();
-                    $dataItem['updated_at'] = now();
-                    $dataItem['status'] = true;
-                    $data[] = $dataItem;
+                    $this->dataItem = [];
+                    $this->dataItem['price'] = (float) $price['price'];
+                    $this->dataItem['article_id'] = $item['article_id'];
+                    $this->dataItem['import_setting_id'] = (int) $import_setting_id;
+                    $this->dataItem['available'] = $price['available'];
+                    $this->dataItem['created_at'] = now();
+                    $this->dataItem['updated_at'] = now();
+                    $this->dataItem['status'] = true;
+                    $this->updateData[] = $this->dataItem;
+                    $this->dataItem = null;
                 } else {
-                    $invalid[] = $price;
+//                    Log::info(json_encode($price));
                 }
             }
         }
 
-        Log::info(json_encode($invalid));
+        $this->invalid = null;
 
-        return $data;
+        return $this->updateData;
     }
 }

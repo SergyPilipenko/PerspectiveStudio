@@ -9,7 +9,7 @@
                 <div class="col-md-12">
                     {!! Breadcrumbs::render('frontend.model', $brand, $model) !!}
                     <div>
-                        <h2 class="category__title">Выберите модификацию для Volkswagen Transporter</h2>
+                        <h2 class="category__title">Выберите модификацию для {{ ucfirst($brand) }} {{ ucfirst($model) }}</h2>
                     </div>
                     <div>
                         <select-car-body

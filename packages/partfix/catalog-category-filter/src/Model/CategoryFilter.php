@@ -6,8 +6,6 @@ use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Attributes\Attribute;
 use App\Models\Catalog\Category;
 use App\Repositories\CatalogCategory\CategoryRepository;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Partfix\CatalogCategoryFilter\Contracts\CategoryFilterInterface;
 use App\Models\Admin\Catalog\Product\ProductAttributeValue;

@@ -21,6 +21,8 @@ class RubricController extends Controller
         $meta_tags = [
             'rubric_title' => $rubric->title
         ];
-        return view('frontend.rubrics.index', compact('rubric', 'meta_tags'));
+        $activeCar = app('App\Classes\Garage')->getGarage()->activeCar ?? null;
+
+        return view('frontend.rubrics.index', compact('rubric', 'meta_tags', 'activeCar'));
     }
 }

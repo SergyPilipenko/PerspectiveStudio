@@ -17,7 +17,7 @@
                                 </h3>
                                 <div class="category__block-items">
                                     @foreach($group->categories as $category)
-                                        <a href="{{ route('frontend.product-categories.show', $category->slug) }}" class="category__block-item">
+                                        <a href="{{ $activeCar ? $activeCar->path . '-' . $category->slug : route('frontend.product-categories.show', $category->slug) }}" class="category__block-item">
                                             <img src="{{ asset($category->image) }}" alt="list">
                                             <span>{{ $category->category_title }}</span>
                                         </a>

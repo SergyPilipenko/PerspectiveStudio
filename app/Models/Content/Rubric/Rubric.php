@@ -15,4 +15,9 @@ class Rubric extends Model
     {
         return $this->hasMany(RubricGroup::class, 'rubric_id', 'id')->orderBy('position', 'ASC');
     }
+
+    public function scopeMenu($query)
+    {
+        return $query->where('show_in_menu', true)->with('groups')->orderBy('position', 'ASC');
+    }
 }

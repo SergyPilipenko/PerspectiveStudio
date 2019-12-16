@@ -25,3 +25,4 @@ Route::get('{brand}-{model}-{modification}-{category}', 'Frontend\PagesControlle
 Route::get('{brand}-{model}-{modification}', 'Frontend\PagesController@modification')->name('frontend.modification');
 Route::get('{brand}-{model}', 'Frontend\PagesController@model')->name('frontend.model');
 Route::post('set-car-year', 'Frontend\PagesController@setCarYear')->name('set-car-year');
+Route::get('spa', 'TestController@spa');
