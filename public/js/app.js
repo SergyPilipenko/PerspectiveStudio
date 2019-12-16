@@ -55901,7 +55901,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_0__["default"].Store({
   }
 });
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_8__["default"]({
-  mode: 'abstract',
+  mode: 'history',
   routes: []
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
