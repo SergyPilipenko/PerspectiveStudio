@@ -65,7 +65,7 @@ class Parser implements \Iterator, ParserInterface
     public function get() : ParserInterface
     {
         foreach ($this->csvIterator as $key => $row) {
-//            $row = mb_convert_encoding($row, 'UTF-8', 'Windows-1251');
+            $row = mb_convert_encoding($row, 'UTF-8', 'Windows-1251');
             if($this->limit && $key > $this->limit) break;
             $this->updateMaxRowLength($row);
             if(!$this->maxRowLength || $this->maxRowLength < count($row)) $this->maxRowLength = count($row);
