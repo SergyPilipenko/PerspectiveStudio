@@ -16,9 +16,6 @@
                                 <li>
                                     <a href="#" v-for="category in categories" v-text="getCategoryTitle(category)"></a>
                                 </li>
-<!--                                <li><a href="#"><span>Тормоз</span>ные шланги</a></li>-->
-<!--                                <li><a href="#"><span>Тормоз</span>ные колодки</a></li>-->
-<!--                                <li><a href="#"><span>Тормоз</span>ные барабаны</a></li>-->
                             </ul>
                         </div>
                         <div v-if="products.length">

@@ -103,3 +103,14 @@
     }
 }
 
+.catalog__choose_car_container {
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    left: 50%;
+}
+
+.popup-black2.d-block.layout {
+    z-index: 5;
+}

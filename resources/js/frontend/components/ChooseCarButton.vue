@@ -1,8 +1,10 @@
 <template>
     <div>
-        <select-car v-if="showSelectCar" :auto_brands="auto_brands"
-                    :routes="routes"></select-car>
-        <button @click="toggleShowSelectCar" v-else v-text="btnText"></button>
+        <div class="catalog__choose_car_container">
+            <select-car v-if="getPopupLayout" :auto_brands="auto_brands"
+                        :routes="routes"></select-car>
+        </div>
+        <button @click="toggleShowSelectCar" v-if="!getPopupLayout" v-text="btnText"></button>
     </div>
 </template>
 <script>
@@ -21,7 +23,11 @@
         computed: {
             ...mapGetters({
                 'getCars': 'garage/getCars',
-                'getCurrentAuto': 'garage/getCurrentAuto'
+                'getCurrentAuto': 'garage/getCurrentAuto',
+                'getPopupLayout': 'General/getPopupLayout',
+            }),
+            ...mapMutations({
+                'togglePopupBlackLayout': 'General/togglePopupBlackLayout'
             }),
             btnText() {
                 return this.getCurrentAuto ? 'Изменить' : 'Выбрать авто'
@@ -29,7 +35,8 @@
         },
         methods: {
             toggleShowSelectCar() {
-                this.showSelectCar = !this.showSelectCar
+                // this.showSelectCar = !this.showSelectCar;
+                this.togglePopupBlackLayout;
             },
 
         }

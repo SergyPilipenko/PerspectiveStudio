@@ -1,4 +1,4 @@
-<div class="popup-black"></div>
+<popup-black-layout></popup-black-layout>
 <search :add_action="'{{ route('frontend.cart.add', PRODUCT_MARK_FOR_REPLACING) }}'"
         :marker="'{{ PRODUCT_MARK_FOR_REPLACING }}'"></search>
 <section class="pre-header">

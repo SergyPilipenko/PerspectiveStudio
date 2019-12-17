@@ -8499,6 +8499,19 @@ a:hover {
   min-height: 50px;
 }
 
+.catalog__choose_car_container {
+  position: fixed;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  z-index: 10;
+  left: 50%;
+}
+
+.popup-black2.d-block.layout {
+  z-index: 5;
+}
+
 .category #model {
   background-color: #c20f14;
   margin-top: 30px;
