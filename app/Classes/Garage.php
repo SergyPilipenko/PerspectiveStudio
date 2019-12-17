@@ -4,6 +4,7 @@
 namespace App\Classes;
 
 use App\Classes\Car\CarInterface;
+use App\Models\AutoType;
 use Illuminate\Support\Facades\Session;
 
 class Garage
@@ -18,13 +19,19 @@ class Garage
     private $car;
     public $cars;
     public $activeCar;
+    public $checkedBrands;
 
     private $session;
+    /**
+     * @var PartfixTecDoc
+     */
+    private $tecDoc;
 
-    public function __construct(CarInterface $car)
+    public function __construct(CarInterface $car, PartfixTecDoc $tecDoc)
     {
         $this->session = session();
         $this->car = $car;
+        $this->tecDoc = $tecDoc;
     }
 
     public function empty()
@@ -181,5 +188,10 @@ class Garage
 //                return $value == $modification;
 //            });
 //        } return false;
+    }
+
+    public function getCheckedBrands()
+    {
+        return $checkedBrands ?? $this->tecDoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
     }
 }

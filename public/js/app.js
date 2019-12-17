@@ -2224,6 +2224,59 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _frontpage_SelectCar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./frontpage/SelectCar */ "./resources/js/frontend/components/frontpage/SelectCar.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['auto_brands', 'routes'],
+  components: {
+    SelectCar: _frontpage_SelectCar__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      showSelectCar: false
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])({
+    'getCars': 'garage/getCars',
+    'getCurrentAuto': 'garage/getCurrentAuto'
+  }), {
+    btnText: function btnText() {
+      return this.getCurrentAuto ? 'Изменить' : 'Выбрать авто';
+    }
+  }),
+  methods: {
+    toggleShowSelectCar: function toggleShowSelectCar() {
+      this.showSelectCar = !this.showSelectCar;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/Garage.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/Garage.vue?vue&type=script&lang=js& ***!
@@ -3929,69 +3982,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auto_brands', 'routes'],
@@ -4065,33 +4055,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   //удачи! ^_^
@@ -4116,8 +4079,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         id: 3,
         name: 'models',
         visible: false
-      }] // selectedYear: ""
-
+      }]
     };
   },
   created: function created() {
@@ -4267,10 +4229,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           if (_this.selectedYear >= createdAt[0]) {
             return model;
           }
-        } else {
-          console.log(_this.selectedYear);
-          console.log(createdAt);
-          console.log(stopped);
         }
       });
       this.addDistinctModels(this.distinctModels(validModels));
@@ -4303,24 +4261,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           if (_this2.selectedYear >= createdAt[0]) {
             return modification;
           }
-        } else {
-          console.log(_this2.selectedYear);
-          console.log(createdAt);
-          console.log(stopped);
         }
       });
       this.addFilteredModifications(validModifications);
       this.setCarYear({
         action: '/set-car-year',
         yearSelected: this.selectedYear
-      }); // let form = new FormData();
-      // form.append('selected_year', this.selectedYear);
-      // axios.post('/set-car-year', form)
-      //     .then(data => {
-      //         self.addModels(self.filterModelsBySelectedYear(data.data));
-      //         self.resetModelsSelect();
-      //         self.clearModifications();
-      //     });
+      });
     },
     getBrandById: function getBrandById(id) {
       for (var i = 0; i <= this.brands.length; i++) {
@@ -4382,11 +4329,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getSelectedModelURI: function getSelectedModelURI() {
       var brandSelected = this.getBrandById(this.brandSelected.id);
-      var modelSelected = this.getModelById(this.modelSelected.id); // var brandName = "";
-      //     if(brandSelected.description == 'CITROËN') {
-      //         brandName = brandSelected.description.replace(/Ë/, 'E');
-      //     }
-
+      var modelSelected = this.getModelById(this.modelSelected.id);
       var brandName = brandSelected.description.toLowerCase().replace(/[^\w]/g, '_');
       if (brandName == 'citro_n') brandName = 'citroen';
       var modelName = modelSelected.name.includes(" ") ? modelSelected.name.substr(0, modelSelected.name.indexOf(' ')) : modelSelected.name;
@@ -4413,7 +4356,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         self.addBodyTypes(data.data);
       });
     },
-    choseEngine: function choseEngine() {},
     choseModification: function choseModification() {
       window.location.href = this.modificationSelected + "/categories/";
     },
@@ -36602,6 +36544,43 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm.showSelectCar
+        ? _c("select-car", {
+            attrs: { auto_brands: _vm.auto_brands, routes: _vm.routes }
+          })
+        : _c("button", {
+            domProps: { textContent: _vm._s(_vm.btnText) },
+            on: { click: _vm.toggleShowSelectCar }
+          })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/Garage.vue?vue&type=template&id=503dd521&":
 /*!******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/frontend/components/Garage.vue?vue&type=template&id=503dd521& ***!
@@ -55889,6 +55868,7 @@ Vue.component('checkout-order-comment', __webpack_require__(/*! ./frontend/compo
 Vue.component('smt', __webpack_require__(/*! ./frontend/components/Smt */ "./resources/js/frontend/components/Smt.vue")["default"]);
 Vue.component('catalog-filter', __webpack_require__(/*! ../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter */ "./packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter.vue")["default"]);
 Vue.component('mobile-nav', __webpack_require__(/*! ./frontend/components/MobileNav */ "./resources/js/frontend/components/MobileNav.vue")["default"]);
+Vue.component('choose-car-button', __webpack_require__(/*! ./frontend/components/ChooseCarButton */ "./resources/js/frontend/components/ChooseCarButton.vue")["default"]);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_0__["default"].Store({
   modules: {
     selectCar: _frontend_store_modules_select_car__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -55978,6 +55958,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/frontend/components/ChooseCarButton.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/frontend/components/ChooseCarButton.vue ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChooseCarButton.vue?vue&type=template&id=5c379645& */ "./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645&");
+/* harmony import */ var _ChooseCarButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChooseCarButton.vue?vue&type=script&lang=js& */ "./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ChooseCarButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/frontend/components/ChooseCarButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChooseCarButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ChooseCarButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChooseCarButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ChooseCarButton.vue?vue&type=template&id=5c379645& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/frontend/components/ChooseCarButton.vue?vue&type=template&id=5c379645&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChooseCarButton_vue_vue_type_template_id_5c379645___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

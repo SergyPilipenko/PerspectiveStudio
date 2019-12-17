@@ -41,6 +41,7 @@ Vue.component('checkout-order-comment', require('./frontend/components/checkout/
 Vue.component('smt', require('./frontend/components/Smt').default);
 Vue.component('catalog-filter', require('../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter').default);
 Vue.component('mobile-nav', require('./frontend/components/MobileNav').default);
+Vue.component('choose-car-button', require('./frontend/components/ChooseCarButton').default);
 
 const store = new Vuex.Store({
     modules: {
