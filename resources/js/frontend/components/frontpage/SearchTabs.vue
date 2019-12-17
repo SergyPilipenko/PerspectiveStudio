@@ -9,69 +9,6 @@
         </div>
         <select-car :auto_brands="auto_brands"
                     :routes="routes"></select-car>
-<!--        <form class="search__body search__model align-items-center justify-content-center" id="model">-->
-<!--            <div class="search__model-cover">-->
-<!--                <div class="d-flex align-items-center">-->
-<!--                    <span class="search__model-number">1</span>-->
-<!--                    <div class="d-flex flex-column">-->
-<!--                        <span class="search__model-text">Год выпуска</span>-->
-<!--                        <span class="search__model-subtext">2019</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>-->
-<!--                <div class="search__model-dropdown">-->
-<!--                    <span>2011</span>-->
-<!--                    <span>2012</span>-->
-<!--                    <span>2013</span>-->
-<!--                    <span>2014</span>-->
-<!--                    <span>2015</span>-->
-<!--                    <span>2016</span>-->
-<!--                    <span>2017</span>-->
-<!--                    <span>2018</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="search__model-cover">-->
-<!--                <div class="d-flex align-items-center">-->
-<!--                    <span class="search__model-number">2</span>-->
-<!--                    <div class="d-flex flex-column">-->
-<!--                        <span class="search__model-text">Марка</span>-->
-<!--                        <span class="search__model-subtext">2019</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>-->
-<!--                <div class="search__model-dropdown">-->
-<!--                    <span>2011</span>-->
-<!--                    <span>2012</span>-->
-<!--                    <span>2013</span>-->
-<!--                    <span>2014</span>-->
-<!--                    <span>2015</span>-->
-<!--                    <span>2016</span>-->
-<!--                    <span>2017</span>-->
-<!--                    <span>2018</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="search__model-cover">-->
-<!--                <div class="d-flex align-items-center">-->
-<!--                    <span class="search__model-number">3</span>-->
-<!--                    <div class="d-flex flex-column">-->
-<!--                        <span class="search__model-text">Модель</span>-->
-<!--                        <span class="search__model-subtext">2019</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <span class="search__model-arrow"><img src="/img/frontend/img/arrow-down.png" alt="img"></span>-->
-<!--                <div class="search__model-dropdown">-->
-<!--                    <span>2011</span>-->
-<!--                    <span>2012</span>-->
-<!--                    <span>2013</span>-->
-<!--                    <span>2014</span>-->
-<!--                    <span>2015</span>-->
-<!--                    <span>2016</span>-->
-<!--                    <span>2017</span>-->
-<!--                    <span>2018</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <button type="submit">Выбрать</button>-->
-<!--        </form>-->
         <form class="search__body search__vin align-items-center justify-content-center d-none" id="auto">
             <input type="text" placeholder="AA000Ae" required>
             <button type="submit">Выбрать</button>

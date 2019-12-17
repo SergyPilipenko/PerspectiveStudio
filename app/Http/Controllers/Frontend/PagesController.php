@@ -61,10 +61,10 @@ class PagesController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
+    public function index(Garage $garage)
     {
-        $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
-//        dd(\App\Models\Content\Rubric\Rubric::menu()->select('title', 'slug', 'id')->get());
+        $brands = $garage->getCheckedBrands();
+
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
