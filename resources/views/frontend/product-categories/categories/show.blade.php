@@ -18,7 +18,16 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
                         <h1>{{ $category->alias ? $category->alias : $category->category_title }}</h1>
-                        <button>Изменить</button>
+                        <?php $routes = ['get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')] ?>
+                        <choose-car-button
+                            :garage="'{{ json_encode(app('App\Classes\Garage')->getGarage()) }}'"
+                            :auto_brands="{{ json_encode(app('App\Classes\Garage')->getCheckedBrands()) }}"
+                            :routes="'{{ json_encode($routes) }}'"
+                        ></choose-car-button>
+{{--                        <choose-car-button :auto_brands="{{ json_encode(app('App\Classes\Garage')->getCheckedBrands()) }}"--}}
+{{--                                           :routes="'{{ json_encode($routes) }}'"></choose-car-button>--}}
+{{--                            <choose-car-button></choose-car-button>--}}
+{{--                        <button>{{ app('App\Classes\Garage')->getGarage()->activeCar ? 'Изменить' : 'Выбрать авто' }}</button>--}}
                     </div>
                 </div>
             </div>

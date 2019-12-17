@@ -14,13 +14,6 @@
             <div class="row">
                 <div class="col-12">
                     {!! Breadcrumbs::render('frontend.car.category', $category, $car, $brand, $model, $modification) !!}
-
-                    {{--                    <ul class="breadcrumbs">--}}
-{{--                        <li><a href="#">Главная</a></li>--}}
-{{--                        <li><a href="#">Легковые</a></li>--}}
-{{--                        <li><a href="#">Запчасти для Volkswagen Transporter</a></li>--}}
-{{--                        <li><a href="#">Тормозные колодки</a></li>--}}
-{{--                    </ul>--}}
                 </div>
             </div>
         </div>
@@ -31,7 +24,12 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
                         <h1>{{ $category->category_title }} для <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->formatCapacity($car->Capacity) }}</span></h1>
-                        <button>Изменить</button>
+                        <?php $routes = ['get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')] ?>
+                        <choose-car-button
+                            :garage="'{{ json_encode(app('App\Classes\Garage')->getGarage()) }}'"
+                            :auto_brands="{{ json_encode(app('App\Classes\Garage')->getCheckedBrands()) }}"
+                            :routes="'{{ json_encode($routes) }}'"
+                        ></choose-car-button>
                     </div>
                 </div>
             </div>

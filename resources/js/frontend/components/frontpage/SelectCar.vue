@@ -44,33 +44,6 @@
         </div>
         <button type="button" @click="goToCarCatalog">Выбрать</button>
     </form>
-<!--    <div>-->
-<!--        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="year"-->
-<!--                v-for="year in rangeYears"-->
-<!--                v-text="year"-->
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="brand.id"-->
-<!--                v-for="brand in brands"-->
-<!--                v-text="brand.description"-->
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="model.id"-->
-<!--                v-for="model in getModelsDistinct"-->
-<!--                v-text="model.name"-->
-
-<!--            ></option>-->
-<!--        </select>-->
-<!--    </div>-->
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
@@ -78,6 +51,7 @@
     export default {
         //удачи! ^_^
         props: ['auto_brands', 'routes'],
+
         data() {
             return {
                 modificationSelected: "",
@@ -103,7 +77,6 @@
                         visible: false
                     }
                 ],
-                // selectedYear: ""
             }
         },
         created() {
@@ -255,10 +228,6 @@
                         if(this.selectedYear >= createdAt[0]) {
                             return model;
                         }
-                    } else {
-                        console.log(this.selectedYear);
-                        console.log(createdAt);
-                        console.log(stopped);
                     }
                 });
                 this.addDistinctModels(this.distinctModels(validModels));
@@ -294,24 +263,11 @@
                         if(this.selectedYear >= createdAt[0]) {
                             return modification;
                         }
-                    } else {
-                        console.log(this.selectedYear);
-                        console.log(createdAt);
-                        console.log(stopped);
                     }
                 });
                 this.addFilteredModifications(validModifications);
 
                 this.setCarYear({action: '/set-car-year', yearSelected: this.selectedYear});
-
-                // let form = new FormData();
-                // form.append('selected_year', this.selectedYear);
-                // axios.post('/set-car-year', form)
-                //     .then(data => {
-                //         self.addModels(self.filterModelsBySelectedYear(data.data));
-                //         self.resetModelsSelect();
-                //         self.clearModifications();
-                //     });
             },
 
             getBrandById(id) {
@@ -392,10 +348,6 @@
             getSelectedModelURI() {
                 var brandSelected = this.getBrandById(this.brandSelected.id);
                 var modelSelected = this.getModelById(this.modelSelected.id);
-                // var brandName = "";
-                //     if(brandSelected.description == 'CITROËN') {
-                //         brandName = brandSelected.description.replace(/Ë/, 'E');
-                //     }
                 var brandName = brandSelected.description.toLowerCase().replace(/[^\w]/g,'_');
                 if(brandName == 'citro_n') brandName = 'citroen';
 
@@ -413,7 +365,6 @@
                     return this.modificationSelected = "";
                 }
 
-
                 var modelSelectedIds = this.getModelSelectedIds();
 
                 this.getSelectedModelURI();
@@ -427,9 +378,6 @@
                     .then(data => {
                         self.addBodyTypes(data.data);
                     })
-            },
-            choseEngine() {
-
             },
             choseModification() {
                 window.location.href = this.modificationSelected+"/categories/";
