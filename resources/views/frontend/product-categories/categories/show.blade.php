@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="subcategory__footer">
 								<span class="subcategory__total">
-									Показано 6 товаров из 455
+									Показано {{ $products->count() }} товаров из {{ $products->total() }}
 								</span>
                                     {{ $products->appends(request()->all())->links('frontend.UiComponents.pagination.partfix') }}
                                 </div>
