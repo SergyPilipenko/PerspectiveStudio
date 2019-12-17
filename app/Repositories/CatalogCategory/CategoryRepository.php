@@ -51,7 +51,7 @@ class CategoryRepository
         } else {
             $result = $cache;
         }
-        $products = $this->paginator->paginate($result, 20, request()->page);
+        $products = $this->paginator->paginate($result, 21, request()->page);
         $ids = $products->getCollection()->pluck('id');
         $productsWithData = $this->productRepository->getProductsWithData($ids);
         $products->setCollection($productsWithData);
