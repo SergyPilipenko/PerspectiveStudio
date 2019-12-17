@@ -13,6 +13,7 @@ import productShow from './frontend/store/modules/productShow';
 import Cart from './frontend/store/modules/cart';
 import Checkout from './frontend/store/modules/checkout';
 import Search from './frontend/store/modules/search';
+import General from './frontend/store/modules/general';
 import CatalogFilter from "../../packages/partfix/catalog-category-filter/src/assets/js/store/modules/catalog-filter-store";
 import VueRouter from 'vue-router';
 
@@ -42,6 +43,7 @@ Vue.component('smt', require('./frontend/components/Smt').default);
 Vue.component('catalog-filter', require('../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter').default);
 Vue.component('mobile-nav', require('./frontend/components/MobileNav').default);
 Vue.component('choose-car-button', require('./frontend/components/ChooseCarButton').default);
+Vue.component('popup-black-layout', require('./frontend/components/PopupBlackLayout').default);
 
 const store = new Vuex.Store({
     modules: {
@@ -51,7 +53,8 @@ const store = new Vuex.Store({
         Checkout,
         productShow,
         Search,
-        CatalogFilter
+        CatalogFilter,
+        General
     }
 });
 
