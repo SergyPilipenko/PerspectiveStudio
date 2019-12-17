@@ -150,40 +150,40 @@
         </div>
     </div>
 
-    <section class="subcategory__links">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <ul>
-                        <li>
-                            <a href="#">Ссылка разовая</a>
-                        </li>
-                        <li>
-                            <a href="#">Тормозные диск</a>
-                        </li>
-                        <li>
-                            <a href="#">Колодки для буса</a>
-                        </li>
-                        <li>
-                            <a href="#">Торможение 18</a>
-                        </li>
-                        <li>
-                            <a href="#">Свежетормоз</a>
-                        </li>
-                        <li>
-                            <a href="#">Коврик для торможения</a>
-                        </li>
-                        <li>
-                            <a href="#">Дичайшее ПП</a>
-                        </li>
-                        <li>
-                            <a href="#">Органический бочёк</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+{{--    <section class="subcategory__links">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-12">--}}
+{{--                    <ul>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Ссылка разовая</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Тормозные диск</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Колодки для буса</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Торможение 18</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Свежетормоз</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Коврик для торможения</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Дичайшее ПП</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Органический бочёк</a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
     <section class="subcategory__info">
         <div class="container">
             <div class="row">
