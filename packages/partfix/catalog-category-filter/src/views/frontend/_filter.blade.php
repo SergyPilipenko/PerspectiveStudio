@@ -11,11 +11,7 @@
             <h3 class="d-sm-none">Фильтры</h3>
             <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
             <div class="subcategory__sidebar-block">
-                <div class="d-flex justify-content-between">
-                    <span class="subcategory__sidebar-chosen">Вы выбрали:</span><span class="subcategory__sidebar-cancel">Сбросить все</span>
-                </div>
                 <applied-filters></applied-filters>
-
             </div>
 
             @foreach ($filter->items as $filterBlock)
@@ -26,9 +22,9 @@
             <preload-layout></preload-layout>
         </div>
     </catalog-filter>
-    <button class="subcategory__sidebar-clear">
+    <a href="{{ $categoryLink }}" class="subcategory__sidebar-clear-link">
         Отменить всё
-    </button>
+    </a>
     <div class="subcategory__sidebar-more">
         <h3>Смотрите еще</h3>
         <p><a href="#">Ссылка 1</a>, <a href="#">Ссылка первая</a>, <a href="#">Ссылка
