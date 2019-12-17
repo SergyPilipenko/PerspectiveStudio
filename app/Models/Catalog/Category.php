@@ -272,7 +272,7 @@ class Category extends Model implements CategoryInterface
     {
         return $this->builder->select('catalog_categories as node, catalog_categories as parent', ['distinct p.id'])
             ->join('product_categories as pc', 'parent.id', 'pc.category_id')
-            ->join('products as p', 'pc.product_id', 'p.id')
+            ->join('products_flat as p', 'pc.product_id', 'p.id')
             ->whereBetween("node._lft", "parent._lft", "parent._rgt")
             ->where('parent.id', $this->id);
     }

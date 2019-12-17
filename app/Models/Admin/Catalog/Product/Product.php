@@ -326,6 +326,21 @@ class Product extends Model implements ProductInterface
             if(array_key_exists($code, $request)) $data[$code] = $request[$code];
         }
 
+        $productFlat = DB::table('products_flat')->where('id', $product->id)->first();
+
+        if($productFlat && count($data)) {
+            DB::table('products_flat')->where('id', $product->id)->update($data);
+
+        } elseif (!$productFlat && count($data)) {
+            $data['id'] = $product->id;
+            $data['article'] = $product->article;
+            $data['attribute_family_id'] = $product->attribute_family_id;
+            $data['type'] = $product->type;
+            $data['quantity'] = $product->quantity;
+            $data['depends_quantity'] = $product->depends_quantity;
+            DB::table('products_flat')->insert($data);
+        }
+
         if(count($data)) DB::table('products_flat')->where('id', $product->id)->update($data);
     }
 }
