@@ -1859,21 +1859,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     getRequestParams: 'CatalogFilter/getRequestParams',
-    getAppliedFilters: 'CatalogFilter/getAppliedFilters'
+    getAppliedFilters: 'CatalogFilter/getAppliedFilters',
+    getCategoryLink: 'CatalogFilter/getCategoryLink'
   })),
   methods: {
     deleteFilterOption: function deleteFilterOption(href) {
@@ -36197,6 +36188,20 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { staticClass: "d-flex justify-content-between" }, [
+      _c("span", { staticClass: "subcategory__sidebar-chosen" }, [
+        _vm._v("Вы выбрали:")
+      ]),
+      _c(
+        "a",
+        {
+          staticClass: "subcategory__sidebar-cancel",
+          attrs: { href: _vm.getCategoryLink }
+        },
+        [_vm._v("Сбросить все")]
+      )
+    ]),
+    _vm._v(" "),
     _c(
       "div",
       {
