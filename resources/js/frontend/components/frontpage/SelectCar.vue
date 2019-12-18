@@ -15,7 +15,7 @@
             </div>
         </div>
         <div :class="{'search__model-cover disabled' : step < 2, 'search__model-cover' : step >= 2}" @click="showSelect('brand')">
-            <input type="text" v-model="inputBrand" @input="filterBrands">
+            <input type="text" v-model="inputBrand" @input="filterBrands" :disabled="disabled('brand')">
             <div class="d-flex align-items-center">
                 <span class="search__model-number">2</span>
                 <div class="d-flex flex-column">
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div :class="{'search__model-cover disabled' : step < 3, 'search__model-cover' : step >= 3}" @click="showSelect('models')">
-            <input type="text" v-model="inputModel" @input="filterModels">
+            <input type="text" v-model="inputModel" @input="filterModels" :disabled="disabled('models')" >
             <div class="d-flex align-items-center">
                 <span class="search__model-number">3</span>
                 <div class="d-flex flex-column">
@@ -468,6 +468,15 @@
                     }
 
                     this.addDistinctModels(filtered);
+                }
+            },
+            disabled(selectName) {
+                if(this.step < 2 && selectName == 'brand') {
+                    return true
+                }else if(this.step < 3 && selectName == 'models') {
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }

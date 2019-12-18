@@ -4454,6 +4454,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         this.addDistinctModels(filtered);
       }
+    },
+    disabled: function disabled(selectName) {
+      if (this.step < 2 && selectName == 'brand') {
+        return true;
+      } else if (this.step < 3 && selectName == 'models') {
+        return true;
+      } else {
+        return false;
+      }
     }
   })
 });
@@ -38638,7 +38647,7 @@ var render = function() {
                 expression: "inputBrand"
               }
             ],
-            attrs: { type: "text" },
+            attrs: { type: "text", disabled: _vm.disabled("brand") },
             domProps: { value: _vm.inputBrand },
             on: {
               input: [
@@ -38725,7 +38734,7 @@ var render = function() {
                 expression: "inputModel"
               }
             ],
-            attrs: { type: "text" },
+            attrs: { type: "text", disabled: _vm.disabled("models") },
             domProps: { value: _vm.inputModel },
             on: {
               input: [
