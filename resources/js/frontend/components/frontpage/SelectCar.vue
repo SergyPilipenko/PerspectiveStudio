@@ -170,17 +170,20 @@
                 this.filterModificationsBySelectedYear();
                 this.hideAllSelects();
                 this.showSelect('brand');
+                this.inputYear = year;
             },
             setBrand(brand) {
                 this.addSelectedBrand(brand);
                 this.loadModels(brand.id);
                 this.hideAllSelects();
                 this.showSelect('models');
+                this.inputBrand = brand.description;
             },
             setModel(model) {
                 this.addSelectedModel(model);
                 this.hideAllSelects();
                 this.loadModifications();
+                this.inputModel = model.name;
             },
             hideAllSelects(except = null) {
                 var selects = this.selects;
