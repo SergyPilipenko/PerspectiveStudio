@@ -39,12 +39,14 @@
                                 </div>
                             </div>
                             @if(env('APP_DEBUG'))
+                                @if(isset($product->custom_attributes['old_price']))
                                 <div class="card__main-oldprice">
-                                    <span>12 458</span>
+                                    <span>{{ $product->custom_attributes['old_price'] }}</span>
                                     <sup>
                                         грн
                                     </sup>
                                 </div>
+                                @endif
                             @endif
                             <div class="d-flex align-items-start mb25">
                                 <div class="d-flex flex-column">
@@ -285,8 +287,7 @@
                     </ul>
                     <div class="card__info">
                         <div class="card__info-body">
-                            <p>Предоставляем возможность выбрать и заказать Тормозные колодки Dello 30105660234 по самой оптимальной цене среди каталогов автомобильных запчастей в Киеве и Украине.</p>
-                            <p>Тормозные колодки Dello 30105660234 - это отличный вариант покупки для таких брендов авто, как Форд, Ленд Ровер, Вольво. Интернет каталог укрпартс.ком.юа готов предложить Вам деталь по выгодной цене от 411 грн., а также её заменители. Наши сотрудники организуют продажу с доставкой покупателям из регионов Харькова, Никополя, Херсона, Краматорска, Полтавы, Сум и в любой город Украины.</p>
+                            {!! $product->custom_attributes['description'] !!}
                             <h3>Технические характеристики <span>Тормозные колодки Dello 30105660234</span></h3>
                             <div class="card__info-data">
                                 <div class="d-flex align-items-center justify-content-between">

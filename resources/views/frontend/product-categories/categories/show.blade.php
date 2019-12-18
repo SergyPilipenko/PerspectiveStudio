@@ -66,18 +66,18 @@
                                 </div>
                                 <div class="subcategory__main">
                                     @foreach($products as $product)
-                                        @if($product->price > 0)
+                                    @if($product->price > 0)
                                             <div class="subcategory__cell">
                                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                     <div class="subcategory__img">
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                     </div>
                                                 </a>
                                                 <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                 <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                 <span class="subcategory__type">{{ $product->name }}</span>
                                                 <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+{{--                                                <p class="subcategory__sale">Вернем <span>{{ $product->old_price }} грн</span></p>--}}
                                                 <div class="subcategory__buy d-sm-none">
                                                     <add-to-cart
                                                         product="{{ $product }}"
@@ -92,14 +92,14 @@
                                                 <div class="subcategory__cell subcategory__cell--overlay">
                                                     <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                         <div class="subcategory__img">
-                                                            <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                            <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                         </div>
                                                     </a>
                                                     <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                     <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                     <span class="subcategory__type">{{ $product->name }}</span>
                                                     <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+{{--                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
                                                     <div class="subcategory__buy">
                                                         <add-to-cart
                                                             product="{{ $product }}"
@@ -108,7 +108,7 @@
                                                                 <button>Купить</button>
                                                             </div>
                                                         </add-to-cart>
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="delivery-truck">
+                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="delivery-truck">
                                                         <span>В наличии</span>
                                                     </div>
                                                 </div>
@@ -117,7 +117,7 @@
                                             <div class="subcategory__cell subcategory__cell--na">
                                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                     <div class="subcategory__img">
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                     </div>
                                                 </a>
                                                 <span class="subcategory__code">Код: {{ $product->article }} </span>
