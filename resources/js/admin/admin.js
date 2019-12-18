@@ -60,11 +60,28 @@ window.onload = function () {
         el: '#app',
         store
     });
-    CKEDITOR.replace( 'ckeditor', {
-        extraPlugins: 'uploadimage',
-        uploadUrl: '/admin/ckeditor-upload-image',
-        allowedContent: true
-    });
+    if(document.getElementById('ckeditor')) {
+        CKEDITOR.replace( 'ckeditor', {
+            extraPlugins: 'uploadimage',
+            uploadUrl: '/admin/ckeditor-upload-image',
+            allowedContent: true
+        });
+    }
+    if(document.getElementById('ckeditor-short_description')) {
+        CKEDITOR.replace( 'ckeditor-short_description', {
+            extraPlugins: 'uploadimage',
+            uploadUrl: '/admin/ckeditor-upload-image',
+            allowedContent: true
+        });
+    }
+    if(document.getElementById('ckeditor-description')) {
+        CKEDITOR.replace( 'ckeditor-description', {
+            extraPlugins: 'uploadimage',
+            uploadUrl: '/admin/ckeditor-upload-image',
+            allowedContent: true
+        });
+    }
+
 
     if($(".auto_type_head_checkbox")) {
         $(".auto_type_head_checkbox").on('change', function (e) {
