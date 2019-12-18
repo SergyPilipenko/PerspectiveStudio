@@ -4165,17 +4165,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.filterModificationsBySelectedYear();
       this.hideAllSelects();
       this.showSelect('brand');
+      this.inputYear = year;
     },
     setBrand: function setBrand(brand) {
       this.addSelectedBrand(brand);
       this.loadModels(brand.id);
       this.hideAllSelects();
       this.showSelect('models');
+      this.inputBrand = brand.description;
     },
     setModel: function setModel(model) {
       this.addSelectedModel(model);
       this.hideAllSelects();
       this.loadModifications();
+      this.inputModel = model.name;
     },
     hideAllSelects: function hideAllSelects() {
       var except = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
