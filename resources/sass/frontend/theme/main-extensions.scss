@@ -130,3 +130,19 @@
     text-align: center;
     line-height: 38px;
 }
+
+.companies__catalog {
+    .d-flex.flex-column.hidden {
+        display: none !important;
+    }
+}
+
+.search__model-cover.disabled {
+    color: #d2d2d2;
+}
+
+#model {
+    .search__model-cover.hidden {
+        color: #d2d2d2;
+    }
+}

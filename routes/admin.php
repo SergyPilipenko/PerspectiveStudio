@@ -14,9 +14,7 @@ Route::prefix('admin')->group(function() {
     });
 
     Route::prefix('upload-history')->group(function() {
-
         Route::get('/', 'Admin\Import\UploadHistory@index')->name('admin.upload-history.index');
-
     });
 
     Route::group(['prefix' => 'catalog', 'as' => 'admin.catalog.'], function() {

@@ -183,15 +183,21 @@ class Garage
             if($item[self::MODIFICATION_ID] == $modification) return true;
         }
         return false;
-//        if($this->getGarageList()->count()) {
-//            $this->getGarageList()->pluck(self::MODIFICATION_ID)->contains(function ($value) use ($modification) {
-//                return $value == $modification;
-//            });
-//        } return false;
     }
 
     public function getCheckedBrands()
     {
         return $checkedBrands ?? $this->tecDoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
+    }
+
+    public function sortByAlphabet($brands)
+    {
+        $items = [];
+        foreach ($brands as $brand) {
+            $key = substr($brand->description, 0, 1);
+            $items[$key][] = $brand;
+        }
+
+        return $items;
     }
 }

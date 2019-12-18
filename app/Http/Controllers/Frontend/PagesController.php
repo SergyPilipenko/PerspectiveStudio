@@ -64,12 +64,13 @@ class PagesController extends Controller
     public function index(Garage $garage)
     {
         $brands = $garage->getCheckedBrands();
+        $alphabeticalBrands = $garage->sortByAlphabet($brands);
 
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
 
-        return view('frontend.index', compact('brands', 'routes'));
+        return view('frontend.index', compact('brands', 'routes', 'alphabeticalBrands'));
     }
 
     public function brand(Request $request)
