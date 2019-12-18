@@ -70,15 +70,6 @@
                                 @endif
                             </div>
                             <div class="d-flex align-items-center">
-{{--                                <div class="card__main-quantity">--}}
-{{--                                    <span>4 шт.</span>--}}
-{{--                                    <img src="/img/frontend/img/arrow-down.png" alt="arrow">--}}
-{{--                                    <div class="card__main-quantity-dropdown">--}}
-{{--                                        <span>1 шт.</span>--}}
-{{--                                        <span>2 шт.</span>--}}
-{{--                                        <span>3 шт.</span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
                                 <add-to-cart
                                     product="{{ $product }}"
                                     action="{{ route('frontend.cart.add', $product->id) }}"

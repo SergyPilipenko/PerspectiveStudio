@@ -7,7 +7,9 @@ export default {
         selectedModel: null,
         yearsList: [],
         brands: [],
+        brandsStore: [],
         models: [],
+        distinctModelsStore: [],
         modifications: [],
         filteredModifications: [],
         distinctModels: [],
@@ -32,8 +34,14 @@ export default {
         getBrands: function (state) {
             return state.brands
         },
+        getBrandsStore: function(state) {
+            return state.brandsStore
+        },
         getModels: function (state) {
             return state.models
+        },
+        getDistinctModelsStore: function (state) {
+            return state.distinctModelsStore
         },
         getModifications: function (state) {
             return state.modifications
@@ -85,8 +93,14 @@ export default {
         addBrands: function(state, newValue){
             state.brands = newValue;
         },
+        addBrandsStore: function(state, newValue){
+            state.brandsStore = newValue;
+        },
         addModels: function(state, newValue){
             state.models = newValue;
+        },
+        addDistinctModelsStore: function(state, newValue){
+            state.distinctModelsStore = newValue;
         },
         addModifications: function (state, newValue) {
             state.modifications = newValue;
@@ -131,7 +145,8 @@ export default {
             form.append('year', payload.selected_year);
             axios.post(payload.action, form)
                 .then(data => {
-                context.commit('addBrands', data.data)
+                context.commit('addBrands', data.data);
+                context.commit('addBrandsStore', data.data);
             });
         },
         resetModifications: function(context){

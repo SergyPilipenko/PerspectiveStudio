@@ -314,198 +314,235 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+{{--                    {{ dd($brands) }}--}}
                     <h2 class="default-title">
                         Автозапчасти для любой марки автомобиля
                     </h2>
+{{--                    @foreach($alphabeticalBrands as $key => $items)--}}
+{{--                        <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										{{ $key }}--}}
+{{--									</span>--}}
+{{--                            <ul>--}}
+{{--                                @foreach($items as $item)--}}
+{{--                                    <li><a href="#">{{ $item->description }}</a></li>--}}
+{{--                                                                            <li><a href="#">Alfa romeo</a></li>--}}
+{{--                                                                            <li><a href="#">Audi</a></li>--}}
+{{--                                @endforeach--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
                     <div class="d-flex flex-column flex-lg-row">
                         <div class="companies__catalog">
-                            <div class="d-flex flex-column">
-                                <div class="companies__catalog-block">
+                            <?php $i = 0; $x = 0; ?>
+                            @foreach($alphabeticalBrands as $key => $items)
+                                @if($i % 6 == 0)
+                                    <div class="d-flex flex-column {{ $x >= 5 ? 'hidden' : '' }}">
+                                @endif
+                                        <div class="companies__catalog-block">
 									<span class="companies__catalog-letter">
-										A
+										{{ $key }}
 									</span>
-                                    <ul>
-                                        <li><a href="#">Acura</a></li>
-                                        <li><a href="#">Alfa romeo</a></li>
-                                        <li><a href="#">Audi</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										B
-									</span>
-                                    <ul>
-                                        <li><a href="#">Bentley</a></li>
-                                        <li><a href="#">BMW</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										C
-									</span>
-                                    <ul>
-                                        <li><a href="#">Cadillac</a></li>
-                                        <li><a href="#">Chevrolet</a></li>
-                                        <li><a href="#">Chrysler</a></li>
-                                        <li><a href="#">Citroën</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										D
-									</span>
-                                    <ul>
-                                        <li><a href="#">Daewoo</a></li>
-                                        <li><a href="#">Dodge</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										F
-									</span>
-                                    <ul>
-                                        <li><a href="#">Fiat</a></li>
-                                        <li><a href="#">Ford</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										G
-									</span>
-                                    <ul>
-                                        <li><a href="#">Gaz</a></li>
-                                        <li><a href="#">Geely</a></li>
-                                        <li><a href="#">Great wall</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										H
-									</span>
-                                    <ul>
-                                        <li><a href="#">Honda</a></li>
-                                        <li><a href="#">Hummer</a></li>
-                                        <li><a href="#">Hyundai</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										I
-									</span>
-                                    <ul>
-                                        <li><a href="#">Infiniti</a></li>
-                                        <li><a href="#">Isuzu</a></li>
-                                        <li><a href="#">Iveco</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										J
-									</span>
-                                    <ul>
-                                        <li><a href="#">Jaguar</a></li>
-                                        <li><a href="#">Jeep</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block active">
-									<span class="companies__catalog-letter">
-										K
-									</span>
-                                    <ul>
-                                        <li><a href="#">Kia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										L
-									</span>
-                                    <ul>
-                                        <li><a href="#">Lada</a></li>
-                                        <li><a href="#">Land rover</a></li>
-                                        <li><a href="#">Lexus</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										M
-									</span>
-                                    <ul>
-                                        <li><a href="#">Mazda</a></li>
-                                        <li><a href="#">Mercedes-benz</a></li>
-                                        <li><a href="#">Mini</a></li>
-                                        <li><a href="#">Mitsubishi</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										N
-									</span>
-                                    <ul>
-                                        <li><a href="#">Nissan</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										O
-									</span>
-                                    <ul>
-                                        <li><a href="#">Opel</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										P
-									</span>
-                                    <ul>
-                                        <li><a href="#">Peugeot</a></li>
-                                        <li><a href="#">Porsche</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										R
-									</span>
-                                    <ul>
-                                        <li><a href="#">Renault</a></li>
-                                        <li><a href="#">Rover</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										S
-									</span>
-                                    <ul>
-                                        <li><a href="#">Saab</a></li>
-                                        <li><a href="#">Seat</a></li>
-                                        <li><a href="#">Skoda</a></li>
-                                        <li><a href="#">Smart</a></li>
-                                        <li><a href="#">Ssangyong</a></li>
-                                        <li><a href="#">Subaru</a></li>
-                                        <li><a href="#">Suzuki</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										T
-									</span>
-                                    <ul>
-                                        <li><a href="#">Toyota</a></li>
-                                    </ul>
-                                </div>
-                                <div class="companies__catalog-block">
-									<span class="companies__catalog-letter">
-										V
-									</span>
-                                    <ul>
-                                        <li><a href="#">Volvo</a></li>
-                                        <li><a href="#">Vw</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                                            <ul>
+                                                @foreach($items as $item)
+                                                <li><a href="#">{{ $item->description }}</a></li>
+                                                @endforeach
+{{--                                                <li><a href="#">Alfa romeo</a></li>--}}
+{{--                                                <li><a href="#">Audi</a></li>--}}
+                                            </ul>
+                                        </div>
+                                @if($i % 6 == 0)
+                                    </div>
+                                @endif
+                                <?php $x++ ?>
+                            @endforeach
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										A--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Acura</a></li>--}}
+{{--                                        <li><a href="#">Alfa romeo</a></li>--}}
+{{--                                        <li><a href="#">Audi</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										B--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Bentley</a></li>--}}
+{{--                                        <li><a href="#">BMW</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										C--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Cadillac</a></li>--}}
+{{--                                        <li><a href="#">Chevrolet</a></li>--}}
+{{--                                        <li><a href="#">Chrysler</a></li>--}}
+{{--                                        <li><a href="#">Citroën</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										D--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Daewoo</a></li>--}}
+{{--                                        <li><a href="#">Dodge</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										F--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Fiat</a></li>--}}
+{{--                                        <li><a href="#">Ford</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										G--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Gaz</a></li>--}}
+{{--                                        <li><a href="#">Geely</a></li>--}}
+{{--                                        <li><a href="#">Great wall</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										H--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Honda</a></li>--}}
+{{--                                        <li><a href="#">Hummer</a></li>--}}
+{{--                                        <li><a href="#">Hyundai</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										I--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Infiniti</a></li>--}}
+{{--                                        <li><a href="#">Isuzu</a></li>--}}
+{{--                                        <li><a href="#">Iveco</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										J--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Jaguar</a></li>--}}
+{{--                                        <li><a href="#">Jeep</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block active">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										K--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Kia</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										L--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Lada</a></li>--}}
+{{--                                        <li><a href="#">Land rover</a></li>--}}
+{{--                                        <li><a href="#">Lexus</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										M--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Mazda</a></li>--}}
+{{--                                        <li><a href="#">Mercedes-benz</a></li>--}}
+{{--                                        <li><a href="#">Mini</a></li>--}}
+{{--                                        <li><a href="#">Mitsubishi</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="d-flex flex-column">--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										N--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Nissan</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										O--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Opel</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										P--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Peugeot</a></li>--}}
+{{--                                        <li><a href="#">Porsche</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										R--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Renault</a></li>--}}
+{{--                                        <li><a href="#">Rover</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										S--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Saab</a></li>--}}
+{{--                                        <li><a href="#">Seat</a></li>--}}
+{{--                                        <li><a href="#">Skoda</a></li>--}}
+{{--                                        <li><a href="#">Smart</a></li>--}}
+{{--                                        <li><a href="#">Ssangyong</a></li>--}}
+{{--                                        <li><a href="#">Subaru</a></li>--}}
+{{--                                        <li><a href="#">Suzuki</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										T--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Toyota</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                                <div class="companies__catalog-block">--}}
+{{--									<span class="companies__catalog-letter">--}}
+{{--										V--}}
+{{--									</span>--}}
+{{--                                    <ul>--}}
+{{--                                        <li><a href="#">Volvo</a></li>--}}
+{{--                                        <li><a href="#">Vw</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <a href="#" class="companies__catalog-show"><span>Показать все</span></a>
                         </div>
                         <div class="d-flex flex-column">

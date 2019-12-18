@@ -30,7 +30,7 @@
                 <span v-for="bodyType in getBodyTypes" v-text="bodyType.displayvalue" @click="setCarBodyType(bodyType.displayvalue)"></span>
             </div>
         </div>
-        <div class="search__model-cover" @click="showSelect('engineType')">
+        <div :class="{'search__model-cover disabled' : step < 3, 'search__model-cover' : step >= 3}" @click="showSelect('engineType')">
             <div class="d-flex align-items-center">
                 <span class="search__model-number">3</span>
                 <div class="d-flex flex-column">
@@ -52,7 +52,7 @@
                 </span>
             </div>
         </div>
-        <div class="search__model-cover" @click="showSelect('modification')">
+        <div :class="{'search__model-cover disabled' : step < 4, 'search__model-cover' : step >= 4}" @click="showSelect('modification')">
             <div class="d-flex align-items-center">
                 <span class="search__model-number">4</span>
                 <div class="d-flex flex-column">
@@ -72,43 +72,6 @@
             </div>
         </div>
     </form>
-<!--    <div>-->
-<!--        <div>-->
-<!--            <label for="year" v-if="!yearSelected"></label>-->
-<!--            <select name="year"-->
-<!--                    v-model="yearSelected" class="form-control"-->
-<!--                    @change="setYear">-->
-<!--                <option value="">Не выбрано</option>-->
-<!--                <option :value="year" v-for="year in getYearsList" v-text="year"></option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <select name="" v-model="selectedBodyType" class="form-control" @change="setCarBodyType">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option :value="bodyType.displayvalue"-->
-<!--                    v-for="bodyType in getBodyTypes"-->
-<!--                    v-text="bodyType.displayvalue"-->
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <div>-->
-<!--            <ul>-->
-<!--                <li v-for="(engine, engineType) in getEngines">-->
-<!--                    {{engineType}}-->
-<!--                    <ul>-->
-<!--                        <li v-for="capacity in engine">-->
-<!--                            <a href="#" v-text="capacity" @click.prevent="setCarCapacity(capacity, engineType)"></a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--        <div v-if="getModifications">-->
-<!--            <div v-for="modification in getModifications">-->
-<!--                <a :href="route['auto.model']+'-'+modification.id">-->
-<!--                    {{ modification.fulldescription }} ({{ modification.enginePower }})-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </template>
 <script>
     import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
@@ -125,6 +88,7 @@
                 selectedBodyType: "",
                 selectedEngineType: "",
                 selectedModification: "",
+                step: 1,
                 selects: [
                     {
                         id: 1,
@@ -151,6 +115,9 @@
         },
 
         created() {
+            if(this.year) {
+                this.step = 2;
+            }
             this.setYearsList(this.years);
             this.setModels(this.convertModelsBackendData());
             this.filterModelsByYear({models: this.getModels, selectedYear: this.yearSelected});
@@ -193,6 +160,7 @@
             }),
 
             setCarBodyType(bodyType) {
+                this.step = 3;
                 this.clearSelectedEngineType();
                 this.selectedBodyType = bodyType;
                 this.pluck({value: 'id', items: this.getFilteredModelsByYear});
@@ -206,6 +174,7 @@
             },
 
             setCarCapacity(capacity, engineType) {
+                this.step = 4;
                 this.pluck({value: 'id', items: this.getFilteredModelsByYear});
                 this.setModifications({
                     action: this.route['get-filtered-modifications'],
@@ -225,6 +194,7 @@
                 this.selectedModification = "";
             },
             setYear(year) {
+                this.step = 2;
                 this.yearSelected = year;
                 this.clearSelectedEngineType();
                 this.selectedBodyType = "";
@@ -241,6 +211,9 @@
                 this.showSelect('bodyType');
             },
             showSelect(name) {
+                // console.log(name);
+                if(name == 'engineType' && this.step < 3) return;
+                if(name == 'modification' && this.step < 4) return;
                 this.hideAllSelects(name);
                 var selects = this.selects;
                 for(let i in selects) {

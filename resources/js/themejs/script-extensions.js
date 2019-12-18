@@ -30,4 +30,14 @@ $(function () {
             }
         });
     }
+    if($(".companies__catalog")) {
+        $(".companies__catalog-show").on('click', function(e) {
+            e.preventDefault();
+            var items = $(".companies__catalog .d-flex.flex-column ");
+            items.each(function(index) {
+                $(this).removeClass('hidden')
+            })
+            $(".companies__catalog-show").remove();
+        })
+    }
 });
