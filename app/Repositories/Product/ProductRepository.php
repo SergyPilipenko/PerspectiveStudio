@@ -54,7 +54,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getProductsWithData($ids)
     {
-        return  $this->product->whereIn('id', $ids)->with('productAttributeValues')->get();
+        return  $this->product->whereIn('id', $ids)->with('productAttributeValues','images')->get();
     }
 
     public function createTecdocProducts($products)

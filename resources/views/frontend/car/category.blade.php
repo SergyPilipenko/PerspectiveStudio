@@ -202,7 +202,7 @@
                                                 <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                 <span class="subcategory__type">{{ $product->name }}</span>
                                                 <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+{{--                                                <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
                                                 <div class="subcategory__cell subcategory__cell--overlay">
                                                     <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                         <div class="subcategory__img">
@@ -213,7 +213,7 @@
                                                     <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                     <span class="subcategory__type">{{ $product->name }}</span>
                                                     <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+{{--                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
                                                     <div class="subcategory__buy">
                                                         <add-to-cart
                                                             product="{{ $product }}"
@@ -241,116 +241,6 @@
                                         </div>
                                     @endif
                                 @endforeach
-
-                                {{--                                <div class="subcategory__cell">--}}
-{{--                                    <div class="subcategory__img">--}}
-{{--                                        <img src="/img/frontend/img/subcategory2.png" alt="photo">--}}
-{{--                                    </div>--}}
-{{--                                    <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                    <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                    <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                    <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                    <div class="subcategory__cell subcategory__cell--overlay">--}}
-{{--                                        <div class="subcategory__img">--}}
-{{--                                            <img src="/img/frontend/img/subcategory2.png" alt="photo">--}}
-{{--                                        </div>--}}
-{{--                                        <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                        <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                        <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                        <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                        <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                        <div class="subcategory__buy">--}}
-{{--                                            <button>Купить</button>--}}
-{{--                                            <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="delivery-truck">--}}
-{{--                                            <span>В наличии</span>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="subcategory__cell">--}}
-{{--                                    <div class="subcategory__img">--}}
-{{--                                        <img src="/img/frontend/img/subcategory3.png" alt="photo">--}}
-{{--                                    </div>--}}
-{{--                                    <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                    <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                    <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                    <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                    <div class="subcategory__cell subcategory__cell--overlay">--}}
-{{--                                        <div class="subcategory__img">--}}
-{{--                                            <img src="/img/frontend/img/subcategory3.png" alt="photo">--}}
-{{--                                        </div>--}}
-{{--                                        <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                        <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                        <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                        <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                        <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                        <div class="subcategory__buy">--}}
-{{--                                            <button>Купить</button>--}}
-{{--                                            <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="delivery-truck">--}}
-{{--                                            <span>В наличии</span>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="subcategory__cell">--}}
-{{--                                    <div class="subcategory__img">--}}
-{{--                                        <img src="/img/frontend/img/subcategory4.png" alt="photo">--}}
-{{--                                    </div>--}}
-{{--                                    <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                    <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                    <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                    <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span></div>--}}
-{{--                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                    <div class="subcategory__cell subcategory__cell--overlay">--}}
-{{--                                        <div class="subcategory__img">--}}
-{{--                                            <img src="/img/frontend/img/subcategory1.png" alt="photo">--}}
-{{--                                        </div>--}}
-{{--                                        <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                        <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                        <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                        <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span></div>--}}
-{{--                                        <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                        <div class="subcategory__buy">--}}
-{{--                                            <button>Купить</button>--}}
-{{--                                            <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="delivery-truck">--}}
-{{--                                            <span>В наличии</span>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="subcategory__cell">--}}
-{{--                                    <div class="subcategory__img">--}}
-{{--                                        <img src="/img/frontend/img/subcategory2.png" alt="photo">--}}
-{{--                                    </div>--}}
-{{--                                    <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                    <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                    <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                    <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                    <div class="subcategory__cell subcategory__cell--overlay">--}}
-{{--                                        <div class="subcategory__img">--}}
-{{--                                            <img src="/img/frontend/img/subcategory2.png" alt="photo">--}}
-{{--                                        </div>--}}
-{{--                                        <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                        <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                        <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                        <div class="d-flex align-items-end"><span class="subcategory__price">12289<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>--}}
-{{--                                        <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
-{{--                                        <div class="subcategory__buy">--}}
-{{--                                            <button>Купить</button>--}}
-{{--                                            <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="delivery-truck">--}}
-{{--                                            <span>В наличии</span>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div class="subcategory__cell subcategory__cell--na">--}}
-{{--                                    <div class="subcategory__img">--}}
-{{--                                        <img src="/img/frontend/img/subcategory3.png" alt="photo">--}}
-{{--                                    </div>--}}
-{{--                                    <span class="subcategory__code">Код: PS2385R </span>--}}
-{{--                                    <span class="subcategory__company">Hyundai/Kia</span>--}}
-{{--                                    <span class="subcategory__type">Фильтр масляный</span>--}}
-{{--                                    <a href="#" class="subcategory__notify">Сообщить о поступлении</a>--}}
-{{--                                </div>--}}
                             </div>
                             <div class="subcategory__footer">
 								<span class="subcategory__total">

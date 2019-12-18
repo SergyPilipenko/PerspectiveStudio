@@ -36,10 +36,10 @@ class Attribute extends Model
     {
         parent::boot();
         self::creating(function($attribute) {
-            $this->syncFilterableFieldWithProductsFlatTable($attribute);
+            self::syncFilterableFieldWithProductsFlatTable($attribute);
         });
         self::updating(function($attribute) {
-            $this->syncFilterableFieldWithProductsFlatTable($attribute);
+            self::syncFilterableFieldWithProductsFlatTable($attribute);
         });
         self::deleting(function($attribute) {
             if(Schema::hasColumn('products_flat', $attribute->code)) {
@@ -121,7 +121,7 @@ class Attribute extends Model
         return $formatted;
     }
 
-    public function syncFilterableFieldWithProductsFlatTable($attribute)
+    public static function syncFilterableFieldWithProductsFlatTable($attribute)
     {
 
         if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
