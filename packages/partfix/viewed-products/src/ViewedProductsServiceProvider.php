@@ -4,7 +4,7 @@ namespace Partfix\ViewedProducts;
 
 use Illuminate\Support\ServiceProvider;
 use Partfix\ViewedProducts\Contracts\ViewedProductsInterface;
-use Partfix\ViewedProducts\model\ViewedProducts;
+use Partfix\ViewedProducts\Model\ViewedProducts;
 
 class ViewedProductsServiceProvider extends ServiceProvider
 {

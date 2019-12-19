@@ -1,12 +1,12 @@
-@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.title', [
+@section('meta_title', $category->meta_title ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.title', [
 'brand' => $car->brand->description,
 'model' => $car->model->description,
 'modification' => $car->modification->description,
 'year' => $car->year,
 'category_title' => $category->category_title
 ]))
-@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.description'))
-@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.keywords'))
+@section('meta_description', $category->meta_description ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.description'))
+@section('meta_keywords', $category->meta_keywords ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-car-category.keywords'))
 @extends('frontend')
 @section('content')
     <section class="card">

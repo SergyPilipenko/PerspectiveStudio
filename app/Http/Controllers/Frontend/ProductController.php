@@ -49,7 +49,9 @@ class ProductController extends Controller
             $activeCar = $garage->getActiveCar();
         }
         $this->viewedProducts->add($product);
-        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags', 'activeCar'));
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
+
+        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags', 'activeCar', 'viewedProducts'));
     }
 
     public function search(Request $request, ProductsSearcher $productsSearcher, CategoriesSearcher $categoriesSearcher)
