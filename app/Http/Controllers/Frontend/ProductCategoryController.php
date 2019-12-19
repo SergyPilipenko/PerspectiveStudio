@@ -18,9 +18,8 @@ class ProductCategoryController extends Controller
 
     /**
      * ProductCategoryController constructor.
-     * @param CategoryRepository $categoryRepository
-     * @param MetaTags $metaTags
-     * @param ViewedProductsInterface $viewedProducts
+     * @param  CategoryRepository  $categoryRepository
+     * @param  MetaTags  $metaTags
      */
     public function __construct(
         CategoryRepository $categoryRepository,
@@ -53,7 +52,7 @@ class ProductCategoryController extends Controller
 
     public function show($category)
     {
-        $products = $this->categoryRepository->getCategoryProducts($cataweraweroiihegory);
+        $products = $this->categoryRepository->getCategoryProducts($category);
         $categoryLink = request()->getPathInfo();
         $meta_tags = $this->getCategoryMetaTags($category);
         $viewedProducts = $this->viewedProducts->getViewedProducts();
