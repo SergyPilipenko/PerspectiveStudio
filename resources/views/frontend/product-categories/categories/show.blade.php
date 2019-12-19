@@ -76,7 +76,15 @@
                                                 <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                 <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                 <span class="subcategory__type">{{ $product->name }}</span>
-                                                <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
+                                                <div class="d-flex align-items-end">
+                                                    <span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span>
+                                                    @if($product->old_price)
+                                                    <span class="subcategory__price subcategory__price--old">
+                                                        <span>{{ $product->old_price }}</span>
+                                                        <sup>грн</sup>
+                                                    </span>
+                                                    @endif
+                                                </div>
 {{--                                                <p class="subcategory__sale">Вернем <span>{{ $product->old_price }} грн</span></p>--}}
                                                 <div class="subcategory__buy d-sm-none">
                                                     <add-to-cart
@@ -98,7 +106,14 @@
                                                     <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                     <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                     <span class="subcategory__type">{{ $product->name }}</span>
-                                                    <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
+                                                    <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span>
+                                                        @if($product->old_price)
+                                                            <span class="subcategory__price subcategory__price--old">
+                                                                <span>{{ $product->old_price }}</span>
+                                                                <sup>грн</sup>
+                                                            </span>
+                                                        @endif
+                                                    </div>
 {{--                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
                                                     <div class="subcategory__buy">
                                                         <add-to-cart

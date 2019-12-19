@@ -40,9 +40,10 @@ class ProductController extends Controller
         if(!$garage->empty()) {
             $car = $garage->getSessionActiveCar();
             $belongsModification = $product->belongsModification($car['modification_id']);
+            $activeCar = $garage->getActiveCar();
         }
 
-        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags'));
+        return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags', 'activeCar'));
     }
 
     public function search(Request $request, ProductsSearcher $productsSearcher, CategoriesSearcher $categoriesSearcher)
