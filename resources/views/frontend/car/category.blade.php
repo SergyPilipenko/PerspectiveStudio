@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h1>{{ $category->category_title }} для <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->formatCapacity($car->Capacity) }}</span></h1>
+                        <h1>{{ $category->alias ?: $category->category_title }} для <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->formatCapacity($car->Capacity) }}</span></h1>
                         <?php $routes = ['get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')] ?>
                         <choose-car-button
                             :garage="'{{ json_encode(app('App\Classes\Garage')->getGarage()) }}'"
