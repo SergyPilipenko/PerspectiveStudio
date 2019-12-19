@@ -11,16 +11,22 @@ use App\Search\Searchers\ProductsSearcher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Catalog\Product\Product;
+use Partfix\ViewedProducts\Contracts\ViewedProductsInterface;
 
 class ProductController extends Controller
 {
 
     protected $product, $attribute;
+    /**
+     * @var ViewedProductsInterface
+     */
+    private $viewedProducts;
 
-    public function __construct(Product $product, Attribute $attribute)
+    public function __construct(Product $product, Attribute $attribute, ViewedProductsInterface $viewedProducts)
     {
         $this->product = $product;
         $this->attribute = $attribute;
+        $this->viewedProducts = $viewedProducts;
         $this->middleware('frontend');
     }
 
@@ -42,7 +48,7 @@ class ProductController extends Controller
             $belongsModification = $product->belongsModification($car['modification_id']);
             $activeCar = $garage->getActiveCar();
         }
-
+        $this->viewedProducts->getViewedProducts();
         return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags', 'activeCar'));
     }
 

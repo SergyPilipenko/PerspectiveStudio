@@ -53,7 +53,8 @@
             "Partfix\\QueryBuilder\\": "packages/partfix/query-builder/src",
             "Partfix\\MetaTags\\": "packages/partfix/meta-tags/src",
             "Partfix\\SiteMap\\": "packages/partfix/site-map/src",
-            "Partfix\\Parser\\": "packages/partfix/parser/src"
+            "Partfix\\Parser\\": "packages/partfix/parser/src",
+            "Partfix\\ViewedProducts\\": "packages/partfix/viewed-products/src"
         },
         "classmap": [
             "database/seeds",
