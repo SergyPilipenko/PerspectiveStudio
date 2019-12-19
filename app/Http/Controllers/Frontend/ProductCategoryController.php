@@ -54,7 +54,6 @@ class ProductCategoryController extends Controller
     public function show($category)
     {
         $products = $this->categoryRepository->getCategoryProducts($category);
-//        $product = $products->first();
         $categoryLink = request()->getPathInfo();
         $meta_tags = $this->getCategoryMetaTags($category);
         $viewedProducts = $this->viewedProducts->getViewedProducts();

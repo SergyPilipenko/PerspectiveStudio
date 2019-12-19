@@ -27,6 +27,10 @@ Breadcrumbs::for('frontend.model', function ($trail, $brand, $model) {
 
 Breadcrumbs::for('frontend.product.show', function ($trail, $product) {
     $trail->parent('frontend.index');
+    $category = $product->categories->first();
+    if($category && $category->type != 'tecdoc') {
+        $trail->push($category->category_title, route('frontend.product-categories.show', $category->slug));
+    }
     $trail->push($product->custom_attributes['name'], route('frontend.product.show', $product->slug));
 });
 
