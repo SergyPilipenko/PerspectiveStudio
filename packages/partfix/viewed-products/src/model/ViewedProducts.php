@@ -13,21 +13,14 @@ class ViewedProducts implements ViewedProductsInterface
     private $productRepository;
     private $products;
     const VIEWED_PRODUCTS_SESSSION_KEY = 'viewedProducts';
-    /**
-     * @var ProductInterface
-     */
 
-    /**
-     * ViewedProducts constructor.
-     * @param SessionManager $sessionManager
-     * @param ProductRepositoryInterface $productRepository
-     */
     public function __construct(SessionManager $sessionManager, ProductRepositoryInterface $productRepository)
     {
         $this->sessionManager = $sessionManager;
         $this->productRepository = $productRepository;
     }
 
+    /** @inheritDoc */
     public function add(ProductInterface $product)
     {
         if(!in_array($product->id, $this->getViewedProductsIds())) {
@@ -35,11 +28,13 @@ class ViewedProducts implements ViewedProductsInterface
         }
     }
 
+    /** @inheritDoc */
     public function getViewedProductsIds() : array
     {
         return $this->sessionManager->get(self::VIEWED_PRODUCTS_SESSSION_KEY) ?? [];
     }
 
+    /** @inheritDoc */
     public function getViewedProducts()
     {
         if(!count($this->getViewedProductsIds())) return null;
@@ -49,6 +44,11 @@ class ViewedProducts implements ViewedProductsInterface
         return $this->products;
     }
 
+
+    /**
+     * Добавляет в сессию id просмотренного товара
+     * @param $id
+     */
     private function addViewedProductId($id) : void
     {
         $this->sessionManager->push(self::VIEWED_PRODUCTS_SESSSION_KEY, $id);
