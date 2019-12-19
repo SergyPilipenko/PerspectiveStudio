@@ -149,14 +149,7 @@ class Product extends Model implements ProductInterface
 
     public function getProductById($id)
     {
-        $product = $this->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($id);
-//        if(isset($product->attribute_family->attribute_groups)) {
-//            foreach ($product->attribute_family->attribute_groups as $group) {
-//                if($group->name == 'Характеристики') {
-//                    $product->features = $group->group_attributes;
-//                }
-//            }
-//        }
+        $product = $this->with('attribute_family.attribute_groups.group_attributes', 'images', 'categories')->findOrFail($id);
 
         $product->custom_attributes = $product->getProductAttributes();
 

@@ -35,7 +35,6 @@ class ProductController extends Controller
         $cart = $cart->getCart();
         /** @var Product $product */
         $product = $product->getProduct($slug);
-
         $garage = $garage->getGarage();
         $meta_tags = [
             'part' => $product->custom_attributes['name'],
