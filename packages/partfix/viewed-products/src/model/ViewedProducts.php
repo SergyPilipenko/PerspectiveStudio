@@ -11,6 +11,7 @@ class ViewedProducts implements ViewedProductsInterface
 {
     private $sessionManager;
     private $productRepository;
+    private $products;
     const VIEWED_PRODUCTS_SESSSION_KEY = 'viewedProducts';
     /**
      * @var ProductInterface
@@ -43,8 +44,9 @@ class ViewedProducts implements ViewedProductsInterface
     {
         if(!count($this->getViewedProductsIds())) return null;
         $ids = array_reverse($this->getViewedProductsIds());
+        $this->products = $this->products ?? $this->productRepository->getProductsWithData($ids);
 
-        return $this->productRepository->getProductsWithData($ids);
+        return $this->products;
     }
 
     private function addViewedProductId($id) : void

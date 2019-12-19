@@ -48,7 +48,7 @@ class ProductController extends Controller
             $belongsModification = $product->belongsModification($car['modification_id']);
             $activeCar = $garage->getActiveCar();
         }
-        $this->viewedProducts->getViewedProducts();
+        $this->viewedProducts->add($product);
         return view('frontend.product.show', compact('product', 'cart', 'belongsModification', 'garage', 'meta_tags', 'activeCar'));
     }
 

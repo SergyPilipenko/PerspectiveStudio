@@ -10,7 +10,98 @@
             </div>
         </div>
     </section>
-    @include('partfix\viewed-products::viewed-products')
+    <section class="last-goods">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    @if($viewedProducts)
+                        <h2 class="default-title">
+                            последние просмотренные товары
+                        </h2>
+                        @include('partfix\viewed-products::viewed-products', ['viewedProducts' => $viewedProducts])
+                    @endif
+                    <ul class="last-goods__list">
+                        <li class="active" data-for="#block1">Самое популярное</li>
+                        <li data-for="#block2">Шины и диски</li>
+                        <li data-for="#block3">Автозвук</li>
+                        <li data-for="#block4">Электроника</li>
+                        <li data-for="#block5">Автохимия</li>
+                    </ul>
+                    <div class="last-goods__list-block" id="block1">
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                    </div>
+                    <div class="last-goods__list-block d-none" id="block2">
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                    </div>
+                    <div class="last-goods__list-block d-none" id="block3">
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                    </div>
+                    <div class="last-goods__list-block d-none" id="block4">
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                    </div>
+                    <div class="last-goods__list-block d-none" id="block5">
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list1.png" alt="list"><span>Тормозные колодки</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list2.png" alt="list"><span>Фильтры</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list3.png" alt="list"><span>Масла</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list4.png" alt="list"><span>Освещение</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list5.png" alt="list"><span>Свечи зажигания</span></a>
+                        <a href="#" class="last-goods__list-block-item"><img src="/img/frontend/img/list6.png" alt="list"><span>Аммортизаторы</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="companies">
         <div class="container">
             <div class="row">

@@ -24,6 +24,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
+use Partfix\ViewedProducts\Contracts\ViewedProductsInterface;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;
 use Illuminate\Support\Facades\Session;
@@ -42,23 +43,27 @@ class PagesController extends Controller
      * @var CategoryRepository
      */
     private $categoryRepository;
+    private $viewedProducts;
 
     /**
      * ProductCategoryController constructor.
      * @param ProductsFilter $filters
      * @param CategoryFilter $categoryFilter
      * @param CategoryRepository $categoryRepository
+     * @param ViewedProductsInterface $viewedProducts
      */
     public function __construct(
         ProductsFilter $filters,
         CategoryFilter $categoryFilter,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        ViewedProductsInterface $viewedProducts
     )
     {
         $this->middleware('frontend');
         $this->filters = $filters;
         $this->categoryFilter = $categoryFilter;
         $this->categoryRepository = $categoryRepository;
+        $this->viewedProducts = $viewedProducts;
     }
 
     public function index(Garage $garage)
@@ -69,8 +74,9 @@ class PagesController extends Controller
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
 
-        return view('frontend.index', compact('brands', 'routes', 'alphabeticalBrands'));
+        return view('frontend.index', compact('brands', 'routes', 'alphabeticalBrands', 'viewedProducts'));
     }
 
     public function brand(Request $request)
@@ -140,7 +146,9 @@ class PagesController extends Controller
 
         $categoryLink = request()->getPathInfo();
 
-        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification', 'categoryLink'));
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
+
+        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification', 'categoryLink', 'viewedProducts'));
     }
 
 
