@@ -1,6 +1,6 @@
-@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.title', $meta_tags))
-@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.description', $meta_tags))
-@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.keywords', $meta_tags))
+@section('meta_title', $category->meta_title ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.title', $meta_tags))
+@section('meta_description', $category->meta_description ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.description', $meta_tags))
+@section('meta_keywords', $category->meta_keywords ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.keywords', $meta_tags))
 @extends('frontend')
 @section('content')
     <section class="card">

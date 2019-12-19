@@ -260,14 +260,13 @@ class Product extends Model implements ProductInterface
             } else {
                 $request['depends_quantity'] = false;
             }
-
             $product->update($request);
             $this->updateProductsFlatTable($request, $product);
             $attributes = $product->attribute_family->custom_attributes()->get();
 
             foreach ($attributes as $attribute) {
 
-                if (!isset($request[$attribute->code]) || (in_array($attribute->type, ['date', 'datetime']) && !$request[$attribute->code]))
+                if ((in_array($attribute->type, ['date', 'datetime'])))
                     continue;
 
                 $attributeValue = $this->productAttributeValue->where([

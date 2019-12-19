@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Partfix\ViewedProducts\model;
+namespace Partfix\ViewedProducts\Model;
 use App\Models\Admin\Catalog\Product\ProductInterface;
 use App\Repositories\Product\ProductRepositoryInterface;
 use Illuminate\Session\SessionManager;
