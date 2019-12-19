@@ -62,7 +62,7 @@
                                         <div class="subcategory__cell">
                                             <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                 <div class="subcategory__img">
-                                                    <img src="{{ $product->image }}" alt="photo">
+                                                    <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                 </div>
                                             </a>
                                             <span class="subcategory__code">Код: {{ $product->article }} </span>
