@@ -123,7 +123,7 @@
                                                                 <button>Купить</button>
                                                             </div>
                                                         </add-to-cart>
-                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="delivery-truck">
+                                                        <img src="{{ asset('img/frontend/img/svg/delivery-truck-green.svg') }}" alt="delivery-truck">
                                                         <span>В наличии</span>
                                                     </div>
                                                 </div>

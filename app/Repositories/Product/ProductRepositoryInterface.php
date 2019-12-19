@@ -13,4 +13,7 @@ interface ProductRepositoryInterface
      * @return mixed
      */
     public function createTecdocProducts($data);
+
+    public function getProductsWithData($ids);
+
 }

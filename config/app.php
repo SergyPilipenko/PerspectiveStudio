@@ -174,6 +174,7 @@ return [
         Partfix\MetaTags\MetaTagsServiceProvider::class,
         Partfix\SiteMap\SiteMapServiceProvider::class,
         Partfix\Parser\ParserServiceProvider::class,
+        Partfix\ViewedProducts\ViewedProductsServiceProvider::class,
 //        Partfix\MetaTags\Meta::class,
 //        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         /*
