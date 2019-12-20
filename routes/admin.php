@@ -108,8 +108,8 @@ Route::prefix('admin')->group(function() {
             Route::get('/', 'Admin\Auto\AutoController@index')->name('admin.auto.index');
             Route::post('/store', 'Admin\Auto\AutoController@store')->name('admin.auto.store');
         });
-        Route::group(['prefix' => 'manufacturers-countries', 'as' => 'admin.tecdoc.manufacturers-countries.'], function(){
-            Route::get('/', 'Admin\Locale\LocaleController@index')->name('index');
+        Route::group(['prefix' => 'suppliers-countries', 'as' => 'admin.tecdoc.suppliers-countries.'], function() {
+            Route::get('/', 'Admin\Tecdoc\SupplierCountryController@index')->name('index');
         });
         Route::prefix('catalog')->group(function() {
             Route::get('/', 'Admin\Catalog\CatalogController@index')->name('admin.catalog.index');
