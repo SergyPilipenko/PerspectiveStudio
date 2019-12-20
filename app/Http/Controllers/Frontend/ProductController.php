@@ -35,6 +35,8 @@ class ProductController extends Controller
         $cart = $cart->getCart();
         /** @var Product $product */
         $product = $product->getProduct($slug);
+        $product->features = $product->getTecdocProductFeatures();
+//        dd($product->features);
         $garage = $garage->getGarage();
         $meta_tags = [
             'part' => $product->custom_attributes['name'],
