@@ -4,6 +4,7 @@ Route::get('/', 'Frontend\PagesController@index')->name('frontend.index');
 Route::get('switch-locale/{locale}', 'LocaleController@switch')->name('switch-locale');
 
 Route::get('c-{category}', 'Frontend\ProductCategoryController@productCategory')->name('frontend.product-categories.show');
+Route::get('r-{rubric}', 'Frontend\RubricController@index')->name('frontend.rubric.index');
 Route::get('{product}.html', 'Frontend\ProductController@detail')->name('frontend.product.show');
 Route::post('search', 'Frontend\ProductController@search');
 
@@ -24,3 +25,4 @@ Route::get('{brand}-{model}-{modification}-{category}', 'Frontend\PagesControlle
 Route::get('{brand}-{model}-{modification}', 'Frontend\PagesController@modification')->name('frontend.modification');
 Route::get('{brand}-{model}', 'Frontend\PagesController@model')->name('frontend.model');
 Route::post('set-car-year', 'Frontend\PagesController@setCarYear')->name('set-car-year');
+Route::get('spa', 'TestController@spa');

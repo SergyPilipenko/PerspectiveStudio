@@ -37,4 +37,9 @@ class TestController extends Controller
         dd($categoriesSearcher->search('шины'));
         die;
     }
+
+    public function spa()
+    {
+        return view('spa');
+    }
 }

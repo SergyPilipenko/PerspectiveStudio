@@ -77,12 +77,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="alias">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="alias">Псевдоним: [{{ $category->locale->getLocale() }}]</label>
+                                                                <input type="text" class="form-control" name="{{ $category->locale->locatedInputName('alias') }}" value="{{ old('alias') ?? $category->alias }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="sort">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="sort">Сортировка:</label>
                                                                 <input type="number" name="position" class="form-control" value="{{ old('position') ?? $category->position }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="description">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="description">Описание:</label>
+                                                                <partfix-ckeditor :name="'{{ $category->locale->locatedInputName('description') }}'" :content="{{ json_encode($category->description) }}"></partfix-ckeditor>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -96,7 +116,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <category-image-upload :category_image="'{{ $category->image }}'"></category-image-upload>
+                                                                <category-image-upload  :category_image="'{{ $category->image }}'"></category-image-upload>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -150,10 +170,14 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="filterable-attributes">Доступные для фильтра аттрибуты</label>
-                                                                    <label for="nestedFilterableAttributes">Применить к вложенным категориям</label>
-                                                                    <input type="checkbox" id="nestedFilterableAttributes" class="form-control">
-                                                                    <select multiple name="filterableAttributes[]" class="form-control" id="filterable-attributes">
+                                                                    <div class="form-check form-check-flat form-check-primary">
+                                                                        <label class="form-check-label">
+                                                                            <input type="checkbox" name="applyToChildren" class="form-check-input">
+                                                                            Применить ко всем вложеным категориям
+                                                                            <i class="input-helper"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                    <select size="15" multiple name="filterableAttributes[]" class="form-control" id="filterable-attributes">
                                                                         @foreach ($filterableAttributes as $attribute)
                                                                             <option {{ $category->filterableAttributes->contains('id', $attribute->id) ? 'selected' : ''  }} value="{{ $attribute->id }}">{{ $attribute->title }}</option>
                                                                         @endforeach

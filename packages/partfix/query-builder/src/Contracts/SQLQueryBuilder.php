@@ -20,7 +20,7 @@ interface SQLQueryBuilder
      * @param array $fields
      * @return SQLQueryBuilder
      */
-    public function select(string $table, array $fields): SQLQueryBuilder;
+    public function select($table, array $fields);
 
     /**
      * Добавление условия INNER JOIN
@@ -32,12 +32,23 @@ interface SQLQueryBuilder
     public function join(string $table, string $first, string $second): SQLQueryBuilder;
 
     /**
-     * Work around
+     * Добавление условия LEFT JOIN
      * @param string $table
-     * @param array $fields
+     * @param $first
+     * @param $second
+     * @return SQLQueryBuilder
+     */
+
+    public function leftJoin(string $table, string $first, string $second): SQLQueryBuilder;
+
+    /**
+     * если нужен inner join с более чем 1 условием (on table1.id = table2.id and table1.article = table2.article)
+     * @param  string  $table
+     * @param  array  $fields
      * @return SQLQueryBuilder
      */
     public function multiJoin(string $table, array $fields): SQLQueryBuilder;
+
 
     /**
      * Добавление условия WHERE

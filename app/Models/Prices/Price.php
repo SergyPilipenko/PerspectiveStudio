@@ -7,6 +7,7 @@ use App\Models\Admin\Import\InvalidPrice;
 use App\Models\Admin\Import\SuppliersMapping;
 use App\Models\Tecdoc\ArticleNumber;
 use App\Models\Tecdoc\Supplier;
+use App\Repositories\Product\ProductRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,6 +24,15 @@ class Price extends Model
     protected $upload;
     protected $save_data;
     protected $supplier;
+    /** @var ProductRepositoryInterface */
+    private $productRepository;
+
+
+    public function __construct(array $attributes = [])
+    {
+        $this->productRepository = resolve(ProductRepositoryInterface::class);
+        parent::__construct($attributes);
+    }
 
     public function articleNumber()
     {
@@ -63,15 +73,22 @@ class Price extends Model
         }
     }
 
-    public static function prepareRowsToSave(array $rows, ImportSetting $import_setting) : array
+    public static function prepareRowsToSave(array &$rows, ImportSetting &$import_setting) : array
     {
         $prices = [];
         foreach ($rows as $key => $row) {
+            if(isset($prices[$key])) dd($row);
+            if(empty($row[$import_setting->columns['price']]) ||
+            empty($row[$import_setting->columns['article']])) {
+                continue;
+            }
             $prices[$key]['article'] = $row[$import_setting->columns['article']];
             $prices[$key]['supplier'] = $row[$import_setting->columns['supplier']];
+
             $prices[$key]['price'] = $row[$import_setting->columns['price']];
-            $prices[$key]['available'] = $row[$import_setting->columns['available']];
+            $prices[$key]['available'] = (float) $row[$import_setting->columns['available']];
         }
+
         return $prices;
     }
 
@@ -81,7 +98,6 @@ class Price extends Model
             $x = 0;
 
             foreach ($prices as $key => $price) {
-                DB::enableQueryLog();
 
                 $this->articles = [];
                 $brand = $price['supplier'];
@@ -140,7 +156,7 @@ class Price extends Model
                     if($filtered->count())
                     {
                         $this->upload['valid'][] = $filtered->first();
-                        $this->save_data[$key]['price'] = $price['price'];
+                        $this->save_data[$key]['price'] = (float) $price['price'];
                         $this->save_data[$key]['article_id'] = $filtered->first()->id;
                         $this->save_data[$key]['import_setting_id'] = $import_setting->id;
                         $this->save_data[$key]['available'] = (int) $price['available'];
@@ -160,24 +176,15 @@ class Price extends Model
                     continue;
                 }
                 $x++;
-
             }
 
         if(isset($this->upload['invalid'])) {
                 InvalidPrice::saveInvalidPrices($this->upload['invalid'], $import_setting);
         }
         if(isset($this->save_data)) {
+            dd($this->save_data);
             $query->createOrUpdatePrice($this->save_data);
-        }
-        return;
-    }
-
-    public static function tryToSavePriceWithNewMapping(InvalidPrice $invalidPrices)
-    {
-        foreach ($invalidPrices as $price) {
-
-
-
+            $this->productRepository->createTecdocProducts($this->save_data);
         }
     }
 }

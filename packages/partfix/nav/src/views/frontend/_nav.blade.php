@@ -1,8 +1,8 @@
-@foreach($navCategories = app('Partfix\Nav\App\NavInterface')->getNav() as $key => $category)
+@foreach($navCategories = app('Partfix\Nav\App\NavInterface')->getNav() as $key => $rubric)
     @if($key <= 7)
         <li>
-            <a href="{{ route('frontend.product-categories.show', $category->slug) }}">
-                {{ $category->category_title ?? $category->title }}
+            <a href="{{ route('frontend.rubric.index', $rubric->slug) }}">
+                {{ $rubric->title }}
             </a>
         </li>
     @endif

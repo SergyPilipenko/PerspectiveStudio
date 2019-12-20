@@ -28,7 +28,7 @@ class Category extends Model implements CategoryInterface
 
     protected $table = 'catalog_categories';
     public $categoryTypes = ['default', 'tecdoc'];
-    public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords'];
+    public $translatable = ['category_title', 'slug', 'meta_title', 'meta_description', 'meta_keywords', 'description', 'alias'];
     public $locale;
     protected $image_path = 'img/upload/product-categories/';
     private $product;
@@ -54,12 +54,10 @@ class Category extends Model implements CategoryInterface
         if(env('APP_DEBUG')) {
             static::created(function ($category) {
                 $categoriesIndexer = app(CategoriesIndexer::class);
-                $categoriesIndexer->index($category);
             });
 
             static::updated(function ($category) {
                 $categoriesIndexer = app(CategoriesIndexer::class);
-                $categoriesIndexer->reindex($category);
             });
         }
     }
@@ -83,9 +81,7 @@ class Category extends Model implements CategoryInterface
 
     public function updateCategory(RequestInterface $request)
     {
-
         $this->setCategoryTranslations($request);
-
         $this->activity = $request->category_activity ? 1 : 0;
         $this->position = $request->position;
 
@@ -99,10 +95,25 @@ class Category extends Model implements CategoryInterface
                 $item = (int) $item;
             }
         }
+        if($request->applyToChildren) $this->setToChildrenFilterableAttributes($request->filterableAttributes);
 
         $this->tecdoc_categories()->sync($tree);
         $this->filterableAttributes()->sync($request->filterableAttributes);
         $this->update();
+    }
+
+    public function setToChildrenFilterableAttributes($filterableAttributes)
+    {
+        $categories = $this->get()->toTree();
+        $traverse = function ($categories) use (&$traverse, $filterableAttributes) {
+            foreach ($categories as $category) {
+                $category->filterableAttributes()->sync($filterableAttributes);
+                if($category->children->count()) {
+                    $traverse($category->children);
+                }
+            }
+        };
+        $traverse($categories);
     }
 
     protected function updateImage(RequestInterface $request)
@@ -261,15 +272,16 @@ class Category extends Model implements CategoryInterface
     {
         return $this->builder->select('catalog_categories as node, catalog_categories as parent', ['distinct p.id'])
             ->join('product_categories as pc', 'parent.id', 'pc.category_id')
-            ->join('products as p', 'pc.product_id', 'p.id')
+            ->join('products_flat as p', 'pc.product_id', 'p.id')
             ->whereBetween("node._lft", "parent._lft", "parent._rgt")
             ->where('parent.id', $this->id);
     }
 
     public function tecdocCategoryProducts()
     {
-        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['p.id'])
+        return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_tree as art', ['DISTINCT p.id'])
             ->join('products_flat as p', 'art.article_number_id', 'p.id')
+            ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
             ->whereIn('art.nodeid', function($query) {
                 return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
                     ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
@@ -280,16 +292,17 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._lft', $this->_lft, '>=')
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
-            });
+            })->where('pr.price', '{0}', '>');
     }
 
-    public function tecdocCategoryProductsByModification($modification, array $fields = array('p.id'))
+    public function tecdocCategoryProductsByModification($modification, array $fields = array('DISTINCT p.id'))
     {
         return $this->builder->select(env('DB_TECDOC_DATABASE').'.article_links as al', $fields)
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_pds as pds', 'al.supplierid', 'pds.supplierid')
             ->multiJoin(env('DB_TECDOC_DATABASE').'.article_numbers as an', ['al.datasupplierarticlenumber' => 'an.datasupplierarticlenumber', 'al.supplierid' => 'an.supplierid'])
             ->join(env('DB_TECDOC_DATABASE').'.passanger_car_prd as prd', 'prd.id', 'al.productid')
             ->join(env('DB_DATABASE').'.products_flat as p', 'an.id', 'p.id')
+            ->leftJoin('prices as pr', 'p.id', 'pr.article_id')
             ->where('al.productid', '{pds.productid}')
             ->where('al.linkageid', '{pds.passangercarid}')
             ->where('al.linkageid', (int) $modification)
@@ -304,7 +317,8 @@ class Category extends Model implements CategoryInterface
                             ->where('cc._rgt', $this->_rgt, '<=');
                     });
             })
-            ->where('al.linkagetypeid', 2);
+            ->where('al.linkagetypeid', 2)
+            ->where('pr.price', '{0}', '>');
 
     }
 

@@ -13,11 +13,8 @@ Route::prefix('admin')->group(function() {
         Route::get('/{id}/edit', 'Admin\Import\ImportController@edit')->name('edit');
     });
 
-
     Route::prefix('upload-history')->group(function() {
-
         Route::get('/', 'Admin\Import\UploadHistory@index')->name('admin.upload-history.index');
-
     });
 
     Route::group(['prefix' => 'catalog', 'as' => 'admin.catalog.'], function() {
@@ -64,6 +61,22 @@ Route::prefix('admin')->group(function() {
     });
 
     Route::group(['prefix' => 'content', 'as' => 'admin.content.'], function() {
+        Route::group(['prefix' => 'rubrics', 'as' => 'rubrics.'], function() {
+            Route::get('/', 'Admin\Content\RubricController@index')->name('index');
+            Route::get('/create', 'Admin\Content\RubricController@create')->name('create');
+            Route::post('/store', 'Admin\Content\RubricController@store')->name('store');
+            Route::get('/{rubricId}/edit', 'Admin\Content\RubricController@edit')->name('edit');
+            Route::put('/{rubricId}/update', 'Admin\Content\RubricController@update')->name('update');
+            Route::delete('/{rubricId}/destroy', 'Admin\Content\RubricController@destroy')->name('destroy');
+            Route::group(['as' => 'groups.'], function() {
+                Route::get('/{rubricId}/groups/create', 'Admin\Content\RubricGroupController@create')->name('create');
+                Route::post('/{rubricId}/groups/store', 'Admin\Content\RubricGroupController@store')->name('store');
+                Route::get('/{rubricId}/groups/{groupId}/edit', 'Admin\Content\RubricGroupController@edit')->name('edit');
+                Route::put('/{rubricId}/groups/{groupId}/update', 'Admin\Content\RubricGroupController@update')->name('update');
+                Route::delete('/{rubricId}/groups/{groupId}/destroy', 'Admin\Content\RubricGroupController@destroy')->name('destroy');
+            });
+        });
+
         Route::group(['prefix' => 'blocks', 'as' => 'blocks.'], function() {
             Route::get('/', 'Admin\Content\BlockController@index')->name('index');
             Route::get('/create', 'Admin\Content\BlockController@create')->name('create');
@@ -94,6 +107,9 @@ Route::prefix('admin')->group(function() {
         Route::prefix('auto')->group(function() {
             Route::get('/', 'Admin\Auto\AutoController@index')->name('admin.auto.index');
             Route::post('/store', 'Admin\Auto\AutoController@store')->name('admin.auto.store');
+        });
+        Route::group(['prefix' => 'manufacturers-countries', 'as' => 'admin.tecdoc.manufacturers-countries.'], function(){
+            Route::get('/', 'Admin\Locale\LocaleController@index')->name('index');
         });
         Route::prefix('catalog')->group(function() {
             Route::get('/', 'Admin\Catalog\CatalogController@index')->name('admin.catalog.index');

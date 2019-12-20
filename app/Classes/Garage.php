@@ -4,9 +4,8 @@
 namespace App\Classes;
 
 use App\Classes\Car\CarInterface;
-use App\Models\Tecdoc\PassangerCar;
+use App\Models\AutoType;
 use Illuminate\Support\Facades\Session;
-use Exception;
 
 class Garage
 {
@@ -20,13 +19,19 @@ class Garage
     private $car;
     public $cars;
     public $activeCar;
+    public $checkedBrands;
 
     private $session;
+    /**
+     * @var PartfixTecDoc
+     */
+    private $tecDoc;
 
-    public function __construct(CarInterface $car)
+    public function __construct(CarInterface $car, PartfixTecDoc $tecDoc)
     {
         $this->session = session();
         $this->car = $car;
+        $this->tecDoc = $tecDoc;
     }
 
     public function empty()
@@ -41,7 +46,7 @@ class Garage
     {
         $list = $this->getGarageList();
 
-        if(count($list)) {
+        if(count($list) && !$this->cars) {
             $this->cars = collect($this->car->getCars($list));
             $this->activeCar = $this->getActiveCar();
         }
@@ -90,7 +95,8 @@ class Garage
         if($this->cars && $this->cars->count())
         {
             $active = $this->getSessionActiveCar();
-            foreach ($this->cars as $car) {
+            foreach ($this->cars as $car)
+            {
                 if($car->modification_id == $active['modification_id'])
                 {
                     return $car;
@@ -110,7 +116,6 @@ class Garage
     {
         $garage = Session::get(self::GARAGE);
         $current_auto = $this->getSessionActiveCar();
-
 
         foreach ($garage as $key => $car) {
             if($car[self::MODIFICATION_ID] == $id) {
@@ -178,10 +183,21 @@ class Garage
             if($item[self::MODIFICATION_ID] == $modification) return true;
         }
         return false;
-//        if($this->getGarageList()->count()) {
-//            $this->getGarageList()->pluck(self::MODIFICATION_ID)->contains(function ($value) use ($modification) {
-//                return $value == $modification;
-//            });
-//        } return false;
+    }
+
+    public function getCheckedBrands()
+    {
+        return $checkedBrands ?? $this->tecDoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
+    }
+
+    public function sortByAlphabet($brands)
+    {
+        $items = [];
+        foreach ($brands as $brand) {
+            $key = substr($brand->description, 0, 1);
+            $items[$key][] = $brand;
+        }
+
+        return $items;
     }
 }

@@ -40,12 +40,10 @@ services:
       - ./docker/elasticdata/esdata02:/usr/share/elasticsearch/data
     networks:
       - esnet
-
 volumes:
   esdata01:
     driver: local
   esdata02:
     driver: local
-
 networks:
   esnet:

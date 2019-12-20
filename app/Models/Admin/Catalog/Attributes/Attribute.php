@@ -4,9 +4,7 @@ namespace App\Models\Admin\Catalog\Attributes;
 
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Admin\Catalog\Product\ProductAttributeValue;
-use App\Models\Catalog\Category;
 use Illuminate\Database\Schema\Blueprint;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -38,21 +36,13 @@ class Attribute extends Model
     {
         parent::boot();
         self::creating(function($attribute) {
-            if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
-                $type = ProductAttributeValue::$schema[$attribute->type];
-                Schema::table('products_flat', function (Blueprint $table) use ($type, $attribute) {
-                    $table->$type($attribute->code)->nullable();
-                });
-            }
+            self::syncFilterableFieldWithProductsFlatTable($attribute);
         });
         self::updating(function($attribute) {
-            if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
-                $type = ProductAttributeValue::$schema[$attribute->type];
-                Schema::table('products_flat', function (Blueprint $table) use ($type, $attribute) {
-                    $table->$type($attribute->code)->nullable();
-                });
-            }
-            if(!$attribute->is_filterable && Schema::hasColumn('products_flat', $attribute->code)) {
+            self::syncFilterableFieldWithProductsFlatTable($attribute);
+        });
+        self::deleting(function($attribute) {
+            if(Schema::hasColumn('products_flat', $attribute->code)) {
                 Schema::table('products_flat', function (Blueprint $table) use ($attribute) {
                     $table->dropColumn($attribute->code);
                 });
@@ -129,5 +119,21 @@ class Attribute extends Model
         }
 
         return $formatted;
+    }
+
+    public static function syncFilterableFieldWithProductsFlatTable($attribute)
+    {
+
+        if($attribute->is_filterable && !Schema::hasColumn('products_flat', $attribute->code)) {
+            Schema::table('products_flat', function (Blueprint $table) use ($attribute) {
+                $type = ProductAttributeValue::$schema[$attribute->type];
+                $table->$type($attribute->code)->nullable();
+            });
+        }
+        if(!$attribute->is_filterable && Schema::hasColumn('products_flat', $attribute->code)) {
+            Schema::table('products_flat', function (Blueprint $table) use ($attribute) {
+                $table->dropColumn($attribute->code);
+            });
+        }
     }
 }

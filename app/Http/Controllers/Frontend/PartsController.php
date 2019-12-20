@@ -22,9 +22,9 @@ class PartsController extends Controller
     public function show($id, PartfixTecDoc $tecDoc)
     {
         $category = Category::find($id)->td_categories()->get()->pluck('distinct_pct_id');
-        dd($category);
+//        dd($category);
 //        119512
-        dd($tecDoc->getNestedSections(119512));
+//        dd($tecDoc->getNestedSections(119512));
 
         $part = $tecDoc->getNestedSections(119512, $category->first()->id);
 

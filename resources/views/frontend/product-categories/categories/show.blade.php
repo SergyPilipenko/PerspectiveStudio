@@ -1,6 +1,6 @@
-@section('meta_title', __('meta-tags::meta.frontend-product-show.title'))
-@section('meta_description', __('meta-tags::meta.frontend-product-show.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-product-show.keywords'))
+@section('meta_title', $category->meta_title ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.title', $meta_tags))
+@section('meta_description', $category->meta_description ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-show.description', $meta_tags))
+@section('meta_keywords', $category->meta_keywords ?: app('MetaTags')->getMetaTag('meta-tags::meta.frontend-product-categories-show.keywords', $meta_tags))
 @extends('frontend')
 @section('content')
     <section class="card">
@@ -17,8 +17,17 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h1>{{ $category->category_title }}</h1>
-                        <button>Изменить</button>
+                        <h1>{{ $category->alias ? $category->alias : $category->category_title }}</h1>
+                        <?php $routes = ['get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')] ?>
+                        <choose-car-button
+                            :garage="'{{ json_encode(app('App\Classes\Garage')->getGarage()) }}'"
+                            :auto_brands="{{ json_encode(app('App\Classes\Garage')->getCheckedBrands()) }}"
+                            :routes="'{{ json_encode($routes) }}'"
+                        ></choose-car-button>
+{{--                        <choose-car-button :auto_brands="{{ json_encode(app('App\Classes\Garage')->getCheckedBrands()) }}"--}}
+{{--                                           :routes="'{{ json_encode($routes) }}'"></choose-car-button>--}}
+{{--                            <choose-car-button></choose-car-button>--}}
+{{--                        <button>{{ app('App\Classes\Garage')->getGarage()->activeCar ? 'Изменить' : 'Выбрать авто' }}</button>--}}
                     </div>
                 </div>
             </div>
@@ -57,18 +66,26 @@
                                 </div>
                                 <div class="subcategory__main">
                                     @foreach($products as $product)
-                                        @if($product->price > 0)
+                                    @if($product->price > 0)
                                             <div class="subcategory__cell">
                                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                     <div class="subcategory__img">
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                     </div>
                                                 </a>
                                                 <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                 <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                 <span class="subcategory__type">{{ $product->name }}</span>
-                                                <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+                                                <div class="d-flex align-items-end">
+                                                    <span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span>
+                                                    @if($product->old_price)
+                                                    <span class="subcategory__price subcategory__price--old">
+                                                        <span>{{ $product->old_price }}</span>
+                                                        <sup>грн</sup>
+                                                    </span>
+                                                    @endif
+                                                </div>
+{{--                                                <p class="subcategory__sale">Вернем <span>{{ $product->old_price }} грн</span></p>--}}
                                                 <div class="subcategory__buy d-sm-none">
                                                     <add-to-cart
                                                         product="{{ $product }}"
@@ -83,14 +100,21 @@
                                                 <div class="subcategory__cell subcategory__cell--overlay">
                                                     <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                         <div class="subcategory__img">
-                                                            <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                            <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                         </div>
                                                     </a>
                                                     <span class="subcategory__code">Код: {{ $product->article }} </span>
                                                     <span class="subcategory__company">{{ $product->manufacturer }}</span>
                                                     <span class="subcategory__type">{{ $product->name }}</span>
-                                                    <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span><span class="subcategory__price subcategory__price--old"><span>13898</span><sup>грн</sup></span></div>
-                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>
+                                                    <div class="d-flex align-items-end"><span class="subcategory__price">{{ $product->price }}<sup>грн</sup></span>
+                                                        @if($product->old_price)
+                                                            <span class="subcategory__price subcategory__price--old">
+                                                                <span>{{ $product->old_price }}</span>
+                                                                <sup>грн</sup>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+{{--                                                    <p class="subcategory__sale">Вернем <span>1226 грн</span></p>--}}
                                                     <div class="subcategory__buy">
                                                         <add-to-cart
                                                             product="{{ $product }}"
@@ -99,7 +123,7 @@
                                                                 <button>Купить</button>
                                                             </div>
                                                         </add-to-cart>
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="delivery-truck">
+                                                        <img src="{{ asset('img/frontend/img/svg/delivery-truck-green.svg') }}" alt="delivery-truck">
                                                         <span>В наличии</span>
                                                     </div>
                                                 </div>
@@ -108,7 +132,7 @@
                                             <div class="subcategory__cell subcategory__cell--na">
                                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
                                                     <div class="subcategory__img">
-                                                        <img src="{{ file_exists($product->image) ? asset($product->image) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
+                                                        <img src="{{ $product->images->first() != null && file_exists($product->images->first()->path) ? asset($product->images->first()->path) : asset('img/frontend/img/images-empty.png') }}" alt="photo">
                                                     </div>
                                                 </a>
                                                 <span class="subcategory__code">Код: {{ $product->article }} </span>
@@ -121,16 +145,18 @@
                                 </div>
                                 <div class="subcategory__footer">
 								<span class="subcategory__total">
-									Показано 6 товаров из 455
+									Показано {{ $products->count() }} товаров из {{ $products->total() }}
 								</span>
                                     {{ $products->appends(request()->all())->links('frontend.UiComponents.pagination.partfix') }}
                                 </div>
+                                @if($products->total() > $products->count())
                                 <div class="subcategory__more">
                                     <button>
                                         <div><img src="/img/frontend/img/svg/refresh2.svg" alt="refresh"></div>
                                         <span>загрузить еще 21 товар</span>
                                     </button>
                                 </div>
+                                @endif
                             </div>
                         @else
                             <p>Ничего не найдено...</p>
@@ -141,41 +167,50 @@
         </div>
     </div>
 
-    <section class="subcategory__links">
+{{--    <section class="subcategory__links">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-12">--}}
+{{--                    <ul>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Ссылка разовая</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Тормозные диск</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Колодки для буса</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Торможение 18</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Свежетормоз</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Коврик для торможения</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Дичайшее ПП</a>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <a href="#">Органический бочёк</a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
+    <section class="subcategory__info">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <ul>
-                        <li>
-                            <a href="#">Ссылка разовая</a>
-                        </li>
-                        <li>
-                            <a href="#">Тормозные диск</a>
-                        </li>
-                        <li>
-                            <a href="#">Колодки для буса</a>
-                        </li>
-                        <li>
-                            <a href="#">Торможение 18</a>
-                        </li>
-                        <li>
-                            <a href="#">Свежетормоз</a>
-                        </li>
-                        <li>
-                            <a href="#">Коврик для торможения</a>
-                        </li>
-                        <li>
-                            <a href="#">Дичайшее ПП</a>
-                        </li>
-                        <li>
-                            <a href="#">Органический бочёк</a>
-                        </li>
-                    </ul>
+                    {!! $category->description !!}
                 </div>
             </div>
         </div>
     </section>
-    {!! app('ContentBlock')->render('content') !!}
+{{--    {!! app('ContentBlock')->render('content') !!}--}}
 {{--    <section class="subcategory__info">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}
@@ -239,6 +274,7 @@
 {{--            </div>--}}
 {{--        </div>--}}
 {{--    </section>--}}
+    @if($viewedProducts)
     <section class="last-goods pb30">
         <div class="container">
             <div class="row">
@@ -246,221 +282,11 @@
                     <h2 class="default-title">
                         последние просмотренные товары
                     </h2>
-                    <div class="last-goods__slider">
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good1.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good2.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good3.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="awaiting">Под заказ</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good4.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="not-aval">Нет на складе</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good5.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good1.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good2.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good3.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="awaiting">Под заказ</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good4.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="not-aval">Нет на складе</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good5.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good1.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good2.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good3.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="awaiting">Под заказ</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good4.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span class="not-aval">Нет на складе</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                        <div class="last-goods__slide">
-                            <a href="#"><img src="/img/frontend/img/last-good5.png" alt="last-good" class="last-goods__image"></a>
-                            <div class="d-flex flex-column"><a href="#"><span class="last-goods__title">Hyundai/Kia</span></a><a href="#"><span class="last-goods__type">Фильтр масляный</span></a></div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span class="last-goods__price">122 грн</span>
-                                    <div class="d-flex align-items-center last-goods__available">
-                                        <img src="/img/frontend/img/svg/delivery-truck-green.svg" alt="truck">
-                                        <span>В наличии</span>
-                                    </div>
-                                </div>
-                                <button class="last-goods__buy">Купить</button>
-                            </div>
-                        </div>
-                    </div>
+                    @include('partfix\viewed-products::viewed-products', ['viewedProducts' => $viewedProducts])
                 </div>
             </div>
         </div>
     </section>
+    @endif
     @include('frontend.partials._advatages')
 @endsection

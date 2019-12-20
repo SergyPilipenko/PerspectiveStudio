@@ -4,6 +4,7 @@
 namespace App\Repositories\CatalogCategory;
 
 
+use App\Filters\ProductsFilter;
 use App\Models\Admin\Catalog\Product\Product;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
@@ -40,29 +41,19 @@ class CategoryRepository
     public function getCategoryProducts(CategoryInterface $category, $modification = null)
     {
         $builder = $category->newProducts();
-
-//        if($modification) {
-//            $builder->join('tecdoc2018_db.passanger_car_pds as pds', 'art.productId', 'pds.productId')->where('pds.passangercarid', $modification);
-//        }
-
+        /** @var ProductsFilter $query */
+        $sql = $builder->getQuery();
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
-
-//        $cache = Cache::get(md5($query->getQuery()));
+        $filteredSql = $builder->getQuery();
         $cache = null;
         if(!$cache) {
             $result = $query->getArrayResult();
         } else {
             $result = $cache;
         }
-
-
-
-        $products = $this->paginator->paginate($result, 20, request()->page);
-
+        $products = $this->paginator->paginate($result, 21, request()->page);
         $ids = $products->getCollection()->pluck('id');
-
         $productsWithData = $this->productRepository->getProductsWithData($ids);
-
         $products->setCollection($productsWithData);
 
         return $products;
@@ -84,9 +75,7 @@ class CategoryRepository
     public function getCategoryProductsQty(CategoryInterface $category, $modification = null)
     {
         $builder = $modification ? $category->tecdocCategoryProductsByModification($modification) : $category->newProducts();
-
         $query = $this->product->newFilter($builder, $category->filterableAttributes);
-
         $result = $query->getArrayResult();
 
         return count($result);

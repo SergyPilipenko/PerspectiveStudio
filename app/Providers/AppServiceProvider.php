@@ -4,17 +4,18 @@ namespace App\Providers;
 
 use App\Classes\Car\Car;
 use App\Classes\Car\CarInterface;
+use App\Classes\Garage;
 use App\Models\Catalog\Category;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Locale\Locale;
 use App\Models\Locale\LocaleInterface;
 use App\Repositories\Content\ContentBlock;
 use App\Repositories\Content\ContentBlockInterface;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Classes\PriceFilter\PriceFilterInterface;
 use App\Classes\PriceFilter\PriceFilter;
+use UpdateProcuctsFlatPriceFromPrices;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LocaleInterface::class, Locale::class);
         $this->app->singleton(CarInterface::class, Car::class);
         $this->app->singleton(ContentBlockInterface::class, ContentBlock::class);
+        $this->app->singleton(Garage::class);
     }
 
     /**
@@ -51,8 +53,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-//        \Debugbar::disable();
 
+//        \Debugbar::disable();
 
         $this->app->singleton('PartfixTecDoc', function () {
             return new \App\Classes\PartfixTecDoc;

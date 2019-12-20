@@ -13,18 +13,15 @@ import productShow from './frontend/store/modules/productShow';
 import Cart from './frontend/store/modules/cart';
 import Checkout from './frontend/store/modules/checkout';
 import Search from './frontend/store/modules/search';
+import General from './frontend/store/modules/general';
 import CatalogFilter from "../../packages/partfix/catalog-category-filter/src/assets/js/store/modules/catalog-filter-store";
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 
 window.lang = document.documentElement.lang;
 window.Vue = require('vue');
 Vue.config.devtools = true;
 Vue.use(Vuex);
 Vue.use(VueRouter);
-
-/**
- * Vuex
- */
 
 
 Vue.component('search-button', require('./frontend/components/Search/SearchButton').default);
@@ -44,7 +41,9 @@ Vue.component('checkout-user-info-form', require('./frontend/components/checkout
 Vue.component('checkout-order-comment', require('./frontend/components/checkout/CheckoutOrderComment').default);
 Vue.component('smt', require('./frontend/components/Smt').default);
 Vue.component('catalog-filter', require('../../packages/partfix/catalog-category-filter/src/assets/js/components/CatalogFilter').default);
-// Vue.component('catalog-filter', require(''));
+Vue.component('mobile-nav', require('./frontend/components/MobileNav').default);
+Vue.component('choose-car-button', require('./frontend/components/ChooseCarButton').default);
+Vue.component('popup-black-layout', require('./frontend/components/PopupBlackLayout').default);
 
 const store = new Vuex.Store({
     modules: {
@@ -54,13 +53,14 @@ const store = new Vuex.Store({
         Checkout,
         productShow,
         Search,
-        CatalogFilter
+        CatalogFilter,
+        General
     }
 });
 
 const router = new VueRouter({
     mode: 'history',
-    routes: []
+    routes: [],
 });
 export default router;
 /**

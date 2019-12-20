@@ -1,6 +1,11 @@
-@section('meta_title', __('meta-tags::meta.frontend-modification.title'))
-@section('meta_description', __('meta-tags::meta.frontend-modification.description'))
-@section('meta_keywords', __('meta-tags::meta.frontend-modification.keywords'))
+@section('meta_title', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.title', [
+'brand' => $car->brand->description,
+'model' => $car->model->description,
+'modification' => $car->modification->description, 'year' => $car->year,
+'rubric_title' => $rubric->title
+]))
+@section('meta_description', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.description'))
+@section('meta_keywords', app('MetaTags')->getMetaTag('meta-tags::meta.frontend-modification.keywords'))
 @extends('frontend')
 @section('content')
     <section class="category">
@@ -10,18 +15,18 @@
                     {!! Breadcrumbs::render('frontend.modification', $car, $brand, $model, $modification) !!}
                     <div class="white-bg">
                         <h2 class="category__title">Каталог запчастей на <span>{{ $car->brand->description }} {{ $car->model->description }} {{ $car->year }}</span></h2>
-                            @if($category->children->count())
-                                @foreach($category->children as $categoryBlock)
+                            @if($rubric->groups->count())
+                                @foreach($rubric->groups as $group)
                                     <div class="category__block">
                                         <h3 class="category__block-title">
-                                            <span>{{ $categoryBlock->category_title }}</span>
+                                            <span>{{ $group->title }}</span>
                                         </h3>
                                         <span class="category__block-subtitle">
                                             {{ $car->brand->description }} {{ $car->model->description }}
                                         </span>
                                         <div class="category__block-items">
-                                            @foreach($categoryBlock->children as $child)
-                                                <a href="{{ route('frontend.car.category', [$brand, $model, $modification, $child->slug]) }}" class="category__block-item"><img src="{{ file_exists($child->image) ? asset($child->image) : asset('img/frontend/img/images-empty.png') }}" alt="list"><span>{{ $child->category_title }}</span></a>
+                                            @foreach($group->categories as $category)
+                                                <a href="{{ route('frontend.car.category', [$brand, $model, $modification, $category->slug]) }}" class="category__block-item"><img src="{{ file_exists($category->image) ? asset($category->image) : asset('img/frontend/img/images-empty.png') }}" alt="list"><span>{{ $category->category_title }}</span></a>
                                             @endforeach
                                         </div>
                                     </div>

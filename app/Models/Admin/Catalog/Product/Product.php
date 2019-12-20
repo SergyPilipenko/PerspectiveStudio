@@ -15,19 +15,17 @@ use App\Models\Prices\Price;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Partfix\QueryBuilder\Model\MysqlQueryBuilder;
 
 class Product extends Model implements ProductInterface
 {
     protected $fillable = ['type', 'attribute_family_id', 'quantity', 'article', 'parent_id', 'depends_quantity'];
-//    protected $table = 'products';
-    protected $table = 'products_flat';
+    protected $table = 'products';
     public $priceFilter;
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
     private $newProductsFilter;
     private $productsFilter;
+    private $simpleQueryBuilder;
 
     protected static function boot()
     {
@@ -36,10 +34,6 @@ class Product extends Model implements ProductInterface
         static::created(function ($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->index($product);
         });
-
-//        static::updated(function ($product) {
-//            app()->make('App\Search\Indexers\ProductsIndexer')->reindex($product);
-//        });
 
         static::deleted(function($product) {
             app()->make('App\Search\Indexers\ProductsIndexer')->remove($product);
@@ -56,6 +50,7 @@ class Product extends Model implements ProductInterface
         $this->priceFilter = app(PriceFilterInterface::class);
         $this->newProductsFilter = app(NewProductsFilter::class);
         $this->productsFilter = app(ProductsFilter::class);
+        $this->simpleQueryBuilder = app(SQLQueryBuilder::class);
         parent::__construct();
     }
 
@@ -63,7 +58,7 @@ class Product extends Model implements ProductInterface
     {
         if (! method_exists(self::class, $key) && ! in_array($key, $this->fillable) && ! isset($this->attributes[$key]) && $key != 'pivot') {
             if (isset($this->id)) {
-
+                if($key == 'price') return $this->getPrice();
                 $attribute = $this->productAttributeValues->where('code', $key)->first();
 
                 if($attribute) {
@@ -71,10 +66,6 @@ class Product extends Model implements ProductInterface
 
                     return $attribute->$field;
                 }
-//                $attribute = core()->getSingletonInstance(\Webkul\Attribute\Repositories\AttributeRepository::class)
-//                    ->getAttributeByCode($key);
-//
-//                $this->attributes[$key] = $this->getCustomAttributeValue($attribute);
 
                 return $this->getAttributeValue($key);
             }
@@ -158,8 +149,10 @@ class Product extends Model implements ProductInterface
 
     public function getProductById($id)
     {
-        $product = $this->with('attribute_family.attribute_groups.group_attributes', 'images')->findOrFail($id);
+        $product = $this->with('attribute_family.attribute_groups.group_attributes', 'images', 'categories')->findOrFail($id);
+
         $product->custom_attributes = $product->getProductAttributes();
+
         $product->price = $product->getPrice();
 
         return $product;
@@ -179,7 +172,7 @@ class Product extends Model implements ProductInterface
     public function getProductAttributes()
     {
         $sql = "
-        SELECT pav.*, a.* FROM `products` p 
+        SELECT pav.*, a.* FROM `products` p
         JOIN product_attribute_values pav ON p.id = pav.product_id
         JOIN attributes a ON pav.attribute_id = a.id
         WHERE p.id = {$this->id}";
@@ -196,18 +189,6 @@ class Product extends Model implements ProductInterface
         return $formatted;
     }
 
-
-
-//    public function attribute_values()
-//    {
-//        return $this->hasMany(ProductAttributeValue::class);
-//    }
-//
-//    public function attribute_value()
-//    {
-//        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
-//    }
-
     public function images()
     {
         return $this->hasMany(ProductImage::class);
@@ -215,12 +196,15 @@ class Product extends Model implements ProductInterface
 
     public function getProductByIdSlug($slug)
     {
-        return DB::connection('mysql')->selectOne("
+        $product =  DB::connection('mysql')->selectOne("
            SELECT p.id FROM attributes a
             LEFT JOIN product_attribute_values pv on a.id = pv.attribute_id
             LEFT JOIN products p ON pv.product_id = p.id
             WHERE a.code = 'slug' AND pv.text_value = '".$slug."'
-        ")->id;
+        ");
+        if(!$product) abort(404);
+
+        return $product->id;
     }
 
     public function getAttrValues(array $attributes_codes)
@@ -269,14 +253,13 @@ class Product extends Model implements ProductInterface
             } else {
                 $request['depends_quantity'] = false;
             }
-
             $product->update($request);
-
+            $this->updateProductsFlatTable($request, $product);
             $attributes = $product->attribute_family->custom_attributes()->get();
 
             foreach ($attributes as $attribute) {
 
-                if (!isset($request[$attribute->code]) || (in_array($attribute->type, ['date', 'datetime']) && !$request[$attribute->code]))
+                if ((in_array($attribute->type, ['date', 'datetime'])))
                     continue;
 
                 $attributeValue = $this->productAttributeValue->where([
@@ -303,6 +286,7 @@ class Product extends Model implements ProductInterface
                 $product->categories()->delete();
             }
 
+
             event(new ProductUpdatedEvent($product));
 
             DB::connection()->getPdo()->commit();
@@ -318,5 +302,46 @@ class Product extends Model implements ProductInterface
     public function newFilter(MysqlQueryBuilder $builder, $filterableItems)
     {
         return $this->productsFilter->apply($builder, $filterableItems);
+    }
+
+    public function belongsModification(int $modification) : ?bool
+    {
+        $query = $this->simpleQueryBuilder->select(env('DB_TECDOC_DATABASE') . '.article_numbers AS an', ['*'])
+            ->multiJoin(env('DB_TECDOC_DATABASE') . '.article_links AS al', [
+                'an.supplierid' => 'al.supplierid',
+                'an.datasupplierarticlenumber' => 'al.datasupplierarticlenumber'
+            ])->multiJoin(env('DB_TECDOC_DATABASE') . '.passanger_car_pds AS pds', [
+                'al.productid' => 'pds.productid',
+                'an.supplierid' => 'pds.supplierid'
+            ])->where('an.id', $this->id)->where('pds.passangercarid', $modification)->limit(1)->getResult();
+
+        return count($query) ? true : false;
+    }
+
+    protected function updateProductsFlatTable($request, $product)
+    {
+        $filterableAttributes = $attributes = Attribute::where('is_filterable', true)->get();
+        $data = [];
+        foreach ($filterableAttributes as $filterableAttribute) {
+            $code = $filterableAttribute->code;
+            if(array_key_exists($code, $request)) $data[$code] = $request[$code];
+        }
+
+        $productFlat = DB::table('products_flat')->where('id', $product->id)->first();
+
+        if($productFlat && count($data)) {
+            DB::table('products_flat')->where('id', $product->id)->update($data);
+
+        } elseif (!$productFlat && count($data)) {
+            $data['id'] = $product->id;
+            $data['article'] = $product->article;
+            $data['attribute_family_id'] = $product->attribute_family_id;
+            $data['type'] = $product->type;
+            $data['quantity'] = $product->quantity;
+            $data['depends_quantity'] = $product->depends_quantity;
+            DB::table('products_flat')->insert($data);
+        }
+
+        if(count($data)) DB::table('products_flat')->where('id', $product->id)->update($data);
     }
 }

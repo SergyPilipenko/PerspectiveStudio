@@ -24,7 +24,7 @@
             }
         },
         created() {
-            this.categories = JSON.parse(this.product_categories);
+            this.categories = this.product_categories;
             this.options = this.toTree(this.categories);
             var selectedCategories = JSON.parse(this.selected_categories);
             var defaultValue = [];

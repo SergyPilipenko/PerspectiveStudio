@@ -2,17 +2,17 @@
 
 return array(
     'frontend-index' => [
-        'title' => 'Купить',
+        'title' => 'Partfix - Интернет-магазин автозапчастей и авто товаров. Более 1 000 000 товаров по самой низкой цене в Украине',
         'description' => 'Купить',
         'keywords' => 'Купить'
     ],
     'frontend-product-show' => [
-        'title' => 'Купить :part :manufacturer',
+        'title' => ':part :manufacturer :article',
         'description' => 'description frontend-product-show',
         'keywords' => 'keywords frontend-product-show'
     ],
     'frontend-product-categories-show' => [
-        'title' => 'Купить :part :manufacturer',
+        'title' => ':category_title :page :filterable_options',
         'description' => 'description frontend-product-show',
         'keywords' => 'keywords frontend-product-show'
     ],
@@ -22,12 +22,12 @@ return array(
         'keywords' => 'keywords frontend-checkout-index'
     ],
     'frontend-car-category' => [
-        'title' => 'title frontend-car-category',
+        'title' => ':category_title для :brand :model :year :modification',
         'description' => 'description frontend-car-category',
         'keywords' => 'keywords frontend-car-category'
     ],
     'frontend-modification' => [
-        'title' => 'title frontend-modification',
+        'title' => ':rubric_title :brand :model :year :modification',
         'description' => 'description frontend-modification',
         'keywords' => 'title frontend-modification'
     ],
@@ -35,5 +35,10 @@ return array(
         'title' => 'title frontend-model',
         'description' => 'description frontend-model',
         'keywords' => 'keywords frontend-model'
+    ],
+    'frontend-rubric-index' => [
+        'title' => 'title frontend-rubric-index :rubric_title',
+        'description' => 'description frontend-rubric-index :rubric_title',
+        'keywords' => 'keywords frontend-rubric-index :rubric_title'
     ]
 );

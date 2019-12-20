@@ -14,6 +14,7 @@ use App\Models\AutoType;
 use App\Models\Cart\CartInterface;
 use App\Models\Catalog\CategoryInterface;
 use App\Models\Categories\Category;
+use App\Models\Content\Rubric\Rubric;
 use App\Models\ManufacturersUri;
 use App\Models\ModelsUri;
 use App\Models\Tecdoc\PassangerCar;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Partfix\CatalogCategoryFilter\Model\CategoryFilter;
+use Partfix\ViewedProducts\Contracts\ViewedProductsInterface;
 use Transliterate;
 use App\Models\Catalog\Category as ProductCategory;
 use Illuminate\Support\Facades\Session;
@@ -41,34 +43,40 @@ class PagesController extends Controller
      * @var CategoryRepository
      */
     private $categoryRepository;
+    private $viewedProducts;
 
     /**
      * ProductCategoryController constructor.
      * @param ProductsFilter $filters
      * @param CategoryFilter $categoryFilter
      * @param CategoryRepository $categoryRepository
+     * @param ViewedProductsInterface $viewedProducts
      */
     public function __construct(
         ProductsFilter $filters,
         CategoryFilter $categoryFilter,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        ViewedProductsInterface $viewedProducts
     )
     {
         $this->middleware('frontend');
         $this->filters = $filters;
         $this->categoryFilter = $categoryFilter;
         $this->categoryRepository = $categoryRepository;
+        $this->viewedProducts = $viewedProducts;
     }
 
-    public function index(PartfixTecDoc $tecdoc, Garage $garage, ProductCategory $category)
+    public function index(Garage $garage)
     {
-        $brands = $tecdoc->getCheckedBrands(AutoType::where('code', 'cars')->first()->id);
+        $brands = $garage->getCheckedBrands();
+        $alphabeticalBrands = $garage->sortByAlphabet($brands);
 
         $routes = [
             'get-brands-by-models-created-year' => route('api.get-brands-by-models-created-year')
         ];
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
 
-        return view('frontend.index', compact('brands', 'routes'));
+        return view('frontend.index', compact('brands', 'routes', 'alphabeticalBrands', 'viewedProducts'));
     }
 
     public function brand(Request $request)
@@ -118,20 +126,11 @@ class PagesController extends Controller
     public function modification($brand, $model, $modification, Garage $garage, CarInterface $car)
     {
         $garage->setActiveCar($modification);
-
         $car = $car->getCar($modification);
 
-//        $categories = Category::where('slug', 'legkovye')->with('children.children')->first();
-        $category = resolve(CategoryInterface::class)
-            ->where('slug->' . app()->getLocale(), 'legkovye')
-            ->with('children.children')
-            ->firstOrFail();
+        $rubric = Rubric::where('slug', 'legkovye')->with('groups.categories')->firstOrFail();
 
-        if($category->children->count()) {
-            $children = $category->children;
-        }
-
-        return view('frontend.car.index', compact('category','children', 'car', 'brand', 'model', 'modification'));
+        return view('frontend.car.index', compact('rubric','children', 'car', 'brand', 'model', 'modification'));
     }
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
@@ -141,13 +140,15 @@ class PagesController extends Controller
             ->with('children.children')
             ->firstOrFail();
 
-        $products = $this->categoryRepository->getCategoryProductsByModification($category, $modification);
+       $products = $this->categoryRepository->getCategoryProductsByModification($category, $modification);
 
         $car = $car->getCar($modification);
 
         $categoryLink = request()->getPathInfo();
 
-        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification', 'categoryLink'));
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
+
+        return view('frontend.car.category', compact('car', 'category', 'products', 'brand', 'model', 'modification', 'categoryLink', 'viewedProducts'));
     }
 
 
@@ -163,6 +164,7 @@ class PagesController extends Controller
         $garage = collect(Session::get('garage'));
 
         $current_modification = $garage->where('modification_id', $id)->first();
+
         Session::put('current-auto', [
             'modification_id' => $current_modification['modification_id'],
             'modification_year' => $current_modification['modification_year']

@@ -11,9 +11,7 @@ use App\Models\Tecdoc\DistinctPassangerCarTree;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Session;
-use App\Helpers\Locale;
+use Illuminate\Support\Facades\Session;
 
 class CategoriesController extends Controller
 {
@@ -44,10 +42,11 @@ class CategoriesController extends Controller
     {
         $categories = Category::get()->toTree();
 
-        $store = $id ? route('admin.catalog.categories.store-subcategory', $this->category->findOrFail($id)->id) : route('admin.catalog.categories.store');
+        $parentCategory = $id ? $this->category->findOrFail($id) : null;
+        $store = $parentCategory ? route('admin.catalog.categories.store-subcategory', $parentCategory->id) : route('admin.catalog.categories.store');
         $categoryTypes = json_encode($this->category->categoryTypes, true);
 
-        return view('admin.catalog.categories.create', compact('category', 'store', 'categories', 'categoryTypes'));
+        return view('admin.catalog.categories.create', compact('store', 'categories', 'categoryTypes', 'parentCategory'));
     }
 
     /**
@@ -104,9 +103,14 @@ class CategoriesController extends Controller
 
         $categories = Category::orderBy('position', 'asc')->with('filterableAttributes')->get()->toTree();
         $filterableAttributes = Attribute::where('is_filterable', true)->get();
+        $vars = [
+            'category' => $category,
+            'categories' => $categories,
+            'filterableAttributes' => $filterableAttributes
+        ];
+
         if($category->type == 'tecdoc') {
             $tec_doc_categories = DistinctPassangerCarTree::get();
-
             $category_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', $id)->pluck('distinct_pct_id');
             $disabled_distinct_tecdoc_categories = CategoryDistinctPassangerCarTree::where('category_id', '!=', $id)->pluck('distinct_pct_id');
 
@@ -119,10 +123,12 @@ class CategoriesController extends Controller
             $tec_doc_categories = $this->prepareNodes($tec_doc_categories, $disabled_distinct_tecdoc_categories)->toTree();
 
             $category_distinct_tecdoc_categories = $category_distinct_tecdoc_categories->toJson();
+            $vars['tec_doc_categories'] = $tec_doc_categories;
+            $vars['category_distinct_tecdoc_categories'] = $category_distinct_tecdoc_categories;
+            $vars['disabled_distinct_tecdoc_categories'] = $disabled_distinct_tecdoc_categories;
         }
 
-        return view('admin.catalog.categories.edit',
-            compact('category', 'categories', 'tec_doc_categories', 'category_distinct_tecdoc_categories', 'disabled_distinct_tecdoc_categories', 'filterableAttributes'));
+        return view('admin.catalog.categories.edit', $vars);
     }
 
     /**
@@ -135,8 +141,8 @@ class CategoriesController extends Controller
      */
     public function update(RequestInterface $request, $id)
     {
+        /** @var Category $category */
         $category = $this->category->findOrFail($id);
-
         $category->updateCategory($request);
 
         Session::flash('flash', 'Новые данные сохранены успешно');
@@ -170,11 +176,12 @@ class CategoriesController extends Controller
                     $node->label = $node->description;
                     if(in_array($node->id, $disabled_distinct_tecdoc_categories->toArray())) {
                         $node->isDisabled = "true";
-                    };
+                    }
                     unset($node->description);
-                };
+                }
             }
         }
+
         return $nodes;
     }
 }

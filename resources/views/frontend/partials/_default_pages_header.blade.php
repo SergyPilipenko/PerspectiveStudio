@@ -1,4 +1,4 @@
-<div class="popup-black"></div>
+<popup-black-layout></popup-black-layout>
 <search :add_action="'{{ route('frontend.cart.add', PRODUCT_MARK_FOR_REPLACING) }}'"
         :marker="'{{ PRODUCT_MARK_FOR_REPLACING }}'"></search>
 <section class="pre-header">
@@ -52,7 +52,7 @@
                     <div class="pre-header__language">
                         <div class="d-flex align-items-center">
                             <span class="pre-header__language-title">Русский</span>
-                            <img src="img/arrow-down.png" alt="img">
+                            <img src="{{ asset('img/frontend/img/arrow-down.png') }}" alt="img">
                             <div class="pre-header__language-dropdown">
                                 <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Язык сайта</h3>
@@ -64,7 +64,7 @@
                     <div class="pre-header__profile">
                         <div class="d-flex align-items-center">
                             <span class="pre-header__profile-title">Мой профиль</span>
-                            <img src="img/arrow-down.png" alt="img">
+                            <img src="{{ asset('img/frontend/img/arrow-down.png') }}" alt="img">
                             <form class="pre-header__profile-dropdown">
                                 <span class="close"><img src="{{ asset('img/frontend/img/cross.png') }}" alt="img"></span>
                                 <h3>Профиль покупателя</h3>
@@ -303,28 +303,10 @@
                                 </div>
                             </li>
                         </ul>
+                        <?php $rubrics = \App\Models\Content\Rubric\Rubric::menu()->select('title', 'slug', 'id')->get() ?>
+                        @if($rubrics->count())
                         <h3>Каталог товаров</h3>
-                        <ul class="header__menu arrows border">
-                            <li><a href="#">Легковые</a></li>
-                            <li><a href="#">Грузовые</a></li>
-                            <li><a href="#">Мотоциклы</a></li>
-                            <li><a href="#">Шины и диски</a></li>
-                            <li><a href="#">Автозвук</a></li>
-                            <li><a href="#">Электроника</a></li>
-                            <li><a href="#">Автохимия</a></li>
-                            <li>
-                                <a href="#">
-                                    Инструменты
-                                    <span class="new">new</span>
-                                </a>
-                            </li>
-                            <li class="sale">
-                                <img src="{{ asset('img/frontend/img/fire.png') }}" alt="fire">
-                                <a href="#">
-                                    Скидки
-                                </a>
-                            </li>
-                        </ul>
+                        @endif
                         <h3>Информация</h3>
                         <ul class="header__menu">
                             <li><a href="#">Мой профиль</a></li>

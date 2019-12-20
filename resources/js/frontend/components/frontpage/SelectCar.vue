@@ -1,6 +1,7 @@
 <template>
     <form class="search__body search__model align-items-center justify-content-center" id="model">
         <div class="search__model-cover" @click="showSelect('year')">
+            <input type="text" v-model="inputYear" @input="filterYears">
             <div class="d-flex align-items-center">
                 <span class="search__model-number">1</span>
                 <div class="d-flex flex-column">
@@ -13,7 +14,8 @@
                 <span v-for="year in rangeYears" v-text="year" @click="setYear(year)"></span>
             </div>
         </div>
-        <div class="search__model-cover" @click="showSelect('brand')">
+        <div :class="{'search__model-cover disabled' : step < 2, 'search__model-cover' : step >= 2}" @click="showSelect('brand')">
+            <input type="text" v-model="inputBrand" @input="filterBrands" :disabled="disabled('brand')">
             <div class="d-flex align-items-center">
                 <span class="search__model-number">2</span>
                 <div class="d-flex flex-column">
@@ -27,7 +29,8 @@
                       v-text="brand.description" @click="setBrand(brand)"></span>
             </div>
         </div>
-        <div class="search__model-cover" @click="showSelect('models')">
+        <div :class="{'search__model-cover disabled' : step < 3, 'search__model-cover' : step >= 3}" @click="showSelect('models')">
+            <input type="text" v-model="inputModel" @input="filterModels" :disabled="disabled('models')" >
             <div class="d-flex align-items-center">
                 <span class="search__model-number">3</span>
                 <div class="d-flex flex-column">
@@ -44,44 +47,21 @@
         </div>
         <button type="button" @click="goToCarCatalog">Выбрать</button>
     </form>
-<!--    <div>-->
-<!--        <select name="" id="" v-model="selectedYear" class="form-control" @change="filterModificationsBySelectedYear">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="year"-->
-<!--                v-for="year in rangeYears"-->
-<!--                v-text="year"-->
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <select v-if="step >=2" name="" @change="loadModels(brandSelected)" class="form-control" v-model="brandSelected">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="brand.id"-->
-<!--                v-for="brand in brands"-->
-<!--                v-text="brand.description"-->
-<!--            ></option>-->
-<!--        </select>-->
-<!--        <select v-if="step >=3" name="" v-model="modelSelected" class="form-control" @change="loadModifications">-->
-<!--            <option value="">Не выбрано</option>-->
-<!--            <option-->
-<!--                :value="model.id"-->
-<!--                v-for="model in getModelsDistinct"-->
-<!--                v-text="model.name"-->
-
-<!--            ></option>-->
-<!--        </select>-->
-<!--    </div>-->
 </template>
 <script>
-    import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+    import {mapGetters, mapMutations, mapActions} from 'vuex'
 
     export default {
         //удачи! ^_^
         props: ['auto_brands', 'routes'],
+
         data() {
             return {
                 modificationSelected: "",
                 step: 0,
+                inputYear: '',
+                inputBrand: '',
+                inputModel: '',
                 rangeYears: [],
                 bodyTypeSelected: "",
                 selectedEngine: "",
@@ -103,17 +83,10 @@
                         visible: false
                     }
                 ],
-                // selectedYear: ""
             }
         },
         created() {
-            let years = [];
-            let first = this.years[0];
-            while (first <= this.years[1]) {
-                years.push(first);
-                first++;
-            }
-            this.rangeYears = years.reverse();
+            this.setYearsList();
             if(this.getCurrentAuto) {
                 this.addSelectedYead(this.getCurrentAuto.year);
                 this.addSelectedBrand({
@@ -140,6 +113,8 @@
             ...mapGetters({
                 years: 'selectCar/getYears',
                 brands: 'selectCar/getBrands',
+                getBrandsStore: 'selectCar/getBrandsStore',
+                getDistinctModelsStore: 'selectCar/getDistinctModelsStore',
                 models: 'selectCar/getModels',
                 modifications: 'selectCar/getModifications',
                 filteredModifications: 'selectCar/getFilteredModifications',
@@ -160,11 +135,13 @@
 
             ...mapMutations({
                 addBrands: 'selectCar/addBrands',
+                addBrandsStore: 'selectCar/addBrandsStore',
                 addModels: 'selectCar/addModels',
                 addModifications: 'selectCar/addModifications',
                 clearModifications: 'selectCar/clearModifications',
                 addFilteredModifications: 'selectCar/addFilteredModifications',
                 addDistinctModels: 'selectCar/addDistinctModels',
+                addDistinctModelsStore: 'selectCar/addDistinctModelsStore',
                 addBodyTypes: 'selectCar/addBodyTypes',
                 addEngines: 'selectCar/addEngines',
                 addSelectedYead: 'selectCar/addSelectedYead',
@@ -179,22 +156,34 @@
                 setBrands: 'selectCar/setBrands',
                 clearModels: 'selectCar/clearModels'
             }),
+            setYearsList() {
+                let years = [];
+                let first = this.years[0];
+                while (first <= this.years[1]) {
+                    years.push(first);
+                    first++;
+                }
+                this.rangeYears = years.reverse();
+            },
             setYear(year){
                 this.addSelectedYead(year);
                 this.filterModificationsBySelectedYear();
                 this.hideAllSelects();
                 this.showSelect('brand');
+                this.inputYear = year;
             },
             setBrand(brand) {
                 this.addSelectedBrand(brand);
                 this.loadModels(brand.id);
                 this.hideAllSelects();
                 this.showSelect('models');
+                this.inputBrand = brand.description;
             },
             setModel(model) {
                 this.addSelectedModel(model);
                 this.hideAllSelects();
                 this.loadModifications();
+                this.inputModel = model.name;
             },
             hideAllSelects(except = null) {
                 var selects = this.selects;
@@ -210,6 +199,10 @@
                 this.selects = selects;
             },
             showSelect(name) {
+                //work around
+                if(name == 'brand' && this.step < 2) return;
+                if(name == 'models' && this.step < 3) return;
+                // console.log(name);
                 this.hideAllSelects(name);
                 var selects = this.selects;
                 for(let i in selects) {
@@ -255,13 +248,12 @@
                         if(this.selectedYear >= createdAt[0]) {
                             return model;
                         }
-                    } else {
-                        console.log(this.selectedYear);
-                        console.log(createdAt);
-                        console.log(stopped);
                     }
                 });
-                this.addDistinctModels(this.distinctModels(validModels));
+                var distinctModels = this.distinctModels(validModels);
+                this.addDistinctModels(distinctModels);
+                this.addDistinctModelsStore(distinctModels);
+
                 return validModels;
             },
 
@@ -294,24 +286,11 @@
                         if(this.selectedYear >= createdAt[0]) {
                             return modification;
                         }
-                    } else {
-                        console.log(this.selectedYear);
-                        console.log(createdAt);
-                        console.log(stopped);
                     }
                 });
                 this.addFilteredModifications(validModifications);
 
                 this.setCarYear({action: '/set-car-year', yearSelected: this.selectedYear});
-
-                // let form = new FormData();
-                // form.append('selected_year', this.selectedYear);
-                // axios.post('/set-car-year', form)
-                //     .then(data => {
-                //         self.addModels(self.filterModelsBySelectedYear(data.data));
-                //         self.resetModelsSelect();
-                //         self.clearModifications();
-                //     });
             },
 
             getBrandById(id) {
@@ -392,10 +371,6 @@
             getSelectedModelURI() {
                 var brandSelected = this.getBrandById(this.brandSelected.id);
                 var modelSelected = this.getModelById(this.modelSelected.id);
-                // var brandName = "";
-                //     if(brandSelected.description == 'CITROËN') {
-                //         brandName = brandSelected.description.replace(/Ë/, 'E');
-                //     }
                 var brandName = brandSelected.description.toLowerCase().replace(/[^\w]/g,'_');
                 if(brandName == 'citro_n') brandName = 'citroen';
 
@@ -413,13 +388,11 @@
                     return this.modificationSelected = "";
                 }
 
-
                 var modelSelectedIds = this.getModelSelectedIds();
 
                 this.getSelectedModelURI();
                 this.redirecting = true;
                 window.location.href = this.getSelectedModelURI();
-                console.log(333);
                 var self = this;
                 let form = new FormData();
                 form.append('model_Ids', modelSelectedIds);
@@ -427,9 +400,6 @@
                     .then(data => {
                         self.addBodyTypes(data.data);
                     })
-            },
-            choseEngine() {
-
             },
             choseModification() {
                 window.location.href = this.modificationSelected+"/categories/";
@@ -449,6 +419,67 @@
                 }
                 if(!this.redirecting){
                     window.location.href = this.getCurrentAuto.path
+                }
+            },
+
+            filterYears() {
+                if(!this.inputYear) {
+                    this.setYearsList();
+                } else {
+                    function sortNumber(a, b) {
+                        return a + b;
+                    }
+
+                    let inputData = parseInt(this.inputYear);
+                    var reg = new RegExp(inputData);
+                    var filtered = this.rangeYears.filter(item => reg.test(item));
+                    if(filtered.length) {
+                        this.rangeYears = filtered.sort(sortNumber);
+                    }
+                }
+            },
+            filterBrands() {
+                if(!this.inputBrand) {
+                    this.addBrands(this.getBrandsStore);
+                } else {
+                    var reg = new RegExp(this.inputBrand.toUpperCase());
+                    var filtered = [];
+                    for(let i = 0; i <= this.getBrandsStore.length; i++) {
+                        if(this.getBrandsStore[i] && this.getBrandsStore[i].description) {
+                            var brand = this.getBrandsStore[i].description;
+                            if(reg.test(brand)) {
+                                filtered.push(this.getBrandsStore[i]);
+                            }
+                        }
+                    }
+                    this.addBrands(filtered);
+                }
+            },
+            filterModels() {
+                if(!this.inputModel) {
+                    this.addModels(this.getDistinctModelsStore);
+                } else {
+                    var reg = new RegExp(this.inputModel.toUpperCase());
+                    var filtered = [];
+                    for(let i = 0; i <= this.getDistinctModelsStore.length; i++) {
+                        if(this.getDistinctModelsStore[i] && this.getDistinctModelsStore[i].name) {
+                            var model = this.getDistinctModelsStore[i].name;
+                            if(reg.test(model)) {
+                                filtered.push(this.getDistinctModelsStore[i]);
+                            }
+                        }
+                    }
+
+                    this.addDistinctModels(filtered);
+                }
+            },
+            disabled(selectName) {
+                if(this.step < 2 && selectName == 'brand') {
+                    return true
+                }else if(this.step < 3 && selectName == 'models') {
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }
