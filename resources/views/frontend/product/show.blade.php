@@ -21,11 +21,11 @@
                                 <button>Найти аналоги</button>
                             </div>
                             <div class="card__main-icons">
-                                <div class="card__main-iconn">
+                                <div class="card__main-icon">
                                     <img src="/img/frontend/img/svg/shield2.svg" alt="shield2" class="icon">
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>
-                                <div class="card__main-icon {{ preg_replace('/\s/', '-',strtolower($product->custom_attributes['manufacturer'])) . '-country-icon' }}">
+                                <div class="card__main-icon">
                                     <img src="/img/frontend/img/germany.png" alt="germany" class="icon">
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>
@@ -294,48 +294,18 @@
                     <div class="card__info">
                         <div class="card__info-body">
                             {!! $product->custom_attributes['description'] !!}
-                            <h3>Технические характеристики <span>Тормозные колодки Dello 30105660234</span></h3>
+                            <h3>Технические характеристики <span>{{ $product->name }} {{ $product->manufacturer }} {{ $product->article }}</span></h3>
                             <div class="card__info-data">
+                                @foreach($product->features as $feature)
                                 <div class="d-flex align-items-center justify-content-between">
 									<span>
-										Гарантия
+										{{ $feature->description ?? $feature->displaytitle }}
 									</span>
                                     <span>
-										12 мес.
+										{{ $feature->displayvalue }}
 									</span>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Интернет
-									</span>
-                                    <span>
-										4G (LTE); 3G
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Матрица
-									</span>
-                                    <span>
-										IPS
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Пикселей на дюйм
-									</span>
-                                    <span>
-										282 ppi
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Количество ядер
-									</span>
-                                    <span>
-										4
-									</span>
-                                </div>
+                                @endforeach
                             </div>
                             <h3>Применимость к автомобилям</h3>
                             <div class="companies__catalog d-flex flex-column">
