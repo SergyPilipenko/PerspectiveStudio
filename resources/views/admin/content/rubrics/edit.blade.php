@@ -89,7 +89,7 @@
                                 @foreach($rubric->groups as $group)
                                     <div class="row">
                                         <div class="col-md-11">
-                                            <accordian>
+                                            <accordian :default="false">
                                                 <div slot="header">{{ $group->title }}</div>
                                                 <div slot="body">
                                                     @if($categories->count())
