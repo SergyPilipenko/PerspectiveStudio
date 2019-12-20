@@ -150,12 +150,12 @@
                                     {{ $products->appends(request()->all())->links('frontend.UiComponents.pagination.partfix') }}
                                 </div>
                                 @if($products->total() > $products->count())
-                                <div class="subcategory__more">
-                                    <button>
-                                        <div><img src="/img/frontend/img/svg/refresh2.svg" alt="refresh"></div>
-                                        <span>загрузить еще 21 товар</span>
-                                    </button>
-                                </div>
+                                    <div class="subcategory__more">
+                                        <button>
+                                            <div><img src="/img/frontend/img/svg/refresh2.svg" alt="refresh"></div>
+                                            <span>загрузить еще 21 товар</span>
+                                        </button>
+                                    </div>
                                 @endif
                             </div>
                         @else

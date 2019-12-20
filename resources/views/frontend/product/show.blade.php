@@ -21,11 +21,11 @@
                                 <button>Найти аналоги</button>
                             </div>
                             <div class="card__main-icons">
-                                <div class="card__main-icon">
+                                <div class="card__main-iconn">
                                     <img src="/img/frontend/img/svg/shield2.svg" alt="shield2" class="icon">
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>
-                                <div class="card__main-icon">
+                                <div class="card__main-icon {{ preg_replace('/\s/', '-',strtolower($product->custom_attributes['manufacturer'])) . '-country-icon' }}">
                                     <img src="/img/frontend/img/germany.png" alt="germany" class="icon">
                                     <div class="card__main-icon-dropdown">100% оригинал</div>
                                 </div>

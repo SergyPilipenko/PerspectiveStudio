@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Requests\RequestInterface;
 use App\Http\Controllers\Controller;
 use App\Repositories\Order\OrderRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller

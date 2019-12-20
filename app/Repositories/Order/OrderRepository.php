@@ -20,6 +20,7 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function saveOrder(Request $request)
     {
+        $this->order->id = $this->generateOrderId();
         $this->order->cart_id = $request->cart_id;
         $this->order->customer_email = $request->customer_email;
         $this->order->customer_phone = $request->customer_phone;
@@ -28,5 +29,18 @@ class OrderRepository implements OrderRepositoryInterface
         $this->order->order_comment = $request->order_comment;
 
         $this->order->save();
+    }
+
+    private function generateOrderId()
+    {
+        $latest = $this->order->latest()->first();
+        $rand = rand(10, 99);
+        if($latest) {
+            $id = $latest->id + 1;
+
+            return $rand . substr($id, 2);
+        }
+
+        return $rand . 1;
     }
 }
