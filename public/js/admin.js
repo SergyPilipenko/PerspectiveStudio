@@ -87715,7 +87715,7 @@ window.onload = function () {
 
     var name = $(".product-edit #name"),
         slug = $(".product-edit #slug");
-    name.on('input', function (e) {
+    name.on('input', function () {
       slug.val(slugify($(this).val()));
     });
   }
