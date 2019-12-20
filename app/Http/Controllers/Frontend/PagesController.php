@@ -129,8 +129,9 @@ class PagesController extends Controller
         $car = $car->getCar($modification);
 
         $rubric = Rubric::where('slug', 'legkovye')->with('groups.categories')->firstOrFail();
+        $viewedProducts = $this->viewedProducts->getViewedProducts();
 
-        return view('frontend.car.index', compact('rubric','children', 'car', 'brand', 'model', 'modification'));
+        return view('frontend.car.index', compact('rubric','children', 'car', 'brand', 'model', 'modification', 'viewedProducts'));
     }
 
     public function category($brand, $model, $modification, $category, CarInterface $car, Product $product)
