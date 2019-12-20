@@ -11,37 +11,37 @@
                     <div class="white-bg">
                         <h2 class="category__title">{{ $rubric->title }}</h2>
 {{--                        СТАРЫЙ КОД--}}
-{{--                        @foreach($rubric->groups as $group)--}}
-{{--                            <div class="category__block">--}}
-{{--                                <h3 class="category__block-title">--}}
-{{--                                    <span>{{ $group->title }}</span>--}}
-{{--                                </h3>--}}
-{{--                                <div class="category__block-items">--}}
-{{--                                    @foreach($group->categories as $category)--}}
-{{--                                        <a href="{{ $activeCar && $category->type == 'tecdoc' ? $activeCar->path . '-' . $category->slug : route('frontend.product-categories.show', $category->slug) }}" class="category__block-item">--}}
-{{--                                            <img src="{{ asset($category->image) }}" alt="list">--}}
-{{--                                            <span>{{ $category->category_title }}</span>--}}
-{{--                                        </a>--}}
-{{--                                    @endforeach--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        @endforeach--}}
-
-                        @foreach($groups as $group)
+                        @foreach($rubric->groups as $group)
                             <div class="category__block">
                                 <h3 class="category__block-title">
-                                    <span>{{ $group['title'] }}</span>
+                                    <span>{{ $group->title }}</span>
                                 </h3>
                                 <div class="category__block-items">
-                                    @foreach($group['categories'] as $category)
-                                        <a href="{{ $activeCar && $category->type == 'tecdoc' ? $activeCar->path . '-' . $category['slug'] : route('frontend.product-categories.show', $category['slug']) }}" class="category__block-item">
-                                            <img src="{{ asset($category['image']) }}" alt="list">
-                                            <span>{{ $category['title'] }}</span>
+                                    @foreach($group->categories as $category)
+                                        <a href="{{ $activeCar && $category->type == 'tecdoc' ? $activeCar->path . '-' . $category->slug : route('frontend.product-categories.show', $category->slug) }}" class="category__block-item">
+                                            <img src="{{ asset($category->image) }}" alt="list">
+                                            <span>{{ $category->category_title }}</span>
                                         </a>
                                     @endforeach
                                 </div>
                             </div>
                         @endforeach
+
+{{--                        @foreach($groups as $group)--}}
+{{--                            <div class="category__block">--}}
+{{--                                <h3 class="category__block-title">--}}
+{{--                                    <span>{{ $group['title'] }}</span>--}}
+{{--                                </h3>--}}
+{{--                                <div class="category__block-items">--}}
+{{--                                    @foreach($group['categories'] as $category)--}}
+{{--                                        <a href="{{ $activeCar && $category->type == 'tecdoc' ? $activeCar->path . '-' . $category['slug'] : route('frontend.product-categories.show', $category['slug']) }}" class="category__block-item">--}}
+{{--                                            <img src="{{ asset($category['image']) }}" alt="list">--}}
+{{--                                            <span>{{ $category['title'] }}</span>--}}
+{{--                                        </a>--}}
+{{--                                    @endforeach--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
                         <div class="category__block">
                             <h3 class="category__block-title">
                                 <span>Шины и диски</span>
