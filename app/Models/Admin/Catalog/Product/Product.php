@@ -355,4 +355,12 @@ class Product extends Model implements ProductInterface
 
         if(count($data)) DB::table('products_flat')->where('id', $product->id)->update($data);
     }
+
+    public function getTecdocProductFeatures()
+    {
+        return $this->simpleQueryBuilder->select(env('DB_TECDOC_DATABASE') . '.suppliers as s', ['aa.description', 'aa.displaytitle', 'aa.displayvalue'])
+            ->join(env('DB_TECDOC_DATABASE') . '.article_attributes as aa', 's.id', 'aa.supplierid')
+            ->where('s.description', $this->manufacturer)
+            ->where('aa.datasupplierarticlenumber', $this->article)->getResult();
+    }
 }

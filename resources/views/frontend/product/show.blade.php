@@ -294,48 +294,18 @@
                     <div class="card__info">
                         <div class="card__info-body">
                             {!! $product->custom_attributes['description'] !!}
-                            <h3>Технические характеристики <span>Тормозные колодки Dello 30105660234</span></h3>
+                            <h3>Технические характеристики <span>{{ $product->name }} {{ $product->manufacturer }} {{ $product->article }}</span></h3>
                             <div class="card__info-data">
+                                @foreach($product->features as $feature)
                                 <div class="d-flex align-items-center justify-content-between">
 									<span>
-										Гарантия
+										{{ $feature->description ?? $feature->displaytitle }}
 									</span>
                                     <span>
-										12 мес.
+										{{ $feature->displayvalue }}
 									</span>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Интернет
-									</span>
-                                    <span>
-										4G (LTE); 3G
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Матрица
-									</span>
-                                    <span>
-										IPS
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Пикселей на дюйм
-									</span>
-                                    <span>
-										282 ppi
-									</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-									<span>
-										Количество ядер
-									</span>
-                                    <span>
-										4
-									</span>
-                                </div>
+                                @endforeach
                             </div>
                             <h3>Применимость к автомобилям</h3>
                             <div class="companies__catalog d-flex flex-column">
