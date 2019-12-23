@@ -40,6 +40,17 @@ class Product extends Model implements ProductInterface
             if($product->images->count()) {
                 File::deleteDirectory($product->productImage->savePath . $product->id);
             }
+
+
+        });
+        static::created(function ($product) {
+            File::put(public_path('SomethingChanged.txt'), 'changed');
+        });
+        static::updated(function ($product) {
+            File::put(public_path('SomethingChanged.txt'), 'changed');
+        });
+        static::deleted(function ($product) {
+            File::put(public_path('SomethingChanged.txt'), 'changed');
         });
     }
 
