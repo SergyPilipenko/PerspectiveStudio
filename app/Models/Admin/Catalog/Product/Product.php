@@ -44,6 +44,7 @@ class Product extends Model implements ProductInterface
 
         });
         static::created(function ($product) {
+
             File::put(public_path('SomethingChanged.txt'), 'changed');
         });
         static::updated(function ($product) {

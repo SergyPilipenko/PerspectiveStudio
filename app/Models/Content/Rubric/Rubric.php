@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 
 class Rubric extends Model
 {
+
     protected $table = 'rubrics';
     protected $fillable = ['title', 'description', 'position', 'slug'];
 

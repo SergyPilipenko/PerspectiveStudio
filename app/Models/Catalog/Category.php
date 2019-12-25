@@ -66,6 +66,7 @@ class Category extends Model implements CategoryInterface
                 File::put(public_path('SomethingChanged.txt'), 'changed');
             });
             static::deleted(function ($category) {
+
                 File::put(public_path('SomethingChanged.txt'), 'changed');
             });
 

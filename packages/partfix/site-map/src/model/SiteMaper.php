@@ -223,6 +223,8 @@ class SiteMaper extends Model
             $obj3->writeToFile(public_path('sitemap.xml'));
 
 
+
+
         }
     }
 

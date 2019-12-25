@@ -44,6 +44,7 @@ class SiteMap extends Command
      */
     public function handle()
     {
+
        app(SiteMaper::class)->createFile();
     }
 }
