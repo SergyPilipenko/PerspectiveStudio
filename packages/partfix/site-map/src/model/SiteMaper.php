@@ -193,6 +193,6 @@ class SiteMaper extends Model
 
 
         }
-        dd($urlset->asXML());
+
     }
 }
