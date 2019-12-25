@@ -5,6 +5,7 @@ namespace App\Console\Commands\SiteMap;
 use Illuminate\Console\Command;
 use Partfix\SiteMap\model\SiteMaper;
 
+
 class SiteMap extends Command
 {
 

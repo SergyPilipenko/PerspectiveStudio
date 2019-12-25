@@ -5,6 +5,9 @@ namespace Partfix\SiteMap\model;
 use Illuminate\Database\Eloquent\Model;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
 use Illuminate\Support\Facades\File;
+use Spatie\Sitemap\SitemapIndex;
+use Carbon\Carbon;
+use Spatie\Sitemap\SitemapGenerator;
 
 class SiteMaper extends Model
 {
