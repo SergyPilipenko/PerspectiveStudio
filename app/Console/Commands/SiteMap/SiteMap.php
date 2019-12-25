@@ -47,5 +47,6 @@ class SiteMap extends Command
 
        app(SiteMaper::class)->createFile();
 
+
     }
 }
