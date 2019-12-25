@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Garage::class);
     }
 
+
     /**
      * Bootstrap any application services.
      *

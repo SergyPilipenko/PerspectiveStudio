@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rubric extends Model
 {
+
     protected $table = 'rubrics';
     protected $fillable = ['title', 'description', 'position', 'slug'];
 

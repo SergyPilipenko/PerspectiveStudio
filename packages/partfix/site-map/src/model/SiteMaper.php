@@ -85,11 +85,109 @@ class SiteMaper extends Model
         return $result_url;
     }
     public function createFile(){
-        $urlset = new \SimpleXMLElement('<?urlset version="1.0" encoding="UTF-8"?><urlset/>');
-        foreach($this->getFullUrlWithoutCar() as $link){
-            $url = $urlset->addChild('url');
-           $loc =  $url->addChild('loc');
-           $loc['url'] = $link;
+        $contents = File::get(public_path('SomethingChanged.txt'));
+        if($contents) {
+
+            File::put(public_path('SomethingChanged.txt'), '');
+
+
+
+
+            $path = 'public';
+
+            $base_url = route('frontend.index');
+
+
+            $obj = SitemapIndex::create();
+            foreach ($this->getAllCategoryUrl() as $category) {
+                $obj->add('/' . $category);
+            }
+            $obj->writeToFile(public_path('category_sitemap.xml'));
+
+
+            $obj2 = SitemapIndex::create();
+
+            $i = 0;
+            foreach ($this->getFullUrlWithCar() as $k => $value) {
+                $obj2->add(str_replace($base_url, '', $value));
+
+
+                if ($k % 10000 == 0 && $k != 0) {
+                    $i++;
+                    fopen(public_path('frontend_car_category_sitemap_') . $i . '.xml', "w");
+                    $obj2->writeToFile(public_path('frontend_car_category_sitemap_') . $i . '.xml');
+                    $obj2 = SitemapIndex::create();
+                }
+            }
+            $prod_count = 0;
+            $obj4 = SitemapIndex::create();
+            foreach ($this->getFullUrl() as $key_product => $product) {
+                $obj4->add(str_replace($base_url, '', $product));
+
+
+                if ($key_product % 10000 == 0 && $key_product != 0) {
+                    $prod_count++;
+                    fopen(public_path('frontend_product_show_sitemap_') . $prod_count . '.xml', "w");
+                    $obj4->writeToFile(public_path('frontend_product_show_sitemap_') . $prod_count . '.xml');
+                    $obj4 = SitemapIndex::create();
+
+                }
+            }
+            $prod_count_modification = 0;
+            //модификации
+            $obj5 = SitemapIndex::create();
+            foreach ($this->getModification() as $key_modification => $modification) {
+                $obj5->add(str_replace($base_url, '', $modification));
+
+
+                if ($key_modification % 10000 == 0 && $key_modification != 0) {
+                    $prod_count_modification++;
+                    fopen(public_path('frontend_modification_sitemap_') . $prod_count_modification . '.xml', "w");
+                    $obj5->writeToFile(public_path('frontend_modification_sitemap_') . $prod_count_modification . '.xml');
+                    $obj5 = SitemapIndex::create();
+                }
+            }
+            //
+            $prod_count_model = 0;
+            $mod = array_unique($this->getModel());
+            // dd($mod);
+            $obj6 = SitemapIndex::create();
+            foreach ($mod as $key_model => $model) {
+                $obj6->add(str_replace($base_url, '', $model));
+            }
+            fopen(public_path('frontend_model_sitemap_') . '1' . '.xml', "w");
+            $obj6->writeToFile(public_path('frontend_model_sitemap_') . '1' . '.xml');
+
+            $obj7 = SitemapIndex::create();
+            foreach ($this->getRubricUrl() as $key_rubric => $rubric) {
+                $obj7->add(str_replace($base_url, '', $rubric));
+            }
+            fopen(public_path('frontend_rubric_index_') . '1' . '.xml', "w");
+            $obj7->writeToFile(public_path('frontend_rubric_index_') . '1' . '.xml');
+
+
+            //главный файл
+            $obj3 = SitemapIndex::create();
+            $obj3->add('/category_sitemap.xml');
+
+            for ($j = 1; $j <= $i; $j++) {
+                $obj3->add('/frontend_car_category_sitemap_' . $j . '.xml');
+            }
+            for ($a = 1; $a <= $prod_count; $a++) {
+                $obj3->add('/frontend_product_show_sitemap_' . $a . '.xml');
+            }
+            for ($s = 1; $s <= $prod_count_modification; $s++) {
+                $obj3->add('/frontend_modification_sitemap_' . $s . '.xml');
+            }
+
+            $obj3->add('/frontend_model_sitemap_' . '1' . '.xml');
+            $obj3->add('/frontend_rubric_index_' . '1' . '.xml');
+
+            $obj3->writeToFile(public_path('sitemap.xml'));
+
+
+
+
         }
         dd($urlset->asXML());
     }

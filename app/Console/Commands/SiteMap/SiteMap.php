@@ -44,6 +44,7 @@ class SiteMap extends Command
      */
     public function handle()
     {
-        dd(count(app(SiteMaper::class)->getCategorySlug()));
+
+       app(SiteMaper::class)->createFile();
     }
 }
