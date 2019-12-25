@@ -4,6 +4,7 @@
 namespace Partfix\SiteMap\model;
 use Illuminate\Database\Eloquent\Model;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
+use Illuminate\Support\Facades\File;
 
 class SiteMaper extends Model
 {
