@@ -4,12 +4,6 @@
 namespace Partfix\SiteMap\model;
 use Illuminate\Database\Eloquent\Model;
 use Partfix\QueryBuilder\Contracts\SQLQueryBuilder;
-use Carbon\Carbon;
-use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\Tags\Url;
-use Spatie\Sitemap\SitemapGenerator;
-use Spatie\Sitemap\SitemapIndex;
-use Illuminate\Support\Facades\File;
 
 class SiteMaper extends Model
 {
@@ -25,7 +19,6 @@ class SiteMaper extends Model
      */
     public function __construct(SQLQueryBuilder $builder)
     {
-
         $this->builder = $builder;
     }
 
@@ -35,7 +28,7 @@ class SiteMaper extends Model
             ->join('products as p', 'art.article_number_id', 'p.id')
             ->join('product_attribute_values as pav', 'art.article_number_id', 'pav.product_id')
             ->where('pav.attribute_id','3')
-
+            ->limit(10)
             ->whereIn('art.nodeid', function($query) {
                 return $query->select('distinct_passanger_car_trees as node, distinct_passanger_car_trees as parent', ['node.passanger_car_trees_id'])
                     ->whereBetween('node._lft', 'parent._lft', 'parent._rgt')
@@ -60,57 +53,27 @@ class SiteMaper extends Model
             ->where('m.ispassengercar' , 'True')
             ->where('mci.created','1979','>')->getArrayResult();
     }
-    public function getAllCategorySlug()
+    public function getCategorySlug()
     {
         return $this->builder->select(' catalog_categories',['json_unquote(json_extract(slug, \'$."ru"\')) as slug'])->getArrayResult();
     }
-    public function getRubric(){
-        return $this->builder->select('rubrics',['slug']  )->getArrayResult();
-    }
-    public function getRubricUrl(){
-         foreach ($this->getRubric() as $value){
-           $rubric[] =  route('frontend.rubric.index',[$value['slug']]);
-         }
-         return $rubric;
-    }
-    public function getAllCategoryUrl(){
-        foreach ($this->getAllCategorySlug() as $slug){
-            $category_url[] = $slug['slug'];
+    public function getCategoryUrl(){
+        foreach ($this->getCategorySlug() as $slug){
+
         }
-        return $category_url;
     }
-    public function getTecdocCategorySlug()
+    public function getFullUrlWithoutCar()
     {
-        return $this->builder->select(' catalog_categories',['json_unquote(json_extract(slug, \'$."ru"\')) as slug'])
-            ->where('type','tecdoc')->getArrayResult();
-    }
-    public function getFullUrlWithCar()
-    {
+       // dd($this->getCategorySlug());
+//dd($this->getUrlWithoutCar());
+            foreach ($this->getUrlWithoutCar() as $value) {
+               // foreach($this->getCategorySlug() as $slug) {
 
 
-        $categories = $this->getTecdocCategorySlug();
-        foreach ($this->getUrlWithoutCar() as $value) {
+//                $result_url[] = route('frontend.car.category',[$value['manufacturer_slug'],$value['model_slug'],$value['id'],$slug['slug']]);
+                $result_url[] = route('frontend.modification',[$value['manufacturer_slug'],$value['model_slug'],$value['id']]);
 
-            foreach($categories as $slug) {
-
-
-                $result_url[] = route('frontend.car.category',[$value['manufacturer_slug'],$value['model_slug'],$value['id'],$slug['slug']]);
-                // $result_url[] = route('frontend.modification',[$value['manufacturer_slug'],$value['model_slug'],$value['id']]);
-
-            }
-        }
-        // dd($result_url);
-        return $result_url;
-    }
-    public function getModification(){
-        foreach ($this->getUrlWithoutCar() as $value) {
-            $result_url[] = route('frontend.modification',[$value['manufacturer_slug'],$value['model_slug'],$value['id']]);
-        }
-        return $result_url;
-    }
-    public  function getModel(){
-        foreach ($this->getUrlWithoutCar() as $value) {
-            $result_url[] = route('frontend.model',[$value['manufacturer_slug'],$value['model_slug']]);
+           // }
         }
         return $result_url;
     }
@@ -226,8 +189,6 @@ class SiteMaper extends Model
 
 
         }
+        dd($urlset->asXML());
     }
-
-
-
 }
