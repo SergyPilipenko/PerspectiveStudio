@@ -62,10 +62,10 @@ class SiteMaper extends Model
     }
     public function getAllCategorySlug()
     {
-        return $this->builder->select(' catalog_categories',['json_unquote(json_extract(slug, \'$."ru"\')) as slug'])->getArrayResult();
+        return $this->builder->select(' catalog_categories',['json_unquote(json_extract(slug, \'$."ru"\')) as slug','title'])->getArrayResult();
     }
     public function getRubric(){
-        return $this->builder->select('rubrics',['slug']  )->getArrayResult();
+        return $this->builder->select('rubrics',['slug','title']  )->getArrayResult();
     }
     public function getRubricUrl(){
         foreach ($this->getRubric() as $value){
