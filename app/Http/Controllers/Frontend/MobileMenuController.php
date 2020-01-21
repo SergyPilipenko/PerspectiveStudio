@@ -65,11 +65,12 @@ class MobileMenuController extends Controller
                    foreach ($group->categories as $k=> $category){
                        $groups[$k]['title'] = $category->category_title;
                        $groups[$k]['link'] = route('frontend.product-categories.show', $category->slug);
+                       $groups[$k]['image'] = asset($category->image);
                       // $all_rubric['title'] = $category->category_title;
                       // $all_rubric['link'] = route('frontend.product-categories.show', $category->slug);
 
                        $categori['title'] = $category->category_title;
-                       $categori['image'] = asset($category->image);
+
                        $categori['link'] = route('frontend.product-categories.show', $category->slug);
 
                        //$group['children'][$k]= [];

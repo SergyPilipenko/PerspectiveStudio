@@ -19,8 +19,8 @@
                     @click="handleItemClicked(item)"
                     class="header__popup-catalog-item"
                 >
-                    <img v-if="item.image"  src="this.image" alt="catalog">
-                    <img v-else src="img/frontend/img/catalog-img.png" v-if="item.title" alt="catalog">
+                    <img v-if="item.image"  :src="item.image" alt="catalog">
+                    <img v-else src="img/frontend/img/catalog-img.png"  alt="catalog">
                     <a :href="item.link"> {{ item.title }}</a>
                     <!--<span v-show="item.children.length > 0" class="arrow">
                         <RightArrowIcon />

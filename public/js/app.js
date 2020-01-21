@@ -37664,18 +37664,13 @@ var render = function() {
             },
             [
               item.image
-                ? _c("img", { attrs: { src: "this.image", alt: "catalog" } })
-                : _vm._e(),
-              _vm._v(" "),
-              item.title
-                ? _c("img", {
-                    directives: [{ name: "else", rawName: "v-else" }],
+                ? _c("img", { attrs: { src: item.image, alt: "catalog" } })
+                : _c("img", {
                     attrs: {
-                      src: "http://partfix.loc/img/catalog-img.png",
+                      src: "img/frontend/img/catalog-img.png",
                       alt: "catalog"
                     }
-                  })
-                : _vm._e(),
+                  }),
               _vm._v(" "),
               _c("a", { attrs: { href: item.link } }, [
                 _vm._v(" " + _vm._s(item.title))
