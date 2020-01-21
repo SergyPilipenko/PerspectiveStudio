@@ -32,6 +32,7 @@ class RubricController extends Controller
 //        СТАРЫЙ КОД
         $rubric = $this->rubric->where('slug', $slug)->with('groups.categories')->firstOrFail();
 //        $rubric = $this->rubric->where('slug', $slug)->firstOrFail();
+
         $meta_tags = [
             'rubric_title' => $rubric->title
         ];

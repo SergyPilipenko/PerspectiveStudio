@@ -184,6 +184,8 @@
 <header class="header">
     <div class="container">
         <div class="row mb40 v-cloak--hidden">
+
+
             <div class="header__popup-catalog">
                 <h3>Каталог запчастей на Mercedes GLA-CLASS (X156) 2012</h3>
                 <div class="d-flex align-items-center">
@@ -355,10 +357,9 @@
         </div>
         <div class="row align-items-center">
             <div class="col-3 col-lg-1 col-xl-2">
-                <button class="header__catalog">
-                    <img src="{{ asset('img/frontend/img/catalog.png') }}" alt="icon">
-                    <span>Каталог товаров</span>
-                </button>
+
+                    <mobile-nav></mobile-nav>
+
             </div>
             <div class="col-6 d-lg-none d-flex justify-content-center">
                 <a class="header__logo" href="{{ route('frontend.index') }}">

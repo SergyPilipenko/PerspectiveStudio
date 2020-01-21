@@ -6968,6 +6968,10 @@ a:hover {
 }
 
 @media screen and (max-width: 1023.98px) {
+  .menu {
+    display: block;
+  }
+
   .header-checkout .pre-header__menu {
     -webkit-box-pack: center;
             justify-content: center;

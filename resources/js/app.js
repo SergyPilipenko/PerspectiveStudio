@@ -16,12 +16,16 @@ import Search from './frontend/store/modules/search';
 import General from './frontend/store/modules/general';
 import CatalogFilter from "../../packages/partfix/catalog-category-filter/src/assets/js/store/modules/catalog-filter-store";
 import VueRouter from 'vue-router';
+import VueNestedMenu from 'vue-nested-menu';
+
 
 window.lang = document.documentElement.lang;
 window.Vue = require('vue');
 Vue.config.devtools = true;
 Vue.use(Vuex);
 Vue.use(VueRouter);
+
+
 
 
 Vue.component('search-button', require('./frontend/components/Search/SearchButton').default);

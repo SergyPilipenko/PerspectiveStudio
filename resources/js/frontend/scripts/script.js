@@ -100,6 +100,9 @@ $(function(){
 		$('.header__popup-catalog').addClass('d-block');
 		$('.popup-black').addClass('d-block');
 	});
+    $('.header__menu-mobile').click(function(){
+        $('.header__catalog').click();
+    });
 
     $('.header__search input').focus(function(){
         $('.popup-black2').addClass('d-block');
