@@ -20,7 +20,7 @@
                     class="header__popup-catalog-item"
                 >
                     <img v-if="item.image"  src="this.image" alt="catalog">
-                    <img v-else src="http://partfix.loc/img/catalog-img.png" v-if="item.title" alt="catalog">
+                    <img v-else src="img/catalog-img.png" v-if="item.title" alt="catalog">
                     <a :href="item.link"> {{ item.title }}</a>
                     <!--<span v-show="item.children.length > 0" class="arrow">
                         <RightArrowIcon />
